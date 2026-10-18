@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thị Trường Bất Động Sản Việt Nam — Tư Vấn Đầu Tư & Quản Lý Gia Sản</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              dark: '#0c241b',     /* Xanh lá rừng sâu sang trọng */
+              primary: '#164231',  /* Xanh Mộc chủ đạo */
+              accent: '#d4af37',   /* Vàng Gold tinh tế */
+              light: '#f4f7f5'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Be Vietnam Pro', sans-serif; }
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 32s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased">
+
+  <!-- 1. TOP ANNOUNCEMENT BAR (CỘNG ĐỒNG ZALO) -->
+  <div id="top-bar" class="bg-brand-dark text-white text-xs sm:text-sm py-2.5 px-4 border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="bg-brand-accent text-brand-dark font-bold px-2 py-0.5 rounded text-xs uppercase tracking-wider">Cộng đồng kín</span>
+        <span class="text-slate-200">Giỏ hàng chuyển nhượng & cho thuê từ chủ sở hữu đã xác thực — Giao dịch minh bạch, tối ưu dòng tiền.</span>
+      </div>
+      <div class="flex items-center gap-4 shrink-0">
+        <a href="#booking" class="text-brand-accent font-semibold hover:underline flex items-center gap-1">
+          Tham gia nhóm Zalo VIP &rarr;
+        </a>
+        <button onclick="document.getElementById('top-bar').style.display='none'" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. HEADER & NAVIGATION -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex flex-col">
+        <span class="text-lg sm:text-xl font-bold tracking-tight text-brand-dark">VIETNAM PROPERTY MARKET</span>
+        <span class="text-xs text-brand-primary font-medium tracking-widest uppercase">Tư Vấn Đầu Tư & Quản Lý Dòng Tiền</span>
+      </a>
+
+      <!-- Desktop Menu -->
+      <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-700">
+        <a href="#about" class="hover:text-brand-primary transition">Giới thiệu</a>
+        <div class="relative group py-6">
+          <button class="hover:text-brand-primary transition flex items-center gap-1">BĐS Nhà ở &#9662;</button>
+          <div class="absolute left-0 top-16 w-60 bg-white shadow-xl rounded-xl border border-slate-100 p-2 hidden group-hover:block">
+            <a href="#projects" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Dự án sơ cấp trọng điểm</a>
+            <a href="#projects" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Giỏ hàng Chuyển nhượng</a>
+            <a href="#booking" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Khai thác Cho thuê</a>
+          </div>
+        </div>
+        <div class="relative group py-6">
+          <button class="hover:text-brand-primary transition flex items-center gap-1">Dịch vụ trọn gói &#9662;</button>
+          <div class="absolute left-0 top-16 w-64 bg-white shadow-xl rounded-xl border border-slate-100 p-2 hidden group-hover:block">
+            <a href="#process" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Tư vấn bài toán Lợi nhuận & Dòng tiền</a>
+            <a href="#process" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Quản lý & Vận hành căn hộ</a>
+            <a href="#process" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Cộng đồng Chuyển nhượng kín</a>
+            <a href="#process" class="block px-4 py-2.5 rounded-lg hover:bg-slate-50">Tư vấn Tài chính & Pháp lý</a>
+          </div>
+        </div>
+        <a href="#markets" class="hover:text-brand-primary transition">Thị trường</a>
+        <a href="#why-us" class="hover:text-brand-primary transition">Phân tích chuyên sâu</a>
+        <a href="#booking" class="hover:text-brand-primary transition">Liên hệ</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-100 text-slate-700">
+          🇻🇳 Tiếng Việt
+        </span>
+        <a href="#booking" class="bg-brand-primary hover:bg-brand-dark text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-lg shadow-sm transition">
+          Đặt lịch tư vấn miễn phí
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. LEGAL & BENEFIT MARQUEE TICKER -->
+  <div class="bg-slate-900 text-slate-200 text-xs py-2.5 overflow-hidden border-b border-slate-800">
+    <div class="animate-marquee flex items-center gap-8">
+      <span>&#10003; Pháp lý chuẩn Luật Nhà ở 2023</span>
+      <span>&bull;</span>
+      <span>&#10003; Ký Hợp đồng Mua bán (SPA) trực tiếp Chủ đầu tư</span>
+      <span>&bull;</span>
+      <span>&#10003; Hoạch định chi tiết bài toán Lợi nhuận & Dòng tiền</span>
+      <span>&bull;</span>
+      <span>&#10003; Sở hữu lâu dài cho người Việt & 50 năm (gia hạn) cho khách Quốc tế</span>
+      <span>&bull;</span>
+      <span>&#10003; Tự do chuyển nhượng & khai thác cho thuê dòng tiền cao</span>
+      <span>&bull;</span>
+      <span>&#10003; Pháp lý chuẩn Luật Nhà ở 2023</span>
+      <span>&bull;</span>
+      <span>&#10003; Ký Hợp đồng Mua bán (SPA) trực tiếp Chủ đầu tư</span>
+      <span>&bull;</span>
+      <span>&#10003; Hoạch định chi tiết bài toán Lợi nhuận & Dòng tiền</span>
+    </div>
+  </div>
+
+  <!-- 4. HERO SECTION & ACTIVE MARKETS -->
+  <section class="relative bg-gradient-to-b from-brand-dark via-brand-primary to-slate-900 text-white py-16 lg:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Column -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-brand-accent text-xs font-semibold tracking-wide uppercase">
+            &#9733; Bất động sản Việt Nam &bull; Tư vấn chuyên sâu 1:1
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-bold leading-tight">
+            Bất động sản tuyển chọn — Pháp lý minh bạch, Tối ưu lợi nhuận & Dòng tiền.
+          </h1>
+          <p class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+            Danh mục căn hộ hạng sang, biệt thự và dinh thự được thẩm định kỹ lưỡng tại Trung tâm & Khu Đông TP.HCM. Mỗi bất động sản đều đi kèm bài toán tài chính rõ ràng, lịch thanh toán tối ưu và dịch vụ vận hành cho thuê — chuyển nhượng trọn gói.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2">
+            <a href="#booking" class="bg-brand-accent hover:bg-yellow-500 text-brand-dark font-bold px-6 py-3.5 rounded-lg transition shadow-lg">
+              Đặt lịch tư vấn 1:1
+            </a>
+            <a href="#projects" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3.5 rounded-lg border border-white/20 transition">
+              Khám phá toàn bộ dự án
+            </a>
+          </div>
+
+          <!-- 4 Stats -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-white/15">
+            <div>
+              <div class="text-2xl sm:text-3xl font-bold text-brand-accent">4,200+</div>
+              <div class="text-xs text-slate-300 mt-1">Khách hàng & Nhà đầu tư</div>
+            </div>
+            <div>
+              <div class="text-2xl sm:text-3xl font-bold text-brand-accent">30–100+ Tỷ</div>
+              <div class="text-xs text-slate-300 mt-1">Danh mục tài sản tư vấn</div>
+            </div>
+            <div>
+              <div class="text-2xl sm:text-3xl font-bold text-brand-accent">15+</div>
+              <div class="text-xs text-slate-300 mt-1">Dự án trọng điểm Khu Đông</div>
+            </div>
+            <div>
+              <div class="text-2xl sm:text-3xl font-bold text-brand-accent">100%</div>
+              <div class="text-xs text-slate-300 mt-1">Thẩm định pháp lý & dòng tiền</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Active Markets Map Card -->
+        <div class="lg:col-span-5">
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 sm:p-8 space-y-5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs uppercase tracking-widest text-brand-accent font-bold">Bản đồ thị trường trọng điểm</span>
+              <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full">Đang mở giỏ hàng</span>
+            </div>
+            <h3 class="text-xl font-bold">Tâm điểm dòng vốn đầu tư hiện tại</h3>
+            <p class="text-xs text-slate-300">Chọn khu vực để xem danh sách các dự án đã được xác thực pháp lý và tiềm năng khai thác dòng tiền.</p>
+
+            <div class="space-y-3 pt-2">
+              <a href="#projects" onclick="filterMarket('ALL')" class="flex items-center justify-between p-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 transition">
+                <div>
+                  <div class="font-bold text-white">&#9733; TP. Hồ Chí Minh (Trung tâm & Khu Đông)</div>
+                  <div class="text-xs text-slate-300">Thủ Thiêm, An Phú, Nam Rạch Chiếc, Phú Mỹ Hưng</div>
+                </div>
+                <span class="text-xs font-bold bg-brand-accent text-brand-dark px-3 py-1 rounded-full">15 dự án</span>
+              </a>
+              <a href="#projects" onclick="filterMarket('BD')" class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+                <div>
+                  <div class="font-bold text-white">Bình Dương / Cửa ngõ Bắc Sài Gòn</div>
+                  <div class="text-xs text-slate-300">Hành lang công nghiệp & chuyên gia quốc tế</div>
+                </div>
+                <span class="text-xs font-semibold bg-white/15 px-3 py-1 rounded-full">10 dự án</span>
+              </a>
+              <a href="#projects" class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+                <div>
+                  <div class="font-bold text-white">Hà Nội</div>
+                  <div class="text-xs text-slate-300">Thủ đô & Trung tâm hành chính - di sản</div>
+                </div>
+                <span class="text-xs font-semibold bg-white/15 px-3 py-1 rounded-full">4 dự án</span>
+              </a>
+              <a href="#projects" class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+                <div>
+                  <div class="font-bold text-white">Đà Nẵng</div>
+                  <div class="text-xs text-slate-300">Tâm điểm nghỉ dưỡng ven biển miền Trung</div>
+                </div>
+                <span class="text-xs font-semibold bg-white/15 px-3 py-1 rounded-full">3 dự án</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ONE-STOP OWNERSHIP (QUY TRÌNH 5 BƯỚC KHÉP KÍN) -->
+  <section id="process" class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-primary">Quy trình sở hữu & vận hành khép kín</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Bạn sở hữu tài sản. Chúng tôi vận hành toàn bộ.</h2>
+        <p class="text-slate-600 mt-3 leading-relaxed">
+          5 giai đoạn đồng hành xuyên suốt — từ bước hoạch định bài toán dòng tiền và pháp lý đầu tiên cho đến ngày bạn tất toán chốt lời. Bạn luôn nắm quyền kiểm soát hiệu suất mà không tốn thời gian xử lý sự vụ.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-5 gap-6 mt-12">
+        <!-- Step 1 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-brand-primary text-brand-accent font-bold flex items-center justify-center text-lg">1</div>
+            <h3 class="font-bold text-lg mt-4 text-slate-900">Tư vấn Chiến lược & Pháp lý</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Phân tích chi tiết pháp lý dự án, cấu trúc vốn, lịch thanh toán và bài toán dòng tiền phù hợp đúng mục tiêu tài chính của bạn trước khi xuống tiền.
+            </p>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-brand-primary text-brand-accent font-bold flex items-center justify-center text-lg">2</div>
+            <h3 class="font-bold text-lg mt-4 text-slate-900">Mua trực tiếp Chủ đầu tư</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Chọn căn vị trí đẹp trong giỏ hàng gốc, đàm phán chính sách chiết khấu tối ưu và hoàn tất thủ tục ký HĐMB nhanh gọn, chuẩn xác.
+            </p>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-brand-primary text-brand-accent font-bold flex items-center justify-center text-lg">3</div>
+            <h3 class="font-bold text-lg mt-4 text-slate-900">Khai thác Khách thuê</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Hoàn thiện hình ảnh, định giá thuê tối ưu và sàng lọc khách thuê chuyên gia/doanh nhân kỹ lưỡng để tài sản tạo dòng tiền ngay khi bàn giao.
+            </p>
+          </div>
+        </div>
+        <!-- Step 4 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-brand-primary text-brand-accent font-bold flex items-center justify-center text-lg">4</div>
+            <h3 class="font-bold text-lg mt-4 text-slate-900">Vận hành & Báo cáo định kỳ</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Thu tiền thuê, bảo trì căn hộ, xử lý hóa đơn và nghĩa vụ thuế. Mỗi tháng bạn chỉ nhận bảng báo cáo dòng tiền rõ ràng — không bận tâm việc vặt.
+            </p>
+          </div>
+        </div>
+        <!-- Step 5 -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-brand-primary text-brand-accent font-bold flex items-center justify-center text-lg">5</div>
+            <h3 class="font-bold text-lg mt-4 text-slate-900">Chuyển nhượng Chốt lời</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Định giá theo sát nhịp thị trường, tiếp cận tệp khách mua thực trong cộng đồng kín và xử lý trọn gói thủ tục sang tên khi bạn quyết định thoái vốn.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Callout Banner -->
+      <div class="mt-10 p-6 sm:p-8 rounded-2xl bg-brand-dark text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <h4 class="text-lg sm:text-xl font-bold text-brand-accent">Tài sản của bạn được vận hành 100% bởi đội ngũ chuyên trách.</h4>
+          <p class="text-sm text-slate-300 mt-1">Từ lúc mua nhà hình thành trong tương lai đến khi khai thác dòng tiền và chuyển nhượng — mọi khâu đều được báo cáo minh bạch hàng tháng.</p>
+        </div>
+        <a href="#booking" class="shrink-0 bg-brand-accent text-brand-dark font-bold px-6 py-3 rounded-lg hover:bg-yellow-500 transition text-sm">
+          Trao đổi với Chuyên gia tư vấn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. WHY BUYERS CHOOSE US (4 GIÁ TRỊ CỐT LÕI) -->
+  <section id="why-us" class="py-20 bg-slate-100 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-primary">Lợi thế khác biệt</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Hệ sinh thái tư vấn được thiết kế xoay quanh giá trị dài hạn của Nhà đầu tư</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div class="bg-white p-7 rounded-2xl shadow-sm border border-slate-200/70">
+          <div class="text-xs font-bold text-brand-primary bg-emerald-50 inline-block px-3 py-1 rounded-full">01</div>
+          <h3 class="text-lg font-bold mt-4">Hoạch định Dòng tiền Chuyên sâu</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+            Không chỉ giới thiệu dự án, chúng tôi xây dựng bảng tính dòng tiền, phương án đòn bẩy và điểm rơi lợi nhuận rõ ràng cho từng giai đoạn thanh toán.
+          </p>
+        </div>
+        <div class="bg-white p-7 rounded-2xl shadow-sm border border-slate-200/70">
+          <div class="text-xs font-bold text-brand-primary bg-emerald-50 inline-block px-3 py-1 rounded-full">02</div>
+          <h3 class="text-lg font-bold mt-4">Pháp lý & Hạn mức Minh bạch</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+            Chỉ chọn lọc các dự án từ Chủ đầu tư uy tín (Masterise Homes, Keppel Land, SonKim Land, Gamuda...) với lộ trình cấp sổ hồng và pháp lý rõ ràng.
+          </p>
+        </div>
+        <div class="bg-white p-7 rounded-2xl shadow-sm border border-slate-200/70">
+          <div class="text-xs font-bold text-brand-primary bg-emerald-50 inline-block px-3 py-1 rounded-full">03</div>
+          <h3 class="text-lg font-bold mt-4">Giỏ hàng Độc quyền & Giá gốc</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+            Tiếp cận trực tiếp quỹ căn đẹp nhất ngay từ giai đoạn mở bán đầu tiên (GĐ1) với mức giá gốc và chính sách ưu đãi cao nhất từ Chủ đầu tư.
+          </p>
+        </div>
+        <div class="bg-white p-7 rounded-2xl shadow-sm border border-slate-200/70">
+          <div class="text-xs font-bold text-brand-primary bg-emerald-50 inline-block px-3 py-1 rounded-full">04</div>
+          <h3 class="text-lg font-bold mt-4">Đồng hành Hậu mãi Trọn đời</h3>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+            Vận hành cho thuê tạo dòng thu nhập nhanh và hỗ trợ thanh khoản chuyển nhượng trong cộng đồng nhà đầu tư tinh hoa.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FEATURED PROJECTS (DANH MỤC DỰ ÁN NỔI BẬT) -->
+  <section id="projects" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-primary">Danh mục dự án tuyển chọn</span>
+        <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Giỏ hàng Bất động sản Trọng điểm</h2>
+        <p class="text-slate-600 mt-2">Đã thẩm định pháp lý, vị trí chiến lược và tiềm năng khai thác dòng tiền / tăng giá vốn.</p>
+      </div>
+
+      <!-- Market Filter Buttons -->
+      <div class="flex flex-wrap gap-2">
+        <button onclick="filterMarket('ALL')" class="filter-btn active-filter px-4 py-2 rounded-lg text-xs font-bold bg-brand-primary text-white transition">Tất cả (16)</button>
+        <button onclick="filterMarket('HCMC')" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">TP. Hồ Chí Minh — Khu Đông & Trung tâm</button>
+        <button onclick="filterMarket('BD')" class="filter-btn px-4 py-2 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700 hover:bg-slate-300 transition">Cửa ngõ Bắc Sài Gòn / Bình Dương</button>
+      </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <div id="project-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+
+      <!-- Card 1: The Global City -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-emerald-900 to-slate-900 p-5 flex flex-col justify-between text-white relative">
+            <div class="flex gap-2">
+              <span class="bg-brand-accent text-brand-dark text-xs font-bold px-2.5 py-1 rounded">Độc quyền</span>
+              <span class="bg-white/20 backdrop-blur text-white text-xs font-medium px-2.5 py-1 rounded">Khu Đông TP.HCM</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">An Phú, Quận 2 (TP. Thủ Đức) &bull; Thẩm định 2026</div>
+              <h3 class="text-xl font-bold mt-0.5">The Global City — Masterise Homes</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Đại đô thị phức hợp chuẩn quốc tế rộng 117,4 ha được quy hoạch bởi Foster + Partners. Tâm điểm trung tâm mới của TP.HCM với kênh đào nhạc nước, TTTM 123.000m² và các phân khu cao tầng CT4 Cosmo Central, CT5 Park Place, CT7 Lumiere Mid Town.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Pháp lý:</strong> HĐMB trực tiếp CĐT &bull; Sở hữu lâu dài (VN) / 50 năm (NN)</div>
+              <div><strong>Loại hình:</strong> Căn hộ hạng sang, Shophouse, Biệt thự, Dinh thự</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Quy mô đại đô thị</div>
+            <div class="font-bold text-brand-primary">117,4 ha &bull; Tâm điểm Khu Đông</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Nhận bảng tính dòng tiền &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 2: Masteri Lumiere Mid Town -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-slate-800 to-emerald-950 p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-brand-accent text-brand-dark text-xs font-bold px-2.5 py-1 rounded">Độc quyền</span>
+              <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded">Mới</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">The Global City, Quận 2, TP.HCM &bull; Thẩm định 2026</div>
+              <h3 class="text-xl font-bold mt-0.5">Masteri Lumiere Mid Town (CT7)</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Tháp đôi hạng sang cao cấp nhất thuộc dòng Lumiere của Masterise Homes ngay lõi trung tâm The Global City. Thiết kế kiến trúc xanh tinh tế, tầm nhìn trực diện công viên trung tâm và kênh đào.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Loại căn:</strong> 1–3 PN &bull; Diện tích ~50 – 140 m²</div>
+              <div><strong>Chiến lược:</strong> Dòng tiền cho thuê chuyên gia & tăng giá vốn theo hạ tầng</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Khoảng giá tham khảo</div>
+            <div class="font-bold text-brand-primary">6,8 Tỷ – 19 Tỷ VNĐ</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Xem chi tiết &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 3: Masteri Cosmo Central -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-emerald-950 to-slate-800 p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-brand-accent text-brand-dark text-xs font-bold px-2.5 py-1 rounded">Độc quyền</span>
+              <span class="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded">The Global City</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">Quận 2, TP.HCM &bull; Thẩm định 2026</div>
+              <h3 class="text-xl font-bold mt-0.5">Masteri Cosmo Central (CT4)</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Tổ hợp 4 tòa tháp biểu tượng của Masterise Homes bên trong đại đô thị The Global City. Thiết kế căn hộ 1–3 phòng ngủ tối ưu công năng cùng khối đế thương mại sôi động, kết nối trực tiếp công viên trung tâm.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Loại căn:</strong> 1–3 PN &bull; Diện tích 50 – 130 m²</div>
+              <div><strong>Pháp lý:</strong> HĐMB trực tiếp CĐT &bull; Thanh khoản chuyển nhượng cao</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Khoảng giá tham khảo</div>
+            <div class="font-bold text-brand-primary">6,0 Tỷ – 16 Tỷ VNĐ</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Xem chi tiết &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 4: The Prive -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-slate-900 to-brand-primary p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-brand-accent text-brand-dark text-xs font-bold px-2.5 py-1 rounded">Phiên bản giới hạn</span>
+              <span class="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded">Nam Rạch Chiếc</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">An Phú, TP. Thủ Đức, TP.HCM &bull; Thẩm định 2025–2026</div>
+              <h3 class="text-xl font-bold mt-0.5">The Prive</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Khu căn hộ hạng sang biệt lập ven sông với thiết kế tinh mỹ và khả năng kết nối trực tiếp đại lộ Mai Chí Thọ — nút giao An Phú. Không gian sống chuẩn resort dành cho giới tinh hoa.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Loại căn:</strong> 1–3 PN + Duplex &bull; Diện tích 60 – 130 m²</div>
+              <div><strong>Pháp lý:</strong> HĐMB trực tiếp CĐT &bull; Đủ điều kiện hạn mức NN</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Khoảng giá tham khảo</div>
+            <div class="font-bold text-brand-primary">6,9 Tỷ – 15 Tỷ VNĐ</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Xem chi tiết &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 5: Palm River -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-emerald-900 to-teal-950 p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded">Mới</span>
+              <span class="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded">Palm City</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">Bình Trưng, Khu Đông TP.HCM &bull; Thẩm định 2025–2026</div>
+              <h3 class="text-xl font-bold mt-0.5">Palm River — Palm City</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              4 tòa tháp ven sông cao 36 tầng nằm trong khu đô thị Palm City rộng 30 ha tại khu Đông TP.HCM. Mật độ chỉ 6 căn/sàn, 68 tiện ích đặc quyền, cách ga Metro Bình Trưng, trường quốc tế và bệnh viện quốc tế chỉ 1 phút.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Loại căn:</strong> Studio – 3 PN &bull; Diện tích 41,3 – 157 m²</div>
+              <div><strong>Số lượng:</strong> 620 căn hộ giới hạn + Shophouse & Officetel</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Khoảng giá tham khảo</div>
+            <div class="font-bold text-brand-primary">7,8 Tỷ – 30 Tỷ VNĐ</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Xem chi tiết &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 6: Gladia Heights -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-slate-800 to-brand-dark p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded">Mới</span>
+              <span class="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded">Keppel Land &times; Khang Điền</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">Võ Chí Công, Bình Trưng, TP. Thủ Đức &bull; Bàn giao Quý 4/2027</div>
+              <h3 class="text-xl font-bold mt-0.5">Gladia Heights (Gladia by the Waters)</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Phân khu cao tầng ven sông thuộc quần thể Gladia by the Waters do Keppel Land và Khang Điền hợp tác phát triển. 3 tòa tháp 15 tầng (639 căn hộ + 26 shophouse), chứng nhận xanh BCA Green Mark Gold, vận hành chuẩn Savills.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Loại căn:</strong> 1 – 4 PN &bull; Diện tích 53 – 144 m²</div>
+              <div><strong>Vận hành:</strong> Tiêu chuẩn Savills quốc tế &bull; Bàn giao Quý 4/2027</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Khoảng giá tham khảo</div>
+            <div class="font-bold text-brand-primary">4,8 Tỷ – 13 Tỷ VNĐ</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Xem chi tiết &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 7: The Metropolis Thu Thiem -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-amber-900 to-slate-900 p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-brand-accent text-brand-dark text-xs font-bold px-2.5 py-1 rounded">Pre-Launch</span>
+              <span class="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded">SonKim Land</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">Mai Chí Thọ, Thủ Thiêm, TP.HCM &bull; Thẩm định 2026</div>
+              <h3 class="text-xl font-bold mt-0.5">The Metropolis Thủ Thiêm</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Dự án TOD (đô thị gắn liền giao thông công cộng) biểu tượng mới của SonKim Land ngay mặt tiền đại lộ Mai Chí Thọ, liền kề ga cuối Metro Thủ Thiêm tương lai. Quỹ đất vàng hiếm hoi dành cho nhà đầu tư đón sóng giai đoạn 1.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Vị trí:</strong> Trục đại lộ Mai Chí Thọ — Thủ Thiêm</div>
+              <div><strong>Trạng thái:</strong> Nhận thông tin Booking ưu tiên Giai đoạn 1</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Giai đoạn</div>
+            <div class="font-bold text-brand-primary">Sắp ra mắt (Booking GĐ1)</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Nhận thông tin sớm &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 8: Imperia Sensa Park -->
+      <div data-market="HCMC" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-teal-900 to-slate-900 p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded">Mới</span>
+              <span class="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded">MIK Group</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">Phước Long, Khu Đông TP.HCM &bull; Thẩm định 2026</div>
+              <h3 class="text-xl font-bold mt-0.5">Imperia Sensa Park</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Dấu ấn dòng I-Series của MIK Group tại khu Đông TP.HCM — 2 tòa tháp 25 tầng (922 căn hộ) trên quỹ đất 5 ha với mật độ xây dựng chỉ 28%, hai mặt giáp sông Rạch Chiếc và kênh Một Tấn thoáng đãng.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Loại căn:</strong> Studio – 3 PN & Duplex &bull; 31,9 – 175,5 m²</div>
+              <div><strong>Ưu điểm:</strong> Mật độ xây dựng thấp 28%, địa thế 2 mặt sông</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Chủ đầu tư</div>
+            <div class="font-bold text-brand-primary">MIK Group &bull; Khu Đông</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Xem mặt bằng &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 9: Norton Park (Gamuda Land) -->
+      <div data-market="BD" class="project-card bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+        <div>
+          <div class="h-48 bg-gradient-to-br from-slate-800 to-emerald-900 p-5 flex flex-col justify-between text-white">
+            <div class="flex gap-2">
+              <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded">Gamuda Land</span>
+              <span class="bg-white/20 text-white text-xs font-medium px-2.5 py-1 rounded">Cửa ngõ Bắc Sài Gòn</span>
+            </div>
+            <div>
+              <div class="text-xs text-slate-300">Lái Thiêu, Quốc lộ 13 &bull; Thẩm định 2026</div>
+              <h3 class="text-xl font-bold mt-0.5">Norton Park — Gamuda Land</h3>
+            </div>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-slate-600 line-clamp-3">
+              Khu phức hợp 8 ha mặt tiền Quốc lộ 13 cạnh AEON Mall và đối diện Sân Golf Sông Bé, phát triển cùng Gamuda Land. Quy mô 10 tòa tháp kết nối bằng cầu trên không (Skybridge), tiềm năng khai thác cho thuê chuyên gia vượt trội.
+            </p>
+            <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-slate-700">
+              <div><strong>Loại căn:</strong> Studio – 3 PN, Penthouse &bull; 35 – 180 m²</div>
+              <div><strong>Giá dự kiến:</strong> Từ 66 triệu VNĐ/m²</div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500">Định hướng</div>
+            <div class="font-bold text-brand-primary">Dòng tiền cho thuê Chuyên gia</div>
+          </div>
+          <a href="#booking" class="text-xs font-bold text-brand-dark bg-brand-accent/30 hover:bg-brand-accent px-3.5 py-2 rounded-lg transition">Xem chi tiết &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 8. CONSULTATION BOOKING FORM & FOOTER -->
+  <section id="booking" class="py-20 bg-brand-dark text-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-6 space-y-4">
+          <span class="text-xs font-bold uppercase tracking-widest text-brand-accent">Tư vấn Cá nhân hóa 1:1</span>
+          <h2 class="text-3xl font-bold leading-tight">Nhận Bài toán Dòng tiền & Danh mục Đầu tư Thiết kế Riêng</h2>
+          <p class="text-slate-300 text-sm leading-relaxed">
+            Để lại thông tin hoặc kết nối trực tiếp qua Zalo. Chúng tôi sẽ gửi bảng phân tích chi tiết lịch thanh toán, bài toán đòn bẩy tài chính và tỷ suất lợi nhuận thực tế của các dự án phù hợp nhất với nguồn vốn của bạn.
+          </p>
+          <ul class="space-y-2.5 text-sm text-slate-200 pt-2">
+            <li>&#10003; Bảng tính dòng tiền chi tiết từng đợt thanh toán</li>
+            <li>&#10003; So sánh ưu/nhược điểm các dự án Khu Đông & Trung tâm TP.HCM</li>
+            <li>&#10003; Quyền truy cập Nhóm Zalo Chuyển nhượng & Cho thuê kín</li>
+          </ul>
+        </div>
+
+        <div class="lg:col-span-6">
+          <form onsubmit="event.preventDefault(); alert('Cảm ơn bạn! Chuyên gia tư vấn sẽ liên hệ qua Zalo/SĐT của bạn trong ít phút.');" class="bg-white text-slate-900 p-6 sm:p-8 rounded-2xl shadow-2xl space-y-4">
+            <h3 class="text-lg font-bold text-brand-dark">Đặt lịch trao đổi trực tiếp</h3>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Họ và tên Anh/Chị *</label>
+              <input type="text" required placeholder="Nhập họ và tên..." class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-brand-primary" />
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Số điện thoại / Zalo *</label>
+                <input type="tel" required placeholder="09xx xxx xxx" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-brand-primary" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Ngân sách đầu tư dự kiến</label>
+                <select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-brand-primary">
+                  <option>Từ 10 – 30 Tỷ VNĐ</option>
+                  <option selected>Từ 30 – 50 Tỷ VNĐ</option>
+                  <option>Từ 50 – 100+ Tỷ VNĐ</option>
+                  <option>Tìm hiểu dưới 10 Tỷ VNĐ</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Mục tiêu ưu tiên của Anh/Chị</label>
+              <select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-brand-primary">
+                <option>Đầu tư nhà hình thành trong tương lai (Tối ưu dòng tiền & Lãi vốn)</option>
+                <option>Tài sản tạo dòng tiền cho thuê ngay</option>
+                <option>Mua ở kết hợp tích sản dài hạn tại Khu Đông / Trung tâm</option>
+                <option>Ký gửi Chuyển nhượng / Cho thuê bất động sản</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full bg-brand-primary hover:bg-brand-dark text-brand-accent font-bold py-3.5 rounded-lg transition shadow-md text-sm">
+              Gửi yêu cầu & Nhận bảng phân tích qua Zalo
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-950 text-slate-400 text-xs py-10 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span class="text-white font-bold">VIETNAM PROPERTY MARKET</span> — Tư vấn Đầu tư Bất động sản & Chiến lược Dòng tiền.
+      </div>
+      <div class="flex gap-6">
+        <a href="#projects" class="hover:text-white">Dự án Khu Đông</a>
+        <a href="#process" class="hover:text-white">Quy trình 5 bước</a>
+        <a href="#booking" class="hover:text-white">Cộng đồng Zalo</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Filter Script -->
+  <script>
+    function filterMarket(market) {
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach(card => {
+        if (market === 'ALL' || card.getAttribute('data-market') === market) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
