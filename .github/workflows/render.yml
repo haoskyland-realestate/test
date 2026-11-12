@@ -18,9 +18,10 @@ jobs:
         with: { node-version: 22 }
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - name: Cài thư viện Manim
-        if: inputs.engine == 'manim'
-        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config && pip install manim
+      - name: Cài FFmpeg (và thư viện Manim nếu chọn Manim)
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          if [ "${{ inputs.engine }}" = manim ]; then sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config && pip install manim; fi
       - run: npm install --no-audit --no-fund
       - name: Tạo spec từ form
         env: { T: "${{ inputs.title }}", H: "${{ inputs.hook }}", B: "${{ inputs.bullets }}", P: "${{ inputs.platform }}", D: "${{ inputs.duration }}", E: "${{ inputs.engine }}" }
