@@ -6,3 +6,6 @@ renders/
 __pycache__/
 media/
 build/
+history/
+*.bak
+*.tmp

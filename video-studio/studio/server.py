@@ -2,7 +2,7 @@
 Chạy trong video-studio:  python3 studio/server.py          (chỉ máy này)
                            python3 studio/server.py --lan    (cho điện thoại cùng wifi)
 Mở đúng đường link in ra (có mã khóa ?t=...). Chỉ dùng Python có sẵn, không cài thêm."""
-import http.server, json, os, re, secrets, shutil, socket, subprocess, sys, urllib.parse
+import http.server, json, os, re, secrets, shutil, socket, subprocess, sys, time, urllib.parse
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
@@ -12,7 +12,8 @@ import effects  # noqa: E402
 PROJ = os.path.join(ROOT, "projects")
 TOKEN = os.environ.get("STUDIO_TOKEN") or secrets.token_urlsafe(9)
 SAFE = re.compile(r"^[\w-]+$")
-jobs = {}  # tên dự án -> tiến trình dựng
+jobs = {}  # tên dự án -> (tiến trình dựng, có phải nháp)
+proxies = {}  # đường dẫn bản xem trước -> tiến trình đang tạo
 
 
 def effects_json():
@@ -67,15 +68,30 @@ class H(http.server.BaseHTTPRequestHandler):
         if len(parts) == 3:
             tl = json.load(open(os.path.join(d, "timeline.json"), encoding="utf8"))
             return self.send(200, {"timeline": tl, "has_video": os.path.exists(os.path.join(ROOT, "out", name + ".mp4"))})
+        q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
         if parts[3] == "thumb" and len(parts) == 5:
             return self.thumb(d, parts[4])
         if parts[3] == "video":
-            return self.file(os.path.join(ROOT, "out", name + ".mp4"), "video/mp4")
+            nhap = ".nhap" if q.get("nhap") else ""
+            return self.file(os.path.join(ROOT, "out", name + nhap + ".mp4"), "video/mp4")
+        if parts[3] == "proxy" and len(parts) == 5:
+            return self.proxy(d, parts[4], bool(q.get("check")))
+        if parts[3] == "wave" and len(parts) == 5:
+            return self.wave(d, parts[4])
+        if parts[3] == "history":
+            hd = os.path.join(d, "history")
+            if len(parts) == 4:
+                return self.send(200, sorted((f[:-5] for f in os.listdir(hd) if f.endswith(".json")), reverse=True) if os.path.isdir(hd) else [])
+            if len(parts) == 5 and SAFE.match(parts[4]) and os.path.exists(f := os.path.join(hd, parts[4] + ".json")):
+                return self.send(200, json.load(open(f, encoding="utf8")))
+            return self.send(404, {"error": "Không có phiên bản này"})
         if parts[3] == "render":
-            j = jobs.get(name)
+            j, nh = jobs.get(name, (None, False))
             log = os.path.join(d, "build", "render.log")
             tail = open(log, encoding="utf8", errors="replace").read()[-1500:] if os.path.exists(log) else ""
-            return self.send(200, {"running": bool(j and j.poll() is None), "code": j and j.poll(), "log": tail})
+            return self.send(200, {"running": bool(j and j.poll() is None), "code": j and j.poll(), "draft": nh, "log": tail,
+                                   "has": {"nhap": os.path.exists(os.path.join(ROOT, "out", name + ".nhap.mp4")),
+                                           "xuat": os.path.exists(os.path.join(ROOT, "out", name + ".mp4"))}})
         self.send(404, {"error": "Không có"})
 
     def thumb(self, d, spec):
@@ -94,6 +110,50 @@ class H(http.server.BaseHTTPRequestHandler):
         if not os.path.exists(out):
             return self.send(500, {"error": "Không tạo được ảnh"})
         self.send(200, open(out, "rb").read(), "image/jpeg", {"Cache-Control": "max-age=3600"})
+
+    def raw(self, d, f):
+        if not f or "/" in f or "\\" in f or f.startswith("."):
+            return None
+        p = os.path.join(d, "build", "raw", f)
+        return p if os.path.exists(p) else None
+
+    def proxy(self, d, f, check):
+        # Bản xem trước nhẹ (540p H.264 + AAC) để trình duyệt phát được footage 4K/HEVC; tạo nền ở lần đầu.
+        raw = self.raw(d, f)
+        if not raw:
+            return self.send(404, {"error": "Chưa có footage " + f})
+        out = os.path.join(d, "build", "proxy", f + ".mp4")
+        p = proxies.get(out)
+        if p and p.poll() == 0 and os.path.exists(out + ".tmp.mp4"):
+            os.replace(out + ".tmp.mp4", out)  # tạo xong: đổi tên thì mới tính là có
+        running = bool(p and p.poll() is None)
+        failed = bool(p and p.poll() not in (None, 0))
+        ready = os.path.exists(out)
+        if not ready and not running and not failed:
+            os.makedirs(os.path.dirname(out), exist_ok=True)
+            proxies[out] = subprocess.Popen(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", raw, "-vf", "scale=-2:540",
+                                             "-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-c:a", "aac", "-b:a", "96k",
+                                             "-movflags", "+faststart", out + ".tmp.mp4"])
+        if check:
+            return self.send(200, {"ready": ready, "failed": failed})
+        if not ready:
+            return self.send(202, {"error": "Đang tạo bản xem trước"})
+        self.file(out, "video/mp4")
+
+    def wave(self, d, spec):
+        # Sóng âm của một đoạn: "<file>@<giây vào>@<độ dài>"
+        m = re.fullmatch(r"(.+)@(\d+(?:\.\d+)?)@(\d+(?:\.\d+)?)", spec)
+        raw = m and self.raw(d, m[1])
+        if not raw:
+            return self.send(404, {"error": "Chưa có footage"})
+        out = os.path.join(d, "build", "thumbs", f"wave-{spec}.png")
+        if not os.path.exists(out):
+            os.makedirs(os.path.dirname(out), exist_ok=True)
+            subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", m[2], "-t", m[3], "-i", raw, "-filter_complex",
+                            "aformat=channel_layouts=mono,showwavespic=s=800x60:colors=#9cc3ee", "-frames:v", "1", out], check=False)
+        if not os.path.exists(out):
+            return self.send(404, {"error": "Đoạn này không có tiếng"})
+        self.send(200, open(out, "rb").read(), "image/png", {"Cache-Control": "max-age=3600"})
 
     def file(self, path, ctype):
         # Hỗ trợ tải từng đoạn (Range) để video tua được trên iPhone/Safari
@@ -131,6 +191,10 @@ class H(http.server.BaseHTTPRequestHandler):
             return self.send(400, {"errors": errs})
         p = os.path.join(d, "timeline.json")
         shutil.copy(p, p + ".bak")  # giữ bản trước để khôi phục nếu lưu nhầm
+        hd = os.path.join(d, "history"); os.makedirs(hd, exist_ok=True)
+        shutil.copy(p, os.path.join(hd, time.strftime("%Y%m%d-%H%M%S") + ".json"))
+        for old in sorted(os.listdir(hd))[:-30]:  # giữ 30 phiên bản gần nhất
+            os.remove(os.path.join(hd, old))
         tmp = p + ".tmp"
         with open(tmp, "w", encoding="utf8") as fh:
             json.dump(tl, fh, ensure_ascii=False, indent=1)
@@ -144,12 +208,16 @@ class H(http.server.BaseHTTPRequestHandler):
         if len(parts) != 4 or parts[3] != "render" or not (d := self.project(parts[2])):
             return self.send(404, {"error": "Không có dự án này"})
         name = parts[2]
-        if jobs.get(name) and jobs[name].poll() is None:
+        if jobs.get(name) and jobs[name][0].poll() is None:
             return self.send(409, {"error": "Đang dựng, chờ xong đã"})
+        try:
+            draft = bool((self.body() or {}).get("draft"))
+        except Exception:
+            draft = False
         os.makedirs(os.path.join(d, "build"), exist_ok=True)
         log = open(os.path.join(d, "build", "render.log"), "w", encoding="utf8")
-        jobs[name] = subprocess.Popen([sys.executable, os.path.join(ROOT, "scripts", "dung.py"), d], cwd=ROOT,
-                                      stdout=log, stderr=subprocess.STDOUT)
+        jobs[name] = (subprocess.Popen([sys.executable, os.path.join(ROOT, "scripts", "dung.py"), d] + (["--nhap"] if draft else []),
+                                       cwd=ROOT, stdout=log, stderr=subprocess.STDOUT), draft)
         self.send(202, {"ok": True})
 
 

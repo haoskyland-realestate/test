@@ -5,85 +5,160 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hào Sky Land Studio</title>
 <style>
-  :root { --bg:#0e1116; --panel:#161b22; --line:#2a313c; --text:#e6e8eb; --dim:#8b949e; --accent:#d4a64a; --err:#f2766b; --ok:#5cc28a; }
+  :root { --bg:#0b0d10; --panel:#14171c; --card:#1b1f26; --line:#262b33; --text:#e9ebee; --dim:#8a919b; --lime:#e9f86b; --gold:#d4a64a; --err:#f2766b; --ok:#7bd88f;
+    --c-text:#9a8a2e; --c-sub:#2c3440; --c-card:#6b2140; --c-broll:#1f4f5a; --c-zoom:#24325a; }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif; }
-  button, select, input, textarea { font:inherit; color:var(--text); background:#0b0e12; border:1px solid var(--line); border-radius:6px; padding:6px 9px; }
-  button { cursor:pointer; background:#1f2630; } button:hover { border-color:var(--accent); }
-  button.main { background:var(--accent); color:#1a1408; border-color:var(--accent); font-weight:700; }
-  button:disabled { opacity:.5; cursor:default; }
-  #app { display:grid; grid-template-columns:minmax(260px,1fr) 340px; grid-template-rows:auto minmax(0,1fr) auto; grid-template-areas:"top top" "view insp" "tl tl"; height:100vh; }
-  header { grid-area:top; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 12px; border-bottom:1px solid var(--line); background:var(--panel); }
-  header h1 { font-size:15px; margin:0 8px 0 0; letter-spacing:1px; } header h1 i { color:var(--accent); font-style:normal; }
-  #msg { flex-basis:100%; font-size:13px; } #msg.err { color:var(--err); } #msg.ok { color:var(--ok); }
-  #view { grid-area:view; overflow:hidden; display:flex; flex-direction:column; align-items:center; gap:8px; padding:10px; min-height:0; }
-  #tabs button.on { border-color:var(--accent); color:var(--accent); }
-  #frame { position:relative; height:calc(100% - 46px); aspect-ratio:9/16; background:#000 center/cover no-repeat; border-radius:8px; overflow:hidden; }
-  #frame .ph { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--dim); padding:20px; }
-  #ov { position:absolute; left:7%; right:13%; bottom:23%; font-weight:700; text-shadow:0 2px 8px #000; }
-  #ov .tag { display:inline-block; font-size:10px; border:1px solid var(--accent); border-radius:20px; padding:2px 8px; margin-bottom:6px; }
-  #ov .l { font-size:clamp(12px,2.2vh,22px); line-height:1.2; } #ov .hl { color:var(--hl,#f2c766); }
-  #ov .num { font-size:clamp(28px,6vh,60px); line-height:.9; color:transparent; -webkit-text-stroke:1px var(--hl,#f2c766); }
-  #video { height:calc(100% - 46px); aspect-ratio:9/16; background:#000; border-radius:8px; }
-  #insp { grid-area:insp; overflow:auto; border-left:1px solid var(--line); background:var(--panel); padding:12px; }
-  #insp h2 { font-size:14px; margin:0 0 10px; color:var(--accent); }
-  #insp label { display:block; margin:8px 0 3px; color:var(--dim); font-size:12px; }
-  #insp input, #insp select, #insp textarea { width:100%; } #insp textarea { min-height:70px; }
-  .row { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
-  .hint { color:var(--dim); font-size:12px; margin-top:4px; }
-  #tl { grid-area:tl; border-top:1px solid var(--line); background:var(--panel); padding:8px 12px 12px; }
-  #tlbar { display:flex; gap:8px; align-items:center; margin-bottom:6px; color:var(--dim); font-size:12px; }
-  #scroll { overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  button, select, input, textarea { font:inherit; color:var(--text); background:#0f1216; border:1px solid var(--line); border-radius:10px; padding:7px 11px; }
+  button { cursor:pointer; background:var(--card); border-color:transparent; }
+  button:hover { border-color:#3a414c; } button:disabled { opacity:.45; cursor:default; }
+  button.lime { background:var(--lime); color:#111; font-weight:700; }
+  button.ghost { background:transparent; }
+  .dim { color:var(--dim); } .err { color:var(--err); } .ok { color:var(--ok); }
+  #app { display:grid; height:100vh; grid-template-rows:auto auto minmax(0,1fr) auto; }
+  header { display:flex; align-items:center; gap:10px; padding:10px 16px 4px; flex-wrap:wrap; }
+  #title { flex:1; min-width:240px; }
+  #title select { font-size:20px; font-weight:800; background:transparent; border:0; padding:0 4px 0 0; }
+  #title .dot { display:inline-block; width:10px; height:10px; border-radius:3px; background:var(--lime); margin-right:8px; }
+  #stat { font-size:12px; } #stat b { color:var(--lime); font-weight:600; }
+  .grp { display:flex; gap:4px; background:var(--panel); border-radius:12px; padding:4px; }
+  .grp button { padding:6px 9px; background:transparent; }
+  #tabs { display:flex; gap:6px; padding:6px 16px 10px; overflow-x:auto; border-bottom:1px solid var(--line); }
+  #tabs button { background:transparent; white-space:nowrap; font-size:15px; }
+  #tabs button .n { display:inline-block; min-width:20px; margin-left:6px; padding:0 6px; border-radius:7px; background:#262b33; font-size:11px; }
+  #tabs button.on { background:var(--panel); color:var(--lime); } #tabs button.on .n { background:var(--lime); color:#111; }
+  main { display:grid; grid-template-columns:minmax(300px,1fr) minmax(320px,1.6fr) minmax(280px,1fr); gap:12px; padding:12px 16px; min-height:0; }
+  main.noL { grid-template-columns:0 minmax(320px,2fr) minmax(280px,1fr); } main.noL #left { display:none; }
+  main.noR { grid-template-columns:minmax(300px,1fr) minmax(320px,2fr) 0; } main.noR #right { display:none; }
+  main.noL.noR { grid-template-columns:0 1fr 0; }
+  .box { background:var(--panel); border-radius:16px; padding:14px; min-height:0; overflow:auto; }
+  #left { display:flex; flex-direction:column; align-items:center; gap:10px; }
+  #stage { position:relative; height:100%; max-height:calc(100% - 50px); aspect-ratio:9/16; background:#000; border-radius:12px; overflow:hidden; flex:1; }
+  #stage video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform-origin:center; }
+  #pb { display:none; } #out { display:none; object-fit:contain !important; }
+  #ovl { position:absolute; inset:0; pointer-events:none; container-type:size; }
+  #ovl .blk { position:absolute; left:6.7%; right:13%; bottom:23%; font-weight:700; text-shadow:0 2px 8px #000; }
+  #ovl .l { font-size:3.2cqh; line-height:1.15; } #ovl .big { font-size:4.4cqh; } #ovl .hl { color:#f2c766; }
+  #ovl .tag { display:inline-block; font-size:1.5cqh; border:1px solid var(--gold); color:#f2c766; border-radius:2cqh; padding:.3cqh 1cqh; margin-bottom:1cqh; }
+  #ovl .num { font-size:9cqh; line-height:.9; color:transparent; -webkit-text-stroke:1px #f2c766; }
+  #ovl .sub { position:absolute; left:8%; right:8%; top:61.5%; text-align:center; } #ovl .sub > span { display:inline-block; background:#0008; border-radius:1cqh; padding:.3cqh 1cqh; font-weight:800; font-size:2.8cqh; }
+  #ovl .card { position:absolute; inset:0; background:#0b1b2b; display:flex; flex-direction:column; justify-content:flex-start; padding:17.7% 12% 0; }
+  #ovl .card .cs { text-align:center; font-size:1.6cqh; letter-spacing:.4cqh; color:#f2c766; text-transform:uppercase; }
+  #ovl .card .ct { text-align:center; font-size:4.8cqh; font-weight:800; color:#f2c766; text-transform:uppercase; margin:.5cqh 0 2.5cqh; line-height:1.05; }
+  #ovl .card .ci { background:#ffffff10; border-radius:1cqh; padding:1.1cqh 1.4cqh; margin-top:1cqh; font-size:2.3cqh; }
+  #ovl .safe { position:absolute; border:1px dashed #ff5a5acc; background:#ff5a5a14; }
+  #msgStage { position:absolute; left:0; right:0; top:45%; text-align:center; color:var(--dim); padding:0 10px; }
+  #ctrl { display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center; }
+  #ctrl .time { font-variant-numeric:tabular-nums; color:var(--dim); }
+  #mid { display:flex; flex-direction:column; gap:10px; }
+  #midTop { display:flex; gap:8px; align-items:center; } #midTop .desc { flex:1; color:var(--dim); }
+  #list { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:10px; }
+  .it { background:var(--card); border-radius:12px; padding:10px; cursor:pointer; border:1px solid transparent; }
+  .it.sel { border-color:var(--lime); } .it .h { font-weight:700; } .it .m { color:var(--dim); font-size:12px; }
+  #right h3 { margin:0 0 4px; font-size:18px; text-transform:uppercase; letter-spacing:.5px; }
+  #right label { display:block; margin:10px 0 4px; color:var(--dim); font-size:12px; }
+  #right input, #right select, #right textarea { width:100%; } #right textarea { min-height:80px; }
+  .note { background:var(--card); border-radius:12px; padding:12px; margin-top:12px; font-size:13px; color:#cfd3d8; }
+  .note b { color:var(--lime); font-size:11px; letter-spacing:1px; }
+  .row { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+  #tl { border-top:1px solid var(--line); background:var(--panel); }
+  #tlbar { display:flex; align-items:center; gap:10px; padding:8px 16px; }
+  #tlbar .tc { flex:1; text-align:center; font-variant-numeric:tabular-nums; }
+  #tlwrap { display:grid; grid-template-columns:110px 1fr; max-height:38vh; overflow:auto; }
+  #labels div { height:34px; display:flex; align-items:center; gap:6px; padding-left:16px; color:var(--dim); font-size:13px; }
+  #labels .rl { height:24px; } #labels .vid { height:52px; } #labels .on { color:var(--lime); }
+  #scroll { overflow-x:auto; position:relative; }
   #track { position:relative; }
-  .ruler { position:relative; height:18px; border-bottom:1px solid var(--line); }
-  .ruler span { position:absolute; top:0; font-size:10px; color:var(--dim); border-left:1px solid var(--line); padding-left:3px; height:18px; }
-  .lane { position:relative; height:64px; margin-top:6px; }
-  .lane.t { height:30px; }
-  .blk { position:absolute; top:0; bottom:0; border-radius:6px; border:2px solid transparent; overflow:hidden; cursor:pointer; background:#26303c center/cover no-repeat; font-size:11px; padding:3px 5px; text-shadow:0 1px 3px #000; white-space:nowrap; }
-  .blk.clip { box-shadow:inset 0 -22px 20px -10px #000c; }
-  .blk.tr { top:16px; bottom:16px; background:#3a2f17; color:#f2d08a; text-align:center; z-index:2; padding:6px 2px; min-width:22px; }
-  .blk.tx { background:#24384d; }
-  .blk.sel { border-color:var(--accent); }
-  .err-list { color:var(--err); margin:6px 0 0; padding-left:18px; }
-  @media (max-width:800px) {
-    #app { grid-template-columns:1fr; grid-template-rows:auto auto auto auto; grid-template-areas:"top" "view" "tl" "insp"; height:auto; }
-    #frame, #video { height:46vh; }
-    #insp { border-left:0; border-top:1px solid var(--line); }
+  .ruler { position:relative; height:24px; cursor:pointer; border-bottom:1px solid var(--line); }
+  .ruler span { position:absolute; top:4px; font-size:11px; color:var(--dim); transform:translateX(-50%); }
+  .ruler i { position:absolute; bottom:0; width:1px; height:5px; background:#3a414c; }
+  .ln { position:relative; height:34px; } .ln.vid { height:52px; }
+  .x { position:absolute; top:4px; bottom:4px; border-radius:8px; padding:0 8px; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:grab; display:flex; align-items:center; border:1.5px solid transparent; touch-action:none; user-select:none; }
+  .x.sel { border-color:var(--lime); } .x .rz { position:absolute; right:0; top:0; bottom:0; width:8px; cursor:ew-resize; }
+  .x.text { background:var(--c-text); color:#fff7c8; } .x.sub { background:var(--c-sub); } .x.card { background:var(--c-card); } .x.broll { background:var(--c-broll); } .x.zoom { background:var(--c-zoom); }
+  .x.clip { background:#202833 repeat-x left center/auto 100%; align-items:flex-start; padding-top:3px; text-shadow:0 1px 3px #000; cursor:pointer; }
+  .x.clip .d { position:absolute; right:6px; bottom:4px; background:#000a; border-radius:5px; padding:0 5px; font-size:11px; }
+  .x.tr { top:14px; bottom:14px; width:22px !important; padding:0; justify-content:center; background:#3a2f17; color:#f2d08a; z-index:2; cursor:pointer; }
+  .x.wave { background:#141b24 no-repeat center/100% 100%; cursor:default; }
+  #ph { position:absolute; top:0; bottom:0; width:2px; background:#fff; z-index:5; pointer-events:none; }
+  #ph::before { content:""; position:absolute; top:0; left:-7px; width:16px; height:18px; border-radius:4px; background:#fff; }
+  dialog { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:16px; max-width:720px; width:92vw; }
+  dialog::backdrop { background:#000a; }
+  @media (max-width:900px) {
+    #app { height:auto; } main, main.noL, main.noR { grid-template-columns:1fr; }
+    #stage { height:56vh; max-height:none; flex:none; } #tlwrap { max-height:none; }
   }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <h1>HÀO SKY LAND <i>STUDIO</i></h1>
-    <select id="proj" aria-label="Dự án"></select>
-    <select id="style" aria-label="Phong cách"></select>
-    <button id="undo" title="Hoàn tác (Ctrl+Z)">↶ Hoàn tác</button>
-    <button id="save">Lưu</button>
-    <button id="render" class="main">Dựng video</button>
-    <span id="total" class="hint"></span>
-    <div id="msg" role="status"></div>
+    <div id="title"><span class="dot"></span><select id="proj" aria-label="Dự án"></select><div id="stat" class="dim"></div></div>
+    <div class="grp" aria-label="Bố cục">
+      <button id="lyL" title="Ẩn/hiện khung xem">◧</button><button id="lyR" title="Ẩn/hiện khung chỉnh">◨</button>
+      <button id="lyT" title="Ẩn/hiện timeline">⬓</button><button id="lyF" title="Toàn màn hình">⛶</button>
+    </div>
+    <button class="ghost" id="undo" title="Hoàn tác (Ctrl+Z)">↶</button><button class="ghost" id="redo" title="Làm lại (Ctrl+Shift+Z)">↷</button>
+    <button id="btnLib">▦ Thư viện</button><button class="ghost" id="btnHist">Lịch sử</button><button class="ghost" id="btnAI">Nhờ AI sửa</button>
+    <button class="ghost" id="save">Lưu</button><button id="draft">Dựng nháp</button><button class="lime" id="export">Xuất video</button>
   </header>
-  <section id="view">
-    <div id="tabs" class="row" style="margin:0"><button id="tabEdit" class="on">Xem nháp</button><button id="tabVid">Bản đã dựng</button></div>
-    <div id="frame"><div class="ph">Chọn một cảnh hoặc khối chữ</div><div id="ov"></div></div>
-    <video id="video" controls playsinline hidden></video>
-  </section>
-  <aside id="insp"><h2>Chỉnh sửa</h2><div class="hint">Bấm vào cảnh, chuyển cảnh hoặc khối chữ trên timeline.</div></aside>
+  <nav id="tabs" aria-label="Nhóm chỉnh sửa"></nav>
+  <main id="main">
+    <section class="box" id="left">
+      <div id="stage">
+        <video id="pv" playsinline preload="auto"></video><video id="pb" playsinline muted preload="auto"></video><video id="out" controls playsinline></video>
+        <div id="ovl"></div><div id="msgStage"></div>
+      </div>
+      <div id="ctrl">
+        <button class="ghost" id="back">−1s</button><button class="lime" id="play">Phát</button><button class="ghost" id="fwd">+1s</button>
+        <span class="time" id="ptime">0:00.0 / 0:00.0</span>
+        <label class="dim"><input type="checkbox" id="safe" checked> Vùng an toàn</label>
+        <select id="viewSel" aria-label="Xem"><option value="edit">Xem trước</option><option value="nhap">Bản nháp</option><option value="xuat">Bản xuất</option></select>
+      </div>
+    </section>
+    <section class="box" id="mid">
+      <div id="midTop"><span class="desc" id="desc"></span><input id="search" placeholder="Tìm…" style="max-width:200px"><button id="add">Thêm</button></div>
+      <div id="list"></div>
+    </section>
+    <aside class="box" id="right"></aside>
+  </main>
   <section id="tl">
-    <div id="tlbar">Thu phóng <input id="zoom" type="range" min="8" max="80" value="24" aria-label="Thu phóng timeline">
-      <button id="addText">+ Chữ</button><span>Cảnh · chuyển cảnh · chữ. Kéo ngang để xem hết.</span></div>
-    <div id="scroll"><div id="track"></div></div>
+    <div id="tlbar">
+      <button class="ghost" id="split" title="Tách tại kim chạy (S)">✂ Tách</button><button class="ghost" id="del" title="Xóa (Delete)">🗑 Xóa</button>
+      <div class="tc" id="tc"></div>
+      <button class="ghost" id="zout">−</button><input id="zoom" type="range" min="10" max="200" value="45" aria-label="Thu phóng"><button class="ghost" id="zin">+</button>
+      <button class="ghost" id="fit">Vừa khung</button>
+    </div>
+    <div id="tlwrap"><div id="labels"></div><div id="scroll"><div id="track"></div></div></div>
   </section>
 </div>
+<dialog id="dlg"><div id="dlgBody"></div><div class="row" style="justify-content:flex-end"><button onclick="dlg.close()">Đóng</button></div></dialog>
 <script>
 const T = new URLSearchParams(location.search).get("t") || "";
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let FX, name, tl, sel = null, hist = [], uid = 0, poll;
-const ARR = ["lines", "items"], OPT = {outro:["note"], lower:["sub"], quote:["by"], checklist:["title"], stat:["prefix","suffix","decimals"]};
-const LBL = {file:"Tên file", tag:"Thẻ nhãn", num:"Số mục", title:"Tiêu đề", sub:"Dòng phụ", by:"Người nói", note:"Ghi chú nhỏ", text:"Nội dung", value:"Giá trị số",
-  label:"Nhãn dưới số", prefix:"Chữ trước số", suffix:"Chữ sau số", decimals:"Số chữ số thập phân", lines:"Các dòng (mỗi dòng một hàng, *từ* để tô màu)", items:"Các mục (mỗi mục một hàng)"};
+const hl = s => esc(s).replace(/\*([^*]+)\*/g, '<span class="hl">$1</span>');
+const fmt = t => { t = Math.max(0, t); return `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, "0")}`; };
+const FPS = 30, TIMED = ["texts", "subtitles", "cards", "zooms", "broll"];
+let FX, name, tl, sel = null, undoS = [], redoS = [], uid = 0, dirty = false, now = 0, playing = false, last = 0, tab = "texts", poll;
+
+// Tab: khóa dữ liệu, tên, mô tả
+const TABS = [
+  ["texts", "Chữ", "Khối chữ động: mở đầu, mục số, câu lớn, số liệu, danh sách…"],
+  ["subtitles", "Phụ đề", "Phụ đề theo lời nói. Có thể dán nội dung file SRT."],
+  ["clips", "Cắt", "Các đoạn video chính, theo thứ tự. Tách, đổi chỗ, chỉnh đoạn cắt."],
+  ["zooms", "Zoom", "Phóng to khung trong một đoạn để nhấn ý (7% = 1.07)."],
+  ["cards", "Minh hoạ", "Cảnh nền đen diễn giải ý đang nói — mỗi cảnh một ý."],
+  ["broll", "Cảnh trám", "Phủ cảnh khác lên video chính, vẫn giữ tiếng nói."],
+  ["audio", "Âm thanh", "Giọng gốc, nhạc nền, tiếng chuyển cảnh."],
+  ["frame", "Khung hình", "Tỉ lệ khung và vùng an toàn của TikTok."],
+  ["brand", "Thương hiệu", "Phong cách: màu, chữ, nhịp chuyển động."],
+];
+const LANES = [["texts", "T  Chữ"], ["subtitles", "▭  Phụ đề"], ["cards", "▣  Minh hoạ"], ["broll", "▤  Cảnh trám"], ["zooms", "⌕  Zoom"], ["clips", "▶  Video"], ["voice", "∿  Giọng nói"]];
+const ARR = ["lines", "items"], OPT = {outro: ["note"], lower: ["sub"], quote: ["by"], checklist: ["title"], stat: ["prefix", "suffix", "decimals"]};
+const LBL = {file: "Tên file", id: "ID Google Drive", tag: "Thẻ nhãn", num: "Số mục", title: "Tiêu đề", sub: "Dòng phụ", by: "Người nói", note: "Ghi chú nhỏ", text: "Nội dung",
+  value: "Giá trị số", label: "Nhãn dưới số", prefix: "Chữ trước số", suffix: "Chữ sau số", decimals: "Số chữ số thập phân", step: "Nhãn bước (vd: Bước 2)",
+  lines: "Các dòng (mỗi dòng một hàng, *từ* để tô màu)", items: "Các mục (mỗi mục một hàng)", in: "Bắt đầu từ giây (trong file gốc)", start: "Bắt đầu (giây trên video)", dur: "Độ dài (giây)", scale: "Mức phóng (1.07 = 7%)"};
 
 async function api(path, opt = {}) {
   const r = await fetch("/api/" + path, {...opt, headers: {"X-Token": T, "Content-Type": "application/json"}});
@@ -91,10 +166,12 @@ async function api(path, opt = {}) {
   if (!r.ok) throw Object.assign(new Error(j.error || (j.errors || []).join("; ") || r.status), {data: j});
   return j;
 }
-function say(t, cls = "") { const m = $("#msg"); m.className = cls; m.innerHTML = t; }
+const P = () => `p/${encodeURIComponent(name)}`;
+const media = (kind, spec) => `/api/${P()}/${kind}/${encodeURIComponent(spec)}?t=${T}`;
+let toastT; function toast(t, cls = "") { $("#stat").innerHTML = `<span class="${cls}">${t}</span>`; clearTimeout(toastT); toastT = setTimeout(stat, 4000); }
 
-// Cùng công thức với scripts/timeline.py: cắt thẳng 0s, chuyển cảnh khác cộng thêm độ dài.
-function layout(t) {
+// Cùng công thức với scripts/timeline.py
+function layout(t = tl) {
   const starts = [], trs = []; let x = 0;
   t.clips.forEach((c, i) => {
     starts.push(x); x += +c.dur;
@@ -104,182 +181,392 @@ function layout(t) {
 }
 const clean = t => JSON.parse(JSON.stringify(t, (k, v) => k.startsWith("_") ? undefined : v));
 
-// Mọi thay đổi đi qua đây: lưu để hoàn tác, và giữ chữ bám theo cảnh của nó khi cảnh dài/ngắn hay đổi chỗ.
+// Mọi thay đổi đi qua đây: lưu để hoàn tác, giữ các mục theo thời gian bám theo đoạn video khi đoạn đổi độ dài/thứ tự.
 function mutate(fn) {
-  hist.push(JSON.stringify(tl)); if (hist.length > 100) hist.shift();
-  const L0 = layout(tl);
-  for (const x of tl.texts) {
-    let k = 0; L0.starts.forEach((s, i) => { if (x.start >= s - 1e-6) k = i; });
-    x._a = {id: tl.clips[k]._id, off: x.start - L0.starts[k]};
+  undoS.push(JSON.stringify(tl)); if (undoS.length > 150) undoS.shift(); redoS = [];
+  const L0 = layout();
+  for (const k of TIMED) for (const x of tl[k] || []) {
+    let c = 0; L0.starts.forEach((s, i) => { if (x.start >= s - 1e-6) c = i; });
+    x._a = {id: tl.clips[c]._id, off: x.start - L0.starts[c], s0: x.start};
   }
   fn();
-  const L1 = layout(tl);
-  for (const x of tl.texts) {
-    const k = tl.clips.findIndex(c => c._id === x._a.id);
-    let s = k >= 0 ? L1.starts[k] + x._a.off : x.start;
-    s = Math.max(0, Math.min(s, L1.total - 0.5));
-    x.start = +s.toFixed(2); x.dur = +Math.min(x.dur, L1.total - x.start).toFixed(2);
+  const L1 = layout();
+  for (const k of TIMED) for (const x of tl[k] || []) {
+    // mục vừa được dời tay (kéo, gõ giờ) giữ vị trí mới; mục khác bám theo đoạn video của nó
+    if (x._a && x.start === x._a.s0) { const c = tl.clips.findIndex(c => c._id === x._a.id); if (c >= 0) x.start = L1.starts[c] + x._a.off; }
     delete x._a;
+    x.start = +Math.max(0, Math.min(x.start, L1.total - 0.2)).toFixed(2);
+    x.dur = +Math.max(0.2, Math.min(x.dur, L1.total - x.start)).toFixed(2);
   }
-  draw();
+  dirty = true; now = Math.min(now, L1.total); draw();
+}
+function setRaw(s) { tl = JSON.parse(s); tl.clips.forEach(c => c._id ??= ++uid); sel = null; dirty = true; draw(); }
+function undo() { if (!undoS.length) return toast("Không còn gì để hoàn tác"); redoS.push(JSON.stringify(tl)); setRaw(undoS.pop()); }
+function redo() { if (!redoS.length) return toast("Không còn gì để làm lại"); undoS.push(JSON.stringify(tl)); setRaw(redoS.pop()); }
+
+function stat() {
+  const L = layout(), c = k => (tl[k] || []).length;
+  $("#stat").innerHTML = `<b>Dự án</b> · ${fmt(L.total)} · ${c("clips")} đoạn cắt · ${c("texts")} khối chữ · ${c("subtitles")} phụ đề · ${c("cards")} minh hoạ · ${c("broll")} cảnh trám · `
+    + (dirty ? `<b>Chưa lưu</b>` : `<span class="ok">Đã lưu</span>`) + ` · ${esc(FX.styles[tl.meta.style || "hien-dai"].split(":")[0])}`;
 }
 
-function draw() {
-  const L = layout(tl), pps = +$("#zoom").value, W = Math.ceil(L.total * pps) + 40;
-  $("#total").textContent = `${L.total.toFixed(1)} giây · ${tl.clips.length} cảnh · ${tl.texts.length} khối chữ`;
-  let h = `<div class="ruler" style="width:${W}px">`;
-  for (let s = 0; s <= L.total; s += 5) h += `<span style="left:${s * pps}px">${s}s</span>`;
-  h += `</div><div class="lane" style="width:${W}px">`;
-  tl.clips.forEach((c, i) => {
-    const on = sel && sel.t === "clip" && sel.i === i;
-    h += `<div class="blk clip${on ? " sel" : ""}" data-t="clip" data-i="${i}" style="left:${L.starts[i] * pps}px;width:${c.dur * pps}px;background-image:url('${thumb(c)}')">${i + 1}. ${esc(c.file)}</div>`;
-  });
-  L.trs.forEach(([x, d], i) => {
-    const on = sel && sel.t === "tr" && sel.i === i, ty = tl.transitions[i].type;
-    h += `<div class="blk tr${on ? " sel" : ""}" data-t="tr" data-i="${i}" title="${esc(FX.transitions[ty].vi)}" style="left:${x * pps - (d ? 0 : 11)}px;width:${Math.max(d * pps, 22)}px">${ty === "cut" ? "|" : "◆"}</div>`;
-  });
+function draw() { stat(); drawTabs(); drawList(); inspector(); drawTimeline(); renderFrame(); }
+function drawTabs() {
+  $("#tabs").innerHTML = TABS.map(([k, n]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${n}${Array.isArray(tl[k]) ? `<span class="n">${tl[k].length}</span>` : ""}</button>`).join("");
+  $("#desc").textContent = TABS.find(x => x[0] === tab)[2];
+  const listy = Array.isArray(tl[tab]);
+  $("#add").hidden = !listy || tab === "clips"; $("#search").hidden = !listy;
+}
+function itemLabel(k, x) {
+  if (k === "texts") return x.title || x.text || (x.lines || x.items || [""])[0] || x.label || x.kind;
+  if (k === "subtitles") return x.text; if (k === "cards") return x.title; if (k === "zooms") return `Zoom ${Math.round((x.scale - 1) * 100)}%`;
+  return x.file || "";
+}
+function drawList() {
+  const box = $("#list");
+  if (!Array.isArray(tl[tab])) return box.innerHTML = settings();
+  const q = $("#search").value.toLowerCase(), L = layout();
+  box.innerHTML = tl[tab].map((x, i) => {
+    const lab = String(itemLabel(tab, x)).replace(/\*/g, "");
+    if (q && !lab.toLowerCase().includes(q)) return "";
+    const t0 = tab === "clips" ? L.starts[i] : x.start;
+    const pic = tab === "clips" || tab === "broll" ? `<div style="height:90px;border-radius:8px;margin-bottom:8px;background:#222 center/cover url('${media("thumb", x.file + "@" + (+x.in + 0.3).toFixed(1))}')"></div>` : "";
+    return `<div class="it${sel && sel.k === tab && sel.i === i ? " sel" : ""}" data-k="${tab}" data-i="${i}">${pic}<div class="h">${i + 1}. ${esc(lab)}</div><div class="m">${fmt(t0)} · ${(+x.dur).toFixed(1)}s${x.kind ? " · " + x.kind : ""}</div></div>`;
+  }).join("") + (tab === "subtitles" ? `<div style="grid-column:1/-1"><details><summary class="dim">Dán nội dung file SRT</summary><textarea id="srt" style="width:100%;min-height:100px;margin-top:8px" placeholder="1&#10;00:00:00,500 --> 00:00:02,000&#10;Câu phụ đề"></textarea><div class="row"><button id="srtGo">Thêm phụ đề từ SRT</button></div></details></div>` : "")
+    || `<div class="dim">Chưa có mục nào. Bấm “Thêm”.</div>`;
+}
+function settings() {
+  const a = tl.audio || {};
+  if (tab === "audio") return `<div style="grid-column:1/-1">
+    <label><input type="checkbox" data-set="voice" ${a.voice ? "checked" : ""}> Giữ giọng gốc của các đoạn video (video nói trước máy)</label><br><br>
+    <label>Nhạc nền <select data-set="music"><option value="synth" ${a.music !== null ? "selected" : ""}>Nhạc tổng hợp (tạm, không bản quyền)</option><option value="none" ${a.music === null ? "selected" : ""}>Không nhạc</option></select></label><br><br>
+    <label>Âm lượng nhạc: <b>${(a.music_volume ?? 1).toFixed(2)}</b> <input type="range" min="0" max="2" step="0.05" value="${a.music_volume ?? 1}" data-set="music_volume"></label><br><br>
+    <label><input type="checkbox" data-set="whoosh" ${a.whoosh !== false ? "checked" : ""}> Tiếng “vút” ở chuyển cảnh</label>
+    <p class="dim">Khi giữ giọng gốc, nhạc tự nhỏ lại còn 1/4. Thư viện âm thanh thật (nhạc, tiếng hiệu ứng): chờ thư mục của Hào.</p></div>`;
+  if (tab === "frame") return `<div style="grid-column:1/-1"><p>Khung: <b>TikTok 9:16 (1080×1920)</b>. YouTube 16:9 chưa hỗ trợ.</p>
+    <p class="dim">Vùng an toàn (khung đỏ trong khung xem, bật/tắt dưới khung xem): 220px trên, 420px dưới, 140px phải — nơi giao diện TikTok che chữ.</p></div>`;
+  if (tab === "brand") return `<div style="grid-column:1/-1">` + Object.entries(FX.styles).map(([k, v]) =>
+    `<div class="it${(tl.meta.style || "hien-dai") === k ? " sel" : ""}" data-style="${k}" style="margin-bottom:8px"><div class="h">${k}</div><div class="m">${esc(v)}</div></div>`).join("")
+    + `<p class="dim">Logo và màu thật của Hào Sky Land: chờ Hào gửi.</p></div>`;
+  return "";
+}
+
+const opts = (o, v, blank) => (blank ? `<option value="">${blank}</option>` : "") + Object.entries(o).map(([k, d]) => `<option value="${k}"${k === v ? " selected" : ""}>${k} — ${esc(d.vi || d)}</option>`).join("");
+function fld(key, val, type = "text") {
+  if (ARR.includes(key)) return `<label>${LBL[key]}</label><textarea data-f="${key}">${esc((val || []).join("\n"))}</textarea>`;
+  if (key === "text") return `<label>${LBL[key]}</label><textarea data-f="${key}" style="min-height:60px">${esc(val)}</textarea>`;
+  return `<label>${LBL[key] || key}</label><input data-f="${key}" type="${type}" step="0.01" value="${esc(val ?? "")}">`;
+}
+const SHORT = `<div class="note"><b>PHÍM TẮT</b><br>Space phát/dừng · ←/→ từng khung · Shift+←/→ 1 giây · S tách · Ctrl+Z hoàn tác · Ctrl+Shift+Z làm lại · Ctrl+S lưu · Delete xoá mục</div>`;
+const cur = () => sel && tl[sel.k][sel.i];
+function inspector() {
+  const p = $("#right"), t = TABS.find(x => x[0] === tab);
+  if (!sel) return p.innerHTML = `<h3>${t[1]}</h3><div class="dim">Chưa chọn mục nào.</div><div class="note">${t[2]}</div>${SHORT}`;
+  const o = cur(); let h = "";
+  if (sel.k === "clips") {
+    h = `<h3>Đoạn ${sel.i + 1}</h3>${fld("file", o.file)}${fld("in", o.in, "number")}${fld("dur", o.dur, "number")}
+      <label>Lệch khung dọc: ${o.focus ?? 0} (-1 trái, 1 phải)</label><input data-f="focus" type="range" min="-1" max="1" step="0.1" value="${o.focus ?? 0}">
+      <label>Chỉnh màu</label><select data-f="look">${opts(FX.looks, o.look, "Theo phong cách")}</select>
+      <div class="row"><button data-a="dup">Nhân bản</button><button data-a="left">← Lên trước</button><button data-a="right">Ra sau →</button></div>`;
+  } else if (sel.k === "transitions") {
+    h = `<h3>Chuyển cảnh ${sel.i + 1} → ${sel.i + 2}</h3><label>Kiểu</label><select data-f="type">${opts(FX.transitions, o.type)}</select>`
+      + (o.type === "cut" ? "" : fld("dur", o.dur ?? "", "number") + `<div class="dim">Để trống = mặc định ${FX.transitions[o.type].dur}s</div>`);
+  } else if (sel.k === "texts") {
+    const k = FX.kinds[o.kind];
+    h = `<h3>Khối chữ ${sel.i + 1}</h3><label>Kiểu khối</label><select data-f="kind">${opts(FX.kinds, o.kind)}</select>
+      <label>Hiệu ứng vào</label><select data-f="anim">${opts(FX.anims, o.anim, "Theo phong cách")}</select>${fld("start", o.start, "number")}${fld("dur", o.dur, "number")}`
+      + [...k.need, ...(OPT[o.kind] || [])].map(f => fld(f, o[f], ["value", "decimals"].includes(f) ? "number" : "text")).join("");
+  } else {
+    const F = {subtitles: ["text"], cards: ["step", "title", "items"], zooms: ["scale"], broll: ["file", "id", "in"]}[sel.k];
+    h = `<h3>${TABS.find(x => x[0] === sel.k)[1]} ${sel.i + 1}</h3>${fld("start", o.start, "number")}${fld("dur", o.dur, "number")}`
+      + F.map(f => fld(f, o[f], ["scale", "in"].includes(f) ? "number" : "text")).join("");
+  }
+  if (sel.k !== "transitions") h += `<div class="row"><button data-a="split">✂ Tách tại kim</button><button data-a="del">Xoá</button>${sel.k !== "clips" ? '<button data-a="dupx">Nhân bản</button>' : ""}</div>`;
+  p.innerHTML = h + SHORT;
+}
+
+function drawTimeline() {
+  const L = layout(), pps = +$("#zoom").value, W = Math.ceil(L.total * pps) + 80;
+  const step = pps > 90 ? 1 : pps > 35 ? 2 : pps > 15 ? 5 : 10;
+  let h = `<div class="ruler" id="ruler" style="width:${W}px">`;
+  for (let s = 0; s <= L.total + 0.01; s += step) h += `<span style="left:${s * pps}px">${fmt(s).replace(/\.\d$/, "")}</span><i style="left:${s * pps}px"></i>`;
   h += `</div>`;
-  const lanes = [];  // xếp khối chữ chồng nhau vào nhiều hàng
-  tl.texts.forEach((x, i) => { let r = lanes.findIndex(e => e <= x.start + 1e-6); if (r < 0) { r = lanes.length; lanes.push(0); } lanes[r] = x.start + x.dur; x._r = r; });
-  for (let r = 0; r < Math.max(1, lanes.length); r++) {
-    h += `<div class="lane t" style="width:${W}px">`;
-    tl.texts.forEach((x, i) => { if (x._r !== r) return;
-      const on = sel && sel.t === "text" && sel.i === i, label = x.title || x.text || (x.lines || x.items || [""])[0] || x.label || x.kind;
-      h += `<div class="blk tx${on ? " sel" : ""}" data-t="text" data-i="${i}" style="left:${x.start * pps}px;width:${x.dur * pps}px">${esc(x.kind)} · ${esc(String(label).replace(/\*/g, ""))}</div>`; });
+  const it = (k, i, x0, d, cls, label, extra = "") => `<div class="x ${cls}${sel && sel.k === k && sel.i === i ? " sel" : ""}" data-k="${k}" data-i="${i}" style="left:${x0 * pps}px;width:${Math.max(d * pps, 6)}px;${extra}">${label}${TIMED.includes(k) ? '<span class="rz"></span>' : ""}</div>`;
+  const lanes = {texts: "text", subtitles: "sub", cards: "card", broll: "broll", zooms: "zoom"};
+  for (const [k] of LANES) {
+    h += `<div class="ln${k === "clips" ? " vid" : ""}" style="width:${W}px">`;
+    if (lanes[k]) (tl[k] || []).forEach((x, i) => h += it(k, i, x.start, x.dur, lanes[k], (k === "texts" ? "T  " : k === "cards" ? "▣  " : k === "zooms" ? "⌕  " : "") + esc(String(itemLabel(k, x)).replace(/\*/g, ""))));
+    if (k === "clips") {
+      tl.clips.forEach((c, i) => h += it("clips", i, L.starts[i], c.dur, "clip", `${i + 1}. ${esc(c.file)}<span class="d">${(+c.dur).toFixed(1)}s</span>`, `background-image:url('${media("thumb", c.file + "@" + (+c.in + 0.3).toFixed(1))}')`));
+      L.trs.forEach(([x, d], i) => h += `<div class="x tr${sel && sel.k === "transitions" && sel.i === i ? " sel" : ""}" data-k="transitions" data-i="${i}" title="${esc(FX.transitions[tl.transitions[i].type].vi)}" style="left:${(x + d / 2) * pps - 11}px">${tl.transitions[i].type === "cut" ? "|" : "◆"}</div>`);
+    }
+    if (k === "voice") tl.clips.forEach((c, i) => h += `<div class="x wave" style="left:${L.starts[i] * pps}px;width:${c.dur * pps}px;background-image:url('${media("wave", `${c.file}@${(+c.in).toFixed(2)}@${(+c.dur).toFixed(2)}`)}')"></div>`);
     h += `</div>`;
   }
-  tl.texts.forEach(x => delete x._r);
-  $("#track").innerHTML = h;
-  $("#style").value = tl.meta.style || "hien-dai";
-  preview(); inspector();
+  $("#track").innerHTML = h + `<div id="ph"></div>`;
+  $("#labels").innerHTML = `<div class="rl"></div>` + LANES.map(([k, n]) => `<div class="${k === "clips" ? "vid " : ""}${k === tab ? "on" : ""}">${n}</div>`).join("");
+  placePH();
 }
-const thumb = (c, off = 0.3) => `/api/p/${encodeURIComponent(name)}/thumb/${encodeURIComponent(c.file + "@" + (+c.in + off).toFixed(1))}?t=${T}`;
-
-function preview() {
-  const L = layout(tl), f = $("#frame"), ov = $("#ov"), ph = f.querySelector(".ph");
-  let ci = 0, x = null;
-  if (sel && sel.t === "clip") ci = sel.i;
-  if (sel && sel.t === "tr") ci = sel.i + 1;
-  if (sel && sel.t === "text") { x = tl.texts[sel.i]; L.starts.forEach((s, i) => { if (x.start + 0.3 >= s) ci = i; }); }
-  const c = tl.clips[ci];
-  f.style.backgroundImage = c ? `url('${thumb(c, x ? Math.max(0.3, x.start - L.starts[ci]) : 0.3)}'), linear-gradient(#1b2633,#0b1118)` : "";
-  ph.textContent = c ? "" : "Chưa có cảnh";
-  if (!x) { ov.innerHTML = ""; return; }
-  const hl = s => esc(s).replace(/\*([^*]+)\*/g, '<span class="hl">$1</span>');
-  ov.innerHTML = (x.tag ? `<div class="tag">${esc(x.tag)}</div>` : "") + (x.num ? `<div class="num">${esc(x.num)}</div>` : "")
-    + (x.title ? `<div class="l">${hl(x.title)}</div>` : "") + (x.kind === "stat" ? `<div class="num">${esc(x.prefix || "")}${Number(x.value).toLocaleString("vi-VN")}${esc(x.suffix || "")}</div>` : "")
-    + (x.lines || x.items || []).map(l => `<div class="l">${x.items ? "✓ " : ""}${hl(l)}</div>`).join("")
-    + (x.text ? `<div class="l" style="font-size:11px">${esc(x.text)}</div>` : "") + (x.label ? `<div class="l">${hl(x.label)}</div>` : "")
-    + (x.sub ? `<div class="l" style="font-weight:400">${esc(x.sub)}</div>` : "");
+function placePH() {
+  const pps = +$("#zoom").value, L = layout(), ph = $("#ph"); if (ph) ph.style.left = now * pps + "px";
+  $("#tc").innerHTML = `<b>${fmt(now)}</b> <span class="dim">/ ${fmt(L.total)}</span>`; $("#ptime").textContent = `${fmt(now)} / ${fmt(L.total)}`;
 }
 
-function field(key, val, type = "text") {
-  if (ARR.includes(key)) return `<label>${LBL[key]}</label><textarea data-k="${key}">${esc((val || []).join("\n"))}</textarea>`;
-  return `<label>${LBL[key] || key}</label><input data-k="${key}" type="${type}" step="0.1" value="${esc(val ?? "")}">`;
+// ---- Trình phát: phát bản xem trước nhẹ của footage theo một đồng hồ chung, chữ vẽ đè lên ----
+const proxyReady = {};
+function ensureProxy(f) {
+  if (proxyReady[f] === true) return true;
+  if (proxyReady[f]) return false;  // đang chờ hoặc lỗi
+  proxyReady[f] = "wait";
+  const tick = async () => {
+    const r = await api(`${P()}/proxy/${encodeURIComponent(f)}?check=1`).catch(() => ({failed: true}));
+    if (r.ready) { proxyReady[f] = true; renderFrame(); } else if (r.failed) { proxyReady[f] = "fail"; renderFrame(); } else setTimeout(tick, 2500);
+  };
+  tick(); return false;
 }
-const opts = (o, v, blank) => (blank ? `<option value="">${blank}</option>` : "") + Object.entries(o).map(([k, d]) => `<option value="${k}"${k === v ? " selected" : ""}>${k} — ${esc(d.vi || d)}</option>`).join("");
-
-function inspector() {
-  const p = $("#insp");
-  if (!sel) { p.innerHTML = `<h2>Chỉnh sửa</h2><div class="hint">Bấm vào cảnh, chuyển cảnh hoặc khối chữ trên timeline.</div>`; return; }
+function syncVideo(v, file, t, muted) {
+  if (v.dataset.f !== file) { v.dataset.f = file; v.src = media("proxy", file); }
+  v.muted = muted;
+  if (v.readyState >= 1 && Math.abs(v.currentTime - t) > (playing ? 0.3 : 0.04)) v.currentTime = t;
+  if (playing && v.paused) v.play().catch(() => {}); if (!playing && !v.paused) v.pause();
+}
+function at(t) {
+  const L = layout(); let ci = 0;
+  L.starts.forEach((s, i) => { if (t >= s - 1e-6) ci = i; });
+  return {ci, off: Math.max(0, Math.min(t - L.starts[ci], tl.clips[ci].dur - 0.04))};
+}
+function renderFrame() {
+  placePH();
+  if ($("#viewSel").value !== "edit") return;
+  const {ci, off} = at(now), c = tl.clips[ci], pv = $("#pv"), pb = $("#pb");
+  const ok = ensureProxy(c.file);
+  $("#msgStage").textContent = ok ? "" : proxyReady[c.file] === "fail" ? `Chưa có footage ${c.file} trên máy` : `Đang tạo bản xem trước ${c.file}…`;
+  if (ok) syncVideo(pv, c.file, +c.in + off, !(tl.audio || {}).voice);
+  pv.style.visibility = ok ? "visible" : "hidden";
+  const on = k => (tl[k] || []).filter(x => now >= x.start && now < x.start + x.dur);
+  const z = on("zooms")[0]; pv.style.transform = z ? `scale(${z.scale})` : "";
+  const b = on("broll")[0];
+  if (b && ensureProxy(b.file)) { pb.style.display = "block"; syncVideo(pb, b.file, +b.in + now - b.start, true); }
+  else { pb.style.display = "none"; if (!pb.paused) pb.pause(); }
   let h = "";
-  if (sel.t === "clip") {
-    const c = tl.clips[sel.i];
-    h = `<h2>Cảnh ${sel.i + 1}</h2>${field("file", c.file)}<div class="hint">Tên file trong build/raw (hoặc tự tải từ Drive theo id).</div>`
-      + `<label>Bắt đầu từ giây (trong file gốc)</label><input data-k="in" type="number" step="0.1" min="0" value="${c.in}">`
-      + `<label>Độ dài (giây)</label><input data-k="dur" type="number" step="0.1" min="0.2" value="${c.dur}">`
-      + `<label>Lệch khung dọc: ${c.focus ?? 0} (-1 trái, 1 phải)</label><input data-k="focus" type="range" min="-1" max="1" step="0.1" value="${c.focus ?? 0}">`
-      + `<label>Chỉnh màu</label><select data-k="look">${opts(FX.looks, c.look, "Theo phong cách")}</select>`
-      + `<div class="row"><button data-a="split">Tách đôi</button><button data-a="dup">Nhân bản</button><button data-a="left">← Lên trước</button><button data-a="right">Ra sau →</button><button data-a="del">Xóa</button></div>`;
-  } else if (sel.t === "tr") {
-    const t = tl.transitions[sel.i];
-    h = `<h2>Chuyển cảnh ${sel.i + 1} → ${sel.i + 2}</h2><label>Kiểu</label><select data-k="type">${opts(FX.transitions, t.type)}</select>`
-      + (t.type === "cut" ? "" : `<label>Độ dài (giây, để trống = mặc định ${FX.transitions[t.type].dur}s)</label><input data-k="dur" type="number" step="0.1" min="0.1" value="${t.dur ?? ""}">`);
-  } else {
-    const x = tl.texts[sel.i], k = FX.kinds[x.kind];
-    h = `<h2>Khối chữ ${sel.i + 1}</h2><label>Kiểu khối</label><select data-k="kind">${opts(FX.kinds, x.kind)}</select>`
-      + `<label>Hiệu ứng vào</label><select data-k="anim">${opts(FX.anims, x.anim, "Theo phong cách")}</select>`
-      + `<label>Bắt đầu (giây trên video)</label><input data-k="start" type="number" step="0.1" min="0" value="${x.start}">`
-      + `<label>Hiện trong (giây)</label><input data-k="dur" type="number" step="0.1" min="0.3" value="${x.dur}">`
-      + [...k.need, ...(OPT[x.kind] || [])].map(f => field(f, x[f], ["value", "decimals"].includes(f) ? "number" : "text")).join("")
-      + `<div class="row"><button data-a="dupT">Nhân bản</button><button data-a="delT">Xóa</button></div>`;
+  for (const x of on("texts")) {
+    h += `<div class="blk">` + (x.tag ? `<div class="tag">${esc(x.tag)}</div>` : "") + (x.num ? `<div class="num">${esc(x.num)}</div>` : "")
+      + (x.title ? `<div class="l">${hl(x.title)}</div>` : "") + (x.kind === "stat" ? `<div class="num">${esc(x.prefix || "")}${Number(x.value).toLocaleString("vi-VN")}${esc(x.suffix || "")}</div>` : "")
+      + (x.lines || x.items || []).map(l => `<div class="l ${x.kind === "hook" ? "big" : ""}">${x.items ? "✓ " : ""}${hl(l)}</div>`).join("")
+      + (x.text ? `<div class="l" style="font-size:2cqh">${esc(x.text)}</div>` : "") + (x.label ? `<div class="l">${hl(x.label)}</div>` : "")
+      + (x.sub ? `<div class="l" style="font-weight:400">${esc(x.sub)}</div>` : "") + `</div>`;
   }
-  p.innerHTML = h;
+  for (const x of on("subtitles")) h += `<div class="sub"><span>${hl(x.text)}</span></div>`;
+  for (const x of on("cards")) h += `<div class="card"><div class="cs">${esc(x.step || "")}</div><div class="ct">${esc(x.title)}</div>${(x.items || []).map((it, k) => `<div class="ci">${k + 1}. ${hl(it)}</div>`).join("")}</div>`;
+  if ($("#safe").checked) h += `<div class="safe" style="left:0;right:0;top:0;height:11.5%"></div><div class="safe" style="left:0;right:0;bottom:0;height:21.9%"></div><div class="safe" style="right:0;top:11.5%;bottom:21.9%;width:13%"></div>`;
+  $("#ovl").innerHTML = h;
 }
+function loop(ts) {
+  if (playing) {
+    now += last ? (ts - last) / 1000 : 0;
+    if (now >= layout().total) { now = layout().total; setPlay(false); }
+    renderFrame();
+    const sc = $("#scroll"), x = now * +$("#zoom").value; if (x > sc.scrollLeft + sc.clientWidth - 40) sc.scrollLeft = x - 80;
+  }
+  last = ts; requestAnimationFrame(loop);
+}
+function setPlay(v) { playing = v; $("#play").textContent = v ? "Dừng" : "Phát"; if (!v) { $("#pv").pause(); $("#pb").pause(); } renderFrame(); }
+function seek(t) { now = Math.max(0, Math.min(t, layout().total)); renderFrame(); }
 
-// Sửa trong bảng chỉnh
-$("#insp").addEventListener("change", e => {
-  const k = e.target.dataset.k; if (!k) return;
-  let v = e.target.value;
+// ---- Tương tác ----
+document.addEventListener("click", e => {
+  const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; sel = null; return draw(); }
+  const st = e.target.closest("[data-style]"); if (st) return mutate(() => tl.meta.style = st.dataset.style);
+  const li = e.target.closest(".it[data-k]"); if (li) { sel = {k: li.dataset.k, i: +li.dataset.i}; seek(sel.k === "clips" ? layout().starts[sel.i] + 0.05 : cur().start + 0.05); return draw(); }
+  if (e.target.id === "srtGo") importSrt($("#srt").value);
+});
+$("#right").addEventListener("change", e => {
+  const f = e.target.dataset.f; if (!f) return; let v = e.target.value;
   mutate(() => {
-    const o = sel.t === "clip" ? tl.clips[sel.i] : sel.t === "tr" ? tl.transitions[sel.i] : tl.texts[sel.i];
-    if (ARR.includes(k)) v = v.split("\n").map(s => s.trim()).filter(Boolean);
-    else if (["in", "dur", "focus", "start", "value", "decimals"].includes(k)) v = v === "" ? undefined : +v;
-    if (v === "" || v === undefined) delete o[k]; else o[k] = v;
-    if (sel.t === "text" && k === "kind") for (const f of FX.kinds[v].need) if (o[f] === undefined) o[f] = ARR.includes(f) ? ["Nội dung"] : f === "value" ? 0 : "Nội dung";
-    if (sel.t === "tr" && k === "type") delete o.dur;
+    const o = cur();
+    if (ARR.includes(f)) v = v.split("\n").map(s => s.trim()).filter(Boolean);
+    else if (["in", "dur", "focus", "start", "value", "decimals", "scale"].includes(f)) v = v === "" ? undefined : +v;
+    if (v === "" || v === undefined) delete o[f]; else o[f] = v;
+    if (sel.k === "texts" && f === "kind") for (const k of FX.kinds[v].need) o[k] ??= ARR.includes(k) ? ["Nội dung"] : k === "value" ? 0 : "Nội dung";
+    if (sel.k === "transitions" && f === "type") delete o.dur;
   });
 });
-$("#insp").addEventListener("click", e => {
-  const a = e.target.dataset.a; if (!a) return;
-  const i = sel.i;
+$("#right").addEventListener("click", e => { const a = e.target.dataset.a; if (a) action(a); });
+$("#list").addEventListener("change", e => {
+  const k = e.target.dataset.set; if (!k) return;
+  mutate(() => { const v = e.target.type === "checkbox" ? e.target.checked : k === "music_volume" ? +e.target.value : e.target.value === "none" ? null : e.target.value; tl.audio[k] = v; });
+});
+function action(a) {
+  if (!sel) return toast("Chọn một mục trước", "err");
+  const {k, i} = sel, C = tl.clips, R = tl.transitions;
+  if (a === "del" && k === "clips" && C.length < 2) return toast("Phải còn ít nhất một đoạn", "err");
+  if (a === "del" && k === "transitions") return toast("Đổi chuyển cảnh thành “cut” để bỏ", "err");
   mutate(() => {
-    const C = tl.clips, R = tl.transitions;
-    if (a === "split") { const c = C[i], h = +(c.dur / 2).toFixed(2); const b = {...c, _id: ++uid, in: +(c.in + h).toFixed(2), dur: +(c.dur - h).toFixed(2)}; c.dur = h; C.splice(i + 1, 0, b); R.splice(i, 0, {type: "cut"}); }
+    if (a === "del" && k === "clips") { C.splice(i, 1); R.splice(Math.min(i, R.length - 1), 1); sel = null; }
+    else if (a === "del") { tl[k].splice(i, 1); sel = null; }
     if (a === "dup") { C.splice(i + 1, 0, {...C[i], _id: ++uid}); R.splice(i, 0, {type: "cut"}); }
-    if (a === "del") { if (C.length < 2) return say("Phải còn ít nhất một cảnh", "err"); C.splice(i, 1); R.splice(Math.min(i, R.length - 1), 1); sel = null; }
+    if (a === "dupx") tl[k].splice(i + 1, 0, JSON.parse(JSON.stringify(tl[k][i])));
     if (a === "left" && i > 0) { [C[i - 1], C[i]] = [C[i], C[i - 1]]; sel.i--; }
     if (a === "right" && i < C.length - 1) { [C[i + 1], C[i]] = [C[i], C[i + 1]]; sel.i++; }
-    if (a === "dupT") { tl.texts.splice(i + 1, 0, JSON.parse(JSON.stringify(tl.texts[i]))); }
-    if (a === "delT") { tl.texts.splice(i, 1); sel = null; }
+    if (a === "split") splitAt(k, i);
   });
-});
-$("#track").addEventListener("click", e => { const b = e.target.closest(".blk"); if (!b) return; sel = {t: b.dataset.t, i: +b.dataset.i}; showTab(false); draw(); });
-$("#zoom").oninput = draw;
-$("#style").onchange = e => mutate(() => tl.meta.style = e.target.value);
-$("#addText").onclick = () => mutate(() => {
-  const L = layout(tl), ci = sel && sel.t === "clip" ? sel.i : 0, s = +(L.starts[ci] + 0.2).toFixed(2);
-  tl.texts.push({kind: "line", start: s, dur: +Math.min(3, L.total - s).toFixed(2), lines: ["Chữ mới"]}); sel = {t: "text", i: tl.texts.length - 1};
-});
-$("#undo").onclick = () => { if (!hist.length) return say("Không còn gì để hoàn tác"); tl = JSON.parse(hist.pop()); sel = null; draw(); };
-document.addEventListener("keydown", e => { if ((e.ctrlKey || e.metaKey) && e.key === "z" && !/INPUT|TEXTAREA/.test(e.target.tagName)) { e.preventDefault(); $("#undo").click(); } });
-
-$("#save").onclick = save;
-async function save() {
-  try { const r = await api("p/" + encodeURIComponent(name), {method: "PUT", body: JSON.stringify(clean(tl))}); say(`Đã lưu (${r.total.toFixed(1)} giây).`, "ok"); return true; }
-  catch (e) { say("Chưa lưu được:<ul class='err-list'>" + ((e.data && e.data.errors) || [e.message]).map(m => `<li>${esc(m)}</li>`).join("") + "</ul>", "err"); return false; }
 }
-$("#render").onclick = async () => {
+// Tách tại kim chạy: mục đang chọn (chữ, phụ đề…) hoặc đoạn video dưới kim
+function splitAt(k, i) {
+  if (!TIMED.includes(k)) {
+    const {ci, off} = at(now), c = tl.clips[ci];
+    if (off < 0.2 || c.dur - off < 0.2) return toast("Kim chạy quá sát mép đoạn, không tách được", "err");
+    const b = {...c, _id: ++uid, in: +(c.in + off).toFixed(2), dur: +(c.dur - off).toFixed(2)}; c.dur = +off.toFixed(2);
+    tl.clips.splice(ci + 1, 0, b); tl.transitions.splice(ci, 0, {type: "cut"}); return;
+  }
+  const x = tl[k][i], off = now - x.start;
+  if (off < 0.2 || x.dur - off < 0.2) return toast("Đặt kim chạy vào giữa mục cần tách", "err");
+  const y = JSON.parse(JSON.stringify(x)); x.dur = +off.toFixed(2); y.start = +now.toFixed(2); y.dur = +(y.dur - off).toFixed(2);
+  if (k === "broll") y.in = +(x.in + off).toFixed(2);
+  tl[k].splice(i + 1, 0, y);
+}
+// SRT: "00:00:01,500 --> 00:00:03,000" + các dòng chữ
+function parseSrt(s) {
+  const out = [], ts = t => { const m = t.trim().match(/(\d+):(\d+):(\d+)[,.](\d+)/); return m ? +m[1] * 3600 + +m[2] * 60 + +m[3] + +m[4] / 1000 : NaN; };
+  for (const b of s.replace(/\r/g, "").split(/\n\s*\n/)) {
+    const ls = b.trim().split("\n"), j = ls.findIndex(l => l.includes("-->")); if (j < 0) continue;
+    const [a, z] = ls[j].split("-->").map(ts), text = ls.slice(j + 1).join(" ").trim();
+    if (text && a >= 0 && z > a) out.push({start: +a.toFixed(2), dur: +(z - a).toFixed(2), text});
+  }
+  return out;
+}
+function importSrt(s) {
+  const L = layout(), xs = parseSrt(s).filter(x => x.start < L.total);
+  if (!xs.length) return toast("Không đọc được dòng phụ đề nào trong SRT", "err");
+  mutate(() => tl.subtitles.push(...xs)); toast(`Đã thêm ${xs.length} phụ đề.`, "ok");
+}
+$("#add").onclick = () => mutate(() => {
+  const L = layout(), s = +Math.min(now, L.total - 1).toFixed(2), d = +Math.min(2.5, L.total - s).toFixed(2);
+  const D = {texts: {kind: "line", lines: ["Chữ mới"]}, subtitles: {text: "Phụ đề mới"}, cards: {step: "Bước 1", title: "Tiêu đề", items: ["Ý thứ nhất"]},
+    zooms: {scale: 1.07}, broll: {file: tl.clips[0].file, in: 0}}[tab];
+  tl[tab].push({start: s, dur: d, ...D}); sel = {k: tab, i: tl[tab].length - 1};
+});
+$("#search").oninput = drawList;
+$("#split").onclick = () => mutate(() => splitAt(sel && sel.k, sel && sel.i));
+$("#del").onclick = () => action("del");
+$("#undo").onclick = undo; $("#redo").onclick = redo;
+$("#zoom").oninput = drawTimeline; $("#zin").onclick = () => { $("#zoom").value = +$("#zoom").value * 1.3; drawTimeline(); }; $("#zout").onclick = () => { $("#zoom").value = +$("#zoom").value / 1.3; drawTimeline(); };
+$("#fit").onclick = () => { $("#zoom").value = ($("#scroll").clientWidth - 30) / layout().total; drawTimeline(); };
+$("#play").onclick = () => { if ($("#viewSel").value !== "edit") { $("#viewSel").value = "edit"; view(); } if (now >= layout().total - 0.05) now = 0; setPlay(!playing); };
+$("#back").onclick = () => seek(now - 1); $("#fwd").onclick = () => seek(now + 1);
+$("#safe").onchange = renderFrame;
+$("#lyL").onclick = () => $("#main").classList.toggle("noL"); $("#lyR").onclick = () => $("#main").classList.toggle("noR");
+$("#lyT").onclick = () => { $("#tl").hidden = !$("#tl").hidden; }; $("#lyF").onclick = () => $("#stage").requestFullscreen?.();
+
+// Timeline: bấm/kéo trên thước để tua; kéo mục để dời; kéo mép phải để đổi độ dài
+$("#track").addEventListener("pointerdown", e => {
+  const pps = +$("#zoom").value, r = $("#track").getBoundingClientRect();
+  if (e.target.closest("#ruler")) {
+    seek((e.clientX - r.left) / pps);
+    const mv = ev => seek((ev.clientX - r.left) / pps);
+    addEventListener("pointermove", mv); addEventListener("pointerup", () => removeEventListener("pointermove", mv), {once: true}); return;
+  }
+  const el = e.target.closest(".x[data-k]"); if (!el) return;
+  sel = {k: el.dataset.k, i: +el.dataset.i};
+  const k = sel.k, x = tl[k][sel.i];
+  if (!TIMED.includes(k)) { if (k === "clips") seek((e.clientX - r.left) / pps); return draw(); }
+  const rz = e.target.classList.contains("rz"), x0 = e.clientX, s0 = x.start, d0 = x.dur; let moved = false;
+  const mv = ev => {
+    const dx = (ev.clientX - x0) / pps; if (Math.abs(ev.clientX - x0) > 3) moved = true; if (!moved) return;
+    if (rz) el.style.width = Math.max(0.2, d0 + dx) * pps + "px"; else el.style.left = Math.max(0, s0 + dx) * pps + "px";
+  };
+  addEventListener("pointermove", mv);
+  addEventListener("pointerup", ev => {
+    removeEventListener("pointermove", mv);
+    const dx = Math.round((ev.clientX - x0) / pps * 10) / 10;
+    if (moved && dx) mutate(() => { if (rz) x.dur = Math.max(0.2, d0 + dx); else x.start = Math.max(0, s0 + dx); });
+    else { now = x.start + 0.05; draw(); }
+  }, {once: true});
+});
+document.addEventListener("keydown", e => {
+  const ctl = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+  if (ctl && k === "s") { e.preventDefault(); return save(); }
+  if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName) || $("#dlg").open) return;
+  if (k === " ") { e.preventDefault(); $("#play").click(); }
+  else if (e.key === "ArrowLeft") seek(now - (e.shiftKey ? 1 : 1 / FPS));
+  else if (e.key === "ArrowRight") seek(now + (e.shiftKey ? 1 : 1 / FPS));
+  else if (ctl && k === "z") { e.preventDefault(); e.shiftKey ? redo() : undo(); }
+  else if (ctl && k === "y") { e.preventDefault(); redo(); }
+  else if (e.key === "Delete" || e.key === "Backspace") action("del");
+  else if (k === "s" && !ctl) $("#split").click();
+});
+addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+// ---- Lưu, dựng, xem bản dựng ----
+async function save() {
+  try { const r = await api(P(), {method: "PUT", body: JSON.stringify(clean(tl))}); dirty = false; toast(`Đã lưu (${r.total.toFixed(1)} giây).`, "ok"); return true; }
+  catch (e) { dlgShow(`<h3 class="err">Chưa lưu được</h3><ul>${((e.data && e.data.errors) || [e.message]).map(m => `<li>${esc(m)}</li>`).join("")}</ul>`); return false; }
+}
+$("#save").onclick = save;
+async function render(draft) {
   if (!await save()) return;
-  try { await api(`p/${encodeURIComponent(name)}/render`, {method: "POST"}); } catch (e) { return say(esc(e.message), "err"); }
-  $("#render").disabled = true; say("Đang dựng… (90 giây video có thể mất 10–20 phút)");
+  try { await api(`${P()}/render`, {method: "POST", body: JSON.stringify({draft})}); } catch (e) { return toast(esc(e.message), "err"); }
+  $("#draft").disabled = $("#export").disabled = true;
+  const msg = draft ? "Đang dựng nháp…" : "Đang xuất video… (90 giây video có thể mất 10–20 phút)"; toast(msg);
   clearInterval(poll);
   poll = setInterval(async () => {
-    const s = await api(`p/${encodeURIComponent(name)}/render`).catch(() => null); if (!s || s.running) return;
-    clearInterval(poll); $("#render").disabled = false;
-    if (s.code === 0) { say("Dựng xong. Xem ở tab “Bản đã dựng”.", "ok"); loadVideo(); showTab(true); }
-    else say("Dựng lỗi:<pre style='white-space:pre-wrap'>" + esc(s.log.slice(-800)) + "</pre>", "err");
+    const s = await api(`${P()}/render`).catch(() => null); if (!s) return; if (s.running) return toast(msg);
+    clearInterval(poll); $("#draft").disabled = $("#export").disabled = false;
+    if (s.code === 0) { toast(draft ? "Dựng nháp xong." : "Xuất video xong.", "ok"); $("#viewSel").value = draft ? "nhap" : "xuat"; view(); }
+    else dlgShow(`<h3 class="err">Dựng lỗi</h3><pre style="white-space:pre-wrap;font-size:12px">${esc(s.log.slice(-1200))}</pre>`);
   }, 3000);
+}
+$("#draft").onclick = () => render(true); $("#export").onclick = () => render(false);
+function view() {
+  const v = $("#viewSel").value, out = $("#out");
+  setPlay(false);
+  if (v === "edit") { out.style.display = "none"; out.pause(); $("#ovl").hidden = false; return renderFrame(); }
+  out.style.display = "block"; $("#ovl").hidden = true; $("#msgStage").textContent = "";
+  out.onerror = () => $("#msgStage").textContent = v === "nhap" ? "Chưa có bản nháp. Bấm “Dựng nháp”." : "Chưa có bản xuất. Bấm “Xuất video”.";
+  out.src = `/api/${P()}/video?t=${T}${v === "nhap" ? "&nhap=1" : ""}&v=${Date.now()}`;
+}
+$("#viewSel").onchange = view;
+
+// ---- Hộp thoại: Thư viện, Lịch sử, Nhờ AI sửa ----
+const dlg = $("#dlg"); function dlgShow(h) { $("#dlgBody").innerHTML = h; dlg.showModal(); }
+$("#btnLib").onclick = () => {
+  const can = sel && sel.k === "transitions" ? "transitions" : sel && sel.k === "texts" ? "anims" : null;
+  const sec = (k, title) => `<h3>${title}</h3>` + Object.entries(FX[k]).map(([n, d]) => `<div class="it" style="margin-bottom:6px" ${can === k ? `data-apply="${n}"` : ""}><div class="h">${n}${can === k ? ' <span class="ok">— bấm để áp dụng</span>' : ""}</div><div class="m">${esc(d.vi || d)}</div></div>`).join("");
+  dlgShow(`<p class="dim">Chọn một chuyển cảnh hoặc khối chữ trên timeline để áp dụng trực tiếp.</p>${sec("transitions", "Chuyển cảnh")}${sec("anims", "Hiệu ứng chữ")}${sec("kinds", "Khối chữ")}${sec("looks", "Chỉnh màu")}`);
 };
-function loadVideo() { $("#video").src = `/api/p/${encodeURIComponent(name)}/video?t=${T}&v=${Date.now()}`; }
-function showTab(vid) { $("#tabVid").classList.toggle("on", vid); $("#tabEdit").classList.toggle("on", !vid); $("#video").hidden = !vid; $("#frame").hidden = vid; }
-$("#tabEdit").onclick = () => showTab(false);
-$("#tabVid").onclick = () => { loadVideo(); showTab(true); };
+$("#dlgBody").addEventListener("click", async e => {
+  const ap = e.target.closest("[data-apply]"); if (ap) { mutate(() => { if (sel.k === "transitions") { cur().type = ap.dataset.apply; delete cur().dur; } else cur().anim = ap.dataset.apply; }); return dlg.close(); }
+  const hv = e.target.closest("[data-ver]"); if (hv) { const v = await api(`${P()}/history/${hv.dataset.ver}`); undoS.push(JSON.stringify(tl)); setRaw(JSON.stringify(v)); dlg.close(); toast("Đã mở phiên bản cũ. Bấm Lưu để giữ.", "ok"); }
+  if (e.target.id === "copyAI") { navigator.clipboard?.writeText($("#aiOut").value).catch(() => {}); $("#aiOut").select(); toast("Đã chép yêu cầu.", "ok"); }
+});
+$("#btnHist").onclick = async () => {
+  const vs = await api(`${P()}/history`).catch(() => []);
+  dlgShow(`<h3>Lịch sử lưu</h3><p class="dim">Mỗi lần Lưu giữ lại một phiên bản (30 bản gần nhất). Bấm để mở lại.</p>`
+    + (vs.map(v => `<div class="it" data-ver="${esc(v)}" style="margin-bottom:6px"><div class="h">${v.replace(/(\d{4})(\d\d)(\d\d)-(\d\d)(\d\d)(\d\d)/, "$3/$2/$1 $4:$5:$6")}</div></div>`).join("") || `<div class="dim">Chưa có lần lưu nào.</div>`));
+};
+$("#btnAI").onclick = () => {
+  dlgShow(`<h3>Nhờ AI sửa</h3><p class="dim">Gõ điều muốn sửa. Bản này soạn sẵn yêu cầu để dán cho Claude (Claude Code trên PC/Anti sửa thẳng file). Gọi AI ngay trong app cần khóa API và có tính phí — chưa bật.</p>
+    <textarea id="aiReq" style="width:100%;min-height:70px" placeholder="Ví dụ: thêm phụ đề cho cả video, đổi chuyển cảnh thứ 2 thành hòa tan, rút đoạn 3 còn 4 giây"></textarea>
+    <div class="row"><button id="mkAI" class="lime">Soạn yêu cầu</button></div><textarea id="aiOut" style="width:100%;min-height:120px;margin-top:10px" readonly></textarea><div class="row"><button id="copyAI">Chép</button></div>`);
+  $("#mkAI").onclick = () => $("#aiOut").value = `Sửa video "${name}": file video-studio/projects/${name}/timeline.json (định dạng: video-studio/scripts/timeline.py, hiệu ứng: docs/THU-VIEN-HIEU-UNG.md).\nYêu cầu: ${$("#aiReq").value}\nSau khi sửa chạy: python3 scripts/test_timeline.py (trong video-studio), báo lại đã đổi gì. Theo quy tắc nội dung trong CLAUDE.md, không tự điền số liệu dự án.`;
+};
 
 async function open_(n) {
-  name = n; const r = await api("p/" + encodeURIComponent(n));
-  tl = r.timeline; tl.texts = tl.texts || []; tl.meta = tl.meta || {}; tl.clips.forEach(c => c._id = ++uid);
-  sel = null; hist = []; showTab(false); draw(); say(r.has_video ? "Dự án đã có bản dựng." : "");
+  if (dirty && !confirm("Dự án đang có thay đổi chưa lưu. Bỏ qua?")) return ($("#proj").value = name);
+  name = n; const r = await api(P());
+  tl = r.timeline; tl.meta ??= {}; for (const k of TIMED) tl[k] ??= []; tl.audio ??= {}; tl.clips.forEach(c => c._id = ++uid);
+  sel = null; undoS = []; redoS = []; dirty = false; now = 0; $("#viewSel").value = "edit";
+  $("#zoom").value = Math.max(10, ($("#scroll").clientWidth - 30) / layout().total); draw(); view();
 }
 (async () => {
   try {
     FX = await api("effects");
-    $("#style").innerHTML = opts(FX.styles, "");
     const ps = await api("projects");
     $("#proj").innerHTML = ps.map(p => `<option>${esc(p)}</option>`).join("");
     $("#proj").onchange = e => open_(e.target.value);
-    if (ps.length) await open_(ps[0]); else say("Chưa có dự án nào trong projects/.", "err");
-  } catch (e) { say(esc(e.message), "err"); }
+    if (ps.length) await open_(ps[0]); else $("#stat").innerHTML = `<span class="err">Chưa có dự án nào trong projects/.</span>`;
+    requestAnimationFrame(loop);
+  } catch (e) { $("#stat").innerHTML = `<span class="err">${esc(e.message)}</span>`; }
 })();
 </script>
 </body>

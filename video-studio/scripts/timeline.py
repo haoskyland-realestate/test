@@ -6,7 +6,11 @@
   "clips": [{"file": "a.mp4", "id": "<id Drive>", "in": 13.0, "dur": 9.2, "focus": 0, "look": "am-sang"}],
   "transitions": [{"type": "cube-h"}],          # giữa cảnh i và i+1; tên trong effects.TRANSITIONS
   "texts": [{"kind": "hook", "anim": "rise", "start": 0.4, "dur": 8.6, "tag": "...", "lines": ["..."]}],
-  "audio": {"music": "synth", "whoosh": true}
+  "subtitles": [{"start": 0.2, "dur": 1.8, "text": "Phụ đề theo lời nói"}],
+  "cards": [{"start": 5, "dur": 4, "step": "Bước 2", "title": "Giao cho ChatGPT", "items": ["Mở ChatGPT"]}],   # minh họa nền đen
+  "zooms": [{"start": 3, "dur": 2, "scale": 1.07}],                    # phóng to khung (1.07 = 7%)
+  "broll": [{"start": 8, "dur": 3, "file": "b.mp4", "id": "", "in": 0}],   # cảnh trám: phủ hình, giữ tiếng
+  "audio": {"music": "synth", "whoosh": true, "voice": false, "music_volume": 1.0}   # voice: giữ tiếng gốc của cảnh
 }
 Mốc giờ của chữ (start) tính trên video thành phẩm (đã cộng chuyển cảnh). Từ tô vàng viết *từ*.
 """
@@ -58,7 +62,10 @@ def check(tl):
     for i, t in enumerate(trs, 1):
         if t.get("type") not in TRANSITIONS:
             e.append(f"Chuyển cảnh {i}: kiểu '{t.get('type')}' chưa có (đang có: {', '.join(TRANSITIONS)})")
-    music = tl.get("audio", {}).get("music", "synth")
+    a = tl.get("audio", {})
+    if not 0 <= a.get("music_volume", 1.0) <= 2:
+        e.append("'audio.music_volume' phải từ 0 đến 2")
+    music = a.get("music", "synth")
     if music not in ("synth", None):
         e.append("'audio.music' hiện chỉ nhận 'synth' (nhạc tổng hợp) hoặc null (không nhạc)")
     if e:
@@ -78,4 +85,14 @@ def check(tl):
             e.append(f"Chữ {i}: thiếu {', '.join(missing)}")
         elif x["start"] < 0 or x["dur"] <= 0 or x["start"] + x["dur"] > total + 0.01:
             e.append(f"Chữ {i}: {x['start']}s + {x['dur']}s nằm ngoài video ({total:.2f}s)")
+    for key, name, need in (("subtitles", "Phụ đề", ["text"]), ("cards", "Minh họa", ["title"]),
+                            ("zooms", "Zoom", ["scale"]), ("broll", "Cảnh trám", ["file", "in"])):
+        for i, x in enumerate(tl.get(key, []), 1):
+            miss = [k for k in ["start", "dur"] + need if k not in x]
+            if miss:
+                e.append(f"{name} {i}: thiếu {', '.join(miss)}")
+            elif x["start"] < 0 or x["dur"] <= 0 or x["start"] + x["dur"] > total + 0.01:
+                e.append(f"{name} {i}: {x['start']}s + {x['dur']}s nằm ngoài video ({total:.2f}s)")
+            elif key == "zooms" and not 1 <= x["scale"] <= 1.6:
+                e.append(f"Zoom {i}: 'scale' từ 1 đến 1.6 (1.07 = phóng 7%)")
     return e

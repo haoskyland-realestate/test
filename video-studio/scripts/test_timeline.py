@@ -33,6 +33,11 @@ bad(lambda t: t["clips"][0].update(look="xyz"), "chỉnh màu 'xyz' chưa có")
 bad(lambda t: t["texts"][0].update(anim="spin"), "hiệu ứng 'spin' chưa có")
 bad(lambda t: t["texts"].append({"kind": "stat", "start": 1, "dur": 2, "value": "abc", "label": "x"}), "phải là số")
 bad(lambda t: t["texts"].append({"kind": "checklist", "start": 1, "dur": 2}), "thiếu items")
+bad(lambda t: t.update(subtitles=[{"start": 1, "dur": 2}]), "Phụ đề 1: thiếu text")
+bad(lambda t: t.update(zooms=[{"start": 1, "dur": 2, "scale": 3}]), "Zoom 1: 'scale' từ 1")
+bad(lambda t: t.update(broll=[{"start": 12, "dur": 2, "file": "x.mp4", "in": 0}]), "Cảnh trám 1: 12s")
+bad(lambda t: t.update(cards=[{"start": 1, "dur": 2}]), "Minh họa 1: thiếu title")
+bad(lambda t: t["audio"].update(music_volume=5), "music_volume")
 t2 = copy.deepcopy(ok); t2["transitions"][0]["type"] = "fade"
 assert abs(layout(t2)["total"] - 12.5) < 1e-9  # fade mặc định 0.5s
 

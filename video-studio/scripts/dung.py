@@ -1,5 +1,5 @@
 """Dựng video từ timeline.json: flycam thật (9:16) + chuyển cảnh khối 3D + chữ động tiếng Việt + nhạc.
-Chạy trong video-studio:  python3 scripts/dung.py projects/<tên>
+Chạy trong video-studio:  python3 scripts/dung.py projects/<tên> [--nhap]   (--nhap: dựng nháp nhanh, chất lượng thấp → out/<tên>.nhap.mp4)
 Đầu vào: projects/<tên>/timeline.json (định dạng: scripts/timeline.py). Đầu ra: out/<tên>.mp4.
 Bản gốc đặt sẵn ở projects/<tên>/build/raw/<file>, hoặc tự tải từ Drive theo "id" (thư mục chia sẻ bằng link)."""
 import json, os, re, subprocess, shutil, html, sys
@@ -7,11 +7,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from timeline import check, layout
 from effects import STYLES, LOOKS, TRANSITIONS
 
-if len(sys.argv) != 2:
-    sys.exit("Dùng: python3 scripts/dung.py projects/<tên>")
+DRAFT = "--nhap" in sys.argv[2:]
+if len(sys.argv) < 2 or any(a != "--nhap" for a in sys.argv[2:]):
+    sys.exit("Dùng: python3 scripts/dung.py projects/<tên> [--nhap]")
 HERE = os.path.abspath(sys.argv[1])
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 NAME = os.path.basename(HERE)
+OUTNAME = NAME + (".nhap" if DRAFT else "")
+CRF, PRESET = ("28", "ultrafast") if DRAFT else ("18", "fast")
 tl = json.load(open(os.path.join(HERE, "timeline.json"), encoding="utf8"))
 errs = check(tl)
 if errs:
@@ -32,7 +35,7 @@ def ff(*a): run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", *a])
 
 # 1. Tải bản gốc các cảnh được chọn
 os.makedirs(f"{B}/raw", exist_ok=True)
-for s in shots:
+for s in shots + tl.get("broll", []):
     p = f"{B}/raw/{s['file']}"
     if not os.path.exists(p):
         if not s.get("id"):
@@ -43,14 +46,14 @@ for s in shots:
 # 2. Cắt từng cảnh: khung dọc 9:16 từ 4K, chỉnh màu theo "look" (mặc định của phong cách), 30fps
 for i, s in enumerate(shots):
     look = s.get("look") or style["look"]
-    key = json.dumps([s["file"], s["in"], s["dur"], s.get("focus", 0), look])
+    key = json.dumps([s["file"], s["in"], s["dur"], s.get("focus", 0), look, DRAFT])
     kf = f"{B}/shot{i}.key"  # nhớ cảnh đã cắt; đổi file/mốc/lệch khung/màu thì tự cắt lại
     if os.path.exists(f"{B}/shot{i}.mp4") and os.path.exists(kf) and open(kf).read() == key: continue
     fx = (s.get("focus", 0) + 1) / 2
     ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an",
        "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}:(iw-{W})*{fx}:(ih-{H})/2,"
               f"{LOOKS[look][1]},fps={FPS},format=yuv420p",
-       "-c:v", "libx264", "-crf", "18", "-preset", "fast", f"{B}/shot{i}.mp4")
+       "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/shot{i}.mp4")
     open(kf, "w").write(key)
 
 # 3. Chuyển cảnh giữa khung cuối cảnh trước và khung đầu cảnh sau:
@@ -65,7 +68,7 @@ for i, d_tr, ty in trs:
         ff("-loop", "1", "-framerate", str(FPS), "-t", str(d_tr), "-i", f"{TD}/a{i}.jpg",
            "-loop", "1", "-framerate", str(FPS), "-t", str(d_tr), "-i", f"{TD}/b{i}.jpg",
            "-filter_complex", f"[0:v][1:v]xfade=transition={TRANSITIONS[ty][2]}:duration={d_tr}:offset=0,format=yuv420p",
-           "-t", str(d_tr), "-c:v", "libx264", "-crf", "18", f"{B}/tr{i}.mp4")
+           "-t", str(d_tr), "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/tr{i}.mp4")
 cube = f"{B}/cube"; shutil.rmtree(cube, ignore_errors=True); os.makedirs(cube)
 c3 = [(i, d_tr, ty) for i, d_tr, ty in trs if TRANSITIONS[ty][1] == "css3d"]
 faces, tws, off, seg3 = [], [], 0.0, {}
@@ -105,13 +108,13 @@ window.__timelines["main"]=tl; tl.seek(0);
     json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
               open(f"{cube}/hyperframes.json", "w"))
     open(f"{cube}/package.json", "w").write('{"name":"cube","private":true,"type":"module"}')
-    ckey = json.dumps([style["bg"]] + [[open(f"{B}/shot{i}.key").read(), open(f"{B}/shot{i+1}.key").read(), ty, d_tr] for i, d_tr, ty in c3])
+    ckey = json.dumps([style["bg"], DRAFT] + [[open(f"{B}/shot{i}.key").read(), open(f"{B}/shot{i+1}.key").read(), ty, d_tr] for i, d_tr, ty in c3])
     if not (os.path.exists(f"{B}/cube.mp4") and os.path.exists(f"{B}/cube.key") and open(f"{B}/cube.key").read() == ckey):
-        run([*HF, "render", "-o", f"{B}/cube.mp4", "-q", "delivery", "--quiet"], cwd=cube)
+        run([*HF, "render", "-o", f"{B}/cube.mp4", "-q", "draft" if DRAFT else "delivery", "--quiet"], cwd=cube)
         open(f"{B}/cube.key", "w").write(ckey)
     for i, d_tr, _ in c3:
         ff("-ss", str(seg3[i]), "-t", str(d_tr), "-i", f"{B}/cube.mp4", "-an", "-vf", f"fps={FPS},format=yuv420p",
-           "-c:v", "libx264", "-crf", "18", f"{B}/tr{i}.mp4")
+           "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/tr{i}.mp4")
 
 # 4. Ghép: cảnh 0, chuyển cảnh 0 (nếu không phải cắt thẳng), cảnh 1, ...
 has_tr = {i for i, _, _ in trs}
@@ -121,7 +124,7 @@ for i in range(n):
     if i in has_tr:
         parts.append(f"{B}/tr{i}.mp4")
 open(f"{B}/list.txt", "w").write("".join(f"file '{p}'\n" for p in parts))
-ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", f"{B}/base.mp4")
+ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, "-pix_fmt", "yuv420p", f"{B}/base.mp4")
 
 # 5. Lớp chữ động (nền trong suốt) theo mốc trong timeline; màu, chữ, nhịp theo phong cách
 def words(text, chars=False):
@@ -204,6 +207,18 @@ for i, s in enumerate(tl.get("texts", [])):
     blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}" data-start="{st0:.2f}" data-duration="{du:.2f}" '
                   f'data-track-index="{(6 if kind == "source" else 1 + i % 2)}">{body}</div>')
     anims += a
+# Phụ đề (dưới giữa màn hình) và minh họa (nền phủ kín, chữ + danh sách đánh số)
+for j, x in enumerate(tl.get("subtitles", [])):
+    blocks.append(f'<div id="s{j}" class="clip sub" data-start="{x["start"]:.2f}" data-duration="{x["dur"]:.2f}" data-track-index="7"><span>{words(x["text"])}</span></div>')
+    anims.append(f'tl.fromTo("#s{j} span",{{opacity:0,scale:.9}},{{opacity:1,scale:1,duration:0.12}},{x["start"]:.2f});')
+for j, x in enumerate(tl.get("cards", [])):
+    items = "".join(f'<div class="ci"><b>{k + 1}</b>{words(it)}</div>' for k, it in enumerate(x.get("items", [])))
+    blocks.append(f'<div id="k{j}" class="clip card" data-start="{x["start"]:.2f}" data-duration="{x["dur"]:.2f}" data-track-index="8">'
+                  f'<div class="cw">{f"""<div class="cs">{html.escape(x["step"])}</div>""" if x.get("step") else ""}'
+                  f'<div class="ctt">{html.escape(x["title"])}</div>{items}</div></div>')
+    anims += [f'tl.fromTo("#k{j}",{{opacity:0}},{{opacity:1,duration:{d(.25)}}},{x["start"]:.2f});',
+              f'tl.fromTo("#k{j} .ctt",{{opacity:0,y:40}},{{opacity:1,y:0,duration:{d(.5)},ease:"expo.out"}},{x["start"] + 0.1:.2f});',
+              f'tl.fromTo("#k{j} .ci",{{opacity:0,x:-50}},{{opacity:1,x:0,duration:{d(.4)},ease:"power3.out",stagger:{d(.35)}}},{x["start"] + 0.45:.2f});']
 ov = f"{B}/overlay"; shutil.rmtree(ov, ignore_errors=True); os.makedirs(ov)
 shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), ov)
 open(f"{ov}/index.html", "w", encoding="utf8").write(f"""<!doctype html><html lang="vi"><head><meta charset="UTF-8">
@@ -245,6 +260,13 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;background:transparent;font-
 .tick{{flex:none;width:68px;height:68px;border-radius:50%;background:var(--accent);color:rgb(var(--scrim));font-size:42px;font-weight:800;display:flex;align-items:center;justify-content:center}}
 .stat{{font-family:var(--display);font-size:200px;font-weight:var(--dw);line-height:1;color:var(--hl);white-space:nowrap}}
 .stat .pre,.stat .suf{{font-size:90px;color:var(--text)}}
+.sub{{position:absolute;left:90px;right:90px;top:1180px;text-align:center;z-index:6}}
+.sub > span{{display:inline-block;font-size:54px;font-weight:800;line-height:1.25;padding:6px 16px;border-radius:12px;background:rgba(0,0,0,.45);text-shadow:0 3px 12px rgba(0,0,0,.6)}}
+.card{{position:absolute;inset:0;background:{style["bg"]};z-index:5;display:flex;align-items:flex-start;justify-content:center;padding-top:340px}}
+.cw{{width:820px}} .cs{{font-size:30px;letter-spacing:6px;text-transform:uppercase;color:var(--hl);text-align:center}}
+.ctt{{font-family:var(--display);font-size:92px;font-weight:var(--dw);text-transform:uppercase;text-align:center;color:var(--hl);margin:10px 0 50px;line-height:1.05}}
+.ci{{display:flex;align-items:center;gap:26px;font-size:46px;font-weight:600;padding:22px 28px;margin-top:18px;border-radius:18px;background:rgba(255,255,255,.06)}}
+.ci b{{flex:none;width:64px;height:64px;border-radius:50%;background:var(--accent);color:{style["bg"]};display:flex;align-items:center;justify-content:center;font-size:36px}}
 </style></head><body>
 <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{W}" data-height="{H}">
 <div class="clip scrim" data-start="0" data-duration="{total:.2f}" data-track-index="0"></div>
@@ -263,20 +285,59 @@ window.__timelines["main"]=tl; tl.seek(0);
 json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
           open(f"{ov}/hyperframes.json", "w"))
 open(f"{ov}/package.json", "w").write('{"name":"overlay","private":true,"type":"module"}')
-run([*HF, "render", "-o", f"{B}/overlay.webm", "--format", "webm", "--quiet"], cwd=ov)
+run([*HF, "render", "-o", f"{B}/overlay.webm", "--format", "webm", "-q", "draft" if DRAFT else "standard", "--quiet"], cwd=ov)
 
-# 6. Âm thanh: nhạc tổng hợp + tiếng vút ở tâm mỗi chuyển cảnh (không có nhạc thì để im lặng)
+# 6. Âm thanh: giọng gốc của cảnh (nếu bật) + nhạc tổng hợp + tiếng vút ở tâm mỗi chuyển cảnh
 audio = tl.get("audio", {})
+voice = audio.get("voice", False)
+mvol = audio.get("music_volume", 1.0) * (0.25 if voice else 1.0)  # có giọng thì nhạc nhỏ xuống
 if audio.get("music", "synth") == "synth":
     wh = [str(t0 + d / 2) for t0, d, ty in L["transitions"] if ty != "cut"] if audio.get("whoosh", True) else []
     run(["python3", os.path.join(ROOT, "scripts/music.py"), f"{total:.2f}", f"{B}/music.wav", *wh])
 else:
     ff("-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", f"{total:.2f}", f"{B}/music.wav")
+if voice:
+    vparts = []
+    for i, c in enumerate(shots):
+        raw = f"{B}/raw/{c['file']}"
+        has_a = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries", "stream=index", "-of", "csv=p=0", raw],
+                               capture_output=True, text=True).stdout.strip()
+        src = ["-ss", str(c["in"]), "-t", str(c["dur"]), "-i", raw, "-vn"] if has_a else ["-f", "lavfi", "-t", str(c["dur"]), "-i", "anullsrc=r=44100:cl=stereo"]
+        ff(*src, "-ac", "2", "-ar", "44100", "-t", str(c["dur"]), f"{B}/v{i}.wav"); vparts.append(f"{B}/v{i}.wav")
+        if i < n - 1 and L["transitions"][i][1] > 0:
+            ff("-f", "lavfi", "-t", str(L["transitions"][i][1]), "-i", "anullsrc=r=44100:cl=stereo", f"{B}/vs{i}.wav"); vparts.append(f"{B}/vs{i}.wav")
+    open(f"{B}/vlist.txt", "w").write("".join(f"file '{p}'\n" for p in vparts))
+    ff("-f", "concat", "-safe", "0", "-i", f"{B}/vlist.txt", "-c", "copy", f"{B}/voice.wav")
 
-# 7. Ghép cuối: nền + lớp chữ trong suốt + âm thanh
+# Cảnh trám: cắt từng đoạn về khung dọc, cùng chỉnh màu của phong cách
+brs = tl.get("broll", [])
+for k, x in enumerate(brs):
+    ff("-ss", str(x["in"]), "-t", str(x["dur"]), "-i", f"{B}/raw/{x['file']}", "-an",
+       "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},{LOOKS[style['look']][1]},fps={FPS},format=yuv420p",
+       "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/br{k}.mp4")
+
+# 7. Ghép cuối: nền (+ zoom) + cảnh trám + lớp chữ trong suốt + âm thanh
 os.makedirs(os.path.join(ROOT, "out"), exist_ok=True)
-ff("-i", f"{B}/base.mp4", "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav",
-   "-filter_complex", "[0:v][1:v]overlay=0:0:shortest=1,format=yuv420p[v]", "-map", "[v]", "-map", "2:a",
-   "-c:v", "libx264", "-crf", "19", "-preset", "medium", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",
-   "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{NAME}.mp4"))
-print(f"Xong: out/{NAME}.mp4 ({total:.1f}s, {n} cảnh)")
+ins = ["-i", f"{B}/base.mp4", "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav"]
+fc, cur = [], "0:v"
+zs = tl.get("zooms", [])
+if zs:  # phóng to khung trong từng đoạn (tính theo số khung hình)
+    z = "1"
+    for x in reversed(zs):
+        z = f"if(between(in,{round(x['start'] * FPS)},{round((x['start'] + x['dur']) * FPS)}),{x['scale']},{z})"
+    fc.append(f"[{cur}]zoompan=z='{z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS}[z]"); cur = "z"
+for k, x in enumerate(brs):
+    ins += ["-i", f"{B}/br{k}.mp4"]
+    fc.append(f"[{3 + k}:v]setpts=PTS-STARTPTS+{x['start']}/TB[b{k}]")
+    fc.append(f"[{cur}][b{k}]overlay=0:0:enable='between(t,{x['start']},{x['start'] + x['dur']})':eof_action=pass[o{k}]"); cur = f"o{k}"
+fc.append(f"[{cur}][1:v]overlay=0:0:shortest=1,format=yuv420p[v]")
+fc.append(f"[2:a]volume={mvol}[m]")
+if voice:
+    ins += ["-i", f"{B}/voice.wav"]
+    fc.append(f"[{3 + len(brs)}:a][m]amix=inputs=2:duration=first:normalize=0[a]")
+else:
+    fc.append("[m]anull[a]")
+ff(*ins, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
+   "-c:v", "libx264", "-crf", "28" if DRAFT else "19", "-preset", "veryfast" if DRAFT else "medium",
+   "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{OUTNAME}.mp4"))
+print(f"Xong: out/{OUTNAME}.mp4 ({total:.1f}s, {n} cảnh)")
