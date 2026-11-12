@@ -17,6 +17,8 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Xem app studio có những nút gì | `05-app/GIAO-DIEN-TINH-NANG.md` |
 | Chọn chuyển cảnh, filter màu, kiểu chữ | `04-thu-vien/THU-VIEN-HIEU-UNG.md` |
 | Xem đặc tả thư viện mẫu (bố cục, khung, chữ, nhịp) | `04-thu-vien/THU-VIEN-MAU.md` |
+| Chọn hiệu ứng âm (vút, bụp, ting…), thêm âm thật | `04-thu-vien/THU-VIEN-AM-THANH.md`, `../video-studio/thu-vien-am-thanh/README.md` |
+| Dùng mẫu edit có sẵn (ví dụ "Mẫu edit video 1 chuyên nghiệp"), thêm mẫu mới | `../video-studio/thu-vien-mau/README.md` |
 | Xem 10 repo chuyên nghiệp và cái nào đã dùng | `04-thu-vien/THU-VIEN-CHUYEN-NGHIEP.md` |
 | Xem kế hoạch, đang ở bước nào | `03-ke-hoach/KE-HOACH-APP.md`, bảng Trạng thái trong `../CLAUDE.md` |
 | Hiểu cách làm cũ (không làm theo) | `99-luu-tru/README.md` |
@@ -41,6 +43,7 @@ docs/
   04-thu-vien/
     THU-VIEN-HIEU-UNG.md           tự sinh từ effects.py (222 chuyển cảnh, 9 filter…)
     THU-VIEN-MAU.md                đặc tả mẫu
+    THU-VIEN-AM-THANH.md           21 hiệu ứng âm, tự sinh từ hieu-ung.json ★
     THU-VIEN-CHUYEN-NGHIEP.md      10 repo GitHub
   05-app/
     GIAO-DIEN-TINH-NANG.md         tính năng app studio

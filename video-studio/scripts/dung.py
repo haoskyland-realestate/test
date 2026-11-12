@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from timeline import check, layout, size
 from effects import STYLES, LOOKS, TRANSITIONS
 from mau import khung, tu_can
+from am_thanh import tron_sfx
 
 DRAFT = "--nhap" in sys.argv[2:]
 if len(sys.argv) < 2 or any(a != "--nhap" for a in sys.argv[2:]):
@@ -198,6 +199,7 @@ def anim_in(name, sel, t):
         "pop": f'tl.fromTo("{sel} .line",{{opacity:0,scale:1.18}},{{opacity:1,scale:1,duration:{d(.6)},ease:"expo.out",stagger:{d(.12)}}},{t:.2f});',
         "track": f'tl.fromTo("{sel} .line",{{opacity:0,letterSpacing:"0.35em"}},{{opacity:1,letterSpacing:"0em",duration:{d(1.0)},ease:"expo.out",stagger:{d(.15)}}},{t:.2f});',
         "type": f'tl.fromTo("{sel} .c",{{opacity:0}},{{opacity:1,duration:0.01,stagger:{d(.035)}}},{t:.2f});',
+        "zoom-blur": f'tl.fromTo("{sel} .line",{{opacity:0,scale:1.35,filter:"blur(18px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out",stagger:{d(.1)}}},{t:.2f});',
     }[name]
 
 
@@ -240,6 +242,12 @@ for i, s in enumerate(tl.get("texts", [])):
         a = ([anim_in(an, sel, st0)] if s.get("title") else []) + [
             f'tl.fromTo("{sel} .ck",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:{d(.45)},ease:"power3.out",stagger:{d(.45)}}},{st0 + 0.5:.2f});',
             f'tl.fromTo("{sel} .tick",{{scale:0}},{{scale:1,duration:{d(.4)},ease:"back.out(3)",stagger:{d(.45)}}},{st0 + 0.6:.2f});']
+    elif kind == "title3d":  # mẫu edit-phim-01: nhãn nhỏ trên, chữ lớn nổi 3D lao vào, dòng nhỏ dưới
+        body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "") + f'<div class="t3big">{words(s["big"])}</div>'
+                + (f'<div class="t3sub">{words(s["sub"])}</div>' if s.get("sub") else ""))
+        a = [f'tl.fromTo("{sel} .t3top",{{opacity:0,y:20,filter:"blur(8px)"}},{{opacity:1,y:0,filter:"blur(0px)",duration:{d(.35)}}},{st0:.2f});',
+             f'tl.fromTo("{sel} .t3big",{{opacity:0,scale:1.5,filter:"blur(22px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out"}},{st0 + 0.15:.2f});',
+             f'tl.fromTo("{sel} .t3sub",{{opacity:0,y:-16}},{{opacity:1,y:0,duration:{d(.35)}}},{st0 + 0.45:.2f});']
     elif kind == "stat":
         dec = int(s.get("decimals", 0))
         body = (f'<div class="stat"><span class="pre">{html.escape(s.get("prefix", ""))}</span><span class="val">0</span>'
@@ -248,7 +256,8 @@ for i, s in enumerate(tl.get("texts", [])):
               f'const o{i}={{v:0}};tl.to(o{i},{{v:{s["value"]},duration:{d(1.4)},ease:"power2.out",onUpdate:()=>fmt("{sel} .val",o{i}.v,{dec})}},{st0 + 0.1:.2f});']
     else:
         body = "".join(line(l, "mid", ch) for l in s["lines"])
-    a.append(f'tl.to("{sel}",{{opacity:0,y:-40,duration:{d(.35)},ease:"power2.in"}},{st0 + du - 0.4 * SP:.2f});')
+    a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind == "title3d"
+             else f'tl.to("{sel}",{{opacity:0,y:-40,duration:{d(.35)},ease:"power2.in"}},{st0 + du - 0.4 * SP:.2f});')
     blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}" data-start="{st0:.2f}" data-duration="{du:.2f}" '
                   f'data-track-index="{(6 if kind == "source" else 1 + i % 2)}">{body}</div>')
     anims += a
@@ -277,6 +286,7 @@ YT_CSS = """
 .card{align-items:center;padding-top:0}
 .cw{zoom:.62;width:1700px}
 .logo{top:44px;left:56px;font-size:24px}
+.title3d{left:0;right:0;width:auto;top:330px;bottom:auto}
 """
 ov = f"{B}/overlay"; shutil.rmtree(ov, ignore_errors=True); os.makedirs(ov)
 shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), ov)
@@ -322,11 +332,16 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;background:transparent;font-
 .sub{{position:absolute;left:70px;right:70px;top:1150px;text-align:center;z-index:6}}
 .sub > span{{display:inline-block;font-family:var(--display);font-size:60px;font-weight:800;line-height:1.35;color:#fff;padding:10px 24px;border-radius:20px;background:rgba(var(--scrim),.6);text-shadow:0 3px 10px rgba(0,0,0,.55)}}
 .sub .hl{{display:inline-block;color:#14110a;background:var(--hl);font-size:1.2em;padding:0 14px;border-radius:12px;margin:0 3px;text-shadow:none}}
+.title3d{{left:50px;right:50px;bottom:auto;top:520px;text-align:center}}
+.t3top{{font-size:46px;font-weight:600;text-shadow:0 3px 14px rgba(0,0,0,.6)}}
+.t3big{{font-family:var(--display);font-size:205px;font-weight:var(--dw);line-height:1.02;letter-spacing:-3px;white-space:nowrap}}
+.t3sub{{font-size:42px;font-weight:600;margin-top:6px;text-shadow:0 3px 14px rgba(0,0,0,.6)}}
 .card{{position:absolute;inset:0;background:{style["bg"]};z-index:5;display:flex;align-items:flex-start;justify-content:center;padding-top:340px}}
 .cw{{width:820px}} .cs{{font-size:30px;letter-spacing:6px;text-transform:uppercase;color:var(--hl);text-align:center}}
 .ctt{{font-family:var(--display);font-size:92px;font-weight:var(--dw);text-transform:uppercase;text-align:center;color:var(--hl);margin:10px 0 50px;line-height:1.05}}
 .ci{{display:flex;align-items:center;gap:26px;font-size:46px;font-weight:600;padding:22px 28px;margin-top:18px;border-radius:18px;background:rgba(255,255,255,.06)}}
 .ci b{{flex:none;width:64px;height:64px;border-radius:50%;background:var(--accent);color:{style["bg"]};display:flex;align-items:center;justify-content:center;font-size:36px}}
+{style.get("css", "")}
 {YT_CSS if YT else ""}
 </style></head><body>
 <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{W}" data-height="{H}">
@@ -397,11 +412,14 @@ for k, x in enumerate(brs):
     fc.append(f"[{cur}][b{k}]overlay=0:0:enable='between(t,{x['start']},{x['start'] + x['dur']})':eof_action=pass[o{k}]"); cur = f"o{k}"
 fc.append(f"[{cur}][1:v]overlay=0:0:shortest=1,format=yuv420p[v]")
 fc.append(f"[2:a]volume={mvol}[m]")
+mix = ["[m]"]
 if voice:
     ins += ["-i", f"{B}/voice.wav"]
-    fc.append(f"[{3 + len(brs)}:a][m]amix=inputs=2:duration=first:normalize=0[a0]")
-else:
-    fc.append("[m]anull[a0]")
+    fc.append(f"[{3 + len(brs)}:a]anull[vo]"); mix.insert(0, "[vo]")
+if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-vien-am-thanh/) trộn sẵn thành một file
+    ins += ["-i", f"{B}/sfx.wav"]
+    fc.append(f"[{3 + len(brs) + bool(voice)}:a]anull[sx]"); mix.append("[sx]")
+fc.append(f"{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0[a0]" if len(mix) > 1 else "[m]anull[a0]")
 # Chuẩn âm lượng EBU R128 cho mạng xã hội (−14 LUFS, đỉnh −1,5 dB), cùng thuật toán ffmpeg-normalize dùng
 fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")
 ff(*ins, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",

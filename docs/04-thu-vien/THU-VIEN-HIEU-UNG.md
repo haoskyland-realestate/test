@@ -8,6 +8,7 @@ Tự sinh từ `video-studio/scripts/effects.py`. Dùng tên ở cột đầu tr
 | `hien-dai` | Hiện đại: chữ đậm không chân, vàng nhấn, nhịp nhanh (giống video test đã duyệt) |
 | `sang-trong` | Sang trọng: navy + vàng champagne, tiêu đề chữ có chân, chuyển động chậm, màu ấm có viền tối |
 | `toi-gian` | Tối giản: đen trắng, một màu nhấn nhạt, chữ mảnh, hiện mờ dần, màu nhạt |
+| `edit-phim` | Edit phim (mẫu edit-phim-01): chữ trắng nổi 3D giữa khung, lao vào mờ → rõ, nhịp nhanh, màu rực, phụ đề nhỏ nền tối |
 
 ## Chỉnh màu (`look` của từng cảnh, mặc định theo phong cách)
 | Tên | Mô tả |
@@ -258,6 +259,7 @@ Tự sinh từ `video-studio/scripts/effects.py`. Dùng tên ở cột đầu tr
 | `pop` | Từng dòng phóng nhẹ 118% → 100% (hook) |
 | `track` | Chữ giãn rộng rồi thu về (tiêu đề sang trọng) |
 | `type` | Gõ từng ký tự (phân tích, tin nhanh) |
+| `zoom-blur` | Cả dòng lao vào từ to và mờ → đúng cỡ và rõ (mẫu edit-phim-01) |
 
 ## Khối chữ (`texts[].kind`)
 | Tên | Trường bắt buộc | Mô tả |
@@ -271,3 +273,4 @@ Tự sinh từ `video-studio/scripts/effects.py`. Dùng tên ở cột đầu tr
 | `source` | text | Thẻ nguồn nhỏ, bắt buộc khi có số liệu: 'Nguồn: …, cập nhật …' |
 | `checklist` | items | Danh sách kiểm, từng mục hiện dần có dấu ✓ (thêm 'title') |
 | `stat` | value, label | Số lớn chạy từ 0 (thêm 'prefix', 'suffix', 'decimals') |
+| `title3d` | big | Chữ lớn nổi 3D giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub') — mẫu edit-phim-01 |

@@ -48,6 +48,8 @@ video-studio/                 phần mềm
   studio/                     app timeline (server.py + index.html)  ← dùng hằng ngày
   scripts/                    bộ dựng, phụ đề, master cut, màu, xuất Premiere/DaVinci, test
   projects/<tên video>/       một thư mục cho mỗi video (xem mục 3)
+  thu-vien-am-thanh/          hiệu ứng âm <nhóm>_<tên>_<số>.wav + hieu-ung.json; nhac/ (chờ kho nhạc)
+  thu-vien-mau/               mẫu edit: <loại>-<số>_<tên>/ (mau.json + MAU.md), ví dụ edit-phim-01_chuyen-nghiep
   thu-vien-chuyen-nghiep/     10 repo GitHub tham khảo (submodule)
   engines/, app/, videos/     hệ cũ (mẫu đồ hoạ HyperFrames, form GitHub): còn chạy, ít dùng
   out/                        video dựng ra (không lên GitHub)

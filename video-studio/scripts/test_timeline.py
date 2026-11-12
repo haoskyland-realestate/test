@@ -32,6 +32,11 @@ yt = copy.deepcopy(ok); yt["meta"]["platform"] = "youtube"; yt["audio"]["music"]
 assert check(yt) == [], check(yt)
 bad(lambda t: t["audio"].update(music="../a.mp3"), "audio.music")
 bad(lambda t: t["audio"].update(music="a.exe"), "audio.music")
+bad(lambda t: t.update(sfx=[{"start": 1, "dur": 0.5, "file": "khong-co"}]), "không có trong kho")
+bad(lambda t: t.update(sfx=[{"start": 1, "dur": 0.5}]), "Hiệu ứng âm 1: thiếu file")
+bad(lambda t: t.update(sfx=[{"start": 1, "dur": 0.5, "file": "chu_pop_01", "vol": 3}]), "'vol' từ 0 đến 2")
+sf = copy.deepcopy(ok); sf["sfx"] = [{"start": 12.5, "dur": 2.8, "file": "impact_boom_01"}]  # kéo quá cuối video: hợp lệ
+assert check(sf) == [], check(sf)
 bad(lambda t: t["meta"].update(style="neon"), "Phong cách 'neon' chưa có")
 bad(lambda t: t["clips"][0].update(look="xyz"), "chỉnh màu 'xyz' chưa có")
 bad(lambda t: t["texts"][0].update(anim="spin"), "hiệu ứng 'spin' chưa có")

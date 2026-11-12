@@ -15,7 +15,8 @@ Câu lệnh cho từng bước: `mau/PROMPT-MAU.md` (cùng số thứ tự). Ch�
 | 6 | Storyboard (video ghép cảnh) | Claude Code, skill `lap-storyboard` | PC | `STORYBOARD.md`, `timeline.json` | **Hào duyệt** |
 | 6b | Video nói trước máy | App: Cắt → ✨ Master cut | PC | `timeline.json` đã cắt, báo cáo | Hào xem lại trong app |
 | 7 | Phụ đề | App: Phụ đề → Tạo phụ đề từ giọng nói | PC | phụ đề trong timeline | Hào đọc lại tên riêng, số |
-| 8 | Chữ, zoom, cảnh trám, chuyển cảnh, nhạc | Hào trong app (hoặc Claude Code sửa bằng lời) | PC / điện thoại cùng wifi | `timeline.json` | Xem trước ổn |
+| 7b | Áp mẫu edit (vd. `edit-phim-01`) | App: Thương hiệu → Mẫu edit → Áp mẫu | PC | phong cách, chuyển cảnh, hiệu ứng âm tự rải | Đổi tay chuyển cảnh mạnh cho rơi đúng chỗ đổi chương |
+| 8 | Chữ, zoom, cảnh trám, chuyển cảnh, nhạc, hiệu ứng âm | Hào trong app (hoặc Claude Code sửa bằng lời) | PC / điện thoại cùng wifi | `timeline.json` | Xem trước ổn |
 | 9 | Dựng nháp → xem → Xuất video | App | PC | `out/<tên>.mp4` | |
 | 10 | Nghiệm thu | Claude Code, skill `bao-cao-nghiem-thu` | PC | `out/<tên>-baocao.md` | Không còn mục "chưa đạt" quan trọng |
 | 11 | Chỉnh tay (nếu cần) | Premiere / DaVinci qua nút "Premiere/DaVinci" | PC | file dự án phần mềm đó | |

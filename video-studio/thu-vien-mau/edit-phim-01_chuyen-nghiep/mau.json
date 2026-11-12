@@ -1,0 +1,21 @@
+{
+ "id": "edit-phim-01",
+ "ten": "Mẫu edit video 1 chuyên nghiệp",
+ "loai": "edit phim",
+ "mo_ta": "Review dự án BĐS nhịp nhanh: người dẫn đi/đứng trước cảnh, chữ trắng nổi 3D giữa khung lao vào mờ → rõ, cắt thẳng là chính, cứ 2–4 cảnh có một chuyển cảnh mạnh (phóng mờ, xoay, cháy sáng) kèm tiếng vút; mỗi chữ lớn hiện có tiếng vụt-bụp, con số có tiếng ting.",
+ "nguon": "Phân tích video mẫu 55 giây Hào gửi 12/11/2026 (chỉ lưu phân tích, không lưu video gốc). Chi tiết: MAU.md",
+ "meta": {"style": "edit-phim"},
+ "audio": {"music": null, "whoosh": false},
+ "chuyen_canh": {
+  "chu_ky": ["cut", "gl-CrossZoom", "cut", "gl-WhipSpin", "cut", "cut", "gl-FilmBurn", "cut", "cut", "gl-Overexposure"],
+  "dur": {"gl-CrossZoom": 0.35, "gl-WhipSpin": 0.4, "gl-FilmBurn": 0.6, "gl-Overexposure": 0.4}
+ },
+ "sfx": {
+  "chuyen_canh": {"gl-CrossZoom": "whoosh_zoom_01", "gl-WhipSpin": "whoosh_xoay_01", "gl-FilmBurn": "anh-sang_chay_01", "gl-Overexposure": "anh-sang_flash_01"},
+  "truoc_chuyen_canh": {"gl-FilmBurn": "riser_nguoc_01"},
+  "chu": {"title3d": "chu_swish-pop_01", "line": "chu_swish-pop_01", "hook": "impact_tram_01", "section": "impact_hit_01",
+          "stat": "chu_swish-pop_01", "lower": "chu_pop_01", "quote": "chu_pop_01", "checklist": "chu_tick_01", "outro": "ting_ket_01"},
+  "so_lieu": "ting_don_01",
+  "vol": {"whoosh": 0.8, "anh-sang": 0.8, "riser": 0.5, "chu": 0.55, "ting": 0.45, "impact": 0.9}
+ }
+}

@@ -25,6 +25,21 @@ STYLES = {
         "fonts": "family=Be+Vietnam+Pro:wght@300;400;600",
         "speed": 1.2, "anim": "blur", "look": "nhat-toi-gian",
     },
+    "edit-phim": {
+        "vi": "Edit phim (mẫu edit-phim-01): chữ trắng nổi 3D giữa khung, lao vào mờ → rõ, nhịp nhanh, màu rực, phụ đề nhỏ nền tối",
+        "bg": "#0a0a0c", "scrim": "0,0,0", "accent": "#ffffff", "hl": "#ffffff", "text": "#ffffff",
+        "display": "Montserrat", "body": "Montserrat", "display_weight": 900,
+        "fonts": "family=Montserrat:wght@500;600;800;900",
+        "speed": 0.9, "anim": "zoom-blur", "look": "tuoi-dam",
+        # CSS riêng của phong cách (bộ dựng chèn vào lớp chữ). Chữ 3D: chồng nhiều lớp bóng xám đậm dần xuống dưới.
+        "css": """
+.scrim{height:40%;opacity:.7}
+.line.big,.line.mid,.t3big{color:#fff;text-shadow:0 2px 0 #e2e2e2,0 4px 0 #c8c8c8,0 6px 0 #b0b0b0,0 8px 0 #999,0 12px 6px rgba(0,0,0,.35),0 18px 30px rgba(0,0,0,.45)}
+.sub{top:1380px}
+.sub > span{font-family:var(--body);font-size:40px;font-weight:600;padding:8px 22px;border-radius:14px;background:rgba(0,0,0,.5);text-shadow:none}
+.sub .hl{font-size:1em}
+""",
+    },
 }
 
 # Bộ màu lọc (filter): áp sau bước chuyển tông HDR và tự cân màu từng cảnh (scripts/mau.py).
@@ -89,6 +104,7 @@ TEXT_ANIMS = {
     "pop": "Từng dòng phóng nhẹ 118% → 100% (hook)",
     "track": "Chữ giãn rộng rồi thu về (tiêu đề sang trọng)",
     "type": "Gõ từng ký tự (phân tích, tin nhanh)",
+    "zoom-blur": "Cả dòng lao vào từ to và mờ → đúng cỡ và rõ (mẫu edit-phim-01)",
 }
 
 # Khối chữ: (trường bắt buộc, mô tả).
@@ -102,6 +118,7 @@ TEXT_KINDS = {
     "source": (["text"], "Thẻ nguồn nhỏ, bắt buộc khi có số liệu: 'Nguồn: …, cập nhật …'"),
     "checklist": (["items"], "Danh sách kiểm, từng mục hiện dần có dấu ✓ (thêm 'title')"),
     "stat": (["value", "label"], "Số lớn chạy từ 0 (thêm 'prefix', 'suffix', 'decimals')"),
+    "title3d": (["big"], "Chữ lớn nổi 3D giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub') — mẫu edit-phim-01"),
 }
 
 

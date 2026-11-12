@@ -10,6 +10,7 @@
   "cards": [{"start": 5, "dur": 4, "step": "Bước 2", "title": "Giao cho ChatGPT", "items": ["Mở ChatGPT"]}],   # minh họa nền đen
   "zooms": [{"start": 3, "dur": 2, "scale": 1.07}],                    # phóng to khung (1.07 = 7%)
   "broll": [{"start": 8, "dur": 3, "file": "b.mp4", "id": "", "in": 0}],   # cảnh trám: phủ hình, giữ tiếng
+  "sfx": [{"start": 4.6, "dur": 0.6, "file": "whoosh_zoom_01", "vol": 1.0}],   # hiệu ứng âm: start = lúc file bắt đầu phát (scripts/am_thanh.py)
   "audio": {"music": "synth", "whoosh": true, "voice": false, "music_volume": 1.0}   # voice: giữ tiếng gốc của cảnh
                                                 # music: "synth" (nhạc tổng hợp), null (không nhạc) hoặc tên file nhạc trong build/raw/ (vd "nhac.mp3")
 }
@@ -19,6 +20,7 @@ Mốc giờ của chữ (start) tính trên video thành phẩm (đã cộng chu
 import re
 
 from effects import STYLES, LOOKS, TRANSITIONS, TEXT_ANIMS, TEXT_KINDS
+from am_thanh import SFX
 
 PLATFORMS = {"tiktok": (1080, 1920, "TikTok / Reels / Shorts dọc 9:16"), "youtube": (1920, 1080, "YouTube ngang 16:9")}
 AUDIO_EXT = r"\.(mp3|wav|m4a|aac|flac|ogg)$"
@@ -100,13 +102,17 @@ def check(tl):
         elif x["start"] < 0 or x["dur"] <= 0 or x["start"] + x["dur"] > total + 0.01:
             e.append(f"Chữ {i}: {x['start']}s + {x['dur']}s nằm ngoài video ({total:.2f}s)")
     for key, name, need in (("subtitles", "Phụ đề", ["text"]), ("cards", "Minh họa", ["title"]),
-                            ("zooms", "Zoom", ["scale"]), ("broll", "Cảnh trám", ["file", "in"])):
+                            ("zooms", "Zoom", ["scale"]), ("broll", "Cảnh trám", ["file", "in"]), ("sfx", "Hiệu ứng âm", ["file"])):
         for i, x in enumerate(tl.get(key, []), 1):
             miss = [k for k in ["start", "dur"] + need if k not in x]
             if miss:
                 e.append(f"{name} {i}: thiếu {', '.join(miss)}")
-            elif x["start"] < 0 or x["dur"] <= 0 or x["start"] + x["dur"] > total + 0.01:
+            elif x["start"] < 0 or x["dur"] <= 0 or x["start"] + (0 if key == "sfx" else x["dur"]) > total + 0.01:  # âm được kéo dài quá cuối, bộ trộn tự cắt
                 e.append(f"{name} {i}: {x['start']}s + {x['dur']}s nằm ngoài video ({total:.2f}s)")
             elif key == "zooms" and not 1 <= x["scale"] <= 1.6:
                 e.append(f"Zoom {i}: 'scale' từ 1 đến 1.6 (1.07 = phóng 7%)")
+            elif key == "sfx" and x["file"] not in SFX:
+                e.append(f"Hiệu ứng âm {i}: '{x['file']}' không có trong kho (thu-vien-am-thanh/hieu-ung.json)")
+            elif key == "sfx" and not 0 <= x.get("vol", 1) <= 2:
+                e.append(f"Hiệu ứng âm {i}: 'vol' từ 0 đến 2")
     return e

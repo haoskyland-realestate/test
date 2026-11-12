@@ -9,6 +9,8 @@ sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from timeline import check, layout, AUDIO_EXT, PLATFORMS  # noqa: E402
 from mau import chuyen_tong  # noqa: E402
 import effects  # noqa: E402
+from am_thanh import SFX, SFX_DIR  # noqa: E402
+from ap_mau import MAU, ap  # noqa: E402
 
 PROJ = os.path.join(ROOT, "projects")
 TOKEN = os.environ.get("STUDIO_TOKEN") or secrets.token_urlsafe(9)
@@ -22,7 +24,8 @@ def effects_json():
     return {"styles": {k: v["vi"] for k, v in e.STYLES.items()}, "looks": {k: {"vi": v[0], "css": v[2]} for k, v in e.LOOKS.items() if k != "trung-tinh"},
             "style_looks": {k: v["look"] for k, v in e.STYLES.items()},
             "transitions": {k: {"dur": v[0], "vi": v[3]} for k, v in e.TRANSITIONS.items()},
-            "anims": e.TEXT_ANIMS, "kinds": {k: {"need": v[0], "vi": v[1]} for k, v in e.TEXT_KINDS.items()}}
+            "anims": e.TEXT_ANIMS, "kinds": {k: {"need": v[0], "vi": v[1]} for k, v in e.TEXT_KINDS.items()},
+            "sfx": SFX, "mau": {k: {"ten": m["ten"], "loai": m.get("loai", ""), "mo_ta": m.get("mo_ta", "")} for k, m in MAU.items()}}
 
 
 VIDEO_EXT = re.compile(r"\.(mp4|mov|m4v|mkv|mts)$", re.I)
@@ -155,6 +158,8 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(200, duyet((urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("path") or [""])[0]))
             except (ValueError, OSError) as ex:
                 return self.send(400, {"error": str(ex)})
+        if len(parts) == 3 and parts[1] == "sfx" and parts[2] in SFX:  # nghe thử một hiệu ứng âm
+            return self.file(os.path.join(SFX_DIR, parts[2] + ".wav"), "audio/wav")
         if parts[1:] == ["projects"]:
             return self.send(200, sorted(n for n in os.listdir(PROJ) if self.project(n)))
         if len(parts) < 3 or not (d := self.project(parts[2])):
@@ -315,6 +320,16 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa"})
+        if parts == ["api", "apmau"]:  # áp mẫu edit: trả timeline mới, app tự giữ để hoàn tác rồi Hào bấm Lưu
+            try:
+                req = self.body() or {}
+                tl = req.get("timeline")
+                if req.get("id") not in MAU or not isinstance(tl, dict) or (errs := check(tl)):
+                    return self.send(400, {"error": "Mẫu không có hoặc timeline đang lỗi, bấm Lưu xem lỗi trước"})
+                out = ap(tl, MAU[req["id"]])
+                return self.send(200, {"timeline": out, "sfx": sum(1 for x in out.get("sfx", []) if x.get("auto"))})
+            except (ValueError, KeyError, TypeError) as ex:
+                return self.send(400, {"error": f"Không áp được mẫu: {ex}"})
         if parts == ["api", "new"]:
             try:
                 return self.send(200, tao_du_an(self.body() or {}))

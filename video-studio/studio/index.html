@@ -6,7 +6,7 @@
 <title>Hào Sky Land Studio</title>
 <style>
   :root { --bg:#0b0d10; --panel:#14171c; --card:#1b1f26; --line:#262b33; --text:#e9ebee; --dim:#8a919b; --lime:#e9f86b; --gold:#d4a64a; --err:#f2766b; --ok:#7bd88f;
-    --c-text:#9a8a2e; --c-sub:#2c3440; --c-card:#6b2140; --c-broll:#1f4f5a; --c-zoom:#24325a; }
+    --c-text:#9a8a2e; --c-sub:#2c3440; --c-card:#6b2140; --c-broll:#1f4f5a; --c-zoom:#24325a; --c-sfx:#4a2f66; }
   * { box-sizing:border-box; }
   html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif; }
   button, select, input, textarea { font:inherit; color:var(--text); background:#0f1216; border:1px solid var(--line); border-radius:10px; padding:7px 11px; }
@@ -37,6 +37,8 @@
   #stage { position:relative; height:100%; max-height:calc(100% - 50px); aspect-ratio:9/16; background:#000; border-radius:12px; overflow:hidden; flex:1; }
   #stage.yt { aspect-ratio:16/9; height:auto; width:100%; flex:none; }
   #stage.yt #ovl .blk { left:4.8%; right:auto; width:53%; bottom:11%; } #stage.yt #ovl .sub { top:auto; bottom:6.5%; left:5%; right:5%; }
+  #ovl .blk.t3 { top:27%; bottom:auto; left:4%; right:4%; text-align:center; } #ovl .t3 .l { font-size:2.3cqh; } #ovl .t3 .big { font-size:8.8cqh; line-height:1; text-shadow:0 .15cqh 0 #ccc,0 .3cqh 0 #aaa,0 .6cqh 1cqh #0008; }
+  #stage.yt #ovl .blk.t3 { left:0; right:0; width:auto; top:30%; }
   #stage.yt #ovl .card { justify-content:center; padding:0 22%; }
   #stage video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform-origin:center; }
   #pb { display:none; } #out { display:none; object-fit:contain !important; }
@@ -80,7 +82,7 @@
   .ln { position:relative; height:34px; } .ln.vid { height:52px; }
   .x { position:absolute; top:4px; bottom:4px; border-radius:8px; padding:0 8px; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:grab; display:flex; align-items:center; border:1.5px solid transparent; touch-action:none; user-select:none; }
   .x.sel { border-color:var(--lime); } .x .rz { position:absolute; right:0; top:0; bottom:0; width:8px; cursor:ew-resize; }
-  .x.text { background:var(--c-text); color:#fff7c8; } .x.sub { background:var(--c-sub); } .x.card { background:var(--c-card); } .x.broll { background:var(--c-broll); } .x.zoom { background:var(--c-zoom); }
+  .x.text { background:var(--c-text); color:#fff7c8; } .x.sub { background:var(--c-sub); } .x.card { background:var(--c-card); } .x.broll { background:var(--c-broll); } .x.zoom { background:var(--c-zoom); } .x.sfx { background:var(--c-sfx); }
   .x.clip { background:#202833 repeat-x left center/auto 100%; align-items:flex-start; padding-top:3px; text-shadow:0 1px 3px #000; cursor:pointer; }
   .x.clip .d { position:absolute; right:6px; bottom:4px; background:#000a; border-radius:5px; padding:0 5px; font-size:11px; }
   .x.tr { top:14px; bottom:14px; width:22px !important; padding:0; justify-content:center; background:#3a2f17; color:#f2d08a; z-index:2; cursor:pointer; }
@@ -145,7 +147,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const hl = s => esc(s).replace(/\*([^*]+)\*/g, '<span class="hl">$1</span>');
 const fmt = t => { t = Math.max(0, t); return `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, "0")}`; };
-const FPS = 30, TIMED = ["texts", "subtitles", "cards", "zooms", "broll"];
+const FPS = 30, TIMED = ["texts", "subtitles", "cards", "zooms", "broll", "sfx"];
 let files = [], FX, name, tl, sel = null, undoS = [], redoS = [], uid = 0, dirty = false, now = 0, playing = false, last = 0, tab = "texts", poll;
 
 // Tab: khóa dữ liệu, tên, mô tả
@@ -157,13 +159,15 @@ const TABS = [
   ["cards", "Minh hoạ", "Cảnh nền đen diễn giải ý đang nói — mỗi cảnh một ý."],
   ["broll", "Cảnh trám", "Phủ cảnh khác lên video chính, vẫn giữ tiếng nói."],
   ["audio", "Âm thanh", "Giọng gốc, nhạc nền, tiếng chuyển cảnh."],
+  ["sfx", "Hiệu ứng âm", "Tiếng vút, bụp, ting… đặt đúng lúc chuyển cảnh, chữ hiện. Bấm ▶ để nghe, “+” để thêm tại kim. Áp mẫu edit (tab Thương hiệu) tự rải."],
   ["frame", "Khung hình", "TikTok dọc 9:16 hoặc YouTube ngang 16:9, và vùng an toàn."],
   ["brand", "Thương hiệu", "Phong cách: màu, chữ, nhịp chuyển động."],
 ];
-const LANES = [["texts", "T  Chữ"], ["subtitles", "▭  Phụ đề"], ["cards", "▣  Minh hoạ"], ["broll", "▤  Cảnh trám"], ["zooms", "⌕  Zoom"], ["clips", "▶  Video"], ["voice", "∿  Giọng nói"]];
-const ARR = ["lines", "items"], OPT = {outro: ["note"], lower: ["sub"], quote: ["by"], checklist: ["title"], stat: ["prefix", "suffix", "decimals"]};
+const LANES = [["texts", "T  Chữ"], ["subtitles", "▭  Phụ đề"], ["cards", "▣  Minh hoạ"], ["broll", "▤  Cảnh trám"], ["zooms", "⌕  Zoom"], ["sfx", "♪  Hiệu ứng âm"], ["clips", "▶  Video"], ["voice", "∿  Giọng nói"]];
+const ARR = ["lines", "items"], OPT = {title3d: ["top", "sub"], outro: ["note"], lower: ["sub"], quote: ["by"], checklist: ["title"], stat: ["prefix", "suffix", "decimals"]};
 const LBL = {file: "Tên file", id: "ID Google Drive", tag: "Thẻ nhãn", num: "Số mục", title: "Tiêu đề", sub: "Dòng phụ", by: "Người nói", note: "Ghi chú nhỏ", text: "Nội dung",
   value: "Giá trị số", label: "Nhãn dưới số", prefix: "Chữ trước số", suffix: "Chữ sau số", decimals: "Số chữ số thập phân", step: "Nhãn bước (vd: Bước 2)",
+  top: "Nhãn trên (nhỏ, vd: chỉ từ)", big: "Chữ lớn (vd: 2.4 TỶ)", vol: "Âm lượng (1 = gốc, 0–2)",
   lines: "Các dòng (mỗi dòng một hàng, *từ* để tô màu)", items: "Các mục (mỗi mục một hàng)", in: "Bắt đầu từ giây (trong file gốc)", start: "Bắt đầu (giây trên video)", dur: "Độ dài (giây)", scale: "Mức phóng (1.07 = 7%)"};
 
 async function api(path, opt = {}) {
@@ -224,8 +228,8 @@ function drawTabs() {
   $("#add").hidden = !listy || tab === "clips"; $("#search").hidden = !listy;
 }
 function itemLabel(k, x) {
-  if (k === "texts") return x.title || x.text || (x.lines || x.items || [""])[0] || x.label || x.kind;
-  if (k === "subtitles") return x.text; if (k === "cards") return x.title; if (k === "zooms") return `Zoom ${Math.round((x.scale - 1) * 100)}%`;
+  if (k === "texts") return x.big || x.title || x.text || (x.lines || x.items || [""])[0] || x.label || x.kind;
+  if (k === "sfx") return (x.auto ? "" : "✎ ") + x.file; if (k === "subtitles") return x.text; if (k === "cards") return x.title; if (k === "zooms") return `Zoom ${Math.round((x.scale - 1) * 100)}%`;
   return x.file || "";
 }
 function drawList() {
@@ -238,7 +242,9 @@ function drawList() {
     const t0 = tab === "clips" ? L.starts[i] : x.start;
     const pic = tab === "clips" || tab === "broll" ? `<div style="height:90px;border-radius:8px;margin-bottom:8px;background:#222 center/cover url('${media("thumb", x.file + "@" + (+x.in + 0.3).toFixed(1))}')"></div>` : "";
     return `<div class="it${sel && sel.k === tab && sel.i === i ? " sel" : ""}" data-k="${tab}" data-i="${i}">${pic}<div class="h">${i + 1}. ${esc(lab)}</div><div class="m">${fmt(t0)} · ${(+x.dur).toFixed(1)}s${x.kind ? " · " + x.kind : ""}</div></div>`;
-  }).join("") + (tab === "clips" ? `<div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button id="mc" class="lime">✨ Master cut</button><button id="mcR">Chỉ phân tích</button><span class="dim">Cắt khoảng lặng, bỏ câu nói vấp, chấm điểm khung hình, chọn khúc đẹp, chỉnh nhịp. Bản cũ vẫn ở Lịch sử.</span></div>` : "") + (tab === "subtitles" ? `<div style="grid-column:1/-1"><div class="row" style="margin:0 0 10px"><button id="asr" class="lime">🎙 Tạo phụ đề từ giọng nói</button><span class="dim" style="align-self:center">Nhận dạng tiếng Việt, chỉ thay phụ đề tự sinh; phụ đề tự gõ giữ nguyên.</span></div><details><summary class="dim">Dán nội dung file SRT</summary><textarea id="srt" style="width:100%;min-height:100px;margin-top:8px" placeholder="1&#10;00:00:00,500 --> 00:00:02,000&#10;Câu phụ đề"></textarea><div class="row"><button id="srtGo">Thêm phụ đề từ SRT</button></div></details></div>` : "")
+  }).join("") + (tab === "clips" ? `<div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button id="mc" class="lime">✨ Master cut</button><button id="mcR">Chỉ phân tích</button><span class="dim">Cắt khoảng lặng, bỏ câu nói vấp, chấm điểm khung hình, chọn khúc đẹp, chỉnh nhịp. Bản cũ vẫn ở Lịch sử.</span></div>` : "") + (tab === "sfx" ? `<div style="grid-column:1/-1"><h4 style="margin:12px 0 6px">Kho hiệu ứng âm (${Object.keys(FX.sfx).length})</h4><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px">`
+      + Object.entries(FX.sfx).filter(([k, v]) => !q || (k + v.vi + v.dung_khi).toLowerCase().includes(q)).map(([k, v]) => `<div class="it"><div class="h">${k}</div><div class="m">${esc(v.vi)} · ${v.dai}s</div><div class="m">${esc(v.dung_khi)}</div><div class="row" style="margin:6px 0 0"><button data-play="${k}">▶</button><button data-addsfx="${k}">+ Thêm tại kim</button></div></div>`).join("") + `</div></div>` : "")
+    + (tab === "subtitles" ? `<div style="grid-column:1/-1"><div class="row" style="margin:0 0 10px"><button id="asr" class="lime">🎙 Tạo phụ đề từ giọng nói</button><span class="dim" style="align-self:center">Nhận dạng tiếng Việt, chỉ thay phụ đề tự sinh; phụ đề tự gõ giữ nguyên.</span></div><details><summary class="dim">Dán nội dung file SRT</summary><textarea id="srt" style="width:100%;min-height:100px;margin-top:8px" placeholder="1&#10;00:00:00,500 --> 00:00:02,000&#10;Câu phụ đề"></textarea><div class="row"><button id="srtGo">Thêm phụ đề từ SRT</button></div></details></div>` : "")
     || `<div class="dim">Chưa có mục nào. Bấm “Thêm”.</div>`;
 }
 function settings() {
@@ -257,6 +263,9 @@ function settings() {
     <p class="dim">Vùng an toàn (khung đỏ, bật/tắt dưới khung xem): TikTok — 220px trên, 420px dưới, 140px phải (giao diện app che); YouTube — chừa 5% mỗi cạnh.</p></div>`; }
   if (tab === "brand") return `<div style="grid-column:1/-1">` + Object.entries(FX.styles).map(([k, v]) =>
     `<div class="it${(tl.meta.style || "hien-dai") === k ? " sel" : ""}" data-style="${k}" style="margin-bottom:8px"><div class="h">${k}</div><div class="m">${esc(v)}</div></div>`).join("")
+    + `<h4 style="margin:16px 0 6px">Mẫu edit</h4>` + Object.entries(FX.mau).map(([k, m]) =>
+      `<div class="it${tl.meta.mau === k ? " sel" : ""}" style="margin-bottom:8px"><div class="h">${esc(m.ten)} <span class="dim">(${k} · ${esc(m.loai)})</span></div><div class="m">${esc(m.mo_ta)}</div><div class="row"><button class="lime" data-mau="${k}">Áp mẫu</button></div></div>`).join("")
+    + `<p class="dim">Áp mẫu: đổi phong cách, nhịp chuyển cảnh, tự rải hiệu ứng âm (hàng ♪). Hoàn tác được; nhớ bấm Lưu. Phân tích mẫu: video-studio/thu-vien-mau/.</p>`
     + `<p class="dim">Logo và màu thật của Hào Sky Land: chờ Hào gửi.</p></div>`;
   return "";
 }
@@ -287,6 +296,10 @@ function inspector() {
     h = `<h3>Khối chữ ${sel.i + 1}</h3><label>Kiểu khối</label><select data-f="kind">${opts(FX.kinds, o.kind)}</select>
       <label>Hiệu ứng vào</label><select data-f="anim">${opts(FX.anims, o.anim, "Theo phong cách")}</select>${fld("start", o.start, "number")}${fld("dur", o.dur, "number")}`
       + [...k.need, ...(OPT[o.kind] || [])].map(f => fld(f, o[f], ["value", "decimals"].includes(f) ? "number" : "text")).join("");
+  } else if (sel.k === "sfx") {
+    h = `<h3>Hiệu ứng âm ${sel.i + 1}</h3><label>Âm</label><select data-f="file">${Object.entries(FX.sfx).map(([k, v]) => `<option value="${k}"${k === o.file ? " selected" : ""}>${k} — ${esc(v.vi)}</option>`).join("")}</select>
+      <div class="row"><button data-play="${esc(o.file)}">▶ Nghe</button></div><div class="dim">${esc(FX.sfx[o.file].dung_khi)}</div>${fld("start", o.start, "number")}${fld("vol", o.vol ?? 1, "number")}
+      <div class="dim">Bắt đầu = lúc file bắt đầu phát; điểm “chạm” nằm sau ${FX.sfx[o.file].diem_nhan}s.${o.auto ? " Mục do mẫu tự thêm: áp lại mẫu sẽ thay." : ""}</div>`;
   } else {
     const F = {subtitles: ["text"], cards: ["step", "title", "items"], zooms: ["scale"], broll: ["file", "id", "in"]}[sel.k];
     h = `<h3>${TABS.find(x => x[0] === sel.k)[1]} ${sel.i + 1}</h3>${fld("start", o.start, "number")}${fld("dur", o.dur, "number")}`
@@ -303,10 +316,10 @@ function drawTimeline() {
   for (let s = 0; s <= L.total + 0.01; s += step) h += `<span style="left:${s * pps}px">${fmt(s).replace(/\.\d$/, "")}</span><i style="left:${s * pps}px"></i>`;
   h += `</div>`;
   const it = (k, i, x0, d, cls, label, extra = "") => `<div class="x ${cls}${sel && sel.k === k && sel.i === i ? " sel" : ""}" data-k="${k}" data-i="${i}" style="left:${x0 * pps}px;width:${Math.max(d * pps, 6)}px;${extra}">${label}${TIMED.includes(k) ? '<span class="rz"></span>' : ""}</div>`;
-  const lanes = {texts: "text", subtitles: "sub", cards: "card", broll: "broll", zooms: "zoom"};
+  const lanes = {texts: "text", subtitles: "sub", cards: "card", broll: "broll", zooms: "zoom", sfx: "sfx"};
   for (const [k] of LANES) {
     h += `<div class="ln${k === "clips" ? " vid" : ""}" style="width:${W}px">`;
-    if (lanes[k]) (tl[k] || []).forEach((x, i) => h += it(k, i, x.start, x.dur, lanes[k], (k === "texts" ? "T  " : k === "cards" ? "▣  " : k === "zooms" ? "⌕  " : "") + esc(String(itemLabel(k, x)).replace(/\*/g, ""))));
+    if (lanes[k]) (tl[k] || []).forEach((x, i) => h += it(k, i, x.start, x.dur, lanes[k], (k === "texts" ? "T  " : k === "cards" ? "▣  " : k === "zooms" ? "⌕  " : k === "sfx" ? "♪ " : "") + esc(String(itemLabel(k, x)).replace(/\*/g, ""))));
     if (k === "clips") {
       tl.clips.forEach((c, i) => h += it("clips", i, L.starts[i], c.dur, "clip", `${i + 1}. ${esc(c.file)}<span class="d">${(+c.dur).toFixed(1)}s</span>`, `background-image:url('${media("thumb", c.file + "@" + (+c.in + 0.3).toFixed(1))}')`));
       L.trs.forEach(([x, d], i) => h += `<div class="x tr${sel && sel.k === "transitions" && sel.i === i ? " sel" : ""}" data-k="transitions" data-i="${i}" title="${esc(FX.transitions[tl.transitions[i].type].vi)}" style="left:${(x + d / 2) * pps - 11}px">${tl.transitions[i].type === "cut" ? "|" : "◆"}</div>`);
@@ -364,6 +377,7 @@ function renderFrame() {
   else { pb.style.display = "none"; if (!pb.paused) pb.pause(); }
   let h = "";
   for (const x of on("texts")) {
+    if (x.kind === "title3d") { h += `<div class="blk t3">${x.top ? `<div class="l">${hl(x.top)}</div>` : ""}<div class="l big">${hl(x.big)}</div>${x.sub ? `<div class="l">${hl(x.sub)}</div>` : ""}</div>`; continue; }
     h += `<div class="blk">` + (x.tag ? `<div class="tag">${esc(x.tag)}</div>` : "") + (x.num ? `<div class="num">${esc(x.num)}</div>` : "")
       + (x.title ? `<div class="l">${hl(x.title)}</div>` : "") + (x.kind === "stat" ? `<div class="num">${esc(x.prefix || "")}${Number(x.value).toLocaleString("vi-VN")}${esc(x.suffix || "")}</div>` : "")
       + (x.lines || x.items || []).map(l => `<div class="l ${x.kind === "hook" ? "big" : ""}">${x.items ? "✓ " : ""}${hl(l)}</div>`).join("")
@@ -376,9 +390,22 @@ function renderFrame() {
     : `<div class="safe" style="left:0;right:0;top:0;height:11.5%"></div><div class="safe" style="left:0;right:0;bottom:0;height:21.9%"></div><div class="safe" style="right:0;top:11.5%;bottom:21.9%;width:13%"></div>`;
   $("#ovl").innerHTML = h;
 }
+async function apMau(id) {
+  try {
+    const r = await api("apmau", {method: "POST", body: JSON.stringify({id, timeline: clean(tl)})});
+    undoS.push(JSON.stringify(tl)); redoS = []; setRaw(JSON.stringify(r.timeline));
+    toast(`Đã áp mẫu ${esc(FX.mau[id].ten)}: ${r.sfx} hiệu ứng âm tự rải. Chưa lưu.`, "ok");
+  } catch (e) { toast(esc(e.message), "err"); }
+}
+// Nghe hiệu ứng âm: nút ▶ và khi đang phát timeline (kim đi qua mục nào thì phát mục đó)
+const sfxUrl = f => `/api/sfx/${encodeURIComponent(f)}?t=${T}`;
+function playSfx(f, vol = 1) { const a = new Audio(sfxUrl(f)); a.volume = Math.min(1, vol * 0.8); a.play().catch(() => {}); }
+document.addEventListener("click", e => { const b = e.target.closest("[data-play]"); if (b) playSfx(b.dataset.play); });
 function loop(ts) {
   if (playing) {
+    const t0 = now;
     now += last ? (ts - last) / 1000 : 0;
+    for (const x of tl.sfx || []) if (x.start > t0 && x.start <= now) playSfx(x.file, x.vol ?? 1);
     if (now >= layout().total) { now = layout().total; setPlay(false); }
     renderFrame();
     const sc = $("#scroll"), x = now * +$("#zoom").value; if (x > sc.scrollLeft + sc.clientWidth - 40) sc.scrollLeft = x - 80;
@@ -392,6 +419,8 @@ function seek(t) { now = Math.max(0, Math.min(t, layout().total)); renderFrame()
 document.addEventListener("click", e => {
   const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; sel = null; return draw(); }
   const st = e.target.closest("[data-style]"); if (st) return mutate(() => tl.meta.style = st.dataset.style);
+  const mb = e.target.closest("[data-mau]"); if (mb) return apMau(mb.dataset.mau);
+  const ad = e.target.closest("[data-addsfx]"); if (ad) return mutate(() => { const f = ad.dataset.addsfx; tl.sfx.push({start: +Math.min(now, layout().total - 0.3).toFixed(2), dur: FX.sfx[f].dai, file: f, vol: 1}); sel = {k: "sfx", i: tl.sfx.length - 1}; });
   const pf = e.target.closest("[data-platform]"); if (pf) return mutate(() => tl.meta.platform = pf.dataset.platform);
   if (e.target.id === "dup") return newProject(name, tl.meta.platform === "youtube" ? "tiktok" : "youtube");
   const li = e.target.closest(".it[data-k]"); if (li) { sel = {k: li.dataset.k, i: +li.dataset.i}; seek(sel.k === "clips" ? layout().starts[sel.i] + 0.05 : cur().start + 0.05); return draw(); }
@@ -405,10 +434,11 @@ $("#right").addEventListener("change", e => {
   mutate(() => {
     const o = cur();
     if (ARR.includes(f)) v = v.split("\n").map(s => s.trim()).filter(Boolean);
-    else if (["in", "dur", "focus", "start", "value", "decimals", "scale"].includes(f)) v = v === "" ? undefined : +v;
+    else if (["in", "dur", "focus", "start", "value", "decimals", "scale", "vol"].includes(f)) v = v === "" ? undefined : +v;
     if (v === "" || v === undefined) delete o[f]; else o[f] = v;
     if (sel.k === "texts" && f === "kind") for (const k of FX.kinds[v].need) o[k] ??= ARR.includes(k) ? ["Nội dung"] : k === "value" ? 0 : "Nội dung";
     if (sel.k === "transitions" && f === "type") delete o.dur;
+    if (sel.k === "sfx") { delete o.auto; if (f === "file") o.dur = FX.sfx[v].dai; }  // sửa tay: không còn là mục tự thêm
   });
 });
 $("#right").addEventListener("click", e => { const a = e.target.dataset.a; if (a) action(a); });
@@ -463,7 +493,7 @@ function importSrt(s) {
 $("#add").onclick = () => mutate(() => {
   const L = layout(), s = +Math.min(now, L.total - 1).toFixed(2), d = +Math.min(2.5, L.total - s).toFixed(2);
   const D = {texts: {kind: "line", lines: ["Chữ mới"]}, subtitles: {text: "Phụ đề mới"}, cards: {step: "Bước 1", title: "Tiêu đề", items: ["Ý thứ nhất"]},
-    zooms: {scale: 1.07}, broll: {file: tl.clips[0].file, in: 0}}[tab];
+    zooms: {scale: 1.07}, broll: {file: tl.clips[0].file, in: 0}, sfx: {file: "chu_swish-pop_01", dur: FX.sfx["chu_swish-pop_01"].dai, vol: 1}}[tab];
   tl[tab].push({start: s, dur: d, ...D}); sel = {k: tab, i: tl[tab].length - 1};
 });
 $("#search").oninput = drawList;
