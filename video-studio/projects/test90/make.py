@@ -2,7 +2,7 @@
 Chạy trong video-studio:  python3 projects/test90/make.py
 Đầu vào: projects/test90/shots.json (cảnh, mốc giây, chữ). Đầu ra: out/test90.mp4.
 Bản gốc tải lại từ Drive theo id (link chia sẻ công khai) vào projects/test90/build/raw/."""
-import json, os, subprocess, shutil, html
+import json, os, re, subprocess, shutil, html
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "../.."))
@@ -27,6 +27,7 @@ for s in shots:
 
 # 2. Cắt từng cảnh: khung dọc 9:16 từ 4K, chỉnh màu nhẹ, 30fps
 for i, s in enumerate(shots):
+    if os.path.exists(f"{B}/shot{i}.mp4"): continue  # đã cắt; xóa build/ nếu đổi cảnh
     fx = (s.get("focus", 0) + 1) / 2
     ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an",
        "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}:(iw-{W})*{fx}:(ih-{H})/2,"
@@ -73,7 +74,7 @@ for f in ("gsap.min.js",):
 json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
           open(f"{cube}/hyperframes.json", "w"))
 open(f"{cube}/package.json", "w").write('{"name":"cube","private":true,"type":"module"}')
-run([*HF, "render", "-o", f"{B}/cube.mp4", "-q", "delivery", "--quiet"], cwd=cube)
+if not os.path.exists(f"{B}/cube.mp4"): run([*HF, "render", "-o", f"{B}/cube.mp4", "-q", "delivery", "--quiet"], cwd=cube)
 
 # 4. Ghép: cảnh 0, chuyển 0, cảnh 1, ...
 parts, starts, t = [], [], 0.0
@@ -91,8 +92,9 @@ ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf
 def words(text, cls=""):
     out = []
     for w in text.split(" "):
-        hl = w.startswith("*") and w.endswith("*")
-        out.append(f'<span class="w{" hl" if hl else ""}">{html.escape(w.strip("*"))}</span>')
+        m = re.fullmatch(r"\*(.+)\*([^\w]*)", w)  # *từ* hoặc *từ*? : tô vàng, giữ dấu câu
+        out.append(f'<span class="w hl">{html.escape(m[1])}</span><span class="w">{html.escape(m[2])}</span>' if m
+                   else f'<span class="w">{html.escape(w)}</span>')
     return f'<div class="line {cls}">{" ".join(out)}</div>'
 blocks, anims = [], []
 for i, s in enumerate(shots):
