@@ -1,0 +1,40 @@
+"""Kiểm tra nhanh định dạng timeline. Chạy: python3 scripts/test_timeline.py"""
+import copy, json, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from timeline import check, layout
+
+ok = {
+    "version": 1, "meta": {"platform": "tiktok"},
+    "clips": [{"file": "a.mp4", "in": 0, "dur": 5}, {"file": "b.mp4", "in": 2, "dur": 4}, {"file": "c.mp4", "in": 0, "dur": 3}],
+    "transitions": [{"type": "cube-h"}, {"type": "cut"}],
+    "texts": [{"kind": "line", "start": 0.5, "dur": 4, "lines": ["Xin chào"]}],
+    "audio": {"music": "synth"},
+}
+assert check(ok) == [], check(ok)
+L = layout(ok)
+assert L["starts"] == [0, 5.8, 9.8] and abs(L["total"] - 12.8) < 1e-9, L
+assert L["transitions"] == [(5, 0.8, "cube-h"), (9.8, 0.0, "cut")], L
+
+
+def bad(change, expect):
+    tl = copy.deepcopy(ok); change(tl)
+    errs = check(tl)
+    assert any(expect in m for m in errs), (expect, errs)
+
+
+bad(lambda t: t["clips"][1].pop("dur"), "Cảnh 2: thiếu 'dur'")
+bad(lambda t: t["transitions"].pop(), "Cần 2 chuyển cảnh")
+bad(lambda t: t["transitions"][0].update(type="spin"), "kiểu 'spin' chưa có")
+bad(lambda t: t["texts"][0].update(start=12), "nằm ngoài video")
+bad(lambda t: t["texts"][0].update(kind="section"), "thiếu num, title")
+bad(lambda t: t["meta"].update(platform="youtube"), "chỉ hỗ trợ")
+
+# Mọi timeline.json trong projects/ phải hợp lệ
+root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "projects")
+for name in sorted(os.listdir(root)):
+    p = os.path.join(root, name, "timeline.json")
+    if os.path.exists(p):
+        errs = check(json.load(open(p, encoding="utf8")))
+        assert errs == [], (name, errs)
+        print("hợp lệ:", name)
+print("OK")

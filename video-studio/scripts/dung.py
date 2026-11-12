@@ -1,18 +1,26 @@
-"""Dựng video test ~90s: flycam thật (9:16) + chuyển cảnh khối 3D + chữ động tiếng Việt + nhạc.
-Chạy trong video-studio:  python3 projects/test90/make.py
-Đầu vào: shots.json cùng thư mục (cảnh, mốc giây, chữ). Đầu ra: out/<tên thư mục>.mp4.
-Làm video mới: chép cả thư mục test90 thành projects/<tên>, sửa shots.json, chạy python3 projects/<tên>/make.py.
-Bản gốc tải lại từ Drive theo id (link chia sẻ công khai) vào projects/test90/build/raw/."""
-import json, os, re, subprocess, shutil, html
+"""Dựng video từ timeline.json: flycam thật (9:16) + chuyển cảnh khối 3D + chữ động tiếng Việt + nhạc.
+Chạy trong video-studio:  python3 scripts/dung.py projects/<tên>
+Đầu vào: projects/<tên>/timeline.json (định dạng: scripts/timeline.py). Đầu ra: out/<tên>.mp4.
+Bản gốc đặt sẵn ở projects/<tên>/build/raw/<file>, hoặc tự tải từ Drive theo "id" (thư mục chia sẻ bằng link)."""
+import json, os, re, subprocess, shutil, html, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from timeline import check, layout
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.abspath(os.path.join(HERE, "../.."))
-B = os.path.join(HERE, "build"); os.makedirs(B, exist_ok=True)
+if len(sys.argv) != 2:
+    sys.exit("Dùng: python3 scripts/dung.py projects/<tên>")
+HERE = os.path.abspath(sys.argv[1])
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 NAME = os.path.basename(HERE)
-W, H, FPS, TR = 1080, 1920, 30, 0.8  # TR: độ dài chuyển cảnh 3D (giây)
+tl = json.load(open(os.path.join(HERE, "timeline.json"), encoding="utf8"))
+errs = check(tl)
+if errs:
+    sys.exit("timeline.json chưa hợp lệ:\n- " + "\n- ".join(errs))
+B = os.path.join(HERE, "build"); os.makedirs(B, exist_ok=True)
+W, H, FPS = 1080, 1920, 30
+shots = tl["clips"]
+L = layout(tl)
+starts, total = L["starts"], L["total"]
 HF = ["npx", "--yes", "hyperframes@0.9.37"]
-cfg = json.load(open(os.path.join(HERE, "shots.json"), encoding="utf8"))
-shots = cfg["shots"]
 
 def run(cmd, **kw):
     print("+", " ".join(cmd)[:160]); subprocess.run(cmd, check=True, **kw)
@@ -24,83 +32,92 @@ os.makedirs(f"{B}/raw", exist_ok=True)
 for s in shots:
     p = f"{B}/raw/{s['file']}"
     if not os.path.exists(p):
+        if not s.get("id"):
+            sys.exit(f"Không thấy {p} và cảnh không có 'id' Drive để tải")
         run(["curl", "-sS", "-L", "--retry", "3", "-o", p,
              f"https://drive.usercontent.google.com/download?id={s['id']}&export=download&confirm=t"])
 
 # 2. Cắt từng cảnh: khung dọc 9:16 từ 4K, chỉnh màu nhẹ, 30fps
 for i, s in enumerate(shots):
-    if os.path.exists(f"{B}/shot{i}.mp4"): continue  # đã cắt; xóa build/ nếu đổi cảnh
+    key = json.dumps([s["file"], s["in"], s["dur"], s.get("focus", 0)])
+    kf = f"{B}/shot{i}.key"  # nhớ cảnh đã cắt; đổi file/mốc/lệch khung thì tự cắt lại
+    if os.path.exists(f"{B}/shot{i}.mp4") and os.path.exists(kf) and open(kf).read() == key: continue
     fx = (s.get("focus", 0) + 1) / 2
     ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an",
        "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}:(iw-{W})*{fx}:(ih-{H})/2,"
               f"eq=contrast=1.06:saturation=1.12,fps={FPS},format=yuv420p",
        "-c:v", "libx264", "-crf", "18", "-preset", "fast", f"{B}/shot{i}.mp4")
+    open(kf, "w").write(key)
 
-# 3. Khung cuối/đầu của các cảnh kề nhau -> chuyển cảnh khối 3D (CSS 3D trong HyperFrames)
+# 3. Chuyển cảnh khối 3D (CSS 3D trong HyperFrames) giữa khung cuối cảnh trước và khung đầu cảnh sau
 cube = f"{B}/cube"; shutil.rmtree(cube, ignore_errors=True); os.makedirs(cube)
 n = len(shots)
-for i in range(n - 1):
+cubes = [(i, d, ty) for i, (_, d, ty) in enumerate(L["transitions"]) if ty != "cut"]
+faces, tws, off = [], [], 0.0
+for k, (i, d_tr, ty) in enumerate(cubes):
     ff("-sseof", "-0.05", "-i", f"{B}/shot{i}.mp4", "-frames:v", "1", "-q:v", "3", f"{cube}/a{i}.jpg")
     ff("-i", f"{B}/shot{i+1}.mp4", "-frames:v", "1", "-q:v", "3", f"{cube}/b{i}.jpg")
-faces = []
-for i in range(n - 1):
-    vert = i % 2 == 1  # xen kẽ xoay ngang / xoay dọc
+    vert = ty == "cube-v"
     d = (H if vert else W) // 2
     fb = f"rotateX(-90deg) translateZ({d}px)" if vert else f"rotateY(90deg) translateZ({d}px)"
-    faces.append(f"""<div id="t{i}" class="clip stage" data-start="{i*TR}" data-duration="{TR}" data-track-index="0">
-  <div class="cube" id="c{i}"><img src="a{i}.jpg" style="transform:translateZ({d}px)"><img src="b{i}.jpg" style="transform:{fb}"></div></div>""")
-tw = "\n".join(
-    f'tl.to(st[{i}],{{r:90,duration:{TR},ease:"power2.inOut",onUpdate:()=>set({i},{int(i%2==1)})}},{i*TR});'
-    f'tl.fromTo("#t{i}",{{scale:1}},{{scale:0.86,duration:{TR/2},ease:"power1.out",yoyo:true,repeat:1}},{i*TR});'
-    for i in range(n - 1))
-open(f"{cube}/index.html", "w", encoding="utf8").write(f"""<!doctype html><html><head><meta charset="UTF-8">
+    faces.append(f"""<div id="t{k}" class="clip stage" data-start="{off}" data-duration="{d_tr}" data-track-index="0">
+  <div class="cube" id="c{k}"><img src="a{i}.jpg" style="transform:translateZ({d}px)"><img src="b{i}.jpg" style="transform:{fb}"></div></div>""")
+    tws.append(f'tl.to(st[{k}],{{r:90,duration:{d_tr},ease:"power2.inOut",onUpdate:()=>set({k},{int(vert)})}},{off});'
+               f'tl.fromTo("#t{k}",{{scale:1}},{{scale:0.86,duration:{d_tr/2},ease:"power1.out",yoyo:true,repeat:1}},{off});'
+               f'set({k},{int(vert)});')
+    cubes[k] = (i, d_tr, ty, off)
+    off += d_tr
+if cubes:
+    open(f"{cube}/index.html", "w", encoding="utf8").write(f"""<!doctype html><html><head><meta charset="UTF-8">
 <meta name="viewport" content="width={W}, height={H}"><script src="gsap.min.js"></script><style>
 *{{margin:0;padding:0;box-sizing:border-box}} html,body{{width:{W}px;height:{H}px;overflow:hidden;background:#06121c}}
 #root{{position:relative;width:100%;height:100%}}
 .stage{{position:absolute;inset:0;perspective:2400px}}
 .cube{{position:absolute;inset:0;transform-style:preserve-3d}}
 .cube img{{position:absolute;inset:0;width:{W}px;height:{H}px;backface-visibility:hidden}}
-</style></head><body><div id="root" data-composition-id="main" data-start="0" data-duration="{(n-1)*TR}" data-width="{W}" data-height="{H}">
+</style></head><body><div id="root" data-composition-id="main" data-start="0" data-duration="{off}" data-width="{W}" data-height="{H}">
 {chr(10).join(faces)}</div><script>
-const st=[...Array({n-1})].map(()=>({{r:0}}));
+const st=[...Array({len(cubes)})].map(()=>({{r:0}}));
 // Xoay quanh tâm khối: đẩy khối lùi nửa cạnh rồi xoay, mặt sau (cảnh kế) quay ra trước.
 function set(i,v){{const d=v?{H//2}:{W//2};const c=document.getElementById("c"+i);
  c.style.transform=`translateZ(-${{d}}px) ${{v?"rotateX":"rotateY"}}(${{v?"":"-"}}${{st[i].r}}deg)`;}}
 const tl=gsap.timeline({{paused:true}});
-{tw}
-for(let i=0;i<{n-1};i++)set(i,i%2);
+{chr(10).join(tws)}
 window.__timelines["main"]=tl; tl.seek(0);
 </script></body></html>""")
-for f in ("gsap.min.js",):
-    shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist", f), cube)
-json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
-          open(f"{cube}/hyperframes.json", "w"))
-open(f"{cube}/package.json", "w").write('{"name":"cube","private":true,"type":"module"}')
-if not os.path.exists(f"{B}/cube.mp4"): run([*HF, "render", "-o", f"{B}/cube.mp4", "-q", "delivery", "--quiet"], cwd=cube)
+    shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), cube)
+    json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
+              open(f"{cube}/hyperframes.json", "w"))
+    open(f"{cube}/package.json", "w").write('{"name":"cube","private":true,"type":"module"}')
+    ckey = json.dumps([[open(f"{B}/shot{i}.key").read(), open(f"{B}/shot{i+1}.key").read(), ty, d_tr] for i, d_tr, ty, _ in cubes])
+    if not (os.path.exists(f"{B}/cube.mp4") and os.path.exists(f"{B}/cube.key") and open(f"{B}/cube.key").read() == ckey):
+        run([*HF, "render", "-o", f"{B}/cube.mp4", "-q", "delivery", "--quiet"], cwd=cube)
+        open(f"{B}/cube.key", "w").write(ckey)
 
-# 4. Ghép: cảnh 0, chuyển 0, cảnh 1, ...
-parts, starts, t = [], [], 0.0
+# 4. Ghép: cảnh 0, chuyển cảnh 0 (nếu không phải cắt thẳng), cảnh 1, ...
+seg = {i: (d_tr, o) for i, d_tr, _, o in cubes}
+parts = []
 for i in range(n):
-    starts.append(t); parts.append(f"{B}/shot{i}.mp4"); t += shots[i]["dur"]
-    if i < n - 1:
-        ff("-ss", str(i * TR), "-t", str(TR), "-i", f"{B}/cube.mp4", "-an", "-vf", f"fps={FPS},format=yuv420p",
+    parts.append(f"{B}/shot{i}.mp4")
+    if i in seg:
+        d_tr, o = seg[i]
+        ff("-ss", str(o), "-t", str(d_tr), "-i", f"{B}/cube.mp4", "-an", "-vf", f"fps={FPS},format=yuv420p",
            "-c:v", "libx264", "-crf", "18", f"{B}/tr{i}.mp4")
-        parts.append(f"{B}/tr{i}.mp4"); t += TR
-total = t
+        parts.append(f"{B}/tr{i}.mp4")
 open(f"{B}/list.txt", "w").write("".join(f"file '{p}'\n" for p in parts))
 ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", f"{B}/base.mp4")
 
-# 5. Lớp chữ động (nền trong suốt) theo mốc của từng cảnh
+# 5. Lớp chữ động (nền trong suốt) theo mốc trong timeline
 def words(text, cls=""):
     out = []
     for w in text.split(" "):
         m = re.fullmatch(r"\*(.+)\*([^\w]*)", w)  # *từ* hoặc *từ*? : tô vàng, giữ dấu câu
-        out.append(f'<span class="w hl">{html.escape(m[1])}</span><span class="w">{html.escape(m[2])}</span>' if m
+        out.append(f'<span class="nw"><span class="w hl">{html.escape(m[1])}</span><span class="w">{html.escape(m[2])}</span></span>' if m
                    else f'<span class="w">{html.escape(w)}</span>')
     return f'<div class="line {cls}">{" ".join(out)}</div>'
 blocks, anims = [], []
-for i, s in enumerate(shots):
-    st0 = starts[i] + (0.15 if i else 0.4); du = s["dur"] - (0.35 if i else 0.6)
+for i, s in enumerate(tl.get("texts", [])):
+    st0, du = s["start"], s["dur"]
     kind = s.get("kind", "line"); body = ""
     if kind == "hook":
         body = f'<div class="tag">{html.escape(s["tag"])}</div>' + "".join(words(l, "big") for l in s["lines"])
@@ -142,7 +159,7 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;background:transparent;font-
 .line{{font-size:58px;font-weight:600;line-height:1.28;margin-top:14px;text-shadow:0 4px 24px rgba(0,0,0,.45)}}
 .line.big{{font-size:96px;font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-top:6px}}
 .line.mid{{font-size:74px;font-weight:800;line-height:1.15;letter-spacing:-1px}}
-.w{{display:inline-block}} .hl{{color:#f2c766}}
+.w{{display:inline-block}} .hl{{color:#f2c766}} .nw{{white-space:nowrap}}
 .tag{{display:inline-block;font-size:30px;font-weight:600;letter-spacing:4px;padding:12px 22px;border:2px solid #d4a64a;border-radius:40px;color:#f2c766;margin-bottom:28px}}
 .num{{font-size:230px;font-weight:800;line-height:.9;color:transparent;-webkit-text-stroke:3px #f2c766;transform-origin:left bottom}}
 .title{{position:relative;display:inline-block;font-size:76px;font-weight:800;margin:10px 0 10px;padding:0 10px}}
@@ -169,9 +186,13 @@ json.dump({"paths": {"blocks": "compositions", "components": "compositions/compo
 open(f"{ov}/package.json", "w").write('{"name":"overlay","private":true,"type":"module"}')
 run([*HF, "render", "-o", f"{B}/overlay.webm", "--format", "webm", "--quiet"], cwd=ov)
 
-# 6. Âm thanh: nhạc + tiếng vút ở tâm mỗi chuyển cảnh
-wh = [str(starts[i + 1] - TR / 2) for i in range(n - 1)]
-run(["python3", os.path.join(HERE, "music.py"), f"{total:.2f}", f"{B}/music.wav", *wh])
+# 6. Âm thanh: nhạc tổng hợp + tiếng vút ở tâm mỗi chuyển cảnh (không có nhạc thì để im lặng)
+audio = tl.get("audio", {})
+if audio.get("music", "synth") == "synth":
+    wh = [str(t0 + d / 2) for t0, d, ty in L["transitions"] if ty != "cut"] if audio.get("whoosh", True) else []
+    run(["python3", os.path.join(ROOT, "scripts/music.py"), f"{total:.2f}", f"{B}/music.wav", *wh])
+else:
+    ff("-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", f"{total:.2f}", f"{B}/music.wav")
 
 # 7. Ghép cuối: nền + lớp chữ trong suốt + âm thanh
 os.makedirs(os.path.join(ROOT, "out"), exist_ok=True)

@@ -16,7 +16,8 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 - Cách làm chính là **cắt ghép**: `docs/QUY-TRINH-CAT-GHEP.md`. Mẫu đồ họa HyperFrames dùng cho cảnh chữ/số, không phải nguồn chính.
 
 ## Cấu trúc
-- `video-studio/videos/*.json`: nội dung video (spec). Trường `template` chọn mẫu.
+- `video-studio/projects/<tên>/timeline.json`: **định dạng timeline v1** (cảnh, chuyển cảnh, chữ, âm thanh), mô tả trong `video-studio/scripts/timeline.py`, kiểm tra bằng `scripts/test_timeline.py`. Dựng: `python3 scripts/dung.py projects/<tên>` → `out/<tên>.mp4`. Mẫu: `projects/test90`.
+- `video-studio/videos/*.json`: spec mẫu đồ họa cũ (HyperFrames). Trường `template` chọn mẫu.
 - `video-studio/engines/hyperframes/templates/`: **thư viện mẫu** (cashflow-3d có khối 3D, text-only). Thêm mẫu mới: xem README trong thư mục đó.
 - `video-studio/scripts/assemble.mjs`: cắt ghép flycam + giọng + logo + phụ đề theo `projects/<tên>/edl.json`. `contact-sheet.sh`: ảnh lưới chọn cảnh.
 - `video-studio/scripts/render.sh`: spec → engine → FFmpeg → MP4 trong `out/`.
@@ -31,6 +32,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Remotion | Render OK trong sandbox (cần Chromium) |
 | FFmpeg | OK |
 | Cắt ghép (`assemble.mjs`) | Đã dựng video mẫu 33s (`projects/demo`) với cảnh giả, giọng máy, nhạc giả; chưa thử flycam/giọng thật |
+| Định dạng timeline v1 + `scripts/dung.py` | Xong 12/11: kiểm tra định dạng có test; dựng thử đầu cuối với footage giả (khối 3D, cắt thẳng, chữ, nhạc) OK; chưa dựng lại video test 89s với footage thật |
 | Video test 89s (`projects/test90`) | Hào duyệt "rất ok" 12/11; âm thanh hiệu ứng chưa ổn, chờ thư mục âm thanh. Footage và bản dựng test đã xóa theo yêu cầu (bản gốc còn trên Drive thư mục "Hào") |
 | Tải từ Drive trên cloud | Được: môi trường cloud "test" mở mạng tới drive.usercontent.google.com; thư mục phải chia sẻ bằng link |
 | Nhận dạng giọng (`hyperframes transcribe`) | Có lệnh, chưa thử tiếng Việt |
@@ -39,6 +41,12 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Codespaces (`.devcontainer`) | Chưa thử |
 | Windows 11 (`setup-windows.ps1`, `chay-video.bat`) | Chưa thử |
 | Trang Pages cũ | Có thể đã bị app thay ở gốc; cần chạy lại "Deploy site" và kiểm tra |
+
+## Máy và công cụ (Hào xác nhận 12/11/2026)
+- PC Windows 11: Intel i5 "14800KF" (Hào ghi vậy, cần xem lại tên chip), card RTX 5050 (Hào ghi "GTX 5050"; trước đó nói 5060), RAM 64 GB. Máy làm việc nặng.
+- MacBook M1 8 GB RAM, 256 GB: chỉ đọc báo cáo, xem kết quả, nghiệm thu. Không dựng 4K trên máy này.
+- Anti = Google Antigravity, có chạy Claude Code bên trong (skill `.claude/skills/` dùng được).
+- Repo nội bộ (riêng tư).
 
 ## Hệ thống làm việc (Hào chốt 12/11/2026)
 `docs/HE-THONG.md`: Anti xây phần mềm · GitHub giữ mã và bản v1 chạy tạm · **PC Windows 11 làm việc nặng** (tải footage, dựng) · Mac đọc báo cáo và nghiệm thu · điện thoại giao việc. Skill dự án: `.claude/skills/` (lap-storyboard, dung-video, bao-cao-nghiem-thu); MCP: `mcp/README.md`.

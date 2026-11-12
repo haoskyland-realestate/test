@@ -24,7 +24,7 @@ Lập 12/11/2026, sau khi Hào duyệt video test 89 giây. Âm thanh hiệu ứ
 
 ## Chi tiết từng bước
 
-### Bước 1. Định dạng timeline v1 (dự kiến 13–14/11)
+### Bước 1. Định dạng timeline v1: **XONG 12/11** (`scripts/timeline.py`, `scripts/dung.py`, test)
 Một file `timeline.json` cho mỗi video:
 - `meta`: tên, nền tảng (TikTok 9:16 / YouTube 16:9), fps, thương hiệu (logo, màu, font).
 - `tracks.video`: cảnh (file, mốc vào/ra, lệch khung, chỉnh màu).

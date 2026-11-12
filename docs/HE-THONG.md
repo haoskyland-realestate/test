@@ -34,6 +34,12 @@ Mac: đọc báo cáo, xem video, nghiệm thu ◀──────────
 - **Google Drive**: 15 GB miễn phí, đủ cho video thành phẩm, không đủ cho kho footage 4K lâu dài.
 - Claude, Anti: dùng theo gói hiện có.
 
+## Máy (Hào xác nhận)
+- PC: i5 "14800KF" (cần xem lại tên chip), RTX 5050, RAM 64 GB: đủ dựng 4K; sau này có thể dùng mã hóa video bằng card (NVENC) cho nhanh.
+- Mac M1 8 GB: chỉ xem, đọc báo cáo. 8 GB RAM không hợp dựng 4K.
+- Anti = Google Antigravity, chạy Claude Code bên trong nên dùng được skill `.claude/skills/`.
+- Repo nội bộ: GitHub Pages cho repo riêng tư thường cần gói trả phí, nên app trên điện thoại sẽ chạy từ PC (cùng wifi) hoặc qua form GitHub Actions trên app GitHub.
+
 ## Chưa kiểm
-- Chưa thử gì trên PC Windows và Mac. Chưa biết cấu hình PC, RAM Mac.
-- Chưa kiểm Anti có đọc được skill trong `.claude/skills/` không (skill này viết cho Claude Code; Anti có thể cần cách khai báo riêng).
+- Chưa thử gì trên PC Windows và Mac.
+- Chưa thử skill trong Anti (trong phiên Claude Code cloud thì skill đã được nhận).
