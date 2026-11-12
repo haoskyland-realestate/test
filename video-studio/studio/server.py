@@ -85,6 +85,11 @@ class H(http.server.BaseHTTPRequestHandler):
             if len(parts) == 5 and SAFE.match(parts[4]) and os.path.exists(f := os.path.join(hd, parts[4] + ".json")):
                 return self.send(200, json.load(open(f, encoding="utf8")))
             return self.send(404, {"error": "Không có phiên bản này"})
+        if parts[3] == "subtitles":
+            j, _ = jobs.get(name + ":pd", (None, False))
+            log = os.path.join(d, "build", "phude.log")
+            tail = open(log, encoding="utf8", errors="replace").read()[-1200:] if os.path.exists(log) else ""
+            return self.send(200, {"running": bool(j and j.poll() is None), "code": j and j.poll(), "log": tail})
         if parts[3] == "render":
             j, nh = jobs.get(name, (None, False))
             log = os.path.join(d, "build", "render.log")
@@ -205,9 +210,17 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa"})
-        if len(parts) != 4 or parts[3] != "render" or not (d := self.project(parts[2])):
+        if len(parts) != 4 or parts[3] not in ("render", "subtitles") or not (d := self.project(parts[2])):
             return self.send(404, {"error": "Không có dự án này"})
         name = parts[2]
+        if parts[3] == "subtitles":  # phụ đề tự động từ giọng nói (chạy nền, ghi thẳng vào timeline.json)
+            if jobs.get(name + ":pd") and jobs[name + ":pd"][0].poll() is None:
+                return self.send(409, {"error": "Đang tạo phụ đề, chờ xong đã"})
+            os.makedirs(os.path.join(d, "build"), exist_ok=True)
+            log = open(os.path.join(d, "build", "phude.log"), "w", encoding="utf8")
+            jobs[name + ":pd"] = (subprocess.Popen([sys.executable, os.path.join(ROOT, "scripts", "phu_de.py"), d], cwd=ROOT,
+                                                   stdout=log, stderr=subprocess.STDOUT), False)
+            return self.send(202, {"ok": True})
         if jobs.get(name) and jobs[name][0].poll() is None:
             return self.send(409, {"error": "Đang dựng, chờ xong đã"})
         try:

@@ -38,7 +38,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | App timeline v2 (`studio/`) | 12/11: giao diện theo ảnh mẫu Hào gửi — 9 tab, khung xem phát được (bản xem trước 540p tự tạo), timeline 7 hàng kéo thả, tách/xoá, hoàn tác/làm lại, Lịch sử, Thư viện, Dựng nháp/Xuất video. Đối chiếu: `docs/GIAO-DIEN-TINH-NANG.md`. Định dạng thêm `subtitles`, `cards`, `zooms`, `broll`, `audio.voice`. Mẫu: `projects/mau-noi-truoc-may`. Chưa: phụ đề tự sinh từ giọng, cắt khoảng lặng, logo/màu thật. Chưa thử trên Windows/điện thoại thật |
 | Video test 89s (`projects/test90`) | Hào duyệt "rất ok" 12/11; âm thanh hiệu ứng chưa ổn, chờ thư mục âm thanh. Footage và bản dựng test đã xóa theo yêu cầu (bản gốc còn trên Drive thư mục "Hào") |
 | Tải từ Drive trên cloud | Được: môi trường cloud "test" mở mạng tới drive.usercontent.google.com; thư mục phải chia sẻ bằng link |
-| Nhận dạng giọng (`hyperframes transcribe`) | Có lệnh, chưa thử tiếng Việt |
+| Phụ đề tự động (`scripts/phu_de.py`, nút trong app) | Xong 12/11: faster-whisper large-v3-turbo, tiếng Việt, mốc từng từ, chia dòng ≤7 từ/2,8s; chỉ thay phụ đề `auto`. Thử trên clip thật của Hào (nhận dạng đúng tên dự án, số điện thoại). Môi trường cloud "test" đã mở mạng Hugging Face. Chưa thử trên PC |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |
 | Codespaces (`.devcontainer`) | Chưa thử |

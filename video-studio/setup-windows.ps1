@@ -4,4 +4,7 @@ $ErrorActionPreference = "Stop"
 foreach ($id in "OpenJS.NodeJS.LTS", "Gyan.FFmpeg", "Git.Git", "Python.Python.3.12") {
   winget install --id $id -e --accept-package-agreements --accept-source-agreements
 }
-Write-Host "Đóng PowerShell, mở lại, rồi chạy tiếp: npm install  và bấm đúp chay-video.bat"
+Write-Host "Đóng PowerShell, mở lại, rồi chạy tiếp (trong thư mục video-studio):"
+Write-Host "  npm install"
+Write-Host "  pip install numpy faster-whisper     (phụ đề tự động; lần đầu tạo phụ đề tải mô hình ~1,6 GB)"
+Write-Host "Xong thì bấm đúp chay-studio.bat để mở app."

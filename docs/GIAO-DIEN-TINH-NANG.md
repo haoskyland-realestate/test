@@ -19,7 +19,7 @@ Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **T�
 | Timeline: Tách, Xoá, mốc giờ, thu phóng −/+, Vừa khung | Có | |
 | Hàng Chữ, Phụ đề, Minh hoạ, Cảnh trám, Zoom, Video, Giọng nói | Có | Kéo thả để dời, kéo mép phải để đổi độ dài; kim chạy kéo được trên thước |
 | Video có dải ảnh, Giọng nói có sóng âm | Có | |
-| Phụ đề tự sinh từ giọng nói (chữ trong đoạn video ở ảnh mẫu) | **Chưa** | Cần nhận dạng giọng tiếng Việt (Whisper) chạy trên PC; tạm thời dán file SRT |
+| Phụ đề tự sinh từ giọng nói | Có (12/11) | Nút “Tạo phụ đề từ giọng nói” ở tab Phụ đề, hoặc `python3 scripts/phu_de.py projects/<tên>`. Whisper large-v3-turbo, tiếng Việt; chạy trên cloud (CPU) và PC (card NVIDIA, tự về CPU nếu thiếu thư viện). Thử: clip 43 giây nhận dạng 11–12 giây |
 | Tự cắt khoảng lặng ("sau khi cắt", "đoạn đã cắt") | **Chưa** | Làm cùng nhận dạng giọng |
 | Thương hiệu: logo, màu thật | **Chưa** | Chờ Hào gửi; hiện có 3 phong cách |
 
@@ -30,7 +30,7 @@ Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **T�
 - Mở được trên điện thoại cùng wifi (bố cục xếp dọc), có mã khóa.
 
 ## Việc tiếp theo đề xuất
-1. Nhận dạng giọng tiếng Việt trên PC → phụ đề tự động + cắt khoảng lặng.
+1. Cắt khoảng lặng tự động (dùng mốc từng từ đã có từ nhận dạng giọng).
 2. Chuẩn âm lượng (giọng to rõ, mức phổ biến cho TikTok); bản nháp mẫu đang hơi nhỏ (trung bình −28 dB).
 3. Logo, màu thật; mẫu bố cục khi Hào gửi.
 4. Chữ có chuyển động ngay trong khung xem trước.
