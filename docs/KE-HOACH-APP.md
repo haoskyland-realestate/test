@@ -1,5 +1,7 @@
 # Kế hoạch: app timeline (PC + điện thoại) và thư viện hiệu ứng
 
+> **Cập nhật 12/11/2026 theo trả lời của Hào:** làm từ xa trên **MacBook M1** (không phải Windows) và giao việc từ điện thoại, ưu tiên miễn phí (xem `LAM-VIEC-TU-XA.md`). App cần **cắt ghép đầy đủ kiểu CapCut**, có thư mục mẫu (xem `THU-VIEN-MAU.md`). Các bước bên dưới đã đổi theo.
+
 Lập 12/11/2026, sau khi Hào duyệt video test 89 giây. Âm thanh hiệu ứng chưa ổn: chờ thư mục âm thanh riêng của Hào.
 
 ## Kết luận: làm theo thứ tự này
@@ -17,7 +19,7 @@ Lập 12/11/2026, sau khi Hào duyệt video test 89 giây. Âm thanh hiệu ứ
 - Thư viện hiệu ứng tạo giá trị ngay cho video thật (ưu tiên số 1 là ra video tạo khách), app thì phải đợi xong mới dùng được.
 
 ### Không làm (để khỏi phân tán)
-- Không cố làm một CapCut/Premiere đầy đủ. App chỉ làm phần riêng của Hào: dựng tự động từ kịch bản + mẫu thương hiệu, sửa nhẹ, dựng lại. Chỉnh tinh từng khung hình thì xuất sang Premiere (xem câu hỏi 3).
+- Cắt ghép đầy đủ kiểu CapCut làm **theo từng đợt**: đợt 1 nhiều lớp, cắt, kéo thả, chọn mẫu; đợt 2 khung hình chính (keyframe), phụ đề theo giọng. Một app cắt ghép đầy đủ là việc nhiều tháng, nên trong lúc chờ, phần chỉnh tinh dùng phần mềm miễn phí trên Mac (CapCut bản máy tính, DaVinci Resolve) qua file xuất XML (DaVinci nhận được; CapCut chưa chắc nhận, cần thử).
 - Không làm app riêng cho iOS/Android: một web app (PWA) chạy trên cả PC và điện thoại.
 
 ## Chi tiết từng bước
@@ -34,6 +36,7 @@ Việc: viết định dạng, chuyển `shots.json` của video test sang, sử
 Xong khi: dựng lại video test từ `timeline.json` ra kết quả như cũ.
 
 ### Bước 2. Thư viện hiệu ứng v1 (dự kiến 15–18/11)
+Đặc tả đầy đủ: `THU-VIEN-MAU.md` (hệ thống thiết kế, 12 hiệu ứng chữ, 14 khối đồ họa, 12 chuyển cảnh, 6 mẫu bố cục). Bước này làm phần 1–2 của đặc tả; mẫu bố cục làm dần sau.
 Mỗi hiệu ứng là một file riêng, có tên, mô tả tiếng Việt, thông số chỉnh được, ảnh/clip xem trước.
 
 | Nhóm | Hiệu ứng v1 |
@@ -53,13 +56,13 @@ Xong khi: video test dựng lại với hiệu ứng chọn từ thư viện, đ
 - Chưa làm: kéo thả cắt nhiều lớp, ghi âm trong app.
 Xong khi: Hào sửa một câu chữ và một hiệu ứng trên điện thoại, xem lại ngay không cần dựng.
 
-### Bước 4. Máy chủ cục bộ trên Windows (dự kiến 26/11–2/12)
-Footage nặng nằm trên máy Windows, nên app chạy từ máy đó:
-- Một lệnh khởi động (bấm đúp file `.bat`), mở `localhost` trên PC; điện thoại cùng wifi mở bằng địa chỉ máy.
+### Bước 4. Chạy trên MacBook (dự kiến 26/11–2/12)
+Footage nặng nằm trên MacBook, nên app chạy từ máy đó (đổi từ Windows theo Hào):
+- `setup-mac.sh` cài công cụ một lần; một lệnh khởi động app, mở `localhost` trên Mac; điện thoại cùng wifi mở bằng địa chỉ máy. Giao việc cho Claude từ điện thoại qua Remote Control.
 - Chọn thư mục footage → tự tạo bản nhẹ và ảnh lưới cảnh.
 - Nút "Dựng video" → chạy bộ dựng, báo tiến độ, ra file MP4.
 Xong khi: dựng được video từ footage trên máy Hào, điều khiển từ điện thoại.
-Rủi ro: chưa thử trên Windows; dựng trên máy cần Chrome và FFmpeg (đã có `setup-windows.ps1`, chưa thử).
+Rủi ro: chưa thử trên macOS/M1; chưa biết RAM máy; dựng cần Chrome và FFmpeg.
 
 ### Bước 5. Âm thanh (khi có thư mục của Hào)
 Thư viện tiếng hiệu ứng (vút, chạm, chuyển), nhạc nền có giấy phép rõ, giọng thu; tự hạ nhạc khi có giọng; phụ đề từ giọng.
@@ -74,12 +77,17 @@ Kéo thả trên timeline, cắt clip, nhiều lớp chữ; Claude đọc kịch
 | Định dạng timeline | 14/11 | Video test dựng từ một file timeline |
 | Thư viện hiệu ứng v1 | 18/11 | Trang xem 15+ hiệu ứng, đổi hiệu ứng bằng tên |
 | App timeline v1 | 25/11 | Sửa chữ, thời lượng, hiệu ứng trên PC/điện thoại, xem nháp |
-| Chạy trên Windows | 2/12 | Dựng từ footage trên máy, bấm từ điện thoại |
+| Chạy trên MacBook | 2/12 | Dựng từ footage trên Mac, bấm từ điện thoại |
 | Âm thanh | sau khi có thư mục | Tiếng hiệu ứng, nhạc, giọng |
 
 Mốc phụ thuộc lượng token mỗi ngày và thời gian Hào duyệt. Nếu thiếu thời gian, giữ Bước 1–2 (ra video tốt hơn ngay), lùi Bước 3–4.
 
-## Câu hỏi cần Hào chốt
-1. App chạy từ máy Windows của Hào (khuyến nghị: footage ở đó, không tốn phí) hay chạy trên cloud (tiện hơn nhưng tải footage nặng, có thể tốn phí)?
-2. Mức sửa trong app: sửa nhẹ (chữ, thời lượng, hiệu ứng) như kế hoạch, hay cần cắt ghép đầy đủ như CapCut?
-3. Có cần xuất sang Premiere để chỉnh tinh không?
+## Đã chốt (12/11/2026)
+1. Làm từ xa: phiên cloud cho kịch bản/mã/mẫu; MacBook cho dựng footage thật. Miễn phí.
+2. Cắt ghép đầy đủ kiểu CapCut, làm theo đợt; chỉnh tinh tạm dùng CapCut/DaVinci miễn phí.
+3. Mẫu: phân tích, chuyên gia, review, ảnh 3D mô phỏng, tối giản, sang trọng.
+
+## Còn chờ
+- Thư mục âm thanh của Hào.
+- Logo, bộ màu thật.
+- RAM của MacBook (để biết dựng 4K được nặng tới đâu).
