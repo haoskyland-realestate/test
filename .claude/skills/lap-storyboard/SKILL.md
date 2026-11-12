@@ -12,7 +12,7 @@ description: Lập storyboard video TikTok/YouTube cho Hào Sky Land từ thư m
    - Trên máy: liệt kê thư mục footage.
 2. Mỗi clip tạo ảnh lưới để xem nhanh: `video-studio/scripts/contact-sheet.sh <video> <giây giữa các khung>`. Xem ảnh, ghi lại: cảnh gì, quay dọc/ngang, đoạn đẹp (giây), có người nói không.
 3. Đọc kịch bản (nếu có). Không có thì viết bản nháp theo footage, giọng theo `CLAUDE.md` (mộc mạc, nêu cả rủi ro, không từ cấm, không tự điền số liệu dự án: để `[...]`).
-4. Tạo `projects/<tên>/timeline.json` theo định dạng trong `video-studio/scripts/timeline.py` (xem mẫu `projects/test90/timeline.json`): `clips` (file, id Drive, in, dur, focus), `transitions` (cut / cube-h / cube-v, mỗi chỗ nối một cái), `texts` (kind hook/section/line/outro, start, dur tính trên video thành phẩm), `audio`. Từ tô vàng viết `*từ*`. Kiểm tra: `python3 scripts/test_timeline.py` (trong `video-studio`).
+4. Tạo `projects/<tên>/timeline.json` theo định dạng trong `video-studio/scripts/timeline.py` (xem mẫu `projects/test90/timeline.json`): `clips` (file, id Drive, in, dur, focus), `transitions` (cut / cube-h / cube-v, mỗi chỗ nối một cái), `texts` (kind hook/section/line/outro, start, dur tính trên video thành phẩm), `audio`. Tên phong cách, chỉnh màu, chuyển cảnh, hiệu ứng chữ, khối chữ: xem `docs/THU-VIEN-HIEU-UNG.md`. Có số liệu thì thêm khối `source` (thẻ nguồn). Từ tô vàng viết `*từ*`. Kiểm tra: `python3 scripts/test_timeline.py` (trong `video-studio`).
 5. Viết `storyboard.md`: bảng # · giây · cảnh · chữ · chuyển cảnh, và mục "Chưa có" (giọng, logo, nguồn số liệu…).
 6. Nhịp TikTok: hook dưới 2–3 giây, cảnh 2,5–5 giây (xem `docs/THU-VIEN-MAU.md` mục 1.5). Báo Hào nếu footage không đủ.
 

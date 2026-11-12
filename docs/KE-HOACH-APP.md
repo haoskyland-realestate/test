@@ -35,7 +35,7 @@ Một file `timeline.json` cho mỗi video:
 Việc: viết định dạng, chuyển `shots.json` của video test sang, sửa bộ dựng đọc `timeline.json`. Có kiểm tra tự động: file sai định dạng thì báo lỗi rõ ràng bằng tiếng Việt.
 Xong khi: dựng lại video test từ `timeline.json` ra kết quả như cũ.
 
-### Bước 2. Thư viện hiệu ứng v1 (dự kiến 15–18/11)
+### Bước 2. Thư viện hiệu ứng v1: **XONG 12/11** (`scripts/effects.py`, demo `projects/thu-vien`)
 Đặc tả đầy đủ: `THU-VIEN-MAU.md` (hệ thống thiết kế, 12 hiệu ứng chữ, 14 khối đồ họa, 12 chuyển cảnh, 6 mẫu bố cục). Bước này làm phần 1–2 của đặc tả; mẫu bố cục làm dần sau.
 Mỗi hiệu ứng là một file riêng, có tên, mô tả tiếng Việt, thông số chỉnh được, ảnh/clip xem trước.
 

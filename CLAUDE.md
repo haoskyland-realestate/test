@@ -33,6 +33,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | FFmpeg | OK |
 | Cắt ghép (`assemble.mjs`) | Đã dựng video mẫu 33s (`projects/demo`) với cảnh giả, giọng máy, nhạc giả; chưa thử flycam/giọng thật |
 | Định dạng timeline v1 + `scripts/dung.py` | Xong 12/11: kiểm tra định dạng có test; dựng thử đầu cuối với footage giả (khối 3D, cắt thẳng, chữ, nhạc) OK; chưa dựng lại video test 89s với footage thật |
+| Thư viện hiệu ứng v1 (`scripts/effects.py`, danh mục `docs/THU-VIEN-HIEU-UNG.md`) | Xong 12/11: 3 phong cách, 4 chỉnh màu, 10 chuyển cảnh, 6 hiệu ứng chữ, 9 khối chữ; demo 41s `projects/thu-vien` dựng với footage thật, đã xem khung hình. Chưa có: âm thanh hiệu ứng thật, màu/logo thật, mẫu bố cục |
 | Video test 89s (`projects/test90`) | Hào duyệt "rất ok" 12/11; âm thanh hiệu ứng chưa ổn, chờ thư mục âm thanh. Footage và bản dựng test đã xóa theo yêu cầu (bản gốc còn trên Drive thư mục "Hào") |
 | Tải từ Drive trên cloud | Được: môi trường cloud "test" mở mạng tới drive.usercontent.google.com; thư mục phải chia sẻ bằng link |
 | Nhận dạng giọng (`hyperframes transcribe`) | Có lệnh, chưa thử tiếng Việt |
