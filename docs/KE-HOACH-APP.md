@@ -50,7 +50,7 @@ Mỗi hiệu ứng là một file riêng, có tên, mô tả tiếng Việt, th�
 Trang "thư viện" (mở trên điện thoại được): lưới hiệu ứng, bấm để xem chạy thử.
 Xong khi: video test dựng lại với hiệu ứng chọn từ thư viện, đổi hiệu ứng chỉ cần đổi tên trong `timeline.json`.
 
-### Bước 3. App timeline v1 (dự kiến 19–25/11)
+### Bước 3. App timeline v1: **XONG bản đầu 12/11** (`video-studio/studio/`). Thư viện mẫu bố cục để sau, chờ Hào gửi mẫu.
 - Giao diện: PC thì timeline nằm ngang bên dưới, khung xem trước ở trên; điện thoại thì xem trước ở trên, danh sách cảnh cuộn dọc bên dưới.
 - Làm được: xem video nháp trong trình duyệt (chữ và chuyển cảnh chạy thật, footage dùng bản nhẹ), sửa chữ, kéo dài/rút ngắn cảnh bằng thanh trượt, chọn hiệu ứng từ thư viện, lưu `timeline.json`.
 - Chưa làm: kéo thả cắt nhiều lớp, ghi âm trong app.

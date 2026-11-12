@@ -17,6 +17,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 
 ## Cấu trúc
 - `video-studio/projects/<tên>/timeline.json`: **định dạng timeline v1** (cảnh, chuyển cảnh, chữ, âm thanh), mô tả trong `video-studio/scripts/timeline.py`, kiểm tra bằng `scripts/test_timeline.py`. Dựng: `python3 scripts/dung.py projects/<tên>` → `out/<tên>.mp4`. Mẫu: `projects/test90`.
+- `video-studio/studio/`: **app timeline** (máy chủ Python `server.py` + trang `index.html`). Chạy: `python3 studio/server.py` (thêm `--lan` cho điện thoại cùng wifi); Windows: bấm đúp `chay-studio.bat`. Mở đúng link có `?t=` (mã khóa).
 - `video-studio/videos/*.json`: spec mẫu đồ họa cũ (HyperFrames). Trường `template` chọn mẫu.
 - `video-studio/engines/hyperframes/templates/`: **thư viện mẫu** (cashflow-3d có khối 3D, text-only). Thêm mẫu mới: xem README trong thư mục đó.
 - `video-studio/scripts/assemble.mjs`: cắt ghép flycam + giọng + logo + phụ đề theo `projects/<tên>/edl.json`. `contact-sheet.sh`: ảnh lưới chọn cảnh.
@@ -34,6 +35,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Cắt ghép (`assemble.mjs`) | Đã dựng video mẫu 33s (`projects/demo`) với cảnh giả, giọng máy, nhạc giả; chưa thử flycam/giọng thật |
 | Định dạng timeline v1 + `scripts/dung.py` | Xong 12/11: kiểm tra định dạng có test; dựng thử đầu cuối với footage giả (khối 3D, cắt thẳng, chữ, nhạc) OK; chưa dựng lại video test 89s với footage thật |
 | Thư viện hiệu ứng v1 (`scripts/effects.py`, danh mục `docs/THU-VIEN-HIEU-UNG.md`) | Xong 12/11: 3 phong cách, 4 chỉnh màu, 10 chuyển cảnh, 6 hiệu ứng chữ, 9 khối chữ; demo 41s `projects/thu-vien` dựng với footage thật, đã xem khung hình. Chưa có: âm thanh hiệu ứng thật, màu/logo thật, mẫu bố cục |
+| App timeline v1 (`studio/`) | Xong 12/11, thử trên cloud bằng Chromium (máy tính + khung iPhone): mở dự án, timeline cảnh/chuyển cảnh/chữ, xem nháp có chữ, sửa, tách đôi, nhân bản, xóa, đổi thứ tự, hoàn tác, chữ tự bám theo cảnh, lưu có kiểm lỗi, bấm dựng và xem video. Chưa có: kéo thả, cắt bằng tay trên timeline, phát nháp có chuyển động. Chưa thử trên Windows/điện thoại thật |
 | Video test 89s (`projects/test90`) | Hào duyệt "rất ok" 12/11; âm thanh hiệu ứng chưa ổn, chờ thư mục âm thanh. Footage và bản dựng test đã xóa theo yêu cầu (bản gốc còn trên Drive thư mục "Hào") |
 | Tải từ Drive trên cloud | Được: môi trường cloud "test" mở mạng tới drive.usercontent.google.com; thư mục phải chia sẻ bằng link |
 | Nhận dạng giọng (`hyperframes transcribe`) | Có lệnh, chưa thử tiếng Việt |
@@ -73,4 +75,5 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 1. Hào xem video mẫu, chọn engine mặc định.
 2. Chạy lại "Deploy site", kiểm tra trang cũ và `/app/`.
 3. Làm video thật đầu tiên: chọn một góc dòng tiền cho Vinhomes Hóc Môn hoặc Cần Giờ, có nguồn và ngày.
-4. Thử Windows 11 với `setup-windows.ps1`.
+4. Thử Windows 11 với `setup-windows.ps1`, rồi `chay-studio.bat`.
+5. Thư viện mẫu: chờ Hào gửi mẫu tham khảo rồi làm (Hào dặn 12/11).

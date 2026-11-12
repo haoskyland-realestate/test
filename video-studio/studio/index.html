@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hào Sky Land Studio</title>
+<style>
+  :root { --bg:#0e1116; --panel:#161b22; --line:#2a313c; --text:#e6e8eb; --dim:#8b949e; --accent:#d4a64a; --err:#f2766b; --ok:#5cc28a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  button, select, input, textarea { font:inherit; color:var(--text); background:#0b0e12; border:1px solid var(--line); border-radius:6px; padding:6px 9px; }
+  button { cursor:pointer; background:#1f2630; } button:hover { border-color:var(--accent); }
+  button.main { background:var(--accent); color:#1a1408; border-color:var(--accent); font-weight:700; }
+  button:disabled { opacity:.5; cursor:default; }
+  #app { display:grid; grid-template-columns:minmax(260px,1fr) 340px; grid-template-rows:auto minmax(0,1fr) auto; grid-template-areas:"top top" "view insp" "tl tl"; height:100vh; }
+  header { grid-area:top; display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 12px; border-bottom:1px solid var(--line); background:var(--panel); }
+  header h1 { font-size:15px; margin:0 8px 0 0; letter-spacing:1px; } header h1 i { color:var(--accent); font-style:normal; }
+  #msg { flex-basis:100%; font-size:13px; } #msg.err { color:var(--err); } #msg.ok { color:var(--ok); }
+  #view { grid-area:view; overflow:hidden; display:flex; flex-direction:column; align-items:center; gap:8px; padding:10px; min-height:0; }
+  #tabs button.on { border-color:var(--accent); color:var(--accent); }
+  #frame { position:relative; height:calc(100% - 46px); aspect-ratio:9/16; background:#000 center/cover no-repeat; border-radius:8px; overflow:hidden; }
+  #frame .ph { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--dim); padding:20px; }
+  #ov { position:absolute; left:7%; right:13%; bottom:23%; font-weight:700; text-shadow:0 2px 8px #000; }
+  #ov .tag { display:inline-block; font-size:10px; border:1px solid var(--accent); border-radius:20px; padding:2px 8px; margin-bottom:6px; }
+  #ov .l { font-size:clamp(12px,2.2vh,22px); line-height:1.2; } #ov .hl { color:var(--hl,#f2c766); }
+  #ov .num { font-size:clamp(28px,6vh,60px); line-height:.9; color:transparent; -webkit-text-stroke:1px var(--hl,#f2c766); }
+  #video { height:calc(100% - 46px); aspect-ratio:9/16; background:#000; border-radius:8px; }
+  #insp { grid-area:insp; overflow:auto; border-left:1px solid var(--line); background:var(--panel); padding:12px; }
+  #insp h2 { font-size:14px; margin:0 0 10px; color:var(--accent); }
+  #insp label { display:block; margin:8px 0 3px; color:var(--dim); font-size:12px; }
+  #insp input, #insp select, #insp textarea { width:100%; } #insp textarea { min-height:70px; }
+  .row { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+  .hint { color:var(--dim); font-size:12px; margin-top:4px; }
+  #tl { grid-area:tl; border-top:1px solid var(--line); background:var(--panel); padding:8px 12px 12px; }
+  #tlbar { display:flex; gap:8px; align-items:center; margin-bottom:6px; color:var(--dim); font-size:12px; }
+  #scroll { overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; }
+  #track { position:relative; }
+  .ruler { position:relative; height:18px; border-bottom:1px solid var(--line); }
+  .ruler span { position:absolute; top:0; font-size:10px; color:var(--dim); border-left:1px solid var(--line); padding-left:3px; height:18px; }
+  .lane { position:relative; height:64px; margin-top:6px; }
+  .lane.t { height:30px; }
+  .blk { position:absolute; top:0; bottom:0; border-radius:6px; border:2px solid transparent; overflow:hidden; cursor:pointer; background:#26303c center/cover no-repeat; font-size:11px; padding:3px 5px; text-shadow:0 1px 3px #000; white-space:nowrap; }
+  .blk.clip { box-shadow:inset 0 -22px 20px -10px #000c; }
+  .blk.tr { top:16px; bottom:16px; background:#3a2f17; color:#f2d08a; text-align:center; z-index:2; padding:6px 2px; min-width:22px; }
+  .blk.tx { background:#24384d; }
+  .blk.sel { border-color:var(--accent); }
+  .err-list { color:var(--err); margin:6px 0 0; padding-left:18px; }
+  @media (max-width:800px) {
+    #app { grid-template-columns:1fr; grid-template-rows:auto auto auto auto; grid-template-areas:"top" "view" "tl" "insp"; height:auto; }
+    #frame, #video { height:46vh; }
+    #insp { border-left:0; border-top:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>HÀO SKY LAND <i>STUDIO</i></h1>
+    <select id="proj" aria-label="Dự án"></select>
+    <select id="style" aria-label="Phong cách"></select>
+    <button id="undo" title="Hoàn tác (Ctrl+Z)">↶ Hoàn tác</button>
+    <button id="save">Lưu</button>
+    <button id="render" class="main">Dựng video</button>
+    <span id="total" class="hint"></span>
+    <div id="msg" role="status"></div>
+  </header>
+  <section id="view">
+    <div id="tabs" class="row" style="margin:0"><button id="tabEdit" class="on">Xem nháp</button><button id="tabVid">Bản đã dựng</button></div>
+    <div id="frame"><div class="ph">Chọn một cảnh hoặc khối chữ</div><div id="ov"></div></div>
+    <video id="video" controls playsinline hidden></video>
+  </section>
+  <aside id="insp"><h2>Chỉnh sửa</h2><div class="hint">Bấm vào cảnh, chuyển cảnh hoặc khối chữ trên timeline.</div></aside>
+  <section id="tl">
+    <div id="tlbar">Thu phóng <input id="zoom" type="range" min="8" max="80" value="24" aria-label="Thu phóng timeline">
+      <button id="addText">+ Chữ</button><span>Cảnh · chuyển cảnh · chữ. Kéo ngang để xem hết.</span></div>
+    <div id="scroll"><div id="track"></div></div>
+  </section>
+</div>
+<script>
+const T = new URLSearchParams(location.search).get("t") || "";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let FX, name, tl, sel = null, hist = [], uid = 0, poll;
+const ARR = ["lines", "items"], OPT = {outro:["note"], lower:["sub"], quote:["by"], checklist:["title"], stat:["prefix","suffix","decimals"]};
+const LBL = {file:"Tên file", tag:"Thẻ nhãn", num:"Số mục", title:"Tiêu đề", sub:"Dòng phụ", by:"Người nói", note:"Ghi chú nhỏ", text:"Nội dung", value:"Giá trị số",
+  label:"Nhãn dưới số", prefix:"Chữ trước số", suffix:"Chữ sau số", decimals:"Số chữ số thập phân", lines:"Các dòng (mỗi dòng một hàng, *từ* để tô màu)", items:"Các mục (mỗi mục một hàng)"};
+
+async function api(path, opt = {}) {
+  const r = await fetch("/api/" + path, {...opt, headers: {"X-Token": T, "Content-Type": "application/json"}});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error(j.error || (j.errors || []).join("; ") || r.status), {data: j});
+  return j;
+}
+function say(t, cls = "") { const m = $("#msg"); m.className = cls; m.innerHTML = t; }
+
+// Cùng công thức với scripts/timeline.py: cắt thẳng 0s, chuyển cảnh khác cộng thêm độ dài.
+function layout(t) {
+  const starts = [], trs = []; let x = 0;
+  t.clips.forEach((c, i) => {
+    starts.push(x); x += +c.dur;
+    if (i < t.clips.length - 1) { const tr = t.transitions[i], d = tr.type === "cut" ? 0 : +(tr.dur ?? FX.transitions[tr.type].dur); trs.push([x, d]); x += d; }
+  });
+  return {starts, trs, total: x};
+}
+const clean = t => JSON.parse(JSON.stringify(t, (k, v) => k.startsWith("_") ? undefined : v));
+
+// Mọi thay đổi đi qua đây: lưu để hoàn tác, và giữ chữ bám theo cảnh của nó khi cảnh dài/ngắn hay đổi chỗ.
+function mutate(fn) {
+  hist.push(JSON.stringify(tl)); if (hist.length > 100) hist.shift();
+  const L0 = layout(tl);
+  for (const x of tl.texts) {
+    let k = 0; L0.starts.forEach((s, i) => { if (x.start >= s - 1e-6) k = i; });
+    x._a = {id: tl.clips[k]._id, off: x.start - L0.starts[k]};
+  }
+  fn();
+  const L1 = layout(tl);
+  for (const x of tl.texts) {
+    const k = tl.clips.findIndex(c => c._id === x._a.id);
+    let s = k >= 0 ? L1.starts[k] + x._a.off : x.start;
+    s = Math.max(0, Math.min(s, L1.total - 0.5));
+    x.start = +s.toFixed(2); x.dur = +Math.min(x.dur, L1.total - x.start).toFixed(2);
+    delete x._a;
+  }
+  draw();
+}
+
+function draw() {
+  const L = layout(tl), pps = +$("#zoom").value, W = Math.ceil(L.total * pps) + 40;
+  $("#total").textContent = `${L.total.toFixed(1)} giây · ${tl.clips.length} cảnh · ${tl.texts.length} khối chữ`;
+  let h = `<div class="ruler" style="width:${W}px">`;
+  for (let s = 0; s <= L.total; s += 5) h += `<span style="left:${s * pps}px">${s}s</span>`;
+  h += `</div><div class="lane" style="width:${W}px">`;
+  tl.clips.forEach((c, i) => {
+    const on = sel && sel.t === "clip" && sel.i === i;
+    h += `<div class="blk clip${on ? " sel" : ""}" data-t="clip" data-i="${i}" style="left:${L.starts[i] * pps}px;width:${c.dur * pps}px;background-image:url('${thumb(c)}')">${i + 1}. ${esc(c.file)}</div>`;
+  });
+  L.trs.forEach(([x, d], i) => {
+    const on = sel && sel.t === "tr" && sel.i === i, ty = tl.transitions[i].type;
+    h += `<div class="blk tr${on ? " sel" : ""}" data-t="tr" data-i="${i}" title="${esc(FX.transitions[ty].vi)}" style="left:${x * pps - (d ? 0 : 11)}px;width:${Math.max(d * pps, 22)}px">${ty === "cut" ? "|" : "◆"}</div>`;
+  });
+  h += `</div>`;
+  const lanes = [];  // xếp khối chữ chồng nhau vào nhiều hàng
+  tl.texts.forEach((x, i) => { let r = lanes.findIndex(e => e <= x.start + 1e-6); if (r < 0) { r = lanes.length; lanes.push(0); } lanes[r] = x.start + x.dur; x._r = r; });
+  for (let r = 0; r < Math.max(1, lanes.length); r++) {
+    h += `<div class="lane t" style="width:${W}px">`;
+    tl.texts.forEach((x, i) => { if (x._r !== r) return;
+      const on = sel && sel.t === "text" && sel.i === i, label = x.title || x.text || (x.lines || x.items || [""])[0] || x.label || x.kind;
+      h += `<div class="blk tx${on ? " sel" : ""}" data-t="text" data-i="${i}" style="left:${x.start * pps}px;width:${x.dur * pps}px">${esc(x.kind)} · ${esc(label)}</div>`; });
+    h += `</div>`;
+  }
+  tl.texts.forEach(x => delete x._r);
+  $("#track").innerHTML = h;
+  $("#style").value = tl.meta.style || "hien-dai";
+  preview(); inspector();
+}
+const thumb = (c, off = 0.3) => `/api/p/${encodeURIComponent(name)}/thumb/${encodeURIComponent(c.file + "@" + (+c.in + off).toFixed(1))}?t=${T}`;
+
+function preview() {
+  const L = layout(tl), f = $("#frame"), ov = $("#ov"), ph = f.querySelector(".ph");
+  let ci = 0, x = null;
+  if (sel && sel.t === "clip") ci = sel.i;
+  if (sel && sel.t === "tr") ci = sel.i + 1;
+  if (sel && sel.t === "text") { x = tl.texts[sel.i]; L.starts.forEach((s, i) => { if (x.start + 0.3 >= s) ci = i; }); }
+  const c = tl.clips[ci];
+  f.style.backgroundImage = c ? `url('${thumb(c, x ? Math.max(0.3, x.start - L.starts[ci]) : 0.3)}'), linear-gradient(#1b2633,#0b1118)` : "";
+  ph.textContent = c ? "" : "Chưa có cảnh";
+  if (!x) { ov.innerHTML = ""; return; }
+  const hl = s => esc(s).replace(/\*([^*]+)\*/g, '<span class="hl">$1</span>');
+  ov.innerHTML = (x.tag ? `<div class="tag">${esc(x.tag)}</div>` : "") + (x.num ? `<div class="num">${esc(x.num)}</div>` : "")
+    + (x.title ? `<div class="l">${hl(x.title)}</div>` : "") + (x.kind === "stat" ? `<div class="num">${esc(x.prefix || "")}${Number(x.value).toLocaleString("vi-VN")}${esc(x.suffix || "")}</div>` : "")
+    + (x.lines || x.items || []).map(l => `<div class="l">${x.items ? "✓ " : ""}${hl(l)}</div>`).join("")
+    + (x.text ? `<div class="l" style="font-size:11px">${esc(x.text)}</div>` : "") + (x.label ? `<div class="l">${hl(x.label)}</div>` : "")
+    + (x.sub ? `<div class="l" style="font-weight:400">${esc(x.sub)}</div>` : "");
+}
+
+function field(key, val, type = "text") {
+  if (ARR.includes(key)) return `<label>${LBL[key]}</label><textarea data-k="${key}">${esc((val || []).join("\n"))}</textarea>`;
+  return `<label>${LBL[key] || key}</label><input data-k="${key}" type="${type}" step="0.1" value="${esc(val ?? "")}">`;
+}
+const opts = (o, v, blank) => (blank ? `<option value="">${blank}</option>` : "") + Object.entries(o).map(([k, d]) => `<option value="${k}"${k === v ? " selected" : ""}>${k} — ${esc(d.vi || d)}</option>`).join("");
+
+function inspector() {
+  const p = $("#insp");
+  if (!sel) { p.innerHTML = `<h2>Chỉnh sửa</h2><div class="hint">Bấm vào cảnh, chuyển cảnh hoặc khối chữ trên timeline.</div>`; return; }
+  let h = "";
+  if (sel.t === "clip") {
+    const c = tl.clips[sel.i];
+    h = `<h2>Cảnh ${sel.i + 1}</h2>${field("file", c.file)}<div class="hint">Tên file trong build/raw (hoặc tự tải từ Drive theo id).</div>`
+      + `<label>Bắt đầu từ giây (trong file gốc)</label><input data-k="in" type="number" step="0.1" min="0" value="${c.in}">`
+      + `<label>Độ dài (giây)</label><input data-k="dur" type="number" step="0.1" min="0.2" value="${c.dur}">`
+      + `<label>Lệch khung dọc: ${c.focus ?? 0} (-1 trái, 1 phải)</label><input data-k="focus" type="range" min="-1" max="1" step="0.1" value="${c.focus ?? 0}">`
+      + `<label>Chỉnh màu</label><select data-k="look">${opts(FX.looks, c.look, "Theo phong cách")}</select>`
+      + `<div class="row"><button data-a="split">Tách đôi</button><button data-a="dup">Nhân bản</button><button data-a="left">← Lên trước</button><button data-a="right">Ra sau →</button><button data-a="del">Xóa</button></div>`;
+  } else if (sel.t === "tr") {
+    const t = tl.transitions[sel.i];
+    h = `<h2>Chuyển cảnh ${sel.i + 1} → ${sel.i + 2}</h2><label>Kiểu</label><select data-k="type">${opts(FX.transitions, t.type)}</select>`
+      + (t.type === "cut" ? "" : `<label>Độ dài (giây, để trống = mặc định ${FX.transitions[t.type].dur}s)</label><input data-k="dur" type="number" step="0.1" min="0.1" value="${t.dur ?? ""}">`);
+  } else {
+    const x = tl.texts[sel.i], k = FX.kinds[x.kind];
+    h = `<h2>Khối chữ ${sel.i + 1}</h2><label>Kiểu khối</label><select data-k="kind">${opts(FX.kinds, x.kind)}</select>`
+      + `<label>Hiệu ứng vào</label><select data-k="anim">${opts(FX.anims, x.anim, "Theo phong cách")}</select>`
+      + `<label>Bắt đầu (giây trên video)</label><input data-k="start" type="number" step="0.1" min="0" value="${x.start}">`
+      + `<label>Hiện trong (giây)</label><input data-k="dur" type="number" step="0.1" min="0.3" value="${x.dur}">`
+      + [...k.need, ...(OPT[x.kind] || [])].map(f => field(f, x[f], ["value", "decimals"].includes(f) ? "number" : "text")).join("")
+      + `<div class="row"><button data-a="dupT">Nhân bản</button><button data-a="delT">Xóa</button></div>`;
+  }
+  p.innerHTML = h;
+}
+
+// Sửa trong bảng chỉnh
+$("#insp").addEventListener("change", e => {
+  const k = e.target.dataset.k; if (!k) return;
+  let v = e.target.value;
+  mutate(() => {
+    const o = sel.t === "clip" ? tl.clips[sel.i] : sel.t === "tr" ? tl.transitions[sel.i] : tl.texts[sel.i];
+    if (ARR.includes(k)) v = v.split("\n").map(s => s.trim()).filter(Boolean);
+    else if (["in", "dur", "focus", "start", "value", "decimals"].includes(k)) v = v === "" ? undefined : +v;
+    if (v === "" || v === undefined) delete o[k]; else o[k] = v;
+    if (sel.t === "text" && k === "kind") for (const f of FX.kinds[v].need) if (o[f] === undefined) o[f] = ARR.includes(f) ? ["Nội dung"] : f === "value" ? 0 : "Nội dung";
+    if (sel.t === "tr" && k === "type") delete o.dur;
+  });
+});
+$("#insp").addEventListener("click", e => {
+  const a = e.target.dataset.a; if (!a) return;
+  const i = sel.i;
+  mutate(() => {
+    const C = tl.clips, R = tl.transitions;
+    if (a === "split") { const c = C[i], h = +(c.dur / 2).toFixed(2); const b = {...c, _id: ++uid, in: +(c.in + h).toFixed(2), dur: +(c.dur - h).toFixed(2)}; c.dur = h; C.splice(i + 1, 0, b); R.splice(i, 0, {type: "cut"}); }
+    if (a === "dup") { C.splice(i + 1, 0, {...C[i], _id: ++uid}); R.splice(i, 0, {type: "cut"}); }
+    if (a === "del") { if (C.length < 2) return say("Phải còn ít nhất một cảnh", "err"); C.splice(i, 1); R.splice(Math.min(i, R.length - 1), 1); sel = null; }
+    if (a === "left" && i > 0) { [C[i - 1], C[i]] = [C[i], C[i - 1]]; sel.i--; }
+    if (a === "right" && i < C.length - 1) { [C[i + 1], C[i]] = [C[i], C[i + 1]]; sel.i++; }
+    if (a === "dupT") { tl.texts.splice(i + 1, 0, JSON.parse(JSON.stringify(tl.texts[i]))); }
+    if (a === "delT") { tl.texts.splice(i, 1); sel = null; }
+  });
+});
+$("#track").addEventListener("click", e => { const b = e.target.closest(".blk"); if (!b) return; sel = {t: b.dataset.t, i: +b.dataset.i}; showTab(false); draw(); });
+$("#zoom").oninput = draw;
+$("#style").onchange = e => mutate(() => tl.meta.style = e.target.value);
+$("#addText").onclick = () => mutate(() => {
+  const L = layout(tl), ci = sel && sel.t === "clip" ? sel.i : 0, s = +(L.starts[ci] + 0.2).toFixed(2);
+  tl.texts.push({kind: "line", start: s, dur: +Math.min(3, L.total - s).toFixed(2), lines: ["Chữ mới"]}); sel = {t: "text", i: tl.texts.length - 1};
+});
+$("#undo").onclick = () => { if (!hist.length) return say("Không còn gì để hoàn tác"); tl = JSON.parse(hist.pop()); sel = null; draw(); };
+document.addEventListener("keydown", e => { if ((e.ctrlKey || e.metaKey) && e.key === "z" && !/INPUT|TEXTAREA/.test(e.target.tagName)) { e.preventDefault(); $("#undo").click(); } });
+
+$("#save").onclick = save;
+async function save() {
+  try { const r = await api("p/" + encodeURIComponent(name), {method: "PUT", body: JSON.stringify(clean(tl))}); say(`Đã lưu (${r.total.toFixed(1)} giây).`, "ok"); return true; }
+  catch (e) { say("Chưa lưu được:<ul class='err-list'>" + ((e.data && e.data.errors) || [e.message]).map(m => `<li>${esc(m)}</li>`).join("") + "</ul>", "err"); return false; }
+}
+$("#render").onclick = async () => {
+  if (!await save()) return;
+  try { await api(`p/${encodeURIComponent(name)}/render`, {method: "POST"}); } catch (e) { return say(esc(e.message), "err"); }
+  $("#render").disabled = true; say("Đang dựng… (90 giây video có thể mất 10–20 phút)");
+  clearInterval(poll);
+  poll = setInterval(async () => {
+    const s = await api(`p/${encodeURIComponent(name)}/render`).catch(() => null); if (!s || s.running) return;
+    clearInterval(poll); $("#render").disabled = false;
+    if (s.code === 0) { say("Dựng xong. Xem ở tab “Bản đã dựng”.", "ok"); loadVideo(); showTab(true); }
+    else say("Dựng lỗi:<pre style='white-space:pre-wrap'>" + esc(s.log.slice(-800)) + "</pre>", "err");
+  }, 3000);
+};
+function loadVideo() { $("#video").src = `/api/p/${encodeURIComponent(name)}/video?t=${T}&v=${Date.now()}`; }
+function showTab(vid) { $("#tabVid").classList.toggle("on", vid); $("#tabEdit").classList.toggle("on", !vid); $("#video").hidden = !vid; $("#frame").hidden = vid; }
+$("#tabEdit").onclick = () => showTab(false);
+$("#tabVid").onclick = () => { loadVideo(); showTab(true); };
+
+async function open_(n) {
+  name = n; const r = await api("p/" + encodeURIComponent(n));
+  tl = r.timeline; tl.texts = tl.texts || []; tl.meta = tl.meta || {}; tl.clips.forEach(c => c._id = ++uid);
+  sel = null; hist = []; showTab(false); draw(); say(r.has_video ? "Dự án đã có bản dựng." : "");
+}
+(async () => {
+  try {
+    FX = await api("effects");
+    $("#style").innerHTML = opts(FX.styles, "");
+    const ps = await api("projects");
+    $("#proj").innerHTML = ps.map(p => `<option>${esc(p)}</option>`).join("");
+    $("#proj").onchange = e => open_(e.target.value);
+    if (ps.length) await open_(ps[0]); else say("Chưa có dự án nào trong projects/.", "err");
+  } catch (e) { say(esc(e.message), "err"); }
+})();
+</script>
+</body>
+</html>
