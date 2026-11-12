@@ -11,7 +11,8 @@ from am_thanh import SFX
 from effects import STYLES
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-MAU = {m["id"]: m for m in (json.load(open(p, encoding="utf8")) for p in sorted(glob.glob(os.path.join(ROOT, "thu-vien-mau", "*", "mau.json"))))}
+MAU = {m["id"]: dict(m, _dir=os.path.dirname(p)) for p in sorted(glob.glob(os.path.join(ROOT, "thu-vien-mau", "*", "mau.json")))
+       for m in [json.load(open(p, encoding="utf8"))]}
 TIMED = ("texts", "subtitles", "cards", "zooms", "broll", "sfx")
 
 
@@ -19,6 +20,7 @@ def ap(tl, mau, chi_am=False):
     """chi_am=True: chỉ rải lại hiệu ứng âm (giữ phong cách và chuyển cảnh Hào đã chỉnh), dùng khi chữ vừa đổi."""
     tl = copy.deepcopy(tl)
     tl["sfx"] = [x for x in tl.get("sfx", []) if not x.get("auto")]
+    tl["zooms"] = [z for z in tl.get("zooms", []) if not z.get("mau")]  # zoom do mẫu thêm; zoom của master cut ("auto") giữ
     # 1. ghi nhớ mỗi mục thuộc đoạn video nào (như app studio) trước khi đổi chuyển cảnh
     L0 = layout(tl)
     anchor = []
@@ -71,6 +73,21 @@ def ap(tl, mau, chi_am=False):
         elif kind == "title3d" and re.search(r"\d", x.get("big", "")):
             them(s.get("so_lieu"), hit + 0.12)
     tl["sfx"] += sorted(new, key=lambda y: y["start"])
+    # 4. zoom nhấn ý đúng lúc chữ lớn hiện (xen_ke: cách một chữ một zoom → khung gần/xa xen kẽ)
+    zc = mau.get("zoom_chu")
+    if zc:
+        k = 0
+        for x in sorted(tl.get("texts", []), key=lambda x: x["start"]):
+            if x.get("kind") not in ("title3d", "compare", "stat"):
+                continue
+            k += 1
+            if zc.get("xen_ke") and k % 2 == 0:
+                continue
+            st = round(x["start"] + 0.1, 2)
+            du = round(min(zc.get("dur", 1.2), x["dur"], total - st), 2)
+            if du > 0.3 and not any(z["start"] < st + du and st < z["start"] + z["dur"] for z in tl["zooms"]):
+                tl["zooms"].append({"start": st, "dur": du, "scale": zc.get("scale", 1.08), "mau": True})
+        tl["zooms"].sort(key=lambda z: z["start"])
     return tl
 
 

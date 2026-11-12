@@ -16,7 +16,12 @@ STYLES = {
         "bg": "#0b1b2b", "scrim": "8,20,33", "accent": "#c9a45c", "hl": "#e8cf96", "text": "#f4efe6",
         "display": "Playfair Display", "body": "Be Vietnam Pro", "display_weight": 700,
         "fonts": "family=Playfair+Display:wght@500;700&family=Be+Vietnam+Pro:wght@400;600",
-        "speed": 1.3, "anim": "mask", "look": "am-sang",
+        "speed": 1.3, "anim": "mask", "look": "am-sang", "t3anim": "rise",
+        "css": """
+.t3top{letter-spacing:10px;text-transform:uppercase;font-size:32px;color:var(--hl)}
+.t3big{font-weight:500;letter-spacing:1px;color:#f4efe6;text-shadow:0 6px 30px rgba(0,0,0,.55)}
+.t3sub{font-family:var(--display);font-style:italic;font-weight:500;color:#e8dcc6}
+""",
     },
     "toi-gian": {
         "vi": "Tối giản: đen trắng, một màu nhấn nhạt, chữ mảnh, hiện mờ dần, màu nhạt",
@@ -30,7 +35,7 @@ STYLES = {
         "bg": "#0a0a0c", "scrim": "0,0,0", "accent": "#ffffff", "hl": "#ffffff", "text": "#ffffff",
         "display": "Montserrat", "body": "Montserrat", "display_weight": 900,
         "fonts": "family=Montserrat:wght@500;600;800;900",
-        "speed": 0.9, "anim": "zoom-blur", "look": "tuoi-dam",
+        "speed": 0.9, "anim": "zoom-blur", "look": "tuoi-dam", "t3anim": "zoom-blur",
         # CSS riêng của phong cách (bộ dựng chèn vào lớp chữ). Chữ 3D: chồng nhiều lớp bóng xám đậm dần xuống dưới.
         "css": """
 .scrim{height:40%;opacity:.7}
@@ -38,6 +43,70 @@ STYLES = {
 .sub{top:1380px}
 .sub > span{font-family:var(--body);font-size:40px;font-weight:600;padding:8px 22px;border-radius:14px;background:rgba(0,0,0,.5);text-shadow:none}
 .sub .hl{font-size:1em}
+""",
+    },
+    "vang-cao-cap": {
+        "vi": "Vàng cao cấp: chữ Anton vàng ánh kim căn giữa, từng từ bật ra theo lời, thẻ minh hoạ nền đen viền vàng",
+        "bg": "#0b0a08", "scrim": "0,0,0", "accent": "#d9a93f", "hl": "#f3cf6e", "text": "#ffffff",
+        "display": "Anton", "body": "Be Vietnam Pro", "display_weight": 400,
+        "fonts": "family=Anton&family=Be+Vietnam+Pro:wght@400;600;800",
+        "speed": 1.0, "anim": "pop", "look": "am-sang", "t3anim": "word-pop",
+        "css": """
+.title3d{top:760px}
+.sub{top:1290px}
+.t3big{text-transform:uppercase;letter-spacing:1px;line-height:1.05}
+.t3big .w{background:linear-gradient(180deg,#fff6cf 0%,#f3cf6e 42%,#c78f22 68%,#f7dc8c 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))}
+.t3top,.t3sub{font-weight:600;text-shadow:0 3px 14px rgba(0,0,0,.7)}
+.ctt{color:#f3cf6e} .card .cw{border:2px solid rgba(217,169,63,.5);border-radius:28px;padding:40px 36px}
+.sub > span{font-size:44px;font-weight:700;background:rgba(0,0,0,.55);border-radius:12px;font-family:var(--body)}
+""",
+    },
+    "chu-mau": {
+        "vi": "Chữ động nhiều màu: từng từ bật ra, xếp chồng, to nhỏ xen kẽ, trắng – xanh ngọc – cam – hồng",
+        "bg": "#0e1117", "scrim": "0,0,0", "accent": "#3fd0c9", "hl": "#ff9a3c", "text": "#ffffff",
+        "display": "Be Vietnam Pro", "body": "Be Vietnam Pro", "display_weight": 900,
+        "fonts": "family=Be+Vietnam+Pro:wght@500;700;900",
+        "speed": 0.85, "anim": "pop", "look": "tuoi-dam", "t3anim": "word-pop",
+        "css": """
+.title3d{top:640px}
+.t3big{font-size:150px !important;white-space:normal;line-height:.98;text-transform:uppercase;-webkit-text-stroke:2px rgba(0,0,0,.25);text-shadow:0 7px 0 rgba(0,0,0,.35)}
+.t3big > .w,.t3big > .nw{display:block}
+.t3big > :nth-child(4n+1){color:#ffffff} .t3big > :nth-child(4n+2){color:#3fd0c9;font-size:.72em}
+.t3big > :nth-child(4n+3){color:#ff9a3c} .t3big > :nth-child(4n){color:#ff6fae;font-size:.72em}
+.t3big .hl{color:inherit}
+.t3top,.t3sub{font-weight:700;text-shadow:0 3px 12px rgba(0,0,0,.7)}
+.sub > span{background:#ffffff;color:#111;text-shadow:none;font-size:46px} .sub .hl{background:#3fd0c9;color:#111}
+""",
+    },
+    "neon-cam": {
+        "vi": "Neon cam: chữ cam phát sáng gõ dần theo lời, số nổi cam, thẻ tối viền sáng, khung gần – xa xen kẽ",
+        "bg": "#0d0603", "scrim": "10,4,0", "accent": "#ff7a1a", "hl": "#ffb36b", "text": "#ffe9d6",
+        "display": "Montserrat", "body": "Montserrat", "display_weight": 900,
+        "fonts": "family=Montserrat:wght@500;700;900",
+        "speed": 0.95, "anim": "type", "look": "dien-anh", "t3anim": "type",
+        "css": """
+.t3big,.stat,.ctt{color:#ffb36b;text-shadow:0 0 6px #ff8a2a,0 0 18px #ff6a00,0 0 42px #ff4d00,0 0 80px rgba(255,77,0,.55)}
+.t3top,.t3sub{color:#ffe2c4;font-weight:700;text-shadow:0 0 10px rgba(255,120,30,.85)}
+.card .cw{border:2px solid #ff7a1a;border-radius:30px;padding:40px 36px;box-shadow:0 0 40px rgba(255,106,0,.45),inset 0 0 30px rgba(255,106,0,.2)}
+.sub > span{background:rgba(20,8,0,.7);border:1px solid rgba(255,122,26,.7);font-size:42px;font-weight:700}
+.sub .hl{background:#ff7a1a;color:#140800}
+""",
+    },
+    "giai-thich-sang": {
+        "vi": "Giải thích sáng: thẻ trắng bo góc, nhãn BƯỚC cam, chữ đen dễ đọc, thẻ minh hoạ nền kem – hợp hướng dẫn thủ tục, quy trình",
+        "bg": "#f7f3ec", "scrim": "0,0,0", "accent": "#ff7a1a", "hl": "#ff7a1a", "text": "#ffffff",
+        "display": "Be Vietnam Pro", "body": "Be Vietnam Pro", "display_weight": 800,
+        "fonts": "family=Be+Vietnam+Pro:wght@500;700;800",
+        "speed": 1.0, "anim": "rise", "look": "trong-treo", "t3anim": "rise",
+        "css": """
+.scrim{opacity:.55}
+.t3top{display:inline-block;background:#ff7a1a;color:#fff;padding:8px 22px;border-radius:40px;font-size:36px;font-weight:800;letter-spacing:2px;text-shadow:none;margin-bottom:16px}
+.t3big{display:inline-block;color:#1d1d1f;background:#ffffff;padding:6px 34px 16px;border-radius:26px;box-shadow:0 16px 40px rgba(0,0,0,.3);white-space:nowrap}
+.t3big .hl{color:#ff7a1a}
+.t3sub{display:block;width:max-content;margin:16px auto 0;background:rgba(255,255,255,.94);color:#333;padding:8px 22px;border-radius:14px;text-shadow:none}
+.card{color:#1d1d1f} .ctt{color:#1d1d1f} .cs{color:#ff7a1a;font-weight:800}
+.ci{background:#ffffff;color:#1d1d1f;box-shadow:0 8px 24px rgba(0,0,0,.08)} .ci b{background:#ff7a1a;color:#fff}
+.sub > span{background:#ffffff;color:#1d1d1f;text-shadow:none;font-size:44px} .sub .hl{background:#ff7a1a;color:#fff}
 """,
     },
 }
@@ -105,6 +174,7 @@ TEXT_ANIMS = {
     "track": "Chữ giãn rộng rồi thu về (tiêu đề sang trọng)",
     "type": "Gõ từng ký tự (phân tích, tin nhanh)",
     "zoom-blur": "Cả dòng lao vào từ to và mờ → đúng cỡ và rõ (mẫu edit-phim-01)",
+    "word-pop": "Từng từ bật ra nảy nhẹ theo nhịp nói",
 }
 
 # Khối chữ: (trường bắt buộc, mô tả).
@@ -118,7 +188,8 @@ TEXT_KINDS = {
     "source": (["text"], "Thẻ nguồn nhỏ, bắt buộc khi có số liệu: 'Nguồn: …, cập nhật …'"),
     "checklist": (["items"], "Danh sách kiểm, từng mục hiện dần có dấu ✓ (thêm 'title')"),
     "stat": (["value", "label"], "Số lớn chạy từ 0 (thêm 'prefix', 'suffix', 'decimals')"),
-    "title3d": (["big"], "Chữ lớn nổi 3D giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub') — mẫu edit-phim-01"),
+    "title3d": (["big"], "Chữ lớn giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub'); kiểu chữ và cách hiện theo phong cách"),
+    "compare": (["a_label", "a_value", "b_label", "b_value"], "Thẻ so sánh 2 cột (vd. Thuê nhà vs Trả góp), thêm 'title', 'note'"),
 }
 
 

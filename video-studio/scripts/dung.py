@@ -176,6 +176,7 @@ ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf
 def words(text, chars=False):
     esc = (lambda t: "".join(f'<span class="c">{html.escape(ch)}</span>' for ch in t)) if chars else html.escape
     out = []
+    text = re.sub(r"\*([^*]+)\*", lambda m: "*" + m[1].replace(" ", "\u00a0") + "*", text)  # *nhiều từ* tô cả cụm, không tách
     for w in text.split(" "):
         m = re.fullmatch(r"\*(.+)\*([^\w]*)", w)  # *từ* hoặc *từ*? : tô màu nhấn, giữ dấu câu cùng dòng
         out.append(f'<span class="nw"><span class="w hl">{esc(m[1])}</span><span class="w">{esc(m[2])}</span></span>' if m
@@ -199,6 +200,7 @@ def anim_in(name, sel, t):
         "pop": f'tl.fromTo("{sel} .line",{{opacity:0,scale:1.18}},{{opacity:1,scale:1,duration:{d(.6)},ease:"expo.out",stagger:{d(.12)}}},{t:.2f});',
         "track": f'tl.fromTo("{sel} .line",{{opacity:0,letterSpacing:"0.35em"}},{{opacity:1,letterSpacing:"0em",duration:{d(1.0)},ease:"expo.out",stagger:{d(.15)}}},{t:.2f});',
         "type": f'tl.fromTo("{sel} .c",{{opacity:0}},{{opacity:1,duration:0.01,stagger:{d(.035)}}},{t:.2f});',
+        "word-pop": f'tl.fromTo("{sel} .w",{{opacity:0,scale:.3,y:30}},{{opacity:1,scale:1,y:0,duration:{d(.35)},ease:"back.out(2.2)",stagger:{d(.09)}}},{t:.2f});',
         "zoom-blur": f'tl.fromTo("{sel} .line",{{opacity:0,scale:1.35,filter:"blur(18px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out",stagger:{d(.1)}}},{t:.2f});',
     }[name]
 
@@ -242,12 +244,27 @@ for i, s in enumerate(tl.get("texts", [])):
         a = ([anim_in(an, sel, st0)] if s.get("title") else []) + [
             f'tl.fromTo("{sel} .ck",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:{d(.45)},ease:"power3.out",stagger:{d(.45)}}},{st0 + 0.5:.2f});',
             f'tl.fromTo("{sel} .tick",{{scale:0}},{{scale:1,duration:{d(.4)},ease:"back.out(3)",stagger:{d(.45)}}},{st0 + 0.6:.2f});']
-    elif kind == "title3d":  # mẫu edit-phim-01: nhãn nhỏ trên, chữ lớn nổi 3D lao vào, dòng nhỏ dưới
-        body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "") + f'<div class="t3big" style="font-size:{min(205, 1500 // max(len(s["big"]), 1))}px">{words(s["big"])}</div>'
+    elif kind == "title3d":  # nhãn nhỏ trên, chữ lớn, dòng nhỏ dưới; kiểu chữ lớn hiện theo phong cách (t3anim)
+        t3 = style.get("t3anim", "zoom-blur")
+        body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "")
+                + f'<div class="t3big" style="font-size:{min(205, 1500 // max(len(s["big"]), 1))}px">{words(s["big"], t3 == "type")}</div>'  # chữ dài thì nhỏ lại cho vừa khung
                 + (f'<div class="t3sub">{words(s["sub"])}</div>' if s.get("sub") else ""))
-        a = [f'tl.fromTo("{sel} .t3top",{{opacity:0,y:20,filter:"blur(8px)"}},{{opacity:1,y:0,filter:"blur(0px)",duration:{d(.35)}}},{st0:.2f});',
-             f'tl.fromTo("{sel} .t3big",{{opacity:0,scale:1.5,filter:"blur(22px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out"}},{st0 + 0.15:.2f});',
+        big = {"zoom-blur": f'tl.fromTo("{sel} .t3big",{{opacity:0,scale:1.5,filter:"blur(22px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out"}},{st0 + 0.15:.2f});',
+               "word-pop": f'tl.fromTo("{sel} .t3big .w",{{opacity:0,scale:.3,y:40}},{{opacity:1,scale:1,y:0,duration:{d(.35)},ease:"back.out(2.4)",stagger:{d(.1)}}},{st0 + 0.15:.2f});',
+               "type": f'tl.fromTo("{sel} .t3big .c",{{opacity:0}},{{opacity:1,duration:0.01,stagger:{d(.045)}}},{st0 + 0.15:.2f});',
+               "rise": f'tl.fromTo("{sel} .t3big",{{opacity:0,y:60}},{{opacity:1,y:0,duration:{d(.6)},ease:"power3.out"}},{st0 + 0.15:.2f});'}[t3]
+        a = [f'tl.fromTo("{sel} .t3top",{{opacity:0,y:20,filter:"blur(8px)"}},{{opacity:1,y:0,filter:"blur(0px)",duration:{d(.35)}}},{st0:.2f});', big,
              f'tl.fromTo("{sel} .t3sub",{{opacity:0,y:-16}},{{opacity:1,y:0,duration:{d(.35)}}},{st0 + 0.45:.2f});']
+    elif kind == "compare":  # thẻ so sánh 2 cột
+        col = lambda k: f'<div class="col {k}"><div class="cl">{words(s[k + "_label"])}</div><div class="cv">{words(s[k + "_value"])}</div></div>'
+        body = ((f'<div class="cmt">{words(s["title"])}</div>' if s.get("title") else "") + f'<div class="cols">{col("a")}<div class="vs">VS</div>{col("b")}</div>'
+                + (f'<div class="cmn">{words(s["note"])}</div>' if s.get("note") else ""))
+        a = [f'tl.fromTo("{sel} .cmt",{{opacity:0,y:-20}},{{opacity:1,y:0,duration:{d(.4)}}},{st0:.2f});',
+             f'tl.fromTo("{sel} .col.a",{{opacity:0,x:-120}},{{opacity:1,x:0,duration:{d(.45)},ease:"power3.out"}},{st0 + 0.15:.2f});',
+             f'tl.fromTo("{sel} .col.b",{{opacity:0,x:120}},{{opacity:1,x:0,duration:{d(.45)},ease:"power3.out"}},{st0 + 0.3:.2f});',
+             f'tl.fromTo("{sel} .vs",{{opacity:0,scale:2.2}},{{opacity:1,scale:1,duration:{d(.35)},ease:"back.out(3)"}},{st0 + 0.5:.2f});',
+             f'tl.fromTo("{sel} .cv",{{scale:.6}},{{scale:1,duration:{d(.4)},ease:"back.out(2.5)",stagger:{d(.15)}}},{st0 + 0.55:.2f});',
+             f'tl.fromTo("{sel} .cmn",{{opacity:0}},{{opacity:.85,duration:{d(.4)}}},{st0 + 0.9:.2f});']
     elif kind == "stat":
         dec = int(s.get("decimals", 0))
         body = (f'<div class="stat"><span class="pre">{html.escape(s.get("prefix", ""))}</span><span class="val">0</span>'
@@ -256,7 +273,7 @@ for i, s in enumerate(tl.get("texts", [])):
               f'const o{i}={{v:0}};tl.to(o{i},{{v:{s["value"]},duration:{d(1.4)},ease:"power2.out",onUpdate:()=>fmt("{sel} .val",o{i}.v,{dec})}},{st0 + 0.1:.2f});']
     else:
         body = "".join(line(l, "mid", ch) for l in s["lines"])
-    a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind == "title3d"
+    a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind in ("title3d", "compare")
              else f'tl.to("{sel}",{{opacity:0,y:-40,duration:{d(.35)},ease:"power2.in"}},{st0 + du - 0.4 * SP:.2f});')
     blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}" data-start="{st0:.2f}" data-duration="{du:.2f}" '
                   f'data-track-index="{(6 if kind == "source" else 1 + i % 2)}">{body}</div>')
@@ -286,7 +303,7 @@ YT_CSS = """
 .card{align-items:center;padding-top:0}
 .cw{zoom:.62;width:1700px}
 .logo{top:44px;left:56px;font-size:24px}
-.title3d{left:0;right:0;width:auto;top:330px;bottom:auto}
+.title3d,.compare{left:0;right:0;width:auto;top:330px;bottom:auto}
 """
 ov = f"{B}/overlay"; shutil.rmtree(ov, ignore_errors=True); os.makedirs(ov)
 shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), ov)
@@ -336,6 +353,14 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;background:transparent;font-
 .t3top{{font-size:46px;font-weight:600;text-shadow:0 3px 14px rgba(0,0,0,.6)}}
 .t3big{{font-family:var(--display);font-size:205px;font-weight:var(--dw);line-height:1.02;letter-spacing:-3px;white-space:nowrap}}
 .t3sub{{font-size:42px;font-weight:600;margin-top:6px;text-shadow:0 3px 14px rgba(0,0,0,.6)}}
+.compare{{left:50px;right:50px;bottom:auto;top:560px;text-align:center}}
+.cmt{{font-family:var(--display);font-weight:var(--dw);font-size:64px;margin-bottom:26px;text-shadow:0 4px 18px rgba(0,0,0,.6)}}
+.cols{{display:flex;align-items:center;justify-content:center;gap:22px}}
+.col{{width:400px;padding:30px 22px;border-radius:26px;background:rgba(var(--scrim),.8);border:2px solid var(--accent)}}
+.col.b{{background:var(--accent);color:rgb(var(--scrim))}}
+.cl{{font-size:38px;font-weight:600}} .cv{{font-family:var(--display);font-weight:var(--dw);font-size:76px;line-height:1.1;margin-top:8px}}
+.col.a .cv{{color:var(--hl)}} .vs{{font-family:var(--display);font-weight:var(--dw);font-size:46px;color:var(--accent);text-shadow:0 3px 12px rgba(0,0,0,.6)}}
+.cmn{{margin-top:22px;font-size:34px;text-shadow:0 3px 12px rgba(0,0,0,.7)}}
 .card{{position:absolute;inset:0;background:{style["bg"]};z-index:5;display:flex;align-items:flex-start;justify-content:center;padding-top:340px}}
 .cw{{width:820px}} .cs{{font-size:30px;letter-spacing:6px;text-transform:uppercase;color:var(--hl);text-align:center}}
 .ctt{{font-family:var(--display);font-size:92px;font-weight:var(--dw);text-transform:uppercase;text-align:center;color:var(--hl);margin:10px 0 50px;line-height:1.05}}

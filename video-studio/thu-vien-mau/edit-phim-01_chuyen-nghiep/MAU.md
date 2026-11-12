@@ -63,7 +63,7 @@ Nhạc nền: có, đều suốt video, nhỏ dưới giọng. Theo Hào dặn, 
 
 ## 6. Mẫu này làm gì khi áp vào một dự án
 
-Áp trong app: tab **Thương hiệu → Mẫu edit → Áp mẫu** (hoàn tác được). Hoặc: `python3 scripts/ap_mau.py projects/<tên> edit-phim-01`.
+Áp trong app: nút **✦ Thư viện mẫu** (đầu trang) → Áp mẫu (hoàn tác được). Hoặc: `python3 scripts/ap_mau.py projects/<tên> edit-phim-01`.
 
 1. Phong cách `edit-phim`: chữ Montserrat đậm trắng nổi 3D, chữ vào kiểu `zoom-blur`, màu `tuoi-dam`, phụ đề nhỏ nền tối.
 2. Chuyển cảnh theo chu kỳ 10 chỗ nối: `cut, CrossZoom, cut, WhipSpin, cut, cut, FilmBurn, cut, cut, Overexposure` (độ dài 0,35–0,6 s). Sau khi áp, nên **đổi tay cho chuyển cảnh mạnh rơi đúng chỗ đổi chương**.

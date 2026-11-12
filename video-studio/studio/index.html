@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Hào Sky Land Studio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@500;700;800;900&family=Montserrat:wght@700;900&family=Playfair+Display:wght@500&display=swap">
 <style>
   :root { --bg:#0b0d10; --panel:#14171c; --card:#1b1f26; --line:#262b33; --text:#e9ebee; --dim:#8a919b; --lime:#e9f86b; --gold:#d4a64a; --err:#f2766b; --ok:#7bd88f;
     --c-text:#9a8a2e; --c-sub:#2c3440; --c-card:#6b2140; --c-broll:#1f4f5a; --c-zoom:#24325a; --c-sfx:#4a2f66; }
@@ -91,6 +92,30 @@
   #ph::before { content:""; position:absolute; top:0; left:-7px; width:16px; height:18px; border-radius:4px; background:#fff; }
   dialog { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:16px; max-width:720px; width:92vw; }
   dialog::backdrop { background:#000a; }
+  dialog.wide { max-width:1240px; }
+  /* Thư viện mẫu edit */
+  .mchips { display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 12px; } .mchips button.on { background:var(--lime); color:#111; }
+  .mgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; max-height:70vh; overflow:auto; padding-right:4px; }
+  .mcard { background:var(--card); border-radius:14px; padding:8px; border:2px solid transparent; } .mcard.sel { border-color:var(--lime); }
+  .mpv { position:relative; aspect-ratio:9/16; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .mpv::before { content:""; position:absolute; left:28%; right:28%; top:20%; bottom:0; border-radius:48% 48% 0 0; background:#0006; } /* bóng người nói */
+  .mtag { position:absolute; left:8px; bottom:8px; z-index:2; background:#000b; color:#fff; font-size:10px; font-weight:800; padding:3px 7px; border-radius:6px; letter-spacing:.4px; }
+  .mtx { position:relative; z-index:1; text-align:center; padding:0 6px; margin-top:18%; }
+  .mtop { display:inline-block; font-size:11px; font-weight:700; color:#fff; text-shadow:0 1px 4px #000b; margin-bottom:4px; }
+  .mbig { font-size:30px; line-height:1.05; white-space:nowrap; } .msub { font-size:10px; color:#fff; margin-top:6px; text-shadow:0 1px 4px #000; }
+  .msubt { position:absolute; bottom:15%; left:50%; transform:translateX(-50%); font-size:9px; background:#000a; color:#fff; padding:2px 6px; border-radius:5px; white-space:nowrap; }
+  .pw, .pc { display:inline-block; }
+  @keyframes mpop { 0%,6% { opacity:0; transform:scale(.3) translateY(10px); } 16%,86% { opacity:1; transform:none; } 100% { opacity:0; } }
+  @keyframes mtype { 0%,4% { opacity:0; } 5%,86% { opacity:1; } 100% { opacity:0; } }
+  @keyframes mzb { 0%,4% { opacity:0; transform:scale(1.6); filter:blur(8px); } 18%,86% { opacity:1; transform:none; filter:none; } 100% { opacity:0; } }
+  @keyframes mrise { 0%,4% { opacity:0; transform:translateY(16px); } 24%,86% { opacity:1; transform:none; } 100% { opacity:0; } }
+  .a-word-pop .pw { animation:mpop 3.2s calc(var(--i) * .12s) infinite backwards; } .a-type .pc { animation:mtype 3.2s calc(var(--i) * .06s) infinite backwards; }
+  .a-zoom-blur .mbig { animation:mzb 3.2s infinite; } .a-rise .mbig { animation:mrise 3.2s infinite; }
+  .a-stack .mbig { white-space:normal; font-size:27px; line-height:.95; } .a-stack .pw { display:block; animation:mpop 3.2s calc(var(--i) * .15s) infinite backwards; }
+  .a-stack .pw:nth-child(4n+1) { color:#fff; } .a-stack .pw:nth-child(4n+2) { color:#3fd0c9; font-size:.75em; } .a-stack .pw:nth-child(4n+3) { color:#ff9a3c; } .a-stack .pw:nth-child(4n) { color:#ff6fae; font-size:.75em; }
+  .mname { font-weight:800; text-transform:uppercase; font-size:13px; margin:8px 0 4px; } .mdesc { font-size:11.5px; color:var(--dim); line-height:1.45; }
+  .mdoc table { border-collapse:collapse; width:100%; font-size:13px; } .mdoc td, .mdoc th { border:1px solid var(--line); padding:4px 6px; text-align:left; }
+  @media (prefers-reduced-motion: reduce) { .mpv * { animation:none !important; } }
   @media (max-width:900px) {
     #app { height:auto; } main, main.noL, main.noR { grid-template-columns:1fr; }
     #stage { height:56vh; max-height:none; flex:none; } #tlwrap { max-height:none; }
@@ -107,7 +132,7 @@
       <button id="lyT" title="Ẩn/hiện timeline">⬓</button><button id="lyF" title="Toàn màn hình">⛶</button>
     </div>
     <button class="ghost" id="undo" title="Hoàn tác (Ctrl+Z)">↶</button><button class="ghost" id="redo" title="Làm lại (Ctrl+Shift+Z)">↷</button>
-    <button id="btnLib">▦ Thư viện</button><button class="ghost" id="btnHist">Lịch sử</button><button class="ghost" id="btnAI">Nhờ AI sửa</button>
+    <button id="btnMau" class="lime">✦ Thư viện mẫu</button><button id="btnLib">▦ Thư viện</button><button class="ghost" id="btnHist">Lịch sử</button><button class="ghost" id="btnAI">Nhờ AI sửa</button>
     <button class="ghost" id="save">Lưu</button><button id="draft">Dựng nháp</button><button class="lime" id="export">Xuất video</button><button class="ghost" id="nle" title="Xuất timeline để dựng tiếp trên Premiere Pro hoặc DaVinci Resolve">Premiere/DaVinci</button>
   </header>
   <nav id="tabs" aria-label="Nhóm chỉnh sửa"></nav>
@@ -264,8 +289,7 @@ function settings() {
     <p class="dim">Vùng an toàn (khung đỏ, bật/tắt dưới khung xem): TikTok — 220px trên, 420px dưới, 140px phải (giao diện app che); YouTube — chừa 5% mỗi cạnh.</p></div>`; }
   if (tab === "brand") return `<div style="grid-column:1/-1">` + Object.entries(FX.styles).map(([k, v]) =>
     `<div class="it${(tl.meta.style || "hien-dai") === k ? " sel" : ""}" data-style="${k}" style="margin-bottom:8px"><div class="h">${k}</div><div class="m">${esc(v)}</div></div>`).join("")
-    + `<h4 style="margin:16px 0 6px">Mẫu edit</h4>` + Object.entries(FX.mau).map(([k, m]) =>
-      `<div class="it${tl.meta.mau === k ? " sel" : ""}" style="margin-bottom:8px"><div class="h">${esc(m.ten)} <span class="dim">(${k} · ${esc(m.loai)})</span></div><div class="m">${esc(m.mo_ta)}</div><div class="row"><button class="lime" data-mau="${k}">Áp mẫu</button></div></div>`).join("")
+    + `<h4 style="margin:16px 0 6px">Mẫu edit</h4><div class="row"><button class="lime" data-open-mau="1">✦ Mở thư viện mẫu (${Object.keys(FX.mau).length})</button><span class="dim" style="align-self:center">Đang dùng: ${tl.meta.mau ? esc(FX.mau[tl.meta.mau]?.ten || tl.meta.mau) : "chưa áp mẫu"}</span></div>`
     + `<p class="dim">Áp mẫu: đổi phong cách, nhịp chuyển cảnh, tự rải hiệu ứng âm (hàng ♪). Hoàn tác được; nhớ bấm Lưu. Phân tích mẫu: video-studio/thu-vien-mau/.</p>`
     + `<p class="dim">Logo và màu thật của Hào Sky Land: chờ Hào gửi.</p></div>`;
   return "";
@@ -405,6 +429,7 @@ async function apMau(id) {
   try {
     const r = await api("apmau", {method: "POST", body: JSON.stringify({id, timeline: clean(tl)})});
     undoS.push(JSON.stringify(tl)); redoS = []; setRaw(JSON.stringify(r.timeline));
+    if (dlg.open) dlg.close();
     toast(`Đã áp mẫu ${esc(FX.mau[id].ten)}: ${r.sfx} hiệu ứng âm tự rải. Chưa lưu.`, "ok");
   } catch (e) { toast(esc(e.message), "err"); }
 }
@@ -627,7 +652,44 @@ function view() {
 $("#viewSel").onchange = view;
 
 // ---- Hộp thoại: Thư viện, Lịch sử, Nhờ AI sửa ----
-const dlg = $("#dlg"); function dlgShow(h) { $("#dlgBody").innerHTML = h; dlg.showModal(); }
+const dlg = $("#dlg"); function dlgShow(h, wide = false) { $("#dlgBody").innerHTML = h; dlg.classList.toggle("wide", wide); if (!dlg.open) dlg.showModal(); }
+// ---- Thư viện mẫu edit: thẻ xem trước chữ chuyển động, lọc theo loại, áp mẫu, đọc công thức ----
+let mauLoai = "";
+function pvMau(m) {
+  const x = m.xem_truoc || {}, hu = x.hieu_ung || "rise", big = (x.big || "").split("|");
+  const split = (arr, cls) => arr.map((w, i) => `<span class="${cls}" style="--i:${i};${x.css || ""}">${w === " " ? "&nbsp;" : esc(w)}</span>`);
+  const bigHtml = hu === "stack" ? split(big, "pw").join("") : hu === "type" ? split([...big.join(" ")], "pc").join("")
+    : hu === "word-pop" ? split(big.join(" ").split(" "), "pw").join(" ") : esc(big.join(" "));
+  return `<div class="mpv" style="background:${x.nen || "#222"}"><span class="mtag">${esc(m.the || m.loai)}</span><div class="mtx a-${hu}">`
+    + (x.top ? `<div class="mtop" style="${x.top_css || ""}">${esc(x.top)}</div>` : "")
+    + `<div class="mbig" style="${["stack", "type", "word-pop"].includes(hu) ? "" : x.css || ""}">${bigHtml}</div>${x.sub ? `<div class="msub">${esc(x.sub)}</div>` : ""}</div><div class="msubt">phụ đề theo lời nói</div></div>`;
+}
+function moThuVienMau() {
+  const ds = Object.entries(FX.mau), loai = [...new Set(ds.map(([, m]) => m.loai))];
+  const chips = [["", "Tất cả"], ...loai.map(l => [l, l])].map(([v, n]) => `<button class="${mauLoai === v ? "on" : ""}" data-mloai="${esc(v)}">${esc(n)}</button>`).join("");
+  const cards = ds.filter(([, m]) => !mauLoai || m.loai === mauLoai).map(([k, m]) => `<div class="mcard${tl.meta.mau === k ? " sel" : ""}">${pvMau(m)}
+    <div class="mname">${esc(m.ten)}</div><div class="mdesc">${esc(m.mo_ta)}</div><div class="mdesc" style="margin-top:4px"><b>Hợp cho:</b> ${esc(m.dung_cho)}</div>
+    <div class="row" style="margin:8px 0 0"><button class="lime" data-mau="${k}">${tl.meta.mau === k ? "Áp lại" : "Áp mẫu"}</button><button data-mdoc="${k}">Công thức</button></div></div>`).join("");
+  dlgShow(`<h3 style="margin:0">✦ THƯ VIỆN MẪU EDIT</h3><div class="dim">Bấm Áp mẫu: đổi kiểu chữ, nhịp chuyển cảnh, hiệu ứng âm, zoom nhấn ý. Hoàn tác được. Nguyên tắc chung: docs/04-thu-vien/CONG-THUC-VIRAL.md</div>
+    <div class="mchips">${chips}</div><div class="mgrid">${cards}</div>`, true);
+}
+function mdHtml(md) {  // Markdown đơn giản → HTML để đọc công thức trong app
+  const inl = s => esc(s).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "<code>$1</code>");
+  let out = "", tbl = [];
+  const flush = () => { if (tbl.length) out += `<table>${tbl.filter(r => !/^\s*\|?[\s:|-]+\|?\s*$/.test(r)).map((r, i) => `<tr>${r.trim().replace(/^\||\|$/g, "").split("|").map(c => `<${i ? "td" : "th"}>${inl(c.trim())}</${i ? "td" : "th"}>`).join("")}</tr>`).join("")}</table>`; tbl = []; };
+  for (const l of md.split("\n")) {
+    if (l.trim().startsWith("|")) { tbl.push(l); continue; } flush();
+    const h = l.match(/^(#{1,3})\s+(.*)/);
+    out += h ? `<h${h[1].length + 2}>${inl(h[2])}</h${h[1].length + 2}>` : /^\s*[-*]\s/.test(l) ? `<div>• ${inl(l.replace(/^\s*[-*]\s/, ""))}</div>` : l.trim() ? `<p>${inl(l)}</p>` : "";
+  }
+  flush(); return out;
+}
+document.addEventListener("click", async e => {
+  if (e.target.closest("#btnMau, [data-open-mau]")) return moThuVienMau();
+  const ch = e.target.closest("[data-mloai]"); if (ch) { mauLoai = ch.dataset.mloai; return moThuVienMau(); }
+  const dc = e.target.closest("[data-mdoc]");
+  if (dc) { const r = await api(`mau/${encodeURIComponent(dc.dataset.mdoc)}`).catch(e => ({md: e.message})); dlgShow(`<button data-open-mau="1">← Thư viện mẫu</button><div class="mdoc">${mdHtml(r.md)}</div>`, true); }
+});
 // Dự án mới: chọn thư mục footage trên máy chạy studio (duyệt được cả từ điện thoại), hoặc nhân bản dự án sang khung khác
 async function newProject(from = null, platform = "tiktok") {
   let cur = null;

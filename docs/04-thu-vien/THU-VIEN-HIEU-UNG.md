@@ -9,6 +9,10 @@ Tự sinh từ `video-studio/scripts/effects.py`. Dùng tên ở cột đầu tr
 | `sang-trong` | Sang trọng: navy + vàng champagne, tiêu đề chữ có chân, chuyển động chậm, màu ấm có viền tối |
 | `toi-gian` | Tối giản: đen trắng, một màu nhấn nhạt, chữ mảnh, hiện mờ dần, màu nhạt |
 | `edit-phim` | Edit phim (mẫu edit-phim-01): chữ trắng nổi 3D giữa khung, lao vào mờ → rõ, nhịp nhanh, màu rực, phụ đề nhỏ nền tối |
+| `vang-cao-cap` | Vàng cao cấp: chữ Anton vàng ánh kim căn giữa, từng từ bật ra theo lời, thẻ minh hoạ nền đen viền vàng |
+| `chu-mau` | Chữ động nhiều màu: từng từ bật ra, xếp chồng, to nhỏ xen kẽ, trắng – xanh ngọc – cam – hồng |
+| `neon-cam` | Neon cam: chữ cam phát sáng gõ dần theo lời, số nổi cam, thẻ tối viền sáng, khung gần – xa xen kẽ |
+| `giai-thich-sang` | Giải thích sáng: thẻ trắng bo góc, nhãn BƯỚC cam, chữ đen dễ đọc, thẻ minh hoạ nền kem – hợp hướng dẫn thủ tục, quy trình |
 
 ## Chỉnh màu (`look` của từng cảnh, mặc định theo phong cách)
 | Tên | Mô tả |
@@ -260,6 +264,7 @@ Tự sinh từ `video-studio/scripts/effects.py`. Dùng tên ở cột đầu tr
 | `track` | Chữ giãn rộng rồi thu về (tiêu đề sang trọng) |
 | `type` | Gõ từng ký tự (phân tích, tin nhanh) |
 | `zoom-blur` | Cả dòng lao vào từ to và mờ → đúng cỡ và rõ (mẫu edit-phim-01) |
+| `word-pop` | Từng từ bật ra nảy nhẹ theo nhịp nói |
 
 ## Khối chữ (`texts[].kind`)
 | Tên | Trường bắt buộc | Mô tả |
@@ -273,4 +278,5 @@ Tự sinh từ `video-studio/scripts/effects.py`. Dùng tên ở cột đầu tr
 | `source` | text | Thẻ nguồn nhỏ, bắt buộc khi có số liệu: 'Nguồn: …, cập nhật …' |
 | `checklist` | items | Danh sách kiểm, từng mục hiện dần có dấu ✓ (thêm 'title') |
 | `stat` | value, label | Số lớn chạy từ 0 (thêm 'prefix', 'suffix', 'decimals') |
-| `title3d` | big | Chữ lớn nổi 3D giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub') — mẫu edit-phim-01 |
+| `title3d` | big | Chữ lớn giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub'); kiểu chữ và cách hiện theo phong cách |
+| `compare` | a_label, a_value, b_label, b_value | Thẻ so sánh 2 cột (vd. Thuê nhà vs Trả góp), thêm 'title', 'note' |

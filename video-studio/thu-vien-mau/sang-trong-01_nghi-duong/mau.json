@@ -1,0 +1,64 @@
+{
+ "id": "sang-trong-01",
+ "ten": "Sang trọng nghỉ dưỡng",
+ "loai": "sang trọng",
+ "the": "BẤT ĐỘNG SẢN",
+ "nganh": [
+  "Bất động sản nghỉ dưỡng"
+ ],
+ "mo_ta": "Nhịp chậm, chữ có chân màu kem trồi lên mềm, nhãn chữ giãn rộng, chuyển cảnh mơ màng và quét sáng, zoom đẩy rất chậm, âm lấp lánh nhẹ; để cảnh đẹp tự nói.",
+ "dung_cho": "Nghỉ dưỡng Cần Giờ, cảnh flycam, khách VIP thích cảm giác yên và đẳng cấp",
+ "meta": {
+  "style": "sang-trong"
+ },
+ "audio": {
+  "music": null,
+  "whoosh": false
+ },
+ "chuyen_canh": {
+  "chu_ky": [
+   "gl-Dreamy",
+   "cut",
+   "fade",
+   "cut",
+   "gl-LightWipe"
+  ],
+  "dur": {
+   "gl-Dreamy": 1.0,
+   "fade": 0.8,
+   "gl-LightWipe": 0.8
+  }
+ },
+ "sfx": {
+  "chuyen_canh": {
+   "gl-Dreamy": "whoosh_cham_01",
+   "fade": "whoosh_cham_01",
+   "gl-LightWipe": "ting_lap-lanh_01"
+  },
+  "chu": {
+   "title3d": "whoosh_cham_01",
+   "compare": "ting_don_01",
+   "stat": "ting_don_01",
+   "hook": "ting_lap-lanh_01",
+   "outro": "ting_ket_01"
+  },
+  "so_lieu": "ting_lap-lanh_01",
+  "vol": {
+   "whoosh": 0.35,
+   "ting": 0.4
+  }
+ },
+ "zoom_chu": {
+  "scale": 1.05,
+  "dur": 2.0
+ },
+ "xem_truoc": {
+  "nen": "linear-gradient(180deg,#24384a,#0b1b2b)",
+  "top": "BIỂN · RỪNG · GIÓ",
+  "big": "Cần Giờ",
+  "sub": "nơi chậm lại cuối tuần",
+  "css": "font-family:'Playfair Display',serif;font-weight:500;color:#f4efe6",
+  "hieu_ung": "rise",
+  "top_css": "letter-spacing:4px;color:#e8cf96"
+ }
+}

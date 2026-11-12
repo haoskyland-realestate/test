@@ -27,7 +27,7 @@ def effects_json():
             "style_looks": {k: v["look"] for k, v in e.STYLES.items()},
             "transitions": {k: {"dur": v[0], "vi": v[3]} for k, v in e.TRANSITIONS.items()},
             "anims": e.TEXT_ANIMS, "kinds": {k: {"need": v[0], "vi": v[1]} for k, v in e.TEXT_KINDS.items()},
-            "sfx": SFX, "mau": {k: {"ten": m["ten"], "loai": m.get("loai", ""), "mo_ta": m.get("mo_ta", "")} for k, m in MAU.items()}}
+            "sfx": SFX, "mau": {k: {f: m.get(f, "") for f in ("ten", "loai", "the", "nganh", "mo_ta", "dung_cho", "xem_truoc")} for k, m in MAU.items()}}
 
 
 VIDEO_EXT = re.compile(r"\.(mp4|mov|m4v|mkv|mts)$", re.I)
@@ -162,6 +162,9 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(400, {"error": str(ex)})
         if len(parts) == 3 and parts[1] == "sfx" and parts[2] in SFX:  # nghe thử một hiệu ứng âm
             return self.file(os.path.join(SFX_DIR, parts[2] + ".wav"), "audio/wav")
+        if len(parts) == 3 and parts[1] == "mau" and parts[2] in MAU:  # tài liệu công thức của một mẫu
+            f = os.path.join(MAU[parts[2]]["_dir"], "MAU.md")
+            return self.send(200, {"md": open(f, encoding="utf8").read() if os.path.exists(f) else ""})
         if parts[1:] == ["projects"]:
             return self.send(200, sorted(n for n in os.listdir(PROJ) if self.project(n)))
         if len(parts) < 3 or not (d := self.project(parts[2])):

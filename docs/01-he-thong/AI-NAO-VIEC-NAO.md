@@ -35,7 +35,7 @@ Không câu nào khớp: hỏi Claude trước, Claude sẽ chỉ chỗ.
 | Cắt khoảng lặng, bỏ câu vấp, chọn khúc đẹp | App studio: nút **Master cut** (chạy trên máy, không cần mạng) | auto-editor (chưa tích hợp) | Footage nói trước máy | `timeline.json`, báo cáo `build/master-cut.md` |
 | Phụ đề tiếng Việt từ giọng nói | App studio: nút **Tạo phụ đề** (faster-whisper chạy trên máy) | Claude sửa chính tả sau | Footage có giọng | Phụ đề trong `timeline.json`; xuất `.srt` |
 | Sửa timeline bằng lời ("đổi chữ cảnh 3", "thêm zoom") | Claude Code | Sửa tay trong app studio | `timeline.json` | `timeline.json` (app tự giữ 30 bản cũ ở Lịch sử) |
-| Áp phong cách + nhịp chuyển cảnh + hiệu ứng âm theo video mẫu | App studio: Thương hiệu → **Mẫu edit → Áp mẫu** (không cần AI) | Claude Code: `scripts/ap_mau.py` | `timeline.json` | `timeline.json` (hàng ♪ Hiệu ứng âm) |
+| Áp phong cách + nhịp chuyển cảnh + hiệu ứng âm theo video mẫu | App studio: **✦ Thư viện mẫu → Áp mẫu** (không cần AI) | Claude Code: `scripts/ap_mau.py` | `timeline.json` | `timeline.json` (hàng ♪ Hiệu ứng âm) |
 | Phân tích video mẫu Hào tìm được thành mẫu mới | Claude Code (xem khung hình, phổ âm) | — | File video mẫu | `video-studio/thu-vien-mau/<mẫu mới>/` |
 | Dựng video | App studio (Dựng nháp / Xuất video) trên PC | Claude Code (skill `dung-video`) | `timeline.json` + footage | `video-studio/out/<tên>.mp4` |
 | Chỉnh tay chi tiết (màu kỹ, hiệu ứng đặc biệt) | Premiere / DaVinci (nút "Premiere/DaVinci" trong app) | CapCut | `.xml` / `.otio` / `.srt` | File dự án của phần mềm đó |
