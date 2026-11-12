@@ -25,3 +25,7 @@ Windows 11: bấm đúp `chay-video.bat` (cần Node 22, FFmpeg, Git for Windows
 ## App cài được (PC + điện thoại)
 `app/` là PWA: tạo spec JSON. Cài được khi host HTTPS: workflow `pages.yml` tự đưa `app/` lên GitHub Pages sau khi gộp vào `main` và bật Settings → Pages → Source: GitHub Actions. Chưa bật.
 Spec mẫu `videos/demo.json` chứa chỗ trống `[...]`, thay số liệu thật có nguồn và ngày trước khi đăng.
+
+## Môi trường
+- **GitHub trực tiếp:** nút Code → Codespaces → Create (dùng `.devcontainer/`), mở terminal gõ `./scripts/render.sh videos/demo.json hyperframes`. Hoặc dùng workflow Actions ở trên. **Chưa chạy thử Codespaces.**
+- **Windows 11 local:** chạy `setup-windows.ps1` một lần (cài Node, FFmpeg, Git, Python), rồi bấm đúp `chay-video.bat`. **Chưa chạy thử trên Windows.**
