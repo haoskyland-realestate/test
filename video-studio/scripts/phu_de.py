@@ -39,7 +39,7 @@ def nhom_tu(words):
 
 
 def dinh_dang(text):
-    """Số điện thoại tách nhóm dễ đọc (0986 986 049); số, đơn vị và tên riêng được đánh dấu *…* để tô nổi."""
+    """Số điện thoại tách nhóm dễ đọc (0900 123 456); số, đơn vị và tên riêng được đánh dấu *…* để tô nổi."""
     def phone(m):
         d = re.sub(r"\D", "", m[0])
         # khoảng trắng không ngắt dòng: cả số điện thoại là một khối, không rớt nửa xuống dòng

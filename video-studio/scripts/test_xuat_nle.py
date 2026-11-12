@@ -7,6 +7,6 @@ tl = {"version": 1, "clips": [{"file": "a", "in": 0, "dur": 4}, {"file": "b", "i
       "transitions": [{"type": "fade", "dur": 1.0}, {"type": "cut"}]}
 f = gio_nle(tl)
 assert f(2) == 2 and f(4.5) == 4 and f(6) == 5 and f(10) == 9  # bỏ 1 giây chuyển cảnh chèn thêm
-s = srt([{"start": 6, "dur": 1.5, "text": "gọi *0986 986 049*"}], f)
-assert s == "1\n00:00:05,000 --> 00:00:06,500\ngọi 0986 986 049\n", repr(s)
+s = srt([{"start": 6, "dur": 1.5, "text": "gọi *0900 123 456*"}], f)
+assert s == "1\n00:00:05,000 --> 00:00:06,500\ngọi 0900 123 456\n", repr(s)
 print("OK")
