@@ -1,12 +1,14 @@
 """Dựng video test ~90s: flycam thật (9:16) + chuyển cảnh khối 3D + chữ động tiếng Việt + nhạc.
 Chạy trong video-studio:  python3 projects/test90/make.py
-Đầu vào: projects/test90/shots.json (cảnh, mốc giây, chữ). Đầu ra: out/test90.mp4.
+Đầu vào: shots.json cùng thư mục (cảnh, mốc giây, chữ). Đầu ra: out/<tên thư mục>.mp4.
+Làm video mới: chép cả thư mục test90 thành projects/<tên>, sửa shots.json, chạy python3 projects/<tên>/make.py.
 Bản gốc tải lại từ Drive theo id (link chia sẻ công khai) vào projects/test90/build/raw/."""
 import json, os, re, subprocess, shutil, html
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "../.."))
 B = os.path.join(HERE, "build"); os.makedirs(B, exist_ok=True)
+NAME = os.path.basename(HERE)
 W, H, FPS, TR = 1080, 1920, 30, 0.8  # TR: độ dài chuyển cảnh 3D (giây)
 HF = ["npx", "--yes", "hyperframes@0.9.37"]
 cfg = json.load(open(os.path.join(HERE, "shots.json"), encoding="utf8"))
@@ -176,5 +178,5 @@ os.makedirs(os.path.join(ROOT, "out"), exist_ok=True)
 ff("-i", f"{B}/base.mp4", "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav",
    "-filter_complex", "[0:v][1:v]overlay=0:0:shortest=1,format=yuv420p[v]", "-map", "[v]", "-map", "2:a",
    "-c:v", "libx264", "-crf", "19", "-preset", "medium", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",
-   "-t", f"{total:.2f}", os.path.join(ROOT, "out/test90.mp4"))
-print(f"Xong: out/test90.mp4 ({total:.1f}s, {n} cảnh)")
+   "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{NAME}.mp4"))
+print(f"Xong: out/{NAME}.mp4 ({total:.1f}s, {n} cảnh)")
