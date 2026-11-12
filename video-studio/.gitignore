@@ -9,3 +9,4 @@ build/
 history/
 *.bak
 *.tmp
+projects/zz-*/
