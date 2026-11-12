@@ -40,6 +40,7 @@ Không câu nào khớp: hỏi Claude trước, Claude sẽ chỉ chỗ.
 | Dựng video | App studio (Dựng nháp / Xuất video) trên PC | Claude Code (skill `dung-video`) | `timeline.json` + footage | `video-studio/out/<tên>.mp4` |
 | Chỉnh tay chi tiết (màu kỹ, hiệu ứng đặc biệt) | Premiere / DaVinci (nút "Premiere/DaVinci" trong app) | CapCut | `.xml` / `.otio` / `.srt` | File dự án của phần mềm đó |
 | Nghiệm thu video | Claude Code (skill `bao-cao-nghiem-thu`) | Hào xem trên Mac/điện thoại | `out/<tên>.mp4` | `out/<tên>-baocao.md` |
+| Giọng đọc AI: nghe thử kịch bản, sửa một chữ đọc vấp bằng giọng nhân bản của chính Hào | CIT Voice Studio trên PC (**chưa cài**, xem `docs/04-thu-vien/GIONG-NOI-AI.md`) | VoiceStudio | `KICH-BAN.md` (cột Lời đọc) | `.wav` + `.srt` trong thư mục video |
 | Ảnh bìa (thumbnail) | Canva (Claude gọi được qua kết nối) | ChatGPT tạo ảnh | Tiêu đề, ảnh khung đẹp nhất | Thư mục thành phẩm |
 | Ảnh/clip minh hoạ không có thật (phòng khách mẫu, sơ đồ dòng tiền) | ChatGPT tạo ảnh; công cụ tạo video AI **(kiểm lại công cụ, giấy phép)** | Mẫu HyperFrames trong repo | Mô tả chi tiết (xem prompt mẫu) | Ghi rõ "ảnh minh hoạ" trên video |
 | Caption, mô tả, hashtag khi đăng | Claude | ChatGPT | `KICH-BAN.md` | `DANG-BAI.md` trong thư mục video |
