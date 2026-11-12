@@ -232,7 +232,7 @@ function drawList() {
     const t0 = tab === "clips" ? L.starts[i] : x.start;
     const pic = tab === "clips" || tab === "broll" ? `<div style="height:90px;border-radius:8px;margin-bottom:8px;background:#222 center/cover url('${media("thumb", x.file + "@" + (+x.in + 0.3).toFixed(1))}')"></div>` : "";
     return `<div class="it${sel && sel.k === tab && sel.i === i ? " sel" : ""}" data-k="${tab}" data-i="${i}">${pic}<div class="h">${i + 1}. ${esc(lab)}</div><div class="m">${fmt(t0)} · ${(+x.dur).toFixed(1)}s${x.kind ? " · " + x.kind : ""}</div></div>`;
-  }).join("") + (tab === "subtitles" ? `<div style="grid-column:1/-1"><div class="row" style="margin:0 0 10px"><button id="asr" class="lime">🎙 Tạo phụ đề từ giọng nói</button><span class="dim" style="align-self:center">Nhận dạng tiếng Việt, chỉ thay phụ đề tự sinh; phụ đề tự gõ giữ nguyên.</span></div><details><summary class="dim">Dán nội dung file SRT</summary><textarea id="srt" style="width:100%;min-height:100px;margin-top:8px" placeholder="1&#10;00:00:00,500 --> 00:00:02,000&#10;Câu phụ đề"></textarea><div class="row"><button id="srtGo">Thêm phụ đề từ SRT</button></div></details></div>` : "")
+  }).join("") + (tab === "clips" ? `<div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button id="mc" class="lime">✨ Master cut</button><button id="mcR">Chỉ phân tích</button><span class="dim">Cắt khoảng lặng, bỏ câu nói vấp, chấm điểm khung hình, chọn khúc đẹp, chỉnh nhịp. Bản cũ vẫn ở Lịch sử.</span></div>` : "") + (tab === "subtitles" ? `<div style="grid-column:1/-1"><div class="row" style="margin:0 0 10px"><button id="asr" class="lime">🎙 Tạo phụ đề từ giọng nói</button><span class="dim" style="align-self:center">Nhận dạng tiếng Việt, chỉ thay phụ đề tự sinh; phụ đề tự gõ giữ nguyên.</span></div><details><summary class="dim">Dán nội dung file SRT</summary><textarea id="srt" style="width:100%;min-height:100px;margin-top:8px" placeholder="1&#10;00:00:00,500 --> 00:00:02,000&#10;Câu phụ đề"></textarea><div class="row"><button id="srtGo">Thêm phụ đề từ SRT</button></div></details></div>` : "")
     || `<div class="dim">Chưa có mục nào. Bấm “Thêm”.</div>`;
 }
 function settings() {
@@ -380,6 +380,8 @@ document.addEventListener("click", e => {
   const li = e.target.closest(".it[data-k]"); if (li) { sel = {k: li.dataset.k, i: +li.dataset.i}; seek(sel.k === "clips" ? layout().starts[sel.i] + 0.05 : cur().start + 0.05); return draw(); }
   if (e.target.id === "srtGo") importSrt($("#srt").value);
   if (e.target.id === "asr") asr();
+  if (e.target.id === "mc") masterCut(false);
+  if (e.target.id === "mcR") masterCut(true);
 });
 $("#right").addEventListener("change", e => {
   const f = e.target.dataset.f; if (!f) return; let v = e.target.value;
@@ -527,6 +529,20 @@ async function asr() {
     clearInterval(t);
     if (s.code === 0) { const keep = tab; dirty = false; await open_(name); tab = keep; draw(); toast(esc(s.log.trim().split("\n").pop()), "ok"); }
     else { const b = $("#asr"); if (b) b.disabled = false; dlgShow(`<h3 class="err">Chưa tạo được phụ đề</h3><pre style="white-space:pre-wrap;font-size:12px">${esc(s.log.slice(-1000))}</pre>`); }
+  }, 2500);
+}
+// Master cut: lưu trước, máy chủ phân tích tiếng + hình rồi ghi timeline mới, xong mở lại và hiện báo cáo
+async function masterCut(reportOnly) {
+  if (!await save()) return;
+  try { await api(`${P()}/mastercut`, {method: "POST", body: JSON.stringify({report_only: reportOnly})}); } catch (e) { return toast(esc(e.message), "err"); }
+  const msg = "Đang phân tích tiếng và hình… (lần đầu mỗi file mất khoảng 1–3 phút)"; toast(msg);
+  const t = setInterval(async () => {
+    const s = await api(`${P()}/mastercut`).catch(() => null); if (!s) return; if (s.running) return toast(msg);
+    clearInterval(t);
+    if (s.code !== 0) return dlgShow(`<h3 class="err">Master cut chưa chạy được</h3><pre style="white-space:pre-wrap;font-size:12px">${esc(s.log.slice(-1000))}</pre>`);
+    if (!reportOnly) { const keep = tab; dirty = false; await open_(name); tab = keep; draw(); }
+    dlgShow(`<h3>${reportOnly ? "Phân tích (chưa cắt)" : "Đã master cut"}</h3><pre style="white-space:pre-wrap;font:13px/1.5 system-ui">${esc(s.report)}</pre>`
+      + (reportOnly ? "" : `<p class="dim">Không ưng? Mở Lịch sử để quay về bản trước khi cắt.</p>`));
   }, 2500);
 }
 $("#draft").onclick = () => render(true); $("#export").onclick = () => render(false);

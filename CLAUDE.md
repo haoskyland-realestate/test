@@ -39,6 +39,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Video test 89s (`projects/test90`) | Hào duyệt "rất ok" 12/11; âm thanh hiệu ứng chưa ổn, chờ thư mục âm thanh. Footage và bản dựng test đã xóa theo yêu cầu (bản gốc còn trên Drive thư mục "Hào") |
 | Tải từ Drive trên cloud | Được: môi trường cloud "test" mở mạng tới drive.usercontent.google.com; thư mục phải chia sẻ bằng link |
 | Phụ đề tự động (`scripts/phu_de.py`, nút trong app) | Xong 12/11: faster-whisper large-v3-turbo, tiếng Việt, mốc từng từ, chia dòng ≤7 từ/2,8s; chỉ thay phụ đề `auto`. Thử trên clip thật của Hào (nhận dạng đúng tên dự án, số điện thoại). Môi trường cloud "test" đã mở mạng Hugging Face. Chưa thử trên PC |
+| Master cut (`scripts/master_cut.py`, `phan_tich_hinh.py`, nút trong tab Cắt) | Xong 12/11: cắt im lặng theo âm lượng thật (không chỉ mốc từ), chừa nghỉ cuối câu, bỏ tiếng đệm, bỏ lần nói vấp (cụm ≥3 từ lặp sau ngập ngừng), chấm điểm khung hình (nét, sáng, cháy, màu, chuyển động, giật, mặt người nói — OpenCV 4.x), đoạn không lời rút theo nhịp + dời về khúc đẹp nhất, cảnh trám dời về khúc đẹp hơn, phóng xen kẽ ~4s; chữ/phụ đề dời theo; báo cáo `build/master-cut.md`. Test: `scripts/test_master_cut.py`. Thử trên clip thật của Hào. Chưa thử trên PC; ngưỡng mới chỉnh trên vài clip DJI/iPhone |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |
 | Codespaces (`.devcontainer`) | Chưa thử |
