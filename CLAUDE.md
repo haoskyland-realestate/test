@@ -11,7 +11,8 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 - Giỏ hàng hiện tại: Vinhomes Hóc Môn, Vinhomes Cần Giờ. Các dự án khác chỉ là đã nghiên cứu, không phải đang phân phối.
 
 ## Cấu trúc
-- `video-studio/videos/*.json`: nội dung video (spec).
+- `video-studio/videos/*.json`: nội dung video (spec). Trường `template` chọn mẫu.
+- `video-studio/engines/hyperframes/templates/`: **thư viện mẫu** (cashflow-3d có khối 3D, text-only). Thêm mẫu mới: xem README trong thư mục đó.
 - `video-studio/scripts/render.sh`: spec → engine → FFmpeg → MP4 trong `out/`.
 - `video-studio/engines/`: hyperframes (chính), remotion (dự phòng), manim, blender.
 - `video-studio/app/`: PWA soạn spec. `.github/workflows/render.yml`: render trên GitHub bằng form. `pages.yml`: đưa trang cũ (`index.html` gốc) và app (`/app/`) lên Pages.

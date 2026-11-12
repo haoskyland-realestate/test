@@ -8,5 +8,6 @@
   ],
   "platform": "tiktok",
   "duration": 15,
-  "engine": "hyperframes"
+  "engine": "hyperframes",
+  "template": "cashflow-3d"
 }

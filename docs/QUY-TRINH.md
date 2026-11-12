@@ -24,6 +24,9 @@ Claude chỉ chuẩn bị bản nháp. Đăng bài và nhắn khách luôn do H�
 6. **Đăng.** Hào đăng, kèm mô tả ngắn và một lời kêu gọi tự nhiên (nhắn tin để nhận bảng dòng tiền, ví dụ).
 7. **Ghi lại.** Vài chữ: chủ đề, ngày đăng, kết quả (lượt xem, tin nhắn). Dùng cho tổng kết tuần.
 
+## Chọn mẫu (chỉ hyperframes)
+Mặc định `cashflow-3d` (chữ + khối 3D). Muốn nhẹ hơn dùng `text-only`. Thêm mẫu mới theo `video-studio/engines/hyperframes/templates/README.md`.
+
 ## Chọn engine
 - **hyperframes** (mặc định): chữ chuyển động và khối 3D. Đã chạy ổn.
 - **remotion**: dự phòng, chỉ chữ ở bản mẫu. Đọc kỹ giấy phép nếu bán dịch vụ làm video.

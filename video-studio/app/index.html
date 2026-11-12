@@ -29,6 +29,8 @@
 <select id="platform"><option value="tiktok">TikTok (9:16)</option><option value="youtube">YouTube (16:9)</option></select>
 <label for="engine">Engine</label>
 <select id="engine"><option>hyperframes</option><option>remotion</option><option>manim</option></select>
+<label for="template">Mẫu (hyperframes)</label>
+<select id="template"><option>cashflow-3d</option><option>text-only</option></select>
 <label for="duration">Thời lượng (giây)</label><input id="duration" type="number" value="15" min="5" max="180">
 
 <button id="copy">Sao chép spec</button><button id="dl">Tải file .json</button>
@@ -43,6 +45,7 @@ const spec = () => ({
   platform: $("platform").value,
   duration: Math.max(5, Math.min(180, +$("duration").value || 15)),
   engine: $("engine").value,
+  template: $("template").value,
 });
 const show = () => ($("out").textContent = JSON.stringify(spec(), null, 2));
 document.querySelectorAll("input,textarea,select").forEach(e => e.addEventListener("input", show));
