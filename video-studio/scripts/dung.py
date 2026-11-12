@@ -28,7 +28,7 @@ YT = W > H  # khung ngang YouTube
 shots = tl["clips"]
 L = layout(tl)
 starts, total = L["starts"], L["total"]
-HF = ["npx", "--yes", "hyperframes@0.9.37"]
+HF = [shutil.which("npx") or "npx", "--yes", "hyperframes@0.9.37"]  # Windows: npx là npx.cmd, phải tìm đường dẫn đầy đủ
 style = STYLES[tl.get("meta", {}).get("style", "hien-dai")]
 SP = style["speed"]  # >1: chuyển động chậm hơn (sang trọng, tối giản)
 
@@ -169,7 +169,7 @@ for i in range(n):
     parts.append(f"{B}/shot{i}.mp4")
     if i in has_tr:
         parts.append(f"{B}/tr{i}.mp4")
-open(f"{B}/list.txt", "w").write("".join(f"file '{p}'\n" for p in parts))
+open(f"{B}/list.txt", "w", encoding="utf8").write("".join(f"file '{p}'\n" for p in parts))
 ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, "-pix_fmt", "yuv420p", f"{B}/base.mp4")
 
 # 5. Lớp chữ động (nền trong suốt) theo mốc trong timeline; màu, chữ, nhịp theo phong cách
@@ -243,7 +243,7 @@ for i, s in enumerate(tl.get("texts", [])):
             f'tl.fromTo("{sel} .ck",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:{d(.45)},ease:"power3.out",stagger:{d(.45)}}},{st0 + 0.5:.2f});',
             f'tl.fromTo("{sel} .tick",{{scale:0}},{{scale:1,duration:{d(.4)},ease:"back.out(3)",stagger:{d(.45)}}},{st0 + 0.6:.2f});']
     elif kind == "title3d":  # mẫu edit-phim-01: nhãn nhỏ trên, chữ lớn nổi 3D lao vào, dòng nhỏ dưới
-        body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "") + f'<div class="t3big">{words(s["big"])}</div>'
+        body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "") + f'<div class="t3big" style="font-size:{min(205, 1500 // max(len(s["big"]), 1))}px">{words(s["big"])}</div>'
                 + (f'<div class="t3sub">{words(s["sub"])}</div>' if s.get("sub") else ""))
         a = [f'tl.fromTo("{sel} .t3top",{{opacity:0,y:20,filter:"blur(8px)"}},{{opacity:1,y:0,filter:"blur(0px)",duration:{d(.35)}}},{st0:.2f});',
              f'tl.fromTo("{sel} .t3big",{{opacity:0,scale:1.5,filter:"blur(22px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out"}},{st0 + 0.15:.2f});',
@@ -369,7 +369,7 @@ voice = audio.get("voice", False)
 mvol = audio.get("music_volume", 1.0) * (0.25 if voice else 1.0)  # có giọng thì nhạc nhỏ xuống
 if audio.get("music", "synth") == "synth":
     wh = [str(t0 + d / 2) for t0, d, ty in L["transitions"] if ty != "cut"] if audio.get("whoosh", True) else []
-    run(["python3", os.path.join(ROOT, "scripts/music.py"), f"{total:.2f}", f"{B}/music.wav", *wh])
+    run([sys.executable, os.path.join(ROOT, "scripts/music.py"), f"{total:.2f}", f"{B}/music.wav", *wh])
 elif audio.get("music"):  # file nhạc của Hào (build/raw/<file>): lặp nếu ngắn hơn video, mờ dần 2 giây cuối
     ff("-stream_loop", "-1", "-i", f"{B}/raw/{audio['music']}", "-vn", "-ac", "2", "-ar", "44100", "-t", f"{total:.2f}",
        "-af", f"afade=t=out:st={max(0, total - 2):.2f}:d=2", f"{B}/music.wav")
@@ -385,7 +385,7 @@ if voice:
         ff(*src, "-ac", "2", "-ar", "44100", "-t", str(c["dur"]), f"{B}/v{i}.wav"); vparts.append(f"{B}/v{i}.wav")
         if i < n - 1 and L["transitions"][i][1] > 0:
             ff("-f", "lavfi", "-t", str(L["transitions"][i][1]), "-i", "anullsrc=r=44100:cl=stereo", f"{B}/vs{i}.wav"); vparts.append(f"{B}/vs{i}.wav")
-    open(f"{B}/vlist.txt", "w").write("".join(f"file '{p}'\n" for p in vparts))
+    open(f"{B}/vlist.txt", "w", encoding="utf8").write("".join(f"file '{p}'\n" for p in vparts))
     ff("-f", "concat", "-safe", "0", "-i", f"{B}/vlist.txt", "-c", "copy", f"{B}/voice.wav")
 
 # Cảnh trám: cắt từng đoạn về đúng khung, cùng chỉnh màu của phong cách

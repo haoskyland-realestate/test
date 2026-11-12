@@ -57,7 +57,7 @@ Xong khi: video test dựng lại với hiệu ứng chọn từ thư viện, đ
 Xong khi: Hào sửa một câu chữ và một hiệu ứng trên điện thoại, xem lại ngay không cần dựng.
 
 ### Bước 4. Chạy trên PC Windows (đổi lại theo `../01-he-thong/HE-THONG.md`: PC làm việc nặng, Mac nghiệm thu)
-**Phần mềm xong 12/11, chưa thử trên PC thật:** nút ＋ Dự án mới chọn thư mục footage trên PC (cả từ điện thoại cùng wifi), tự tạo bản xem trước 540p, nút Dựng nháp/Xuất video, khung TikTok 9:16 hoặc YouTube 16:9. Còn lại: Hào chạy `setup-windows.ps1` một lần rồi bấm đúp `chay-studio.bat`.
+**Phần mềm xong 12/11, chưa thử trên PC thật:** nút ＋ Dự án mới chọn thư mục footage trên PC (cả từ điện thoại cùng wifi), tự tạo bản xem trước 540p, nút Dựng nháp/Xuất video, khung TikTok 9:16 hoặc YouTube 16:9. Còn lại: Hào chạy `setup-windows.ps1` một lần (13/11: tự cài thư viện, kiểm máy, dựng thử video giả 6 giây) rồi bấm đúp `chay-studio.bat` (tự kiểm máy mỗi lần mở).
 
 #### (Bản cũ) Chạy trên MacBook
 Footage nặng nằm trên MacBook, nên app chạy từ máy đó (đổi từ Windows theo Hào):

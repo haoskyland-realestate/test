@@ -4,6 +4,7 @@ Chạy trong video-studio:  python3 studio/server.py          (chỉ máy này)
 Mở đúng đường link in ra (có mã khóa ?t=...). Chỉ dùng Python có sẵn, không cài thêm."""
 import http.server, json, os, re, secrets, shutil, socket, subprocess, sys, time, urllib.parse
 
+os.environ["PYTHONUTF8"] = "1"  # tiến trình con (dựng, phụ đề, master cut) in/ghi tiếng Việt được trên Windows
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from timeline import check, layout, AUDIO_EXT, PLATFORMS  # noqa: E402

@@ -58,7 +58,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |
 | Codespaces (`.devcontainer`) | Chưa thử |
-| Windows 11 (`setup-windows.ps1`, `chay-video.bat`) | Chưa thử |
+| Windows 11 (`setup-windows.ps1`, `chay-studio.bat`, `scripts/kiem_may.py`) | 13/11: cài một lệnh (winget + npm + pip + đặt PYTHONUTF8 + kiểm máy + dựng thử 6s); `chay-studio.bat` tự kiểm máy mỗi lần mở. Sửa lỗi chắc gặp trên Windows: `npx.cmd`, `python3`, chữ tiếng Việt (UTF-8). `kiem_may.py --dung-thu` đạt trên cloud (57s). **Chưa thử trên PC thật**; script PowerShell chưa chạy thử (máy cloud không có PowerShell) |
 | Trang Pages cũ | Có thể đã bị app thay ở gốc; cần chạy lại "Deploy site" và kiểm tra |
 
 ## Máy và công cụ (Hào xác nhận 12/11/2026)
@@ -91,5 +91,5 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 1. Hào xem video mẫu, chọn engine mặc định.
 2. Chạy lại "Deploy site", kiểm tra trang cũ và `/app/`.
 3. Làm video thật đầu tiên: chọn một góc dòng tiền cho Vinhomes Hóc Môn hoặc Cần Giờ, có nguồn và ngày.
-4. Thử Windows 11 với `setup-windows.ps1`, rồi `chay-studio.bat`.
+4. Thử Windows 11: trong PowerShell ở `video-studio` chạy `.\setup-windows.ps1` (tự kiểm máy + dựng thử), rồi bấm đúp `chay-studio.bat`. Lỗi thì gửi Claude màn hình của `python scripts\kiem_may.py`.
 5. Thư viện mẫu: chờ Hào gửi mẫu tham khảo rồi làm (Hào dặn 12/11).
