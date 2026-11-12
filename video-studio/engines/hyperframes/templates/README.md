@@ -6,6 +6,7 @@ Mỗi mẫu là một file `.html` trong thư mục này. Chọn mẫu bằng tr
 |---|---|
 | `cashflow-3d` | Hook + ý chính + khối 3D xoay (three.js) |
 | `text-only` | Hook + ý chính, không 3D, nhẹ hơn |
+| `aerial-city` | Cảnh bay trên thành phố giả lập (thế chỗ flycam khi chưa có footage), không chữ |
 
 ## Thêm mẫu mới
 1. Sao chép một file mẫu, đổi tên (chỉ dùng chữ, số, gạch ngang), sửa giao diện và animation.

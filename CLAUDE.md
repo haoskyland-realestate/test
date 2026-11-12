@@ -30,7 +30,8 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | HyperFrames + GSAP + three.js | Render OK trong sandbox và trên GitHub Actions |
 | Remotion | Render OK trong sandbox (cần Chromium) |
 | FFmpeg | OK |
-| Cắt ghép (`assemble.mjs`) | Chạy OK với dữ liệu giả; chưa thử flycam/giọng thật |
+| Cắt ghép (`assemble.mjs`) | Đã dựng video mẫu 33s (`projects/demo`) với cảnh giả, giọng máy, nhạc giả; chưa thử flycam/giọng thật |
+| Drive của Hào (thư mục VIDEO GLADIA) | Thấy 75 clip (~7,4 GB), không tải được trên cloud (giới hạn 10 MB, mạng chặn); cần làm trên máy Windows |
 | Nhận dạng giọng (`hyperframes transcribe`) | Có lệnh, chưa thử tiếng Việt |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |

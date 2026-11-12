@@ -1,0 +1,44 @@
+{
+  "platform": "tiktok",
+  "voice": "media/voice.m4a",
+  "music": "media/music.m4a",
+  "musicVolume": 0.07,
+  "logo": "media/logo.png",
+  "captions": "captions.srt",
+  "scenes": [
+    {
+      "clip": "../../out/aerial.hyperframes.mp4",
+      "in": 2,
+      "out": 8.15,
+      "focus": 0
+    },
+    {
+      "clip": "../../out/aerial.hyperframes.mp4",
+      "in": 8,
+      "out": 11.41,
+      "focus": -0.7
+    },
+    {
+      "clip": "../../out/card.hyperframes.mp4",
+      "in": 0,
+      "out": 6.72,
+      "focus": 0
+    },
+    {
+      "clip": "../../out/aerial.hyperframes.mp4",
+      "in": 16,
+      "out": 21.21,
+      "focus": 0.7
+    },
+    {
+      "clip": "../../out/aerial.hyperframes.mp4",
+      "in": 22,
+      "out": 28.4,
+      "focus": -0.3
+    },
+    {
+      "image": "media/outro.png",
+      "dur": 5.14
+    }
+  ]
+}
