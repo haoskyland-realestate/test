@@ -1,8 +1,8 @@
-name: Deploy app
+name: Deploy site
 on:
   push:
     branches: [main]
-    paths: ["video-studio/app/**"]
+    paths: ["index.html", "video-studio/app/**"]
   workflow_dispatch:
 permissions: { contents: read, pages: write, id-token: write }
 jobs:
@@ -11,6 +11,8 @@ jobs:
     environment: { name: github-pages }
     steps:
       - uses: actions/checkout@v4
+      # Giữ trang cũ ở gốc (index.html), app video nằm ở /app/.
+      - run: mkdir _site && cp index.html _site/ && cp -r video-studio/app _site/app
       - uses: actions/upload-pages-artifact@v3
-        with: { path: video-studio/app }
+        with: { path: _site }
       - uses: actions/deploy-pages@v4

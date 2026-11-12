@@ -23,7 +23,7 @@ Trên GitHub: Actions → "Render video" → Run workflow, điền form (tiêu �
 Windows 11: bấm đúp `chay-video.bat` (cần Node 22, FFmpeg, Git for Windows). **Chưa chạy thử trên Windows.**
 
 ## App cài được (PC + điện thoại)
-`app/` là PWA: tạo spec JSON. Cài được khi host HTTPS: workflow `pages.yml` tự đưa `app/` lên GitHub Pages sau khi gộp vào `main` và bật Settings → Pages → Source: GitHub Actions. Chưa bật.
+`app/` là PWA: tạo spec JSON. Cài được khi host HTTPS: workflow `pages.yml` tự đưa `index.html` (trang cũ, ở gốc) và `app/` (ở `/app/`) lên GitHub Pages sau khi gộp vào `main` và bật Settings → Pages → Source: GitHub Actions. Chưa bật.
 Spec mẫu `videos/demo.json` chứa chỗ trống `[...]`, thay số liệu thật có nguồn và ngày trước khi đăng.
 
 ## Môi trường
