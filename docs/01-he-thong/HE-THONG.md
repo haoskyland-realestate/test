@@ -1,5 +1,7 @@
 # Hệ thống làm việc AI tự động: vai trò từng nơi
 
+File này nói **máy nào** làm gì. **AI nào** làm việc gì: `AI-NAO-VIEC-NAO.md`. Thư mục footage trên PC: `THU-MUC-VA-DAT-TEN.md`.
+
 Theo Hào (12/11/2026). Ưu tiên miễn phí.
 
 ```
@@ -19,7 +21,7 @@ Mac: đọc báo cáo, xem video, nghiệm thu ◀──────────
 | **PC Windows 11** | Máy làm việc nặng: tải footage, dựng, Blender | Chạy Claude Code tại thư mục repo (`claude remote-control` để giao việc từ điện thoại). Cài một lần: `video-studio/setup-windows.ps1` (**chưa thử**) |
 | **Mac** | Đọc báo cáo, xem kết quả, nghiệm thu | Không cần cài công cụ dựng. Mở video + `*-baocao.md` từ Google Drive |
 | **Điện thoại** | Giao việc, duyệt storyboard, xem nhanh | App Claude: phiên cloud hoặc phiên Remote Control của PC |
-| **App desktop (Claude Desktop / Claude Code)** | Dùng skill | Skill của dự án ở `.claude/skills/`, MCP ở `mcp/` |
+| **App desktop (Claude Desktop / Claude Code)** | Dùng skill | Skill của dự án ở `.claude/skills/`, MCP ở `docs/01-he-thong/MCP-VA-SKILL.md` |
 
 ## Luồng một video
 1. Điện thoại: "Lập storyboard từ thư mục Drive <link>" → skill `lap-storyboard` → Hào duyệt.

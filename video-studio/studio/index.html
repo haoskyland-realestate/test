@@ -670,7 +670,7 @@ $("#btnAI").onclick = () => {
   dlgShow(`<h3>Nhờ AI sửa</h3><p class="dim">Gõ điều muốn sửa. Bản này soạn sẵn yêu cầu để dán cho Claude (Claude Code trên PC/Anti sửa thẳng file). Gọi AI ngay trong app cần khóa API và có tính phí — chưa bật.</p>
     <textarea id="aiReq" style="width:100%;min-height:70px" placeholder="Ví dụ: thêm phụ đề cho cả video, đổi chuyển cảnh thứ 2 thành hòa tan, rút đoạn 3 còn 4 giây"></textarea>
     <div class="row"><button id="mkAI" class="lime">Soạn yêu cầu</button></div><textarea id="aiOut" style="width:100%;min-height:120px;margin-top:10px" readonly></textarea><div class="row"><button id="copyAI">Chép</button></div>`);
-  $("#mkAI").onclick = () => $("#aiOut").value = `Sửa video "${name}": file video-studio/projects/${name}/timeline.json (định dạng: video-studio/scripts/timeline.py, hiệu ứng: docs/THU-VIEN-HIEU-UNG.md).\nYêu cầu: ${$("#aiReq").value}\nSau khi sửa chạy: python3 scripts/test_timeline.py (trong video-studio), báo lại đã đổi gì. Theo quy tắc nội dung trong CLAUDE.md, không tự điền số liệu dự án.`;
+  $("#mkAI").onclick = () => $("#aiOut").value = `Sửa video "${name}": file video-studio/projects/${name}/timeline.json (định dạng: video-studio/scripts/timeline.py, hiệu ứng: docs/04-thu-vien/THU-VIEN-HIEU-UNG.md).\nYêu cầu: ${$("#aiReq").value}\nSau khi sửa chạy: python3 scripts/test_timeline.py (trong video-studio), báo lại đã đổi gì. Theo quy tắc nội dung trong CLAUDE.md, không tự điền số liệu dự án.`;
 };
 
 async function open_(n) {

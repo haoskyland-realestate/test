@@ -1,5 +1,5 @@
 """Thư viện hiệu ứng v1: một danh mục duy nhất cho bộ kiểm tra timeline, bộ dựng và app sau này.
-In danh mục ra Markdown: python3 scripts/effects.py > ../docs/THU-VIEN-HIEU-UNG.md
+In danh mục ra Markdown: python3 scripts/effects.py > ../docs/04-thu-vien/THU-VIEN-HIEU-UNG.md
 Đổi màu thương hiệu thật: sửa STYLES bên dưới."""
 
 # Phong cách: màu, chữ, tốc độ chuyển động (speed > 1 là chậm hơn), hiệu ứng chữ và chỉnh màu mặc định.

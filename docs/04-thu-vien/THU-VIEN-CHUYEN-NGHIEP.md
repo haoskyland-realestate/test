@@ -35,7 +35,7 @@ Lập 12/11/2026. Mục đích: bộ dựng Claude Edit Video dựa trên công 
 | [colour-science/colour](https://github.com/colour-science/colour) | BSD-3-Clause | 08/11/2026 | Khoa học màu: không gian màu, chuyển đổi, tạo/đọc LUT | Đã thêm. Kế hoạch: xuất filter thành file LUT `.cube` dùng được cả trong CapCut/Premiere |
 | [motion-canvas/motion-canvas](https://github.com/motion-canvas/motion-canvas) | MIT | 02/07/2026 | Đồ hoạ chuyển động bằng mã (biểu đồ, sơ đồ động) | Đã thêm. Dự phòng cho minh hoạ phức tạp |
 
-Đã có sẵn trước đó (không thêm lại): HyperFrames, Remotion, GSAP, three.js, Manim, Blender MCP, FFmpeg (xem `docs/7-repo-lam-video.md`).
+Đã có sẵn trước đó (không thêm lại): HyperFrames, Remotion, GSAP, three.js, Manim, Blender MCP, FFmpeg (xem `docs/99-luu-tru/7-repo-lam-video.md`).
 
 ## Đã áp dụng ngay trong lần này
 - **Chuyển tông HDR** (footage DJI/iPhone là HLG BT.2020): nguyên nhân video bị nhạt. Áp cho video xuất, xem trước, ảnh cảnh, chấm điểm.

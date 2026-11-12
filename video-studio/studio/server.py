@@ -101,6 +101,11 @@ def tao_du_an(req):
         raise ValueError("; ".join(errs))
     with open(os.path.join(d, "timeline.json"), "w", encoding="utf8") as fh:
         json.dump(tl, fh, ensure_ascii=False, indent=1)
+    # giấy tờ của video (BRIEF, KICH-BAN…): nhân bản thì chép của dự án gốc, dự án mới thì chép mẫu
+    md = os.path.join(PROJ, str(req["from"])) if req.get("from") else os.path.join(ROOT, "..", "mau", "du-an-video")
+    for f in os.listdir(md) if os.path.isdir(md) else []:
+        if f.endswith(".md"):
+            shutil.copy(os.path.join(md, f), d)
     return {"ok": True, "name": name, "clips": len(tl["clips"])}
 
 

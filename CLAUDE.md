@@ -1,6 +1,8 @@
 # CLAUDE.md — Hồ sơ dự án Cloud Edit Video (Hào Sky Land)
 
-File này Claude Code tự đọc mỗi phiên. Hào không cần nhắc lại những gì ghi ở đây. Quy trình chi tiết: `docs/QUY-TRINH.md`.
+File này Claude Code tự đọc mỗi phiên. Hào không cần nhắc lại những gì ghi ở đây.
+
+**Đọc trước khi nhận việc:** mục lục `docs/00-MUC-LUC.md`; việc nào giao AI nào `docs/01-he-thong/AI-NAO-VIEC-NAO.md` (Claude tự đề xuất chuyển AI khi việc hợp công cụ khác hơn, theo mục 6 của file đó); làm một video `docs/02-quy-trinh/QUY-TRINH-MOT-VIDEO.md`; đặt tên/thư mục `docs/01-he-thong/THU-MUC-VA-DAT-TEN.md`.
 
 ## Mục đích
 Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu Hào Sky Land: bất động sản, góc nhìn dòng tiền, khách mục tiêu là nữ 35–55 tuổi ở trung tâm và khu Đông TP.HCM.
@@ -13,9 +15,12 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 ## Bối cảnh bổ sung (Hào xác nhận 12/11/2026)
 - Repo riêng tư. Hào có thể dành cả ngày cho dự án, giới hạn là token.
 - Giọng đọc: Hào tự thu. Video đầu: TikTok khoảng 130 giây, từ kịch bản thô, flycam thô, giọng thu và video mẫu cắt cảnh. Hào có bộ logo và màu thương hiệu riêng (chưa gửi).
-- Cách làm chính là **cắt ghép**: `docs/QUY-TRINH-CAT-GHEP.md`. Mẫu đồ họa HyperFrames dùng cho cảnh chữ/số, không phải nguồn chính.
+- Cách làm chính là **cắt ghép footage thật trong app studio** (`docs/02-quy-trinh/QUY-TRINH-MOT-VIDEO.md`). Mẫu đồ họa HyperFrames dùng cho cảnh chữ/số, không phải nguồn chính.
 
 ## Cấu trúc
+- `docs/`: tài liệu theo thư mục đánh số (`00-MUC-LUC.md`, `01-he-thong/`, `02-quy-trinh/`, `03-ke-hoach/`, `04-thu-vien/`, `05-app/`, `99-luu-tru/` cho cách làm cũ). Thêm/dời tài liệu thì sửa `00-MUC-LUC.md`.
+- `mau/`: mẫu để nhân bản: `du-an-video/` (BRIEF, NGUON-SO-LIEU, KICH-BAN, STORYBOARD, DANG-BAI, KET-QUA; app tự chép vào dự án mới), `PROMPT-MAU.md` (câu lệnh cho từng AI).
+- Tên thư mục video: `<ngày>_<tiktok|youtube>_<dự án>_<chủ đề>`, ví dụ `2026-11-20_tiktok_hoc-mon_dong-tien-cho-thue`.
 - `video-studio/projects/<tên>/timeline.json`: **định dạng timeline v1** (cảnh, chuyển cảnh, chữ, âm thanh), mô tả trong `video-studio/scripts/timeline.py`, kiểm tra bằng `scripts/test_timeline.py`. Dựng: `python3 scripts/dung.py projects/<tên>` → `out/<tên>.mp4`. Mẫu: `projects/test90`.
 - `video-studio/studio/`: **app timeline** (máy chủ Python `server.py` + trang `index.html`). Chạy: `python3 studio/server.py` (thêm `--lan` cho điện thoại cùng wifi); Windows: bấm đúp `chay-studio.bat`. Mở đúng link có `?t=` (mã khóa).
 - `video-studio/videos/*.json`: spec mẫu đồ họa cũ (HyperFrames). Trường `template` chọn mẫu.
@@ -34,8 +39,8 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | FFmpeg | OK |
 | Cắt ghép (`assemble.mjs`) | Đã dựng video mẫu 33s (`projects/demo`) với cảnh giả, giọng máy, nhạc giả; chưa thử flycam/giọng thật |
 | Định dạng timeline v1 + `scripts/dung.py` | Xong 12/11: kiểm tra định dạng có test; dựng thử đầu cuối với footage giả (khối 3D, cắt thẳng, chữ, nhạc) OK; chưa dựng lại video test 89s với footage thật |
-| Thư viện hiệu ứng v1 (`scripts/effects.py`, danh mục `docs/THU-VIEN-HIEU-UNG.md`) | Xong 12/11: 3 phong cách, 4 chỉnh màu, 10 chuyển cảnh, 6 hiệu ứng chữ, 9 khối chữ; demo 41s `projects/thu-vien` dựng với footage thật, đã xem khung hình. Chưa có: âm thanh hiệu ứng thật, màu/logo thật, mẫu bố cục |
-| App timeline v2 (`studio/`) | 12/11: giao diện theo ảnh mẫu Hào gửi — 9 tab, khung xem phát được (bản xem trước 540p tự tạo), timeline 7 hàng kéo thả, tách/xoá, hoàn tác/làm lại, Lịch sử, Thư viện, Dựng nháp/Xuất video. Đối chiếu: `docs/GIAO-DIEN-TINH-NANG.md`. Định dạng thêm `subtitles`, `cards`, `zooms`, `broll`, `audio.voice`. Mẫu: `projects/mau-noi-truoc-may`. Chưa: phụ đề tự sinh từ giọng, cắt khoảng lặng, logo/màu thật. Chưa thử trên Windows/điện thoại thật |
+| Thư viện hiệu ứng v1 (`scripts/effects.py`, danh mục `docs/04-thu-vien/THU-VIEN-HIEU-UNG.md`) | Xong 12/11: 3 phong cách, 4 chỉnh màu, 10 chuyển cảnh, 6 hiệu ứng chữ, 9 khối chữ; demo 41s `projects/thu-vien` dựng với footage thật, đã xem khung hình. Chưa có: âm thanh hiệu ứng thật, màu/logo thật, mẫu bố cục |
+| App timeline v2 (`studio/`) | 12/11: giao diện theo ảnh mẫu Hào gửi — 9 tab, khung xem phát được (bản xem trước 540p tự tạo), timeline 7 hàng kéo thả, tách/xoá, hoàn tác/làm lại, Lịch sử, Thư viện, Dựng nháp/Xuất video. Đối chiếu: `docs/05-app/GIAO-DIEN-TINH-NANG.md`. Định dạng thêm `subtitles`, `cards`, `zooms`, `broll`, `audio.voice`. Mẫu: `projects/mau-noi-truoc-may`. Chưa: phụ đề tự sinh từ giọng, cắt khoảng lặng, logo/màu thật. Chưa thử trên Windows/điện thoại thật |
 | Khung YouTube 16:9 | Xong 12/11: `meta.platform` = `tiktok` (1080×1920) hoặc `youtube` (1920×1080); bộ dựng, chữ/phụ đề/minh hoạ, chuyển cảnh 3D/gl, khung xem và vùng an toàn theo khung. Footage quay dọc trong khung ngang tự đặt giữa + hai bên nền mờ (`fit`: crop/blur từng đoạn). Dựng thử với footage thật của Hào, đã xem khung hình |
 | Dự án mới trong app (nút ＋) | Xong 12/11: duyệt thư mục footage trên máy chạy studio (cả từ điện thoại), mỗi video thành một đoạn; liên kết cứng nên không chép thêm (khác ổ thì chép); nhân bản dự án sang khung kia (tab Khung hình). Nhạc nền từ file .mp3/.wav/.m4a trong thư mục (tự lặp, mờ cuối). Chưa thử trên Windows |
 | Video test 89s (`projects/test90`) | Hào duyệt "rất ok" 12/11; âm thanh hiệu ứng chưa ổn, chờ thư mục âm thanh. Footage và bản dựng test đã xóa theo yêu cầu (bản gốc còn trên Drive thư mục "Hào") |
@@ -43,9 +48,10 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Phụ đề tự động (`scripts/phu_de.py`, nút trong app) | Xong 12/11: faster-whisper large-v3-turbo, tiếng Việt, mốc từng từ, chia dòng ≤7 từ/2,8s; chỉ thay phụ đề `auto`. Thử trên clip thật của Hào (nhận dạng đúng tên dự án, số điện thoại). Môi trường cloud "test" đã mở mạng Hugging Face. Chưa thử trên PC |
 | Master cut (`scripts/master_cut.py`, `phan_tich_hinh.py`, nút trong tab Cắt) | Xong 12/11: cắt im lặng theo âm lượng thật (không chỉ mốc từ), chừa nghỉ cuối câu, bỏ tiếng đệm, bỏ lần nói vấp (cụm ≥3 từ lặp sau ngập ngừng), chấm điểm khung hình (nét, sáng, cháy, màu, chuyển động, giật, mặt người nói — OpenCV 4.x), đoạn không lời rút theo nhịp + dời về khúc đẹp nhất, cảnh trám dời về khúc đẹp hơn, phóng xen kẽ ~4s; chữ/phụ đề dời theo; báo cáo `build/master-cut.md`. Test: `scripts/test_master_cut.py`. Thử trên clip thật của Hào. Chưa thử trên PC; ngưỡng mới chỉnh trên vài clip DJI/iPhone |
 | Màu (`scripts/mau.py`) | 12/11: footage DJI/iPhone là HDR HLG → chuyển tông hable sang BT.709 ở mọi nơi (nguyên nhân video nhạt); tự cân màu từng cảnh; 9 filter (`effects.LOOKS`, có CSS xem trước); âm lượng −14 LUFS (`loudnorm`) |
-| Thư viện chuyên nghiệp (`video-studio/thu-vien-chuyen-nghiep/`, `docs/THU-VIEN-CHUYEN-NGHIEP.md`) | 12/11: 10 repo GitHub kiểm chứng giấy phép từ file gốc, thêm dạng submodule: OpenTimelineIO, gl-transitions (214 chuyển cảnh), PySceneDetect, auto-editor, ffmpeg-normalize, DeepFilterNet, Practical-RIFE, Real-ESRGAN, colour, motion-canvas. Đã dùng: chuẩn âm lượng, gl-transitions, OpenTimelineIO; các repo khác là kế hoạch tích hợp |
+| Thư viện chuyên nghiệp (`video-studio/thu-vien-chuyen-nghiep/`, `docs/04-thu-vien/THU-VIEN-CHUYEN-NGHIEP.md`) | 12/11: 10 repo GitHub kiểm chứng giấy phép từ file gốc, thêm dạng submodule: OpenTimelineIO, gl-transitions (214 chuyển cảnh), PySceneDetect, auto-editor, ffmpeg-normalize, DeepFilterNet, Practical-RIFE, Real-ESRGAN, colour, motion-canvas. Đã dùng: chuẩn âm lượng, gl-transitions, OpenTimelineIO; các repo khác là kế hoạch tích hợp |
 | Chuyển cảnh gl-transitions | Xong 12/11: 212 chuyển cảnh (`scripts/gl_transitions.json`, tên `gl-<Tên>`) trong Thư viện app, tìm + xem thử WebGL trực tiếp; dựng bằng HyperFrames. Kiểm cả 212 bằng `scripts/kiem_gl.mjs`; dựng thử 3 cái (CrossZoom, BookFlip, Dreamy) với footage thật |
 | Xuất Premiere/DaVinci (`scripts/xuat_nle.py`, nút “Premiere/DaVinci”) | Xong 12/11: `out/<tên>.xml` (Premiere), `.otio` (DaVinci), `.srt`; chuyển cảnh → hòa tan, chữ/zoom → marker, cảnh trám hàng V2, giọng hàng A1. Đã đọc lại bằng OTIO (thời lượng khớp). **Chưa mở thử trong Premiere/DaVinci thật** |
+| Sắp xếp tài liệu + phân việc AI | Xong 12/11: docs theo thư mục đánh số, `AI-NAO-VIEC-NAO.md`, quy ước tên/thư mục, nhân bản 3 mức, bộ mẫu `mau/`. Thư mục footage trên PC mới là đề xuất, chưa tạo |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |
 | Codespaces (`.devcontainer`) | Chưa thử |
@@ -59,10 +65,10 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 - Repo nội bộ (riêng tư).
 
 ## Hệ thống làm việc (Hào chốt 12/11/2026)
-`docs/HE-THONG.md`: Anti xây phần mềm · GitHub giữ mã và bản v1 chạy tạm · **PC Windows 11 làm việc nặng** (tải footage, dựng) · Mac đọc báo cáo và nghiệm thu · điện thoại giao việc. Skill dự án: `.claude/skills/` (lap-storyboard, dung-video, bao-cao-nghiem-thu); MCP: `mcp/README.md`.
+`docs/01-he-thong/HE-THONG.md`: Anti xây phần mềm · GitHub giữ mã và bản v1 chạy tạm · **PC Windows 11 làm việc nặng** (tải footage, dựng) · Mac đọc báo cáo và nghiệm thu · điện thoại giao việc. Skill dự án: `.claude/skills/` (lap-storyboard, dung-video, bao-cao-nghiem-thu); MCP: `docs/01-he-thong/MCP-VA-SKILL.md`.
 
 ## Kế hoạch đang theo
-`docs/KE-HOACH-APP.md`: định dạng timeline → thư viện hiệu ứng → app timeline (PWA PC + điện thoại) → máy chủ cục bộ Windows → âm thanh.
+`docs/03-ke-hoach/KE-HOACH-APP.md`: định dạng timeline → thư viện hiệu ứng → app timeline (PWA PC + điện thoại) → máy chủ cục bộ Windows → âm thanh.
 
 ## Quy tắc làm việc
 - Phiên bản nhỏ nhất chạy được trước, mở rộng sau. Không thêm công cụ mới khi chưa dùng hết công cụ hiện có.

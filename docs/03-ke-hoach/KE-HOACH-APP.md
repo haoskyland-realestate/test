@@ -1,6 +1,6 @@
 # Kế hoạch: app timeline (PC + điện thoại) và thư viện hiệu ứng
 
-> **Cập nhật 12/11/2026 theo trả lời của Hào:** làm từ xa trên **MacBook M1** (không phải Windows) và giao việc từ điện thoại, ưu tiên miễn phí (xem `LAM-VIEC-TU-XA.md`). App cần **cắt ghép đầy đủ kiểu CapCut**, có thư mục mẫu (xem `THU-VIEN-MAU.md`). Các bước bên dưới đã đổi theo.
+> **Cập nhật 12/11/2026 theo trả lời của Hào:** làm từ xa trên **MacBook M1** (không phải Windows) và giao việc từ điện thoại, ưu tiên miễn phí (xem `../99-luu-tru/LAM-VIEC-TU-XA.md`, đã thay bằng PC Windows). App cần **cắt ghép đầy đủ kiểu CapCut**, có thư mục mẫu (xem `../04-thu-vien/THU-VIEN-MAU.md`). Các bước bên dưới đã đổi theo.
 
 Lập 12/11/2026, sau khi Hào duyệt video test 89 giây. Âm thanh hiệu ứng chưa ổn: chờ thư mục âm thanh riêng của Hào.
 
@@ -36,7 +36,7 @@ Việc: viết định dạng, chuyển `shots.json` của video test sang, sử
 Xong khi: dựng lại video test từ `timeline.json` ra kết quả như cũ.
 
 ### Bước 2. Thư viện hiệu ứng v1: **XONG 12/11** (`scripts/effects.py`, demo `projects/thu-vien`)
-Đặc tả đầy đủ: `THU-VIEN-MAU.md` (hệ thống thiết kế, 12 hiệu ứng chữ, 14 khối đồ họa, 12 chuyển cảnh, 6 mẫu bố cục). Bước này làm phần 1–2 của đặc tả; mẫu bố cục làm dần sau.
+Đặc tả đầy đủ: `../04-thu-vien/THU-VIEN-MAU.md` (hệ thống thiết kế, 12 hiệu ứng chữ, 14 khối đồ họa, 12 chuyển cảnh, 6 mẫu bố cục). Bước này làm phần 1–2 của đặc tả; mẫu bố cục làm dần sau.
 Mỗi hiệu ứng là một file riêng, có tên, mô tả tiếng Việt, thông số chỉnh được, ảnh/clip xem trước.
 
 | Nhóm | Hiệu ứng v1 |
@@ -56,7 +56,7 @@ Xong khi: video test dựng lại với hiệu ứng chọn từ thư viện, đ
 - Chưa làm: kéo thả cắt nhiều lớp, ghi âm trong app.
 Xong khi: Hào sửa một câu chữ và một hiệu ứng trên điện thoại, xem lại ngay không cần dựng.
 
-### Bước 4. Chạy trên PC Windows (đổi lại theo `HE-THONG.md`: PC làm việc nặng, Mac nghiệm thu)
+### Bước 4. Chạy trên PC Windows (đổi lại theo `../01-he-thong/HE-THONG.md`: PC làm việc nặng, Mac nghiệm thu)
 **Phần mềm xong 12/11, chưa thử trên PC thật:** nút ＋ Dự án mới chọn thư mục footage trên PC (cả từ điện thoại cùng wifi), tự tạo bản xem trước 540p, nút Dựng nháp/Xuất video, khung TikTok 9:16 hoặc YouTube 16:9. Còn lại: Hào chạy `setup-windows.ps1` một lần rồi bấm đúp `chay-studio.bat`.
 
 #### (Bản cũ) Chạy trên MacBook

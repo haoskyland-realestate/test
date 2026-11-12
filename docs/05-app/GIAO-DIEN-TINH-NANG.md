@@ -1,6 +1,6 @@
 # Đối chiếu tính năng với ảnh mẫu Hào gửi (12/11/2026)
 
-Ảnh: `docs/anh-giao-dien/`. App: `video-studio/studio/` (chạy `chay-studio.bat` hoặc `python3 studio/server.py`).
+Ảnh: `docs/05-app/anh-giao-dien/`. App: `video-studio/studio/` (chạy `chay-studio.bat` hoặc `python3 studio/server.py`).
 Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **Tạm** = có bản đơn giản · **Chưa**.
 
 | Ảnh mẫu | Trạng thái | Ghi chú |

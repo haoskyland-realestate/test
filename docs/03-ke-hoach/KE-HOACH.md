@@ -3,7 +3,7 @@
 Lập ngày 12/11/2026 (thứ Năm). Đây là kế hoạch, chưa phải cam kết: mốc ngày phụ thuộc vào thời gian Hào dành mỗi ngày (xem mục Giả định).
 
 ## 0. Cập nhật 12/11/2026 sau khi Hào trả lời
-Hào dành được cả ngày (giới hạn là token), tự thu giọng, repo riêng tư, có logo và bộ màu. Video đầu là TikTok khoảng 130 giây từ flycam thô + giọng thu + kịch bản. Vì vậy **cắt ghép tự động trở thành lõi của V1.0**, đồ họa HyperFrames chỉ dùng cho cảnh chữ/số. Mốc V1.0 có thể sớm hơn 20/11 nếu Hào gửi đủ tài liệu trong ngày: xem `QUY-TRINH-CAT-GHEP.md`. Mốc V1.1 (giọng, phụ đề) gộp vào V1.0 vì Hào đã có giọng.
+Hào dành được cả ngày (giới hạn là token), tự thu giọng, repo riêng tư, có logo và bộ màu. Video đầu là TikTok khoảng 130 giây từ flycam thô + giọng thu + kịch bản. Vì vậy **cắt ghép tự động trở thành lõi của V1.0**, đồ họa HyperFrames chỉ dùng cho cảnh chữ/số. Mốc V1.0 có thể sớm hơn 20/11 nếu Hào gửi đủ tài liệu trong ngày: xem `../99-luu-tru/QUY-TRINH-CAT-GHEP.md` (đã thay bằng `../02-quy-trinh/QUY-TRINH-MOT-VIDEO.md`). Mốc V1.1 (giọng, phụ đề) gộp vào V1.0 vì Hào đã có giọng.
 
 ## 1. Đích đến
 
@@ -93,7 +93,7 @@ Mục tiêu: ra 2 video mỗi tuần mà không phải thiết kế lại từ �
 | 3.3 | Chèn ảnh/video thật Hào quay (cảnh dự án, Hào nói trước máy), FFmpeg cắt ghép | 1 video có cảnh quay thật |
 | 3.4 | Biến thể YouTube 16:9 từ cùng nội dung | 1 video xuất cả 9:16 và 16:9 |
 | 3.5 | Kiểm tra kiểu chữ tránh: "cơ hội vàng", "cháy hàng"... cảnh báo khi spec chứa | Render cảnh báo |
-| 3.6 | Nhịp tuần theo `QUY-TRINH.md`, ghi kết quả mỗi tuần | 4 video đã đăng, có số liệu tương tác |
+| 3.6 | Nhịp tuần theo `../02-quy-trinh/NHIP-TUAN.md`, ghi kết quả mỗi tuần | 4 video đã đăng, có số liệu tương tác |
 
 ### Giai đoạn 4: V2 — chạy trên Windows 11 local (11/12–31/12)
 Mục tiêu: render nhanh trên máy của Hào, không phụ thuộc GitHub, không giới hạn thời gian chạy.

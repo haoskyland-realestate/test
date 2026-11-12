@@ -8,3 +8,5 @@ MCP là cách cho Claude điều khiển phần mềm/dịch vụ khác. Mỗi m
 | Blender MCP | PC Windows | Dựng cảnh 3D bằng lời | Cài Blender + add-on từ github.com/ahujasid/blender-mcp, rồi `claude mcp add blender uvx blender-mcp` (cần `uv`). **Chưa thử** |
 
 Skill của dự án nằm ở `.claude/skills/` (lap-storyboard, dung-video, bao-cao-nghiem-thu): Claude Code tự thấy khi mở repo này, trên PC, Mac hay phiên cloud.
+
+Khi nào dùng skill nào, AI nào: `AI-NAO-VIEC-NAO.md` (cùng thư mục).
