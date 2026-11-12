@@ -28,6 +28,13 @@ bad(lambda t: t["transitions"][0].update(type="spin"), "kiểu 'spin' chưa có"
 bad(lambda t: t["texts"][0].update(start=12), "nằm ngoài video")
 bad(lambda t: t["texts"][0].update(kind="section"), "thiếu num, title")
 bad(lambda t: t["meta"].update(platform="youtube"), "chỉ hỗ trợ")
+bad(lambda t: t["meta"].update(style="neon"), "Phong cách 'neon' chưa có")
+bad(lambda t: t["clips"][0].update(look="xyz"), "chỉnh màu 'xyz' chưa có")
+bad(lambda t: t["texts"][0].update(anim="spin"), "hiệu ứng 'spin' chưa có")
+bad(lambda t: t["texts"].append({"kind": "stat", "start": 1, "dur": 2, "value": "abc", "label": "x"}), "phải là số")
+bad(lambda t: t["texts"].append({"kind": "checklist", "start": 1, "dur": 2}), "thiếu items")
+t2 = copy.deepcopy(ok); t2["transitions"][0]["type"] = "fade"
+assert abs(layout(t2)["total"] - 12.5) < 1e-9  # fade mặc định 0.5s
 
 # Mọi timeline.json trong projects/ phải hợp lệ
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "projects")
