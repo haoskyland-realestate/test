@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi" data-resolution="__RES__">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=__W__, height=__H__" />
+<script src="gsap.min.js"></script>
+<script src="three.global.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:__W__px; height:__H__px; overflow:hidden; background:#0b1b2b; font-family:sans-serif; color:#fff; }
+  #root { background:#0b1b2b; position:relative; width:100%; height:100%; }
+  #gl { position:absolute; inset:0; width:100%; height:100%; }
+  .txt { position:absolute; left:8%; right:8%; opacity:0; }
+  #hook { top:14%; font-size:64px; font-weight:700; line-height:1.25; }
+  #list { top:42%; font-size:48px; line-height:1.4; }
+  #list p { margin-bottom:28px; opacity:0; }
+  #brand { bottom:6%; font-size:36px; opacity:.8; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="__DUR__" data-width="__W__" data-height="__H__">
+  <canvas id="gl"></canvas>
+  <h1 id="hook" class="txt clip" data-start="0" data-duration="__DUR__" data-track-index="1"></h1>
+  <div id="list" class="txt clip" data-start="0" data-duration="__DUR__" data-track-index="2"></div>
+  <div id="brand" class="txt clip" data-start="0" data-duration="__DUR__" data-track-index="3">Hào Sky Land</div>
+</div>
+<script>
+const SPEC = /*SPEC*/null;
+document.getElementById("hook").textContent = SPEC.hook;
+document.getElementById("list").innerHTML = SPEC.bullets.map(b => "<p></p>").join("");
+document.querySelectorAll("#list p").forEach((p, i) => (p.textContent = "• " + SPEC.bullets[i]));
+
+// three.js: khối wireframe xoay, góc quay do timeline điều khiển (không dùng đồng hồ thật) để render lặp lại được.
+const W = __W__, H = __H__;
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("gl"), antialias: true });
+renderer.setSize(W, H, false);
+const scene = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+cam.position.set(0, 0, 9);
+const box = new THREE.LineSegments(
+  new THREE.EdgesGeometry(new THREE.BoxGeometry(2, 4, 2)),
+  new THREE.LineBasicMaterial({ color: 0x4fc3f7 })
+);
+box.position.y = -3.2; box.scale.setScalar(0.7);
+scene.add(box);
+const state = { r: 0 };
+const draw = () => { box.rotation.y = state.r; renderer.render(scene, cam); };
+
+const tl = gsap.timeline({ paused: true });
+tl.to(state, { r: Math.PI * 2, duration: __DUR__, ease: "none", onUpdate: draw }, 0);
+tl.fromTo("#hook", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.2);
+tl.fromTo("#brand", { opacity: 0 }, { opacity: 0.8, duration: 0.6 }, 0.4);
+document.querySelectorAll("#list p").forEach((p, i) =>
+  tl.fromTo(p, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 2 + i * 1.5)
+);
+tl.set("#list", { opacity: 1 }, 0);
+window.__timelines["main"] = tl;
+draw();
+tl.seek(0);
+</script>
+</body>
+</html>

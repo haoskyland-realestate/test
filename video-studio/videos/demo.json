@@ -1,0 +1,12 @@
+{
+  "title": "[Tên dự án] – dòng tiền mỗi tháng",
+  "hook": "Sau khi trừ tiền vay, mỗi tháng còn lại bao nhiêu?",
+  "bullets": [
+    "[Số liệu 1 – ghi nguồn, ngày cập nhật]",
+    "[Số liệu 2 – ghi nguồn, ngày cập nhật]",
+    "[Rủi ro cần lưu ý]"
+  ],
+  "platform": "tiktok",
+  "duration": 15,
+  "engine": "hyperframes"
+}

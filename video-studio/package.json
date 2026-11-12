@@ -1,0 +1,13 @@
+{
+  "name": "video-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:hf": "node scripts/build-hyperframes.mjs videos/demo.json"
+  },
+  "dependencies": {
+    "gsap": "3.15.1",
+    "three": "0.187.0",
+    "esbuild": "^0.25.0"
+  }
+}

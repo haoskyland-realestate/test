@@ -1,0 +1,23 @@
+name: Render video
+on:
+  workflow_dispatch:
+    inputs:
+      spec: { description: "Đường dẫn spec", default: "videos/demo.json" }
+      engine: { description: "hyperframes | remotion | manim", default: "hyperframes" }
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: video-studio } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Cài FFmpeg và thư viện Manim
+        if: inputs.engine == 'manim'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg libcairo2-dev libpango1.0-dev pkg-config && pip install manim
+      - run: npm install --no-audit --no-fund
+      - run: ./scripts/render.sh "${{ inputs.spec }}" "${{ inputs.engine }}"
+      - uses: actions/upload-artifact@v4
+        with: { name: video, path: video-studio/out/*.mp4 }
