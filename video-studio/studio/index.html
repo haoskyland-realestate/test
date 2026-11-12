@@ -28,12 +28,16 @@
   #tabs button .n { display:inline-block; min-width:20px; margin-left:6px; padding:0 6px; border-radius:7px; background:#262b33; font-size:11px; }
   #tabs button.on { background:var(--panel); color:var(--lime); } #tabs button.on .n { background:var(--lime); color:#111; }
   main { display:grid; grid-template-columns:minmax(300px,1fr) minmax(320px,1.6fr) minmax(280px,1fr); gap:12px; padding:12px 16px; min-height:0; }
+  main.yt { grid-template-columns:minmax(440px,1.7fr) minmax(320px,1.2fr) minmax(280px,1fr); }
   main.noL { grid-template-columns:0 minmax(320px,2fr) minmax(280px,1fr); } main.noL #left { display:none; }
   main.noR { grid-template-columns:minmax(300px,1fr) minmax(320px,2fr) 0; } main.noR #right { display:none; }
   main.noL.noR { grid-template-columns:0 1fr 0; }
   .box { background:var(--panel); border-radius:16px; padding:14px; min-height:0; overflow:auto; }
   #left { display:flex; flex-direction:column; align-items:center; gap:10px; }
   #stage { position:relative; height:100%; max-height:calc(100% - 50px); aspect-ratio:9/16; background:#000; border-radius:12px; overflow:hidden; flex:1; }
+  #stage.yt { aspect-ratio:16/9; height:auto; width:100%; flex:none; }
+  #stage.yt #ovl .blk { left:4.8%; right:auto; width:53%; bottom:11%; } #stage.yt #ovl .sub { top:auto; bottom:6.5%; left:5%; right:5%; }
+  #stage.yt #ovl .card { justify-content:center; padding:0 22%; }
   #stage video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform-origin:center; }
   #pb { display:none; } #out { display:none; object-fit:contain !important; }
   #ovl { position:absolute; inset:0; pointer-events:none; container-type:size; }
@@ -95,7 +99,7 @@
 <body>
 <div id="app">
   <header>
-    <div id="title"><span class="dot"></span><select id="proj" aria-label="Dự án"></select><div id="stat" class="dim"></div></div>
+    <div id="title"><span class="dot"></span><select id="proj" aria-label="Dự án"></select><button class="ghost" id="newP" title="Dự án mới / nhân bản sang khung khác">＋</button><div id="stat" class="dim"></div></div>
     <div class="grp" aria-label="Bố cục">
       <button id="lyL" title="Ẩn/hiện khung xem">◧</button><button id="lyR" title="Ẩn/hiện khung chỉnh">◨</button>
       <button id="lyT" title="Ẩn/hiện timeline">⬓</button><button id="lyF" title="Toàn màn hình">⛶</button>
@@ -142,7 +146,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;
 const hl = s => esc(s).replace(/\*([^*]+)\*/g, '<span class="hl">$1</span>');
 const fmt = t => { t = Math.max(0, t); return `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, "0")}`; };
 const FPS = 30, TIMED = ["texts", "subtitles", "cards", "zooms", "broll"];
-let FX, name, tl, sel = null, undoS = [], redoS = [], uid = 0, dirty = false, now = 0, playing = false, last = 0, tab = "texts", poll;
+let files = [], FX, name, tl, sel = null, undoS = [], redoS = [], uid = 0, dirty = false, now = 0, playing = false, last = 0, tab = "texts", poll;
 
 // Tab: khóa dữ liệu, tên, mô tả
 const TABS = [
@@ -153,7 +157,7 @@ const TABS = [
   ["cards", "Minh hoạ", "Cảnh nền đen diễn giải ý đang nói — mỗi cảnh một ý."],
   ["broll", "Cảnh trám", "Phủ cảnh khác lên video chính, vẫn giữ tiếng nói."],
   ["audio", "Âm thanh", "Giọng gốc, nhạc nền, tiếng chuyển cảnh."],
-  ["frame", "Khung hình", "Tỉ lệ khung và vùng an toàn của TikTok."],
+  ["frame", "Khung hình", "TikTok dọc 9:16 hoặc YouTube ngang 16:9, và vùng an toàn."],
   ["brand", "Thương hiệu", "Phong cách: màu, chữ, nhịp chuyển động."],
 ];
 const LANES = [["texts", "T  Chữ"], ["subtitles", "▭  Phụ đề"], ["cards", "▣  Minh hoạ"], ["broll", "▤  Cảnh trám"], ["zooms", "⌕  Zoom"], ["clips", "▶  Video"], ["voice", "∿  Giọng nói"]];
@@ -212,7 +216,7 @@ function stat() {
     + (dirty ? `<b>Chưa lưu</b>` : `<span class="ok">Đã lưu</span>`) + ` · ${esc(FX.styles[tl.meta.style || "hien-dai"].split(":")[0])}`;
 }
 
-function draw() { stat(); drawTabs(); drawList(); inspector(); drawTimeline(); renderFrame(); }
+function draw() { const yt = tl.meta.platform === "youtube"; $("#stage").classList.toggle("yt", yt); $("#main").classList.toggle("yt", yt); stat(); drawTabs(); drawList(); inspector(); drawTimeline(); renderFrame(); }
 function drawTabs() {
   $("#tabs").innerHTML = TABS.map(([k, n]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${n}${Array.isArray(tl[k]) ? `<span class="n">${tl[k].length}</span>` : ""}</button>`).join("");
   $("#desc").textContent = TABS.find(x => x[0] === tab)[2];
@@ -241,12 +245,16 @@ function settings() {
   const a = tl.audio || {};
   if (tab === "audio") return `<div style="grid-column:1/-1">
     <label><input type="checkbox" data-set="voice" ${a.voice ? "checked" : ""}> Giữ giọng gốc của các đoạn video (video nói trước máy)</label><br><br>
-    <label>Nhạc nền <select data-set="music"><option value="synth" ${a.music !== null ? "selected" : ""}>Nhạc tổng hợp (tạm, không bản quyền)</option><option value="none" ${a.music === null ? "selected" : ""}>Không nhạc</option></select></label><br><br>
+    <label>Nhạc nền <select data-set="music"><option value="synth" ${a.music === "synth" || a.music === undefined ? "selected" : ""}>Nhạc tổng hợp (tạm, không bản quyền)</option><option value="none" ${a.music === null ? "selected" : ""}>Không nhạc</option>${files.filter(f => /\.(mp3|wav|m4a|aac|flac|ogg)$/i.test(f)).map(f => `<option value="${esc(f)}" ${a.music === f ? "selected" : ""}>File: ${esc(f)}</option>`).join("")}</select></label><br><br>
     <label>Âm lượng nhạc: <b>${(a.music_volume ?? 1).toFixed(2)}</b> <input type="range" min="0" max="2" step="0.05" value="${a.music_volume ?? 1}" data-set="music_volume"></label><br><br>
     <label><input type="checkbox" data-set="whoosh" ${a.whoosh !== false ? "checked" : ""}> Tiếng “vút” ở chuyển cảnh</label>
-    <p class="dim">Khi giữ giọng gốc, nhạc tự nhỏ lại còn 1/4. Thư viện âm thanh thật (nhạc, tiếng hiệu ứng): chờ thư mục của Hào.</p></div>`;
-  if (tab === "frame") return `<div style="grid-column:1/-1"><p>Khung: <b>TikTok 9:16 (1080×1920)</b>. YouTube 16:9 chưa hỗ trợ.</p>
-    <p class="dim">Vùng an toàn (khung đỏ trong khung xem, bật/tắt dưới khung xem): 220px trên, 420px dưới, 140px phải — nơi giao diện TikTok che chữ.</p></div>`;
+    <p class="dim">Khi giữ giọng gốc, nhạc tự nhỏ lại còn 1/4. Nhạc của Hào: để file .mp3/.wav/.m4a trong thư mục footage khi tạo dự án (hoặc chép vào <code>projects/${esc(name)}/build/raw/</code>), rồi chọn ở đây; nhạc ngắn hơn video thì tự lặp, 2 giây cuối mờ dần. Chỉ dùng nhạc có quyền sử dụng.</p></div>`;
+  if (tab === "frame") { const pf = tl.meta.platform || "tiktok";
+    return `<div style="grid-column:1/-1">` + [["tiktok", "TikTok / Reels / Shorts", "Dọc 9:16 · 1080×1920"], ["youtube", "YouTube", "Ngang 16:9 · 1920×1080"]].map(([k, n, d]) =>
+      `<div class="it${pf === k ? " sel" : ""}" data-platform="${k}" style="margin-bottom:8px"><div class="h">${n}</div><div class="m">${d}</div></div>`).join("")
+    + `<div class="row"><button id="dup">Nhân bản dự án này sang ${pf === "youtube" ? "TikTok" : "YouTube"}</button></div>
+    <p class="dim">Đổi khung ngay trên dự án này, hoặc nhân bản để có cả hai bản (dùng chung footage, không tốn thêm ổ). Footage quay dọc đặt vào khung ngang sẽ bị cắt trên/dưới (và ngược lại); dùng “Lệch khung” của từng đoạn để chọn phần giữ lại.</p>
+    <p class="dim">Vùng an toàn (khung đỏ, bật/tắt dưới khung xem): TikTok — 220px trên, 420px dưới, 140px phải (giao diện app che); YouTube — chừa 5% mỗi cạnh.</p></div>`; }
   if (tab === "brand") return `<div style="grid-column:1/-1">` + Object.entries(FX.styles).map(([k, v]) =>
     `<div class="it${(tl.meta.style || "hien-dai") === k ? " sel" : ""}" data-style="${k}" style="margin-bottom:8px"><div class="h">${k}</div><div class="m">${esc(v)}</div></div>`).join("")
     + `<p class="dim">Logo và màu thật của Hào Sky Land: chờ Hào gửi.</p></div>`;
@@ -267,7 +275,8 @@ function inspector() {
   const o = cur(); let h = "";
   if (sel.k === "clips") {
     h = `<h3>Đoạn ${sel.i + 1}</h3>${fld("file", o.file)}${fld("in", o.in, "number")}${fld("dur", o.dur, "number")}
-      <label>Lệch khung dọc: ${o.focus ?? 0} (-1 trái, 1 phải)</label><input data-f="focus" type="range" min="-1" max="1" step="0.1" value="${o.focus ?? 0}">
+      <label>Vừa khung</label><select data-f="fit"><option value="">Tự chọn (quay dọc làm YouTube: nền mờ)</option><option value="crop"${o.fit === "crop" ? " selected" : ""}>Phóng kín khung, cắt bớt</option><option value="blur"${o.fit === "blur" ? " selected" : ""}>Giữ trọn hình, hai bên nền mờ</option></select>
+      <label>Lệch khung khi cắt: ${o.focus ?? 0} (-1 trái/trên, 1 phải/dưới)</label><input data-f="focus" type="range" min="-1" max="1" step="0.1" value="${o.focus ?? 0}">
       <label>Chỉnh màu</label><select data-f="look">${opts(FX.looks, o.look, "Theo phong cách")}</select>
       <div class="row"><button data-a="dup">Nhân bản</button><button data-a="left">← Lên trước</button><button data-a="right">Ra sau →</button></div>`;
   } else if (sel.k === "transitions") {
@@ -315,7 +324,7 @@ function placePH() {
 }
 
 // ---- Trình phát: phát bản xem trước nhẹ của footage theo một đồng hồ chung, chữ vẽ đè lên ----
-const proxyReady = {};
+let proxyReady = {};  // theo dự án đang mở: mở dự án khác thì làm lại
 function ensureProxy(f) {
   if (proxyReady[f] === true) return true;
   if (proxyReady[f]) return false;  // đang chờ hoặc lỗi
@@ -345,6 +354,8 @@ function renderFrame() {
   $("#msgStage").textContent = ok ? "" : proxyReady[c.file] === "fail" ? `Chưa có footage ${c.file} trên máy` : `Đang tạo bản xem trước ${c.file}…`;
   if (ok) syncVideo(pv, c.file, +c.in + off, !(tl.audio || {}).voice);
   pv.style.visibility = ok ? "visible" : "hidden";
+  const fit = c.fit || (tl.meta.platform === "youtube" && pv.videoHeight > pv.videoWidth ? "blur" : "crop");
+  pv.style.objectFit = fit === "blur" ? "contain" : "cover";  // xem trước: nền mờ chỉ có ở bản dựng
   const on = k => (tl[k] || []).filter(x => now >= x.start && now < x.start + x.dur);
   const z = on("zooms")[0]; pv.style.transform = z ? `scale(${z.scale})` : "";
   const lk = FX.looks[c.look || FX.style_looks[tl.meta.style || "hien-dai"]]; pv.style.filter = lk ? lk.css : "";  // filter màu gần giống bản xuất
@@ -361,7 +372,8 @@ function renderFrame() {
   }
   for (const x of on("subtitles")) h += `<div class="sub"><span>${hl(x.text)}</span></div>`;
   for (const x of on("cards")) h += `<div class="card"><div class="cs">${esc(x.step || "")}</div><div class="ct">${esc(x.title)}</div>${(x.items || []).map((it, k) => `<div class="ci">${k + 1}. ${hl(it)}</div>`).join("")}</div>`;
-  if ($("#safe").checked) h += `<div class="safe" style="left:0;right:0;top:0;height:11.5%"></div><div class="safe" style="left:0;right:0;bottom:0;height:21.9%"></div><div class="safe" style="right:0;top:11.5%;bottom:21.9%;width:13%"></div>`;
+  if ($("#safe").checked) h += tl.meta.platform === "youtube" ? `<div class="safe" style="inset:5%;background:none"></div>`
+    : `<div class="safe" style="left:0;right:0;top:0;height:11.5%"></div><div class="safe" style="left:0;right:0;bottom:0;height:21.9%"></div><div class="safe" style="right:0;top:11.5%;bottom:21.9%;width:13%"></div>`;
   $("#ovl").innerHTML = h;
 }
 function loop(ts) {
@@ -380,6 +392,8 @@ function seek(t) { now = Math.max(0, Math.min(t, layout().total)); renderFrame()
 document.addEventListener("click", e => {
   const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; sel = null; return draw(); }
   const st = e.target.closest("[data-style]"); if (st) return mutate(() => tl.meta.style = st.dataset.style);
+  const pf = e.target.closest("[data-platform]"); if (pf) return mutate(() => tl.meta.platform = pf.dataset.platform);
+  if (e.target.id === "dup") return newProject(name, tl.meta.platform === "youtube" ? "tiktok" : "youtube");
   const li = e.target.closest(".it[data-k]"); if (li) { sel = {k: li.dataset.k, i: +li.dataset.i}; seek(sel.k === "clips" ? layout().starts[sel.i] + 0.05 : cur().start + 0.05); return draw(); }
   if (e.target.id === "srtGo") importSrt($("#srt").value);
   if (e.target.id === "asr") asr();
@@ -557,7 +571,7 @@ $("#nle").onclick = async () => {
   if (!r.ok) return dlgShow(`<h3 class="err">Chưa xuất được</h3><pre style="white-space:pre-wrap;font-size:12px">${esc(r.log)}</pre>`);
   const a = (ext, txt) => `<li><a href="/api/${P()}/nle/${ext}?t=${T}" download>${txt}</a></li>`;
   dlgShow(`<h3>Đã xuất timeline</h3><ul>${a("xml", "Premiere Pro: file .xml (File → Import)")}${a("otio", "DaVinci Resolve: file .otio (File → Import → Timeline)")}${a("srt", "Phụ đề .srt")}</ul>
-    <p class="dim">File trỏ tới footage gốc trong thư mục dự án trên máy chạy studio; mở trên máy khác thì chọn “Relink/Locate” tới footage. Chuyển cảnh xuất thành hòa tan, chữ/zoom thành điểm đánh dấu (marker). Khung 9:16: đặt sequence 1080×1920 và chọn “Scale to frame size”.</p>
+    <p class="dim">File trỏ tới footage gốc trong thư mục dự án trên máy chạy studio; mở trên máy khác thì chọn “Relink/Locate” tới footage. Chuyển cảnh xuất thành hòa tan, chữ/zoom thành điểm đánh dấu (marker). Đặt sequence đúng khung (${tl.meta.platform === "youtube" ? "1920×1080" : "1080×1920"}) và chọn “Scale to frame size”.</p>
     <p class="dim">${esc(r.log.trim())}</p>`);
 };
 function view() {
@@ -572,6 +586,37 @@ $("#viewSel").onchange = view;
 
 // ---- Hộp thoại: Thư viện, Lịch sử, Nhờ AI sửa ----
 const dlg = $("#dlg"); function dlgShow(h) { $("#dlgBody").innerHTML = h; dlg.showModal(); }
+// Dự án mới: chọn thư mục footage trên máy chạy studio (duyệt được cả từ điện thoại), hoặc nhân bản dự án sang khung khác
+async function newProject(from = null, platform = "tiktok") {
+  let cur = null;
+  dlgShow(`<h3>${from ? "Nhân bản dự án " + esc(from) : "Dự án mới"}</h3>
+    <label>Tên dự án (không dấu cách, vd: hoc-mon-dong-tien)</label><input id="npName" value="${from ? esc(from) + "-" + platform : ""}" style="width:100%">
+    <label style="display:block;margin-top:10px">Khung</label><select id="npPf"><option value="tiktok">TikTok dọc 9:16</option><option value="youtube"${platform === "youtube" ? " selected" : ""}>YouTube ngang 16:9</option></select>
+    ${from ? "" : `<label style="display:block;margin-top:10px">Thư mục footage trên máy chạy studio</label><div id="npBr" class="dim">Đang mở…</div>`}
+    <div class="row"><button class="lime" id="npGo">Tạo</button></div><p class="dim" id="npMsg"></p>`);
+  const br = async path => {
+    try { cur = await api("browse?path=" + encodeURIComponent(path || "")); } catch (e) { return $("#npMsg").textContent = e.message; }
+    const go = p => `data-go="${esc(p)}"`;
+    $("#npBr").innerHTML = `<div style="margin:4px 0"><b>${esc(cur.path)}</b></div><div style="max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px">`
+      + cur.roots.map(r => `<div class="it" ${go(r)}>💽 ${esc(r)}</div>`).join("")
+      + (cur.parent ? `<div class="it" ${go(cur.parent)}>⬆ Lên trên</div>` : "")
+      + cur.dirs.map(d => `<div class="it" ${go(cur.path + (cur.path.endsWith("/") || cur.path.endsWith("\\") ? "" : (cur.path.includes("\\") ? "\\" : "/")) + d)}>📁 ${esc(d)}</div>`).join("")
+      + `</div><div style="margin-top:6px">${cur.videos.length} video${cur.audio.length ? `, ${cur.audio.length} file nhạc` : ""} trong thư mục này${cur.videos.length ? ": " + esc(cur.videos.slice(0, 6).join(", ")) + (cur.videos.length > 6 ? "…" : "") : ""}</div>`;
+    $("#npBr").querySelectorAll("[data-go]").forEach(el => el.onclick = () => br(el.dataset.go));
+  };
+  if (!from) br("");
+  $("#npGo").onclick = async () => {
+    if (dirty && !(from ? await save() : confirm("Dự án đang mở có thay đổi chưa lưu. Bỏ qua?"))) return;
+    const body = {name: $("#npName").value.trim(), platform: $("#npPf").value};
+    if (from) body.from = from; else body.folder = cur && cur.path;
+    $("#npGo").disabled = true; $("#npMsg").textContent = from ? "Đang nhân bản…" : "Đang đưa footage vào dự án (cùng ổ đĩa thì tức thì; khác ổ phải chép, có thể mất vài phút)…";
+    try {
+      const r = await api("new", {method: "POST", body: JSON.stringify(body)});
+      const ps = await api("projects"); $("#proj").innerHTML = ps.map(p => `<option>${esc(p)}</option>`).join(""); $("#proj").value = r.name;
+      dlg.close(); dirty = false; await open_(r.name); toast(`Đã tạo dự án ${esc(r.name)} (${r.clips} đoạn).${from ? "" : " Bấm ✨ Master cut ở tab Cắt để cắt khoảng lặng."}`, "ok");
+    } catch (e) { $("#npMsg").textContent = e.message; $("#npGo").disabled = false; }
+  };
+}
 // Xem thử chuyển cảnh gl-transitions ngay trong trình duyệt, trên ảnh của 2 đoạn kề nhau
 let GL = null, glr = null, glName = null, glRaf = 0, glImgs = null;
 async function glLoad() {
@@ -631,7 +676,7 @@ $("#btnAI").onclick = () => {
 async function open_(n) {
   if (dirty && !confirm("Dự án đang có thay đổi chưa lưu. Bỏ qua?")) return ($("#proj").value = name);
   name = n; const r = await api(P());
-  tl = r.timeline; tl.meta ??= {}; for (const k of TIMED) tl[k] ??= []; tl.audio ??= {}; tl.clips.forEach(c => c._id = ++uid);
+  tl = r.timeline; files = r.files || []; proxyReady = {}; for (const v of ["#pv", "#pb"]) delete $(v).dataset.f; tl.meta ??= {}; for (const k of TIMED) tl[k] ??= []; tl.audio ??= {}; tl.clips.forEach(c => c._id = ++uid);
   sel = null; undoS = []; redoS = []; dirty = false; now = 0; $("#viewSel").value = "edit";
   $("#zoom").value = Math.max(10, ($("#scroll").clientWidth - 30) / layout().total); draw(); view();
 }
@@ -641,6 +686,7 @@ async function open_(n) {
     const ps = await api("projects");
     $("#proj").innerHTML = ps.map(p => `<option>${esc(p)}</option>`).join("");
     $("#proj").onchange = e => open_(e.target.value);
+    $("#newP").onclick = () => newProject();
     if (ps.length) await open_(ps[0]); else $("#stat").innerHTML = `<span class="err">Chưa có dự án nào trong projects/.</span>`;
     requestAnimationFrame(loop);
   } catch (e) { $("#stat").innerHTML = `<span class="err">${esc(e.message)}</span>`; }

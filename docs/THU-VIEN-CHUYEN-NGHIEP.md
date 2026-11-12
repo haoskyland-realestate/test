@@ -18,7 +18,7 @@ Lập 12/11/2026. Mục đích: bộ dựng Claude Edit Video dựa trên công 
 | 7. Đồ hoạ & chữ | Chữ động, phụ đề, minh hoạ, chuyển cảnh | HyperFrames + GSAP, `effects.py` | **gl-transitions**, **motion-canvas** |
 | 8. Nâng chất | Làm chậm mượt flycam, tăng nét | — | **Practical-RIFE**, **Real-ESRGAN** (cần card RTX) |
 | 9. Trao đổi | Mở timeline trong Premiere / DaVinci để chỉnh tinh | — | **OpenTimelineIO** |
-| 10. Xuất & kiểm | MP4 9:16, báo cáo nghiệm thu | `dung.py`, skill `bao-cao-nghiem-thu` | — |
+| 10. Xuất & kiểm | MP4 9:16 hoặc 16:9, báo cáo nghiệm thu | `dung.py`, skill `bao-cao-nghiem-thu` | — |
 
 ## Danh mục repo
 

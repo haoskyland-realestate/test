@@ -1,6 +1,6 @@
 ---
 name: dung-video
-description: Dựng video từ storyboard đã duyệt (timeline.json) ra MP4 9:16 có chuyển cảnh khối 3D, chữ động tiếng Việt, nhạc. Dùng khi Hào nói "dựng", "render", "xuất video" cho một dự án trong video-studio/projects.
+description: Dựng video từ storyboard đã duyệt (timeline.json) ra MP4 TikTok dọc 9:16 hoặc YouTube ngang 16:9 (theo `meta.platform`) có chuyển cảnh khối 3D, chữ động tiếng Việt, nhạc. Dùng khi Hào nói "dựng", "render", "xuất video" cho một dự án trong video-studio/projects.
 ---
 
 # Dựng video

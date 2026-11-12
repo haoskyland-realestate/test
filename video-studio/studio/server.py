@@ -6,7 +6,7 @@ import http.server, json, os, re, secrets, shutil, socket, subprocess, sys, time
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
-from timeline import check, layout  # noqa: E402
+from timeline import check, layout, AUDIO_EXT, PLATFORMS  # noqa: E402
 from mau import chuyen_tong  # noqa: E402
 import effects  # noqa: E402
 
@@ -23,6 +23,85 @@ def effects_json():
             "style_looks": {k: v["look"] for k, v in e.STYLES.items()},
             "transitions": {k: {"dur": v[0], "vi": v[3]} for k, v in e.TRANSITIONS.items()},
             "anims": e.TEXT_ANIMS, "kinds": {k: {"need": v[0], "vi": v[1]} for k, v in e.TEXT_KINDS.items()}}
+
+
+VIDEO_EXT = re.compile(r"\.(mp4|mov|m4v|mkv|mts)$", re.I)
+
+
+def duyet(path):
+    """Duyệt thư mục trên máy chạy studio (để chọn thư mục footage từ PC hoặc điện thoại)."""
+    path = os.path.abspath(path or os.path.expanduser("~"))
+    if not os.path.isdir(path):
+        raise ValueError("Không có thư mục " + path)
+    names = sorted(os.listdir(path), key=str.lower)
+    dirs = [n for n in names if not n.startswith(".") and os.path.isdir(os.path.join(path, n))]
+    vids = [n for n in names if VIDEO_EXT.search(n)]
+    roots = [f"{c}:\\" for c in "CDEFGH" if os.path.exists(f"{c}:\\")] if os.name == "nt" else []  # ổ đĩa Windows
+    return {"path": path, "parent": os.path.dirname(path) if os.path.dirname(path) != path else None,
+            "dirs": dirs, "videos": vids, "audio": [n for n in names if re.search(AUDIO_EXT, n, re.I)], "roots": roots}
+
+
+def lien_ket(src, dst):
+    """Đưa file vào build/raw mà không chiếm thêm ổ: liên kết cứng (cùng ổ), không được thì chép."""
+    if os.path.exists(dst):
+        return
+    try:
+        os.link(src, dst)
+    except OSError:
+        shutil.copy2(src, dst)
+
+
+def thoi_luong(path):
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path], capture_output=True, text=True).stdout
+    try:
+        return round(float(out), 2)
+    except ValueError:
+        return 0
+
+
+def tao_du_an(req):
+    """Dự án mới: từ thư mục footage (mỗi video thành một đoạn, cắt thẳng) hoặc nhân bản một dự án (đổi khung)."""
+    name, platform = str(req.get("name", "")).strip(), req.get("platform", "tiktok")
+    if not SAFE.match(name):
+        raise ValueError("Tên dự án chỉ gồm chữ, số, gạch ngang (-) hoặc gạch dưới (_), không dấu cách")
+    if platform not in PLATFORMS:
+        raise ValueError("Khung phải là tiktok hoặc youtube")
+    d = os.path.join(PROJ, name)
+    if os.path.exists(d):
+        raise ValueError(f"Đã có dự án '{name}', chọn tên khác")
+    raw = os.path.join(d, "build", "raw")
+    if req.get("from"):
+        src = os.path.join(PROJ, str(req["from"]))
+        if not SAFE.match(str(req["from"])) or not os.path.exists(os.path.join(src, "timeline.json")):
+            raise ValueError("Không có dự án nguồn")
+        tl = json.load(open(os.path.join(src, "timeline.json"), encoding="utf8"))
+        tl.setdefault("meta", {})["platform"] = platform
+        os.makedirs(raw)
+        sr = os.path.join(src, "build", "raw")
+        for f in os.listdir(sr) if os.path.isdir(sr) else []:
+            lien_ket(os.path.join(sr, f), os.path.join(raw, f))
+    else:
+        info = duyet(req.get("folder"))
+        if not info["videos"]:
+            raise ValueError("Thư mục này không có video (.mp4, .mov, .m4v, .mkv, .mts)")
+        os.makedirs(raw)
+        clips = []
+        for f in info["videos"] + info["audio"]:
+            lien_ket(os.path.join(info["path"], f), os.path.join(raw, f))
+        for f in info["videos"]:
+            if (dur := thoi_luong(os.path.join(raw, f))) > 0.2:
+                clips.append({"file": f, "in": 0, "dur": dur})
+        if not clips:
+            raise ValueError("Không đọc được thời lượng video nào (cần FFmpeg)")
+        tl = {"version": 1, "meta": {"platform": platform, "style": "hien-dai", "title": name}, "clips": clips,
+              "transitions": [{"type": "cut"}] * (len(clips) - 1), "texts": [], "subtitles": [],
+              "audio": {"music": "synth", "whoosh": False, "voice": True, "music_volume": 1.0}}
+    if errs := check(tl):
+        shutil.rmtree(d, ignore_errors=True)
+        raise ValueError("; ".join(errs))
+    with open(os.path.join(d, "timeline.json"), "w", encoding="utf8") as fh:
+        json.dump(tl, fh, ensure_ascii=False, indent=1)
+    return {"ok": True, "name": name, "clips": len(tl["clips"])}
 
 
 class H(http.server.BaseHTTPRequestHandler):
@@ -66,6 +145,11 @@ class H(http.server.BaseHTTPRequestHandler):
             return self.send(200, effects_json())
         if parts[1:] == ["gl"]:
             return self.send(200, effects.GL_LIB, extra={"Cache-Control": "max-age=3600"})
+        if parts[1:] == ["browse"]:
+            try:
+                return self.send(200, duyet((urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("path") or [""])[0]))
+            except (ValueError, OSError) as ex:
+                return self.send(400, {"error": str(ex)})
         if parts[1:] == ["projects"]:
             return self.send(200, sorted(n for n in os.listdir(PROJ) if self.project(n)))
         if len(parts) < 3 or not (d := self.project(parts[2])):
@@ -73,7 +157,9 @@ class H(http.server.BaseHTTPRequestHandler):
         name = parts[2]
         if len(parts) == 3:
             tl = json.load(open(os.path.join(d, "timeline.json"), encoding="utf8"))
-            return self.send(200, {"timeline": tl, "has_video": os.path.exists(os.path.join(ROOT, "out", name + ".mp4"))})
+            rd = os.path.join(d, "build", "raw")
+            return self.send(200, {"timeline": tl, "has_video": os.path.exists(os.path.join(ROOT, "out", name + ".mp4")),
+                                   "files": sorted(os.listdir(rd)) if os.path.isdir(rd) else []})
         q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
         if parts[3] == "thumb" and len(parts) == 5:
             return self.thumb(d, parts[4])
@@ -224,6 +310,11 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa"})
+        if parts == ["api", "new"]:
+            try:
+                return self.send(200, tao_du_an(self.body() or {}))
+            except (ValueError, OSError) as ex:
+                return self.send(400, {"error": str(ex)})
         if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle") or not (d := self.project(parts[2])):
             return self.send(404, {"error": "Không có dự án này"})
         name = parts[2]

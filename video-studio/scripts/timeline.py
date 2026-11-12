@@ -2,8 +2,8 @@
 
 {
   "version": 1,
-  "meta": {"platform": "tiktok", "style": "hien-dai"},     # phong cách: xem scripts/effects.py
-  "clips": [{"file": "a.mp4", "id": "<id Drive>", "in": 13.0, "dur": 9.2, "focus": 0, "look": "am-sang"}],
+  "meta": {"platform": "tiktok", "style": "hien-dai"},     # platform: tiktok (dọc 9:16) | youtube (ngang 16:9); phong cách: xem scripts/effects.py
+  "clips": [{"file": "a.mp4", "id": "<id Drive>", "in": 13.0, "dur": 9.2, "focus": 0, "look": "am-sang"}],   # fit: crop | blur (bỏ trống: tự chọn)
   "transitions": [{"type": "cube-h"}],          # giữa cảnh i và i+1; tên trong effects.TRANSITIONS
   "texts": [{"kind": "hook", "anim": "rise", "start": 0.4, "dur": 8.6, "tag": "...", "lines": ["..."]}],
   "subtitles": [{"start": 0.2, "dur": 1.8, "text": "Phụ đề theo lời nói"}],
@@ -11,11 +11,22 @@
   "zooms": [{"start": 3, "dur": 2, "scale": 1.07}],                    # phóng to khung (1.07 = 7%)
   "broll": [{"start": 8, "dur": 3, "file": "b.mp4", "id": "", "in": 0}],   # cảnh trám: phủ hình, giữ tiếng
   "audio": {"music": "synth", "whoosh": true, "voice": false, "music_volume": 1.0}   # voice: giữ tiếng gốc của cảnh
+                                                # music: "synth" (nhạc tổng hợp), null (không nhạc) hoặc tên file nhạc trong build/raw/ (vd "nhac.mp3")
 }
 Mốc giờ của chữ (start) tính trên video thành phẩm (đã cộng chuyển cảnh). Từ tô vàng viết *từ*.
 """
 
+import re
+
 from effects import STYLES, LOOKS, TRANSITIONS, TEXT_ANIMS, TEXT_KINDS
+
+PLATFORMS = {"tiktok": (1080, 1920, "TikTok / Reels / Shorts dọc 9:16"), "youtube": (1920, 1080, "YouTube ngang 16:9")}
+AUDIO_EXT = r"\.(mp3|wav|m4a|aac|flac|ogg)$"
+
+
+def size(tl):
+    """(rộng, cao) khung hình theo nền tảng."""
+    return PLATFORMS[tl.get("meta", {}).get("platform", "tiktok")][:2]
 
 
 def layout(tl):
@@ -39,8 +50,8 @@ def check(tl):
     if tl.get("version") != 1:
         e.append("'version' phải là 1")
     meta = tl.get("meta", {})
-    if meta.get("platform", "tiktok") != "tiktok":
-        e.append("Hiện chỉ hỗ trợ 'platform': 'tiktok' (khung dọc 9:16)")
+    if meta.get("platform", "tiktok") not in PLATFORMS:
+        e.append("'platform' phải là 'tiktok' (dọc 9:16) hoặc 'youtube' (ngang 16:9)")
     if meta.get("style", "hien-dai") not in STYLES:
         e.append(f"Phong cách '{meta.get('style')}' chưa có (đang có: {', '.join(STYLES)})")
     clips = tl.get("clips") or []
@@ -54,6 +65,8 @@ def check(tl):
             e.append(f"Cảnh {i}: 'dur' phải là số giây lớn hơn 0")
         if not -1 <= c.get("focus", 0) <= 1:
             e.append(f"Cảnh {i}: 'focus' phải từ -1 (lệch trái) đến 1 (lệch phải)")
+        if c.get("fit", "crop") not in ("crop", "blur"):
+            e.append(f"Cảnh {i}: 'fit' phải là 'crop' (phóng kín, cắt bớt) hoặc 'blur' (giữ trọn hình, nền mờ)")
         if c.get("look", "trung-tinh") not in LOOKS:
             e.append(f"Cảnh {i}: chỉnh màu '{c.get('look')}' chưa có (đang có: {', '.join(LOOKS)})")
     trs = tl.get("transitions", [])
@@ -66,8 +79,9 @@ def check(tl):
     if not 0 <= a.get("music_volume", 1.0) <= 2:
         e.append("'audio.music_volume' phải từ 0 đến 2")
     music = a.get("music", "synth")
-    if music not in ("synth", None):
-        e.append("'audio.music' hiện chỉ nhận 'synth' (nhạc tổng hợp) hoặc null (không nhạc)")
+    if music not in ("synth", None) and not (isinstance(music, str) and re.search(AUDIO_EXT, music, re.I)
+                                              and not re.search(r"[\\/]|^\.", music)):
+        e.append("'audio.music' phải là 'synth' (nhạc tổng hợp), null (không nhạc) hoặc tên file nhạc .mp3/.wav/.m4a/.aac/.flac/.ogg")
     if e:
         return e
     total = layout(tl)["total"]
