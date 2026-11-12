@@ -145,7 +145,7 @@ function draw() {
     h += `<div class="lane t" style="width:${W}px">`;
     tl.texts.forEach((x, i) => { if (x._r !== r) return;
       const on = sel && sel.t === "text" && sel.i === i, label = x.title || x.text || (x.lines || x.items || [""])[0] || x.label || x.kind;
-      h += `<div class="blk tx${on ? " sel" : ""}" data-t="text" data-i="${i}" style="left:${x.start * pps}px;width:${x.dur * pps}px">${esc(x.kind)} · ${esc(label)}</div>`; });
+      h += `<div class="blk tx${on ? " sel" : ""}" data-t="text" data-i="${i}" style="left:${x.start * pps}px;width:${x.dur * pps}px">${esc(x.kind)} · ${esc(String(label).replace(/\*/g, ""))}</div>`; });
     h += `</div>`;
   }
   tl.texts.forEach(x => delete x._r);
