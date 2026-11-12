@@ -5,3 +5,4 @@ out/
 renders/
 __pycache__/
 media/
+build/
