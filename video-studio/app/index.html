@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cloud Edit Video</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b1b2b">
+<link rel="icon" href="icon-192.png">
+<style>
+  :root { --bg:#0b1b2b; --fg:#fff; --card:#13293f; --accent:#4fc3f7; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:16px; background:var(--bg); color:var(--fg); font-family:system-ui,sans-serif; max-width:640px; margin-inline:auto; }
+  label { display:block; margin:14px 0 6px; font-weight:600; }
+  input, textarea, select { width:100%; padding:10px; border-radius:8px; border:1px solid #2c4a68; background:var(--card); color:var(--fg); font-size:16px; }
+  button { margin-top:16px; padding:12px 16px; border:0; border-radius:8px; background:var(--accent); color:#06202f; font-weight:700; font-size:16px; cursor:pointer; margin-right:8px; }
+  pre { background:var(--card); padding:12px; border-radius:8px; overflow:auto; }
+  small { opacity:.75; }
+</style>
+</head>
+<body>
+<h1>Cloud Edit Video</h1>
+<small>Soạn nội dung ở đây. Để render: GitHub → Actions → "Render video" → Run workflow và dán nội dung vào form. Hoặc lưu file .json vào <code>videos/</code> rồi chạy <code>chay-video.bat</code> trên Windows.</small>
+
+<label for="title">Tiêu đề</label><input id="title">
+<label for="hook">Hook (câu mở đầu)</label><input id="hook">
+<label for="bullets">Ý chính (mỗi dòng một ý)</label><textarea id="bullets" rows="4"></textarea>
+<label for="platform">Nền tảng</label>
+<select id="platform"><option value="tiktok">TikTok (9:16)</option><option value="youtube">YouTube (16:9)</option></select>
+<label for="engine">Engine</label>
+<select id="engine"><option>hyperframes</option><option>remotion</option><option>manim</option></select>
+<label for="duration">Thời lượng (giây)</label><input id="duration" type="number" value="15" min="5" max="180">
+
+<button id="copy">Sao chép spec</button><button id="dl">Tải file .json</button>
+<pre id="out"></pre>
+
+<script>
+const $ = id => document.getElementById(id);
+const spec = () => ({
+  title: $("title").value.trim(),
+  hook: $("hook").value.trim(),
+  bullets: $("bullets").value.split("\n").map(s => s.trim()).filter(Boolean),
+  platform: $("platform").value,
+  duration: Math.max(5, Math.min(180, +$("duration").value || 15)),
+  engine: $("engine").value,
+});
+const show = () => ($("out").textContent = JSON.stringify(spec(), null, 2));
+document.querySelectorAll("input,textarea,select").forEach(e => e.addEventListener("input", show));
+$("copy").onclick = () => navigator.clipboard.writeText($("out").textContent);
+$("dl").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([$("out").textContent], { type: "application/json" }));
+  a.download = (spec().title || "video").replace(/[^\w-]+/g, "-").toLowerCase() + ".json";
+  a.click();
+};
+show();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
+</script>
+</body>
+</html>

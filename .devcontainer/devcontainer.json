@@ -1,0 +1,8 @@
+{
+  "name": "video-studio",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "features": { "ghcr.io/devcontainers/features/python:1": { "version": "3.12" } },
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y ffmpeg chromium libcairo2-dev libpango1.0-dev pkg-config && cd video-studio && npm install && pip install manim",
+  "containerEnv": { "BROWSER": "/usr/bin/chromium" },
+  "customizations": { "codespaces": { "openFiles": ["video-studio/README.md"] } }
+}
