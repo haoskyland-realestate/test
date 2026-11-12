@@ -2,8 +2,12 @@ name: Render video
 on:
   workflow_dispatch:
     inputs:
-      spec: { description: "Đường dẫn spec", default: "videos/demo.json" }
-      engine: { description: "hyperframes | remotion | manim", default: "hyperframes" }
+      title:    { description: "Tiêu đề", default: "Video mẫu" }
+      hook:     { description: "Câu mở đầu (hook)", default: "Sau khi trừ tiền vay, mỗi tháng còn lại bao nhiêu?" }
+      bullets:  { description: "Các ý chính, ngăn cách bằng dấu |", default: "Ý 1|Ý 2|Rủi ro cần lưu ý" }
+      platform: { description: "tiktok (9:16) hoặc youtube (16:9)", default: "tiktok", type: choice, options: [tiktok, youtube] }
+      duration: { description: "Số giây", default: "15" }
+      engine:   { description: "Engine dựng", default: "hyperframes", type: choice, options: [hyperframes, remotion, manim] }
 jobs:
   render:
     runs-on: ubuntu-latest
@@ -14,10 +18,14 @@ jobs:
         with: { node-version: 22 }
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - name: Cài FFmpeg và thư viện Manim
+      - name: Cài thư viện Manim
         if: inputs.engine == 'manim'
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg libcairo2-dev libpango1.0-dev pkg-config && pip install manim
+        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config && pip install manim
       - run: npm install --no-audit --no-fund
-      - run: ./scripts/render.sh "${{ inputs.spec }}" "${{ inputs.engine }}"
+      - name: Tạo spec từ form
+        env: { T: "${{ inputs.title }}", H: "${{ inputs.hook }}", B: "${{ inputs.bullets }}", P: "${{ inputs.platform }}", D: "${{ inputs.duration }}", E: "${{ inputs.engine }}" }
+        run: |
+          node -e 'const e=process.env;require("fs").writeFileSync("videos/form.json",JSON.stringify({title:e.T,hook:e.H,bullets:e.B.split("|").map(s=>s.trim()).filter(Boolean),platform:e.P,duration:Math.max(5,Math.min(180,+e.D||15)),engine:e.E}))'
+      - run: ./scripts/render.sh videos/form.json "${{ inputs.engine }}"
       - uses: actions/upload-artifact@v4
-        with: { name: video, path: video-studio/out/*.mp4 }
+        with: { name: video, path: video-studio/out/form.*.mp4 }

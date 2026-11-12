@@ -18,8 +18,10 @@ cd video-studio && npm install
 ./scripts/render.sh videos/demo.json hyperframes   # hoặc remotion, manim
 # Remotion cần Chromium: BROWSER=/đường/dẫn/chromium ./scripts/render.sh videos/demo.json remotion
 ```
-Trên GitHub: Actions → "Render video" → Run workflow (workflow này **chưa chạy thử trên GitHub**).
+Trên GitHub: Actions → "Render video" → Run workflow, điền form (tiêu đề, hook, ý chính, nền tảng). Làm được từ điện thoại. Chỉ hiện sau khi gộp vào nhánh `main`. **Chưa chạy thử trên GitHub.**
+
+Windows 11: bấm đúp `chay-video.bat` (cần Node 22, FFmpeg, Git for Windows). **Chưa chạy thử trên Windows.**
 
 ## App cài được (PC + điện thoại)
-`app/` là PWA: tạo spec JSON. Cần host HTTPS (ví dụ GitHub Pages) mới cài được; chưa bật.
+`app/` là PWA: tạo spec JSON. Cài được khi host HTTPS: workflow `pages.yml` tự đưa `app/` lên GitHub Pages sau khi gộp vào `main` và bật Settings → Pages → Source: GitHub Actions. Chưa bật.
 Spec mẫu `videos/demo.json` chứa chỗ trống `[...]`, thay số liệu thật có nguồn và ngày trước khi đăng.
