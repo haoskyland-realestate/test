@@ -18,7 +18,7 @@ assert len(r) == 2, r
 assert nhom_tu([]) == []
 # Số điện thoại bị ngắt nhịp nói vẫn hiện cùng một dòng, tách nhóm, tô nổi
 r = nhom_tu([w("liên", 0, .2), w("hệ", .2, .4), w("em", .4, .6), w("0986", .6, 1.4), w("986049", 2.2, 3.4), w("Cảm", 3.9, 4.1), w("ơn", 4.1, 4.3)])
-assert r[0][2] == "liên hệ em *0986* *986* *049*", r
+assert r[0][2] == "liên hệ em *0986\u00a0986\u00a0049*", r
 assert r[1][2] == "Cảm ơn", r
 # Số + đơn vị, tên riêng nhiều chữ
 assert dinh_dang("giá 2,5 tỷ một căn") == "giá *2,5* *tỷ* một căn"

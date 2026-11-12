@@ -42,7 +42,8 @@ def dinh_dang(text):
     """Số điện thoại tách nhóm dễ đọc (0986 986 049); số, đơn vị và tên riêng được đánh dấu *…* để tô nổi."""
     def phone(m):
         d = re.sub(r"\D", "", m[0])
-        return " ".join([d[:4], d[4:7], d[7:]]) if len(d) in (10, 11) and d[0] == "0" else m[0]
+        # khoảng trắng không ngắt dòng: cả số điện thoại là một khối, không rớt nửa xuống dòng
+        return "\u00a0".join([d[:4], d[4:7], d[7:]]) if len(d) in (10, 11) and d[0] == "0" else m[0]
     text = re.sub(r"\b\d[\d ]{7,}\d\b", phone, text)
     ws = text.split(" ")
     hl = [False] * len(ws)

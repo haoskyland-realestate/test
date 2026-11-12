@@ -341,9 +341,11 @@ fc.append(f"[{cur}][1:v]overlay=0:0:shortest=1,format=yuv420p[v]")
 fc.append(f"[2:a]volume={mvol}[m]")
 if voice:
     ins += ["-i", f"{B}/voice.wav"]
-    fc.append(f"[{3 + len(brs)}:a][m]amix=inputs=2:duration=first:normalize=0[a]")
+    fc.append(f"[{3 + len(brs)}:a][m]amix=inputs=2:duration=first:normalize=0[a0]")
 else:
-    fc.append("[m]anull[a]")
+    fc.append("[m]anull[a0]")
+# Chuẩn âm lượng EBU R128 cho mạng xã hội (−14 LUFS, đỉnh −1,5 dB), cùng thuật toán ffmpeg-normalize dùng
+fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")
 ff(*ins, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
    "-c:v", "libx264", "-crf", "28" if DRAFT else "19", "-preset", "veryfast" if DRAFT else "medium",
    "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{OUTNAME}.mp4"))
