@@ -12,6 +12,7 @@ from mau import chuyen_tong  # noqa: E402
 import effects  # noqa: E402
 from am_thanh import SFX, SFX_DIR  # noqa: E402
 from ap_mau import MAU, ap  # noqa: E402
+from kich_ban import dat_chu  # noqa: E402
 
 PROJ = os.path.join(ROOT, "projects")
 TOKEN = os.environ.get("STUDIO_TOKEN") or secrets.token_urlsafe(9)
@@ -336,9 +337,21 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(200, tao_du_an(self.body() or {}))
             except (ValueError, OSError) as ex:
                 return self.send(400, {"error": str(ex)})
-        if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle") or not (d := self.project(parts[2])):
+        if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle", "kichban") or not (d := self.project(parts[2])):
             return self.send(404, {"error": "Không có dự án này"})
         name = parts[2]
+        if parts[3] == "kichban":  # đặt chữ theo KICH-BAN.md + giọng nói; trả timeline mới, app giữ để hoàn tác
+            kb = os.path.join(d, "KICH-BAN.md")
+            if not os.path.exists(kb):
+                return self.send(404, {"error": "Dự án chưa có KICH-BAN.md (mẫu: mau/du-an-video/KICH-BAN.md)"})
+            try:
+                tl = (self.body() or {}).get("timeline")
+                if not isinstance(tl, dict) or (errs := check(tl)):
+                    return self.send(400, {"error": "Timeline đang lỗi, bấm Lưu xem lỗi trước"})
+                out, bao = dat_chu(tl, open(kb, encoding="utf8").read())
+            except (ValueError, KeyError, TypeError) as ex:
+                return self.send(400, {"error": f"Không đọc được kịch bản: {ex}"})
+            return self.send(200, {"timeline": out, "bao": bao})
         if parts[3] == "nle":  # xuất timeline sang Premiere/DaVinci: nhanh (vài giây), chạy luôn
             r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "xuat_nle.py"), d], cwd=ROOT, capture_output=True, text=True, timeout=300)
             return self.send(200 if r.returncode == 0 else 500, {"ok": r.returncode == 0, "log": (r.stdout + r.stderr)[-1500:]})

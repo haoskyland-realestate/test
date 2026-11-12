@@ -15,7 +15,8 @@ MAU = {m["id"]: m for m in (json.load(open(p, encoding="utf8")) for p in sorted(
 TIMED = ("texts", "subtitles", "cards", "zooms", "broll", "sfx")
 
 
-def ap(tl, mau):
+def ap(tl, mau, chi_am=False):
+    """chi_am=True: chỉ rải lại hiệu ứng âm (giữ phong cách và chuyển cảnh Hào đã chỉnh), dùng khi chữ vừa đổi."""
     tl = copy.deepcopy(tl)
     tl["sfx"] = [x for x in tl.get("sfx", []) if not x.get("auto")]
     # 1. ghi nhớ mỗi mục thuộc đoạn video nào (như app studio) trước khi đổi chuyển cảnh
@@ -26,10 +27,11 @@ def ap(tl, mau):
             c = max([i for i, s in enumerate(L0["starts"]) if x["start"] >= s - 1e-6] or [0])
             anchor.append((x, c, x["start"] - L0["starts"][c]))
     # 2. phong cách, âm thanh, nhịp chuyển cảnh
-    tl.setdefault("meta", {}).update(mau.get("meta", {}), mau=mau["id"])
-    tl.setdefault("audio", {}).update(mau.get("audio", {}))
+    if not chi_am:
+        tl.setdefault("meta", {}).update(mau.get("meta", {}), mau=mau["id"])
+        tl.setdefault("audio", {}).update(mau.get("audio", {}))
     cc = mau.get("chuyen_canh", {})
-    if cc.get("chu_ky"):
+    if cc.get("chu_ky") and not chi_am:
         ky = cc["chu_ky"]
         tl["transitions"] = [{"type": ky[i % len(ky)], **({"dur": cc["dur"][ky[i % len(ky)]]} if ky[i % len(ky)] in cc.get("dur", {}) else {})}
                              for i in range(len(tl["clips"]) - 1)]

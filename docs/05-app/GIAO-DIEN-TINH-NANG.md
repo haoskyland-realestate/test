@@ -14,6 +14,8 @@ Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **T�
 | Lưu / Dựng nháp / Xuất video | Có | Nháp: nhanh, chất lượng thấp (`out/<tên>.nhap.mp4`) |
 | Khung TikTok 9:16 / YouTube 16:9 | Có (12/11) | Tab Khung hình: đổi khung, nhân bản sang khung kia; vùng an toàn theo khung; đoạn quay dọc trong khung ngang: “Vừa khung” = nền mờ |
 | Dự án mới từ thư mục footage | Có (12/11) | Nút ＋ cạnh tên dự án: chọn thư mục trên PC (duyệt được từ điện thoại), chọn khung; nhạc .mp3/.wav trong thư mục chọn được ở tab Âm thanh |
+| Đặt chữ theo kịch bản | Có (13/11) | Tab Chữ → 📝: đọc cột "Chữ trên màn hình" của `KICH-BAN.md`, tìm lúc nói trong phụ đề (chịu được lỗi chính tả, lệch dấu), đặt chữ 3D; có bảng báo cáo từng chữ; hoàn tác được. `scripts/kich_ban.py` |
+| Kho hiệu ứng âm, mẫu edit | Có (12/11) | Tab Hiệu ứng âm, hàng ♪; Thương hiệu → Mẫu edit |
 | Xuất sang Premiere / DaVinci | Có (12/11) | Nút “Premiere/DaVinci”: tải `.xml` (Premiere), `.otio` (DaVinci), `.srt`. Chưa mở thử trong phần mềm thật |
 | Thư viện chuyển cảnh gl-transitions | Có (12/11) | 212 hiệu ứng trong hộp Thư viện, ô tìm, khung xem thử WebGL, nút áp dụng |
 | Tab Chữ, Phụ đề, Cắt, Zoom, Minh hoạ, Cảnh trám, Âm thanh, Khung hình, Thương hiệu | Có | Có đếm số mục, tìm kiếm, Thêm |

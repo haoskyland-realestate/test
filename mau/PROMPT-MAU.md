@@ -41,6 +41,7 @@ Tách rõ: thông tin chính thức / dự kiến / nhận định.
 Đọc BRIEF.md và NGUON-SO-LIEU.md của video <tên>.
 Viết KICH-BAN.md theo mẫu mau/du-an-video/KICH-BAN.md, dài <số> giây, theo quy tắc nội dung trong CLAUDE.md.
 Số chưa có trong NGUON-SO-LIEU.md để [...]. Đưa 2 phương án hook, khuyến nghị 1.
+Cột "Chữ trên màn hình": cứ 2–3 giây một chữ, dạng `nhãn trên / *CHỮ LỚN* / dòng dưới`, chữ lớn là đúng từ khoá sẽ nói (số, tên tiện ích), tối đa 3 từ.
 ```
 
 ## 5. Kiểm chéo kịch bản: ChatGPT hoặc Gemini

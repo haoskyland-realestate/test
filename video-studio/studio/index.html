@@ -242,7 +242,8 @@ function drawList() {
     const t0 = tab === "clips" ? L.starts[i] : x.start;
     const pic = tab === "clips" || tab === "broll" ? `<div style="height:90px;border-radius:8px;margin-bottom:8px;background:#222 center/cover url('${media("thumb", x.file + "@" + (+x.in + 0.3).toFixed(1))}')"></div>` : "";
     return `<div class="it${sel && sel.k === tab && sel.i === i ? " sel" : ""}" data-k="${tab}" data-i="${i}">${pic}<div class="h">${i + 1}. ${esc(lab)}</div><div class="m">${fmt(t0)} · ${(+x.dur).toFixed(1)}s${x.kind ? " · " + x.kind : ""}</div></div>`;
-  }).join("") + (tab === "clips" ? `<div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button id="mc" class="lime">✨ Master cut</button><button id="mcR">Chỉ phân tích</button><span class="dim">Cắt khoảng lặng, bỏ câu nói vấp, chấm điểm khung hình, chọn khúc đẹp, chỉnh nhịp. Bản cũ vẫn ở Lịch sử.</span></div>` : "") + (tab === "sfx" ? `<div style="grid-column:1/-1"><h4 style="margin:12px 0 6px">Kho hiệu ứng âm (${Object.keys(FX.sfx).length})</h4><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px">`
+  }).join("") + (tab === "clips" ? `<div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button id="mc" class="lime">✨ Master cut</button><button id="mcR">Chỉ phân tích</button><span class="dim">Cắt khoảng lặng, bỏ câu nói vấp, chấm điểm khung hình, chọn khúc đẹp, chỉnh nhịp. Bản cũ vẫn ở Lịch sử.</span></div>` : "") + (tab === "texts" ? `<div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button id="kb" class="lime">📝 Đặt chữ theo kịch bản</button><span class="dim">Đọc cột “Chữ trên màn hình” trong KICH-BAN.md của dự án, đặt chữ lớn 3D đúng lúc bạn nói tới (cần phụ đề từ giọng nói). Chạy lại chỉ thay chữ do kịch bản đặt.</span></div>` : "")
+    + (tab === "sfx" ? `<div style="grid-column:1/-1"><h4 style="margin:12px 0 6px">Kho hiệu ứng âm (${Object.keys(FX.sfx).length})</h4><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px">`
       + Object.entries(FX.sfx).filter(([k, v]) => !q || (k + v.vi + v.dung_khi).toLowerCase().includes(q)).map(([k, v]) => `<div class="it"><div class="h">${k}</div><div class="m">${esc(v.vi)} · ${v.dai}s</div><div class="m">${esc(v.dung_khi)}</div><div class="row" style="margin:6px 0 0"><button data-play="${k}">▶</button><button data-addsfx="${k}">+ Thêm tại kim</button></div></div>`).join("") + `</div></div>` : "")
     + (tab === "subtitles" ? `<div style="grid-column:1/-1"><div class="row" style="margin:0 0 10px"><button id="asr" class="lime">🎙 Tạo phụ đề từ giọng nói</button><span class="dim" style="align-self:center">Nhận dạng tiếng Việt, chỉ thay phụ đề tự sinh; phụ đề tự gõ giữ nguyên.</span></div><details><summary class="dim">Dán nội dung file SRT</summary><textarea id="srt" style="width:100%;min-height:100px;margin-top:8px" placeholder="1&#10;00:00:00,500 --> 00:00:02,000&#10;Câu phụ đề"></textarea><div class="row"><button id="srtGo">Thêm phụ đề từ SRT</button></div></details></div>` : "")
     || `<div class="dim">Chưa có mục nào. Bấm “Thêm”.</div>`;
@@ -390,6 +391,16 @@ function renderFrame() {
     : `<div class="safe" style="left:0;right:0;top:0;height:11.5%"></div><div class="safe" style="left:0;right:0;bottom:0;height:21.9%"></div><div class="safe" style="right:0;top:11.5%;bottom:21.9%;width:13%"></div>`;
   $("#ovl").innerHTML = h;
 }
+async function datChuKichBan() {
+  try {
+    const r = await api(`${P()}/kichban`, {method: "POST", body: JSON.stringify({timeline: clean(tl)})});
+    undoS.push(JSON.stringify(tl)); redoS = []; setRaw(JSON.stringify(r.timeline));
+    const it = r.bao.map(([c, t, h]) => `<tr><td>${fmt(t)}</td><td>${hl(c)}</td><td class="${h.startsWith("khớp") ? "ok" : "dim"}">${esc(h)}</td></tr>`).join("");
+    dlgShow(`<h3>Đã đặt ${r.bao.length} chữ theo kịch bản</h3><table style="width:100%;font-size:13px">${it}</table>`
+      + (tl.subtitles.some(x => x.auto) ? "" : `<p class="dim">Chưa có phụ đề từ giọng nói nên chữ đặt theo cột Giây. Tạo phụ đề (tab Phụ đề) rồi bấm lại để chữ khớp giọng.</p>`)
+      + `<p class="dim">Chưa lưu. Không ưng thì bấm ↶ hoàn tác.</p>`);
+  } catch (e) { toast(esc(e.message), "err"); }
+}
 async function apMau(id) {
   try {
     const r = await api("apmau", {method: "POST", body: JSON.stringify({id, timeline: clean(tl)})});
@@ -426,6 +437,7 @@ document.addEventListener("click", e => {
   const li = e.target.closest(".it[data-k]"); if (li) { sel = {k: li.dataset.k, i: +li.dataset.i}; seek(sel.k === "clips" ? layout().starts[sel.i] + 0.05 : cur().start + 0.05); return draw(); }
   if (e.target.id === "srtGo") importSrt($("#srt").value);
   if (e.target.id === "asr") asr();
+  if (e.target.id === "kb") datChuKichBan();
   if (e.target.id === "mc") masterCut(false);
   if (e.target.id === "mcR") masterCut(true);
 });
