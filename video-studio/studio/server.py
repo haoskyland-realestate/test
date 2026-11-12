@@ -7,6 +7,7 @@ import http.server, json, os, re, secrets, shutil, socket, subprocess, sys, time
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from timeline import check, layout  # noqa: E402
+from mau import chuyen_tong  # noqa: E402
 import effects  # noqa: E402
 
 PROJ = os.path.join(ROOT, "projects")
@@ -18,7 +19,8 @@ proxies = {}  # đường dẫn bản xem trước -> tiến trình đang tạo
 
 def effects_json():
     e = effects
-    return {"styles": {k: v["vi"] for k, v in e.STYLES.items()}, "looks": {k: v[0] for k, v in e.LOOKS.items()},
+    return {"styles": {k: v["vi"] for k, v in e.STYLES.items()}, "looks": {k: {"vi": v[0], "css": v[2]} for k, v in e.LOOKS.items() if k != "trung-tinh"},
+            "style_looks": {k: v["look"] for k, v in e.STYLES.items()},
             "transitions": {k: {"dur": v[0], "vi": v[3]} for k, v in e.TRANSITIONS.items()},
             "anims": e.TEXT_ANIMS, "kinds": {k: {"need": v[0], "vi": v[1]} for k, v in e.TEXT_KINDS.items()}}
 
@@ -113,7 +115,7 @@ class H(http.server.BaseHTTPRequestHandler):
         if not os.path.exists(out):
             os.makedirs(os.path.dirname(out), exist_ok=True)
             subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", "-ss", t, "-i", raw, "-frames:v", "1",
-                            "-vf", "scale=-2:360", out], check=False)
+                            "-vf", chuyen_tong(raw) + "scale=-2:360", out], check=False)
         if not os.path.exists(out):
             return self.send(500, {"error": "Không tạo được ảnh"})
         self.send(200, open(out, "rb").read(), "image/jpeg", {"Cache-Control": "max-age=3600"})
@@ -138,7 +140,7 @@ class H(http.server.BaseHTTPRequestHandler):
         ready = os.path.exists(out)
         if not ready and not running and not failed:
             os.makedirs(os.path.dirname(out), exist_ok=True)
-            proxies[out] = subprocess.Popen(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", raw, "-vf", "scale=-2:540",
+            proxies[out] = subprocess.Popen(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", raw, "-vf", chuyen_tong(raw) + "scale=-2:540",
                                              "-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-c:a", "aac", "-b:a", "96k",
                                              "-movflags", "+faststart", out + ".tmp.mp4"])
         if check:

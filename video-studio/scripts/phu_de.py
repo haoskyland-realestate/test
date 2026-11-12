@@ -11,18 +11,49 @@ from timeline import check, layout
 MAX_WORDS, MAX_SEC, PAUSE = 7, 2.8, 0.45  # một dòng phụ đề: tối đa 7 từ / 2,8 giây; ngừng nói 0,45s thì xuống dòng
 
 
+UNITS = {"tỷ", "tỉ", "triệu", "nghìn", "ngàn", "trăm", "m2", "m²", "mét", "km", "năm", "tháng", "ngày", "phút", "giờ",
+         "%", "phần", "đồng", "vnđ", "usd", "căn", "tầng", "phòng", "lô", "block", "tháp"}
+
+
+def dinh(a, b):
+    """Hai từ phải hiện cùng nhau: số liền số (số điện thoại), số + đơn vị (2,5 tỷ, 120 m2), tên riêng nhiều chữ (Gladia Khang Điền)."""
+    if any(ch.isdigit() for ch in a) and (any(ch.isdigit() for ch in b) or re.sub(r"[^\w%²]", "", b.lower()) in UNITS):
+        return True
+    return a[:1].isupper() and b[:1].isupper() and not re.search(r"[.?!,;:]$", a)
+
+
 def nhom_tu(words):
-    """[(từ, bắt đầu, kết thúc)] theo thời gian → [(bắt đầu, kết thúc, câu)]: ngắt ở dấu câu, chỗ ngừng, hoặc khi dòng dài."""
+    """[(từ, bắt đầu, kết thúc)] theo thời gian → [(bắt đầu, kết thúc, câu)]: ngắt ở dấu câu, chỗ ngừng, hoặc khi dòng dài.
+    Thông tin cần liền mạch (số điện thoại, giá, diện tích, tên riêng) không bị ngắt, dù người nói ngừng giữa chừng."""
     lines, cur = [], []
     for w in words:
-        if cur and (w[1] - cur[-1][2] >= PAUSE or len(cur) >= MAX_WORDS or w[2] - cur[0][1] > MAX_SEC):
+        stick = cur and dinh(cur[-1][0], w[0]) and len(cur) < MAX_WORDS + 5
+        if cur and not stick and (w[1] - cur[-1][2] >= PAUSE or len(cur) >= MAX_WORDS or w[2] - cur[0][1] > MAX_SEC):
             lines.append(cur); cur = []
         cur.append(w)
         if re.search(r"[.?!,;:]$", w[0]):
             lines.append(cur); cur = []
     if cur:
         lines.append(cur)
-    return [(ln[0][1], ln[-1][2], " ".join(x[0] for x in ln)) for ln in lines]
+    return [(ln[0][1], ln[-1][2], dinh_dang(" ".join(x[0] for x in ln))) for ln in lines]
+
+
+def dinh_dang(text):
+    """Số điện thoại tách nhóm dễ đọc (0986 986 049); số, đơn vị và tên riêng được đánh dấu *…* để tô nổi."""
+    def phone(m):
+        d = re.sub(r"\D", "", m[0])
+        return " ".join([d[:4], d[4:7], d[7:]]) if len(d) in (10, 11) and d[0] == "0" else m[0]
+    text = re.sub(r"\b\d[\d ]{7,}\d\b", phone, text)
+    ws = text.split(" ")
+    hl = [False] * len(ws)
+    for i, w in enumerate(ws):
+        if re.search(r"\d", w):
+            hl[i] = True
+            if i + 1 < len(ws) and re.sub(r"[^\w%²]", "", ws[i + 1].lower()) in UNITS:
+                hl[i + 1] = True
+        if i and w[:1].isupper() and (ws[i - 1][:1].isupper() or (i + 1 < len(ws) and ws[i + 1][:1].isupper())):
+            hl[i] = True  # tên riêng nhiều chữ (không tính chữ hoa đầu câu đứng một mình)
+    return " ".join(f"*{w}*" if h and not w.startswith("*") else w for w, h in zip(ws, hl))
 
 
 def nhan_dang(path, cache):

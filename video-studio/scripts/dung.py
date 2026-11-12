@@ -6,6 +6,7 @@ import json, os, re, subprocess, shutil, html, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from timeline import check, layout
 from effects import STYLES, LOOKS, TRANSITIONS
+from mau import chuyen_tong, tu_can
 
 DRAFT = "--nhap" in sys.argv[2:]
 if len(sys.argv) < 2 or any(a != "--nhap" for a in sys.argv[2:]):
@@ -46,12 +47,14 @@ for s in shots + tl.get("broll", []):
 # 2. Cắt từng cảnh: khung dọc 9:16 từ 4K, chỉnh màu theo "look" (mặc định của phong cách), 30fps
 for i, s in enumerate(shots):
     look = s.get("look") or style["look"]
-    key = json.dumps([s["file"], s["in"], s["dur"], s.get("focus", 0), look, DRAFT])
+    auto = tl.get("meta", {}).get("auto_color", True)  # tự cân màu từng cảnh (mặc định bật)
+    key = json.dumps([s["file"], s["in"], s["dur"], s.get("focus", 0), look, auto, DRAFT, 2])  # 2: có chuyển tông HDR
     kf = f"{B}/shot{i}.key"  # nhớ cảnh đã cắt; đổi file/mốc/lệch khung/màu thì tự cắt lại
     if os.path.exists(f"{B}/shot{i}.mp4") and os.path.exists(kf) and open(kf).read() == key: continue
     fx = (s.get("focus", 0) + 1) / 2
     ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an",
-       "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}:(iw-{W})*{fx}:(ih-{H})/2,"
+       "-vf", f"{chuyen_tong(f'{B}/raw/' + s['file'])}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H}:(iw-{W})*{fx}:(ih-{H})/2,"
+              f"{tu_can(f'{B}/raw/' + s['file'], s['in'], s['dur']) if auto else 'null'},"
               f"{LOOKS[look][1]},fps={FPS},format=yuv420p",
        "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/shot{i}.mp4")
     open(kf, "w").write(key)
@@ -210,7 +213,9 @@ for i, s in enumerate(tl.get("texts", [])):
 # Phụ đề (dưới giữa màn hình) và minh họa (nền phủ kín, chữ + danh sách đánh số)
 for j, x in enumerate(tl.get("subtitles", [])):
     blocks.append(f'<div id="s{j}" class="clip sub" data-start="{x["start"]:.2f}" data-duration="{x["dur"]:.2f}" data-track-index="7"><span>{words(x["text"])}</span></div>')
-    anims.append(f'tl.fromTo("#s{j} span",{{opacity:0,scale:.9}},{{opacity:1,scale:1,duration:0.12}},{x["start"]:.2f});')
+    # cả dòng bật lên cùng lúc; từ khóa (số, tên riêng) nảy thêm cho nổi
+    anims.append(f'tl.fromTo("#s{j} > span",{{opacity:0,scale:.85}},{{opacity:1,scale:1,duration:0.18,ease:"back.out(2)"}},{x["start"]:.2f});')
+    anims.append(f'tl.fromTo("#s{j} .hl",{{scale:1.35}},{{scale:1,duration:0.3,ease:"back.out(3)"}},{x["start"] + 0.06:.2f});')
 for j, x in enumerate(tl.get("cards", [])):
     items = "".join(f'<div class="ci"><b>{k + 1}</b>{words(it)}</div>' for k, it in enumerate(x.get("items", [])))
     blocks.append(f'<div id="k{j}" class="clip card" data-start="{x["start"]:.2f}" data-duration="{x["dur"]:.2f}" data-track-index="8">'
@@ -260,8 +265,9 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;background:transparent;font-
 .tick{{flex:none;width:68px;height:68px;border-radius:50%;background:var(--accent);color:rgb(var(--scrim));font-size:42px;font-weight:800;display:flex;align-items:center;justify-content:center}}
 .stat{{font-family:var(--display);font-size:200px;font-weight:var(--dw);line-height:1;color:var(--hl);white-space:nowrap}}
 .stat .pre,.stat .suf{{font-size:90px;color:var(--text)}}
-.sub{{position:absolute;left:90px;right:90px;top:1180px;text-align:center;z-index:6}}
-.sub > span{{display:inline-block;font-size:54px;font-weight:800;line-height:1.25;padding:6px 16px;border-radius:12px;background:rgba(0,0,0,.45);text-shadow:0 3px 12px rgba(0,0,0,.6)}}
+.sub{{position:absolute;left:70px;right:70px;top:1150px;text-align:center;z-index:6}}
+.sub > span{{display:inline-block;font-family:var(--display);font-size:60px;font-weight:800;line-height:1.35;color:#fff;padding:10px 24px;border-radius:20px;background:rgba(var(--scrim),.6);text-shadow:0 3px 10px rgba(0,0,0,.55)}}
+.sub .hl{{display:inline-block;color:#14110a;background:var(--hl);font-size:1.2em;padding:0 14px;border-radius:12px;margin:0 3px;text-shadow:none}}
 .card{{position:absolute;inset:0;background:{style["bg"]};z-index:5;display:flex;align-items:flex-start;justify-content:center;padding-top:340px}}
 .cw{{width:820px}} .cs{{font-size:30px;letter-spacing:6px;text-transform:uppercase;color:var(--hl);text-align:center}}
 .ctt{{font-family:var(--display);font-size:92px;font-weight:var(--dw);text-transform:uppercase;text-align:center;color:var(--hl);margin:10px 0 50px;line-height:1.05}}
@@ -313,7 +319,8 @@ if voice:
 brs = tl.get("broll", [])
 for k, x in enumerate(brs):
     ff("-ss", str(x["in"]), "-t", str(x["dur"]), "-i", f"{B}/raw/{x['file']}", "-an",
-       "-vf", f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},{LOOKS[style['look']][1]},fps={FPS},format=yuv420p",
+       "-vf", f"{chuyen_tong(f'{B}/raw/' + x['file'])}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
+              f"{tu_can(f'{B}/raw/' + x['file'], x['in'], x['dur'])},{LOOKS[style['look']][1]},fps={FPS},format=yuv420p",
        "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/br{k}.mp4")
 
 # 7. Ghép cuối: nền (+ zoom) + cảnh trám + lớp chữ trong suốt + âm thanh

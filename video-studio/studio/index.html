@@ -41,7 +41,8 @@
   #ovl .l { font-size:3.2cqh; line-height:1.15; } #ovl .big { font-size:4.4cqh; } #ovl .hl { color:#f2c766; }
   #ovl .tag { display:inline-block; font-size:1.5cqh; border:1px solid var(--gold); color:#f2c766; border-radius:2cqh; padding:.3cqh 1cqh; margin-bottom:1cqh; }
   #ovl .num { font-size:9cqh; line-height:.9; color:transparent; -webkit-text-stroke:1px #f2c766; }
-  #ovl .sub { position:absolute; left:8%; right:8%; top:61.5%; text-align:center; } #ovl .sub > span { display:inline-block; background:#0008; border-radius:1cqh; padding:.3cqh 1cqh; font-weight:800; font-size:2.8cqh; }
+  #ovl .sub { position:absolute; left:8%; right:8%; top:61.5%; text-align:center; } #ovl .sub > span { display:inline-block; background:#0b1b2b99; border-radius:1cqh; padding:.5cqh 1.2cqh; font-weight:800; font-size:3.1cqh; line-height:1.35; }
+  #ovl .sub .hl { display:inline-block; color:#14110a; background:#f2c766; font-size:1.2em; padding:0 .6cqh; border-radius:.6cqh; margin:0 .15cqh; }
   #ovl .card { position:absolute; inset:0; background:#0b1b2b; display:flex; flex-direction:column; justify-content:flex-start; padding:17.7% 12% 0; }
   #ovl .card .cs { text-align:center; font-size:1.6cqh; letter-spacing:.4cqh; color:#f2c766; text-transform:uppercase; }
   #ovl .card .ct { text-align:center; font-size:4.8cqh; font-weight:800; color:#f2c766; text-transform:uppercase; margin:.5cqh 0 2.5cqh; line-height:1.05; }
@@ -345,6 +346,7 @@ function renderFrame() {
   pv.style.visibility = ok ? "visible" : "hidden";
   const on = k => (tl[k] || []).filter(x => now >= x.start && now < x.start + x.dur);
   const z = on("zooms")[0]; pv.style.transform = z ? `scale(${z.scale})` : "";
+  const lk = FX.looks[c.look || FX.style_looks[tl.meta.style || "hien-dai"]]; pv.style.filter = lk ? lk.css : "";  // filter màu gần giống bản xuất
   const b = on("broll")[0];
   if (b && ensureProxy(b.file)) { pb.style.display = "block"; syncVideo(pb, b.file, +b.in + now - b.start, true); }
   else { pb.style.display = "none"; if (!pb.paused) pb.pause(); }

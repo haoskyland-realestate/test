@@ -2,6 +2,7 @@
 Dùng: python3 scripts/phan_tich_hinh.py <video>   → in điểm từng giây (để xem và chỉnh ngưỡng)."""
 import json, os, subprocess, sys
 import numpy as np
+from mau import chuyen_tong
 
 FPS_A, W_A = 5, 320  # phân tích 5 khung/giây ở khung rộng 320px là đủ, nhanh
 _face = None
@@ -11,10 +12,10 @@ def khung(path):
     """Giải mã video thành ảnh xám nhỏ + ảnh màu nhỏ, 5 khung/giây (đã xoay đúng chiều)."""
     # khung đầu cho biết kích thước thật sau khi FFmpeg tự xoay (video quay dọc)
     import cv2
-    png = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", path, "-frames:v", "1", "-vf", f"scale={W_A}:-2", "-f", "image2pipe",
+    png = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", path, "-frames:v", "1", "-vf", chuyen_tong(path) + f"scale={W_A}:-2", "-f", "image2pipe",
                           "-vcodec", "png", "-"], capture_output=True, check=True).stdout
     H = cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_COLOR).shape[0]
-    raw = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", path, "-vf", f"fps={FPS_A},scale={W_A}:{H}", "-f", "rawvideo",
+    raw = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", path, "-vf", chuyen_tong(path) + f"fps={FPS_A},scale={W_A}:{H}", "-f", "rawvideo",
                           "-pix_fmt", "bgr24", "-"], capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.uint8).reshape(-1, H, W_A, 3)
 

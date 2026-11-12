@@ -9,7 +9,7 @@ STYLES = {
         "bg": "#06121c", "scrim": "4,14,24", "accent": "#d4a64a", "hl": "#f2c766", "text": "#ffffff",
         "display": "Be Vietnam Pro", "body": "Be Vietnam Pro", "display_weight": 800,
         "fonts": "family=Be+Vietnam+Pro:wght@400;600;800",
-        "speed": 1.0, "anim": "rise", "look": "trung-tinh",
+        "speed": 1.0, "anim": "rise", "look": "tuoi-dam",
     },
     "sang-trong": {
         "vi": "Sang trọng: navy + vàng champagne, tiêu đề chữ có chân, chuyển động chậm, màu ấm có viền tối",
@@ -27,14 +27,29 @@ STYLES = {
     },
 }
 
-# Chỉnh màu footage (bộ lọc FFmpeg).
+# Bộ màu lọc (filter): áp sau bước chuyển tông HDR và tự cân màu từng cảnh (scripts/mau.py).
+# (mô tả, bộ lọc FFmpeg, bộ lọc CSS gần giống để xem trước trong app)
 LOOKS = {
-    "trung-tinh": ("Trung tính, tăng nhẹ tương phản và độ rực", "eq=contrast=1.06:saturation=1.12"),
+    "tu-nhien": ("Tự nhiên: màu thật, chỉ tự cân", "null", "none"),
+    "tuoi-dam": ("Tươi đậm: rực, tương phản rõ, hợp mạng xã hội",
+                 "eq=contrast=1.06:saturation=1.08,vibrance=intensity=0.18", "contrast(1.06) saturate(1.22)"),
+    "trong-treo": ("Trong trẻo: sáng, nhẹ, trời xanh, hợp nội thất và nhà mẫu",
+                   "eq=brightness=0.035:gamma=1.04:saturation=1.08,colorbalance=bh=0.03:rh=-0.01", "brightness(1.07) saturate(1.1)"),
     "am-sang": ("Ấm sang: ấm nhẹ, bớt rực, viền tối, hạt phim nhẹ",
-                "eq=contrast=1.04:saturation=0.92,colorbalance=rs=0.05:bs=-0.05:rm=0.03:bm=-0.03,vignette=PI/5,noise=alls=6:allf=t"),
-    "mat-hien-dai": ("Mát hiện đại: xanh nhẹ, tương phản cao", "eq=contrast=1.12:saturation=1.05,colorbalance=bs=0.05:bm=0.03:rs=-0.03"),
-    "nhat-toi-gian": ("Nhạt tối giản: sáng, ít màu, ít tương phản", "eq=contrast=0.94:brightness=0.03:saturation=0.75"),
+                "eq=contrast=1.04:saturation=0.95,colorbalance=rs=0.04:bs=-0.04:rm=0.03:bm=-0.03,vignette=PI/5,noise=alls=4:allf=t",
+                "sepia(0.15) saturate(0.95) contrast(1.04)"),
+    "dien-anh": ("Điện ảnh: vùng tối xanh ngọc, da và nắng cam ấm",
+                 "colorbalance=rs=-0.06:gs=0.01:bs=0.07:rh=0.07:gh=0.02:bh=-0.06,eq=contrast=1.08:saturation=1.05,vignette=PI/6",
+                 "contrast(1.08) saturate(1.1) sepia(0.12) hue-rotate(-6deg)"),
+    "nang-chieu": ("Nắng chiều: vàng ấm, dịu", "colorbalance=rm=0.06:gm=0.02:bm=-0.08:rh=0.04:bh=-0.05,eq=saturation=1.08",
+                   "sepia(0.25) saturate(1.2)"),
+    "mat-hien-dai": ("Mát hiện đại: xanh nhẹ, tương phản cao", "eq=contrast=1.12:saturation=1.05,colorbalance=bs=0.05:bm=0.03:rs=-0.03",
+                     "contrast(1.12) saturate(1.05) hue-rotate(8deg)"),
+    "nhat-toi-gian": ("Nhạt tối giản: sáng, ít màu, ít tương phản", "eq=contrast=0.94:brightness=0.03:saturation=0.75",
+                      "contrast(0.94) brightness(1.03) saturate(0.75)"),
+    "den-trang": ("Đen trắng tương phản", "hue=s=0,eq=contrast=1.2", "grayscale(1) contrast(1.2)"),
 }
+LOOKS["trung-tinh"] = LOOKS["tu-nhien"]  # tên cũ, giữ để timeline cũ vẫn chạy
 
 # Chuyển cảnh: (độ dài mặc định giây, cách dựng, tham số, mô tả). css3d dựng bằng HyperFrames, xfade bằng FFmpeg.
 TRANSITIONS = {
