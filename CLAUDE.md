@@ -1,0 +1,50 @@
+# CLAUDE.md — Hồ sơ dự án Cloud Edit Video (Hào Sky Land)
+
+File này Claude Code tự đọc mỗi phiên. Hào không cần nhắc lại những gì ghi ở đây. Quy trình chi tiết: `docs/QUY-TRINH.md`.
+
+## Mục đích
+Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu Hào Sky Land: bất động sản, góc nhìn dòng tiền, khách mục tiêu là nữ 35–55 tuổi ở trung tâm và khu Đông TP.HCM.
+
+## Người dùng
+- Hào, không rành code. Giao việc kiểu "làm giúp tôi"; Claude tự chọn phương án đơn giản nhất và báo lại ngắn gọn bằng tiếng Việt.
+- Giải thích thuật ngữ tiếng Anh bằng tiếng Việt trước.
+- Giỏ hàng hiện tại: Vinhomes Hóc Môn, Vinhomes Cần Giờ. Các dự án khác chỉ là đã nghiên cứu, không phải đang phân phối.
+
+## Cấu trúc
+- `video-studio/videos/*.json`: nội dung video (spec).
+- `video-studio/scripts/render.sh`: spec → engine → FFmpeg → MP4 trong `out/`.
+- `video-studio/engines/`: hyperframes (chính), remotion (dự phòng), manim, blender.
+- `video-studio/app/`: PWA soạn spec. `.github/workflows/render.yml`: render trên GitHub bằng form. `pages.yml`: đưa trang cũ (`index.html` gốc) và app (`/app/`) lên Pages.
+- Windows 11 local: `setup-windows.ps1` (một lần), `chay-video.bat`.
+
+## Trạng thái (cập nhật 12/11/2026)
+| Thành phần | Trạng thái |
+|---|---|
+| HyperFrames + GSAP + three.js | Render OK trong sandbox và trên GitHub Actions |
+| Remotion | Render OK trong sandbox (cần Chromium) |
+| FFmpeg | OK |
+| Manim | Có mã, chưa chạy thử |
+| Blender MCP | Mới có hướng dẫn, chưa thử |
+| Codespaces (`.devcontainer`) | Chưa thử |
+| Windows 11 (`setup-windows.ps1`, `chay-video.bat`) | Chưa thử |
+| Trang Pages cũ | Có thể đã bị app thay ở gốc; cần chạy lại "Deploy site" và kiểm tra |
+
+## Quy tắc làm việc
+- Phiên bản nhỏ nhất chạy được trước, mở rộng sau. Không thêm công cụ mới khi chưa dùng hết công cụ hiện có.
+- Chưa chạy thử thì ghi "chưa thử", không nói đã xong.
+- **Phải hỏi Hào trước:** đăng nội dung công khai, gửi tin cho khách, xóa hoặc ghi đè dữ liệu quan trọng, thay đổi trang đang chạy công khai, phát sinh chi phí. Gộp PR chỉ làm khi Hào cho phép trong phiên đó.
+- Đẩy mã lên nhánh `claude/...`, không đẩy thẳng `main`, không ghi đè lịch sử.
+- Không đưa vào repo: thu nhập, ngày sinh, thông tin khách, khóa API, token.
+
+## Quy tắc nội dung video bất động sản
+- Giọng mộc mạc, thật, ít chữ, có thông tin. Hook rõ trong 2–3 giây đầu. Rất ít emoji.
+- Xưng "em" với khách lớn tuổi, "tôi" khi phân tích kiểu chuyên gia.
+- Nêu cả lợi ích và rủi ro; ưu tiên số cụ thể (dòng tiền mỗi tháng sau khi trừ tiền vay).
+- Mọi dữ kiện dự án (giá, chính sách, tiến độ, pháp lý) phải có nguồn và ngày cập nhật. Chưa xác minh thì để `[...]`, không tự điền.
+- Tránh: "cơ hội vàng", "sinh lời chắc chắn", "cam kết lợi nhuận", "cháy hàng", "chốt ngay kẻo lỡ", "sốt đất", "x2 tài sản". Không tạo khan hiếm giả.
+
+## Việc tiếp theo
+1. Hào xem video mẫu, chọn engine mặc định.
+2. Chạy lại "Deploy site", kiểm tra trang cũ và `/app/`.
+3. Làm video thật đầu tiên: chọn một góc dòng tiền cho Vinhomes Hóc Môn hoặc Cần Giờ, có nguồn và ngày.
+4. Thử Windows 11 với `setup-windows.ps1`.
