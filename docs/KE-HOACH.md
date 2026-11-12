@@ -2,6 +2,9 @@
 
 Lập ngày 12/11/2026 (thứ Năm). Đây là kế hoạch, chưa phải cam kết: mốc ngày phụ thuộc vào thời gian Hào dành mỗi ngày (xem mục Giả định).
 
+## 0. Cập nhật 12/11/2026 sau khi Hào trả lời
+Hào dành được cả ngày (giới hạn là token), tự thu giọng, repo riêng tư, có logo và bộ màu. Video đầu là TikTok khoảng 130 giây từ flycam thô + giọng thu + kịch bản. Vì vậy **cắt ghép tự động trở thành lõi của V1.0**, đồ họa HyperFrames chỉ dùng cho cảnh chữ/số. Mốc V1.0 có thể sớm hơn 20/11 nếu Hào gửi đủ tài liệu trong ngày: xem `QUY-TRINH-CAT-GHEP.md`. Mốc V1.1 (giọng, phụ đề) gộp vào V1.0 vì Hào đã có giọng.
+
 ## 1. Đích đến
 
 Một hệ thống mà Hào chỉ làm 3 việc: **chọn chủ đề, xác minh số liệu, bấm render rồi đăng**. Phần soạn bản nháp, dựng, chuẩn hóa định dạng do Claude và công cụ làm. Chạy được trên GitHub (điện thoại/PC) và sau này trên Windows 11 local.

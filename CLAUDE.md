@@ -10,9 +10,15 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 - Giải thích thuật ngữ tiếng Anh bằng tiếng Việt trước.
 - Giỏ hàng hiện tại: Vinhomes Hóc Môn, Vinhomes Cần Giờ. Các dự án khác chỉ là đã nghiên cứu, không phải đang phân phối.
 
+## Bối cảnh bổ sung (Hào xác nhận 12/11/2026)
+- Repo riêng tư. Hào có thể dành cả ngày cho dự án, giới hạn là token.
+- Giọng đọc: Hào tự thu. Video đầu: TikTok khoảng 130 giây, từ kịch bản thô, flycam thô, giọng thu và video mẫu cắt cảnh. Hào có bộ logo và màu thương hiệu riêng (chưa gửi).
+- Cách làm chính là **cắt ghép**: `docs/QUY-TRINH-CAT-GHEP.md`. Mẫu đồ họa HyperFrames dùng cho cảnh chữ/số, không phải nguồn chính.
+
 ## Cấu trúc
 - `video-studio/videos/*.json`: nội dung video (spec). Trường `template` chọn mẫu.
 - `video-studio/engines/hyperframes/templates/`: **thư viện mẫu** (cashflow-3d có khối 3D, text-only). Thêm mẫu mới: xem README trong thư mục đó.
+- `video-studio/scripts/assemble.mjs`: cắt ghép flycam + giọng + logo + phụ đề theo `projects/<tên>/edl.json`. `contact-sheet.sh`: ảnh lưới chọn cảnh.
 - `video-studio/scripts/render.sh`: spec → engine → FFmpeg → MP4 trong `out/`.
 - `video-studio/engines/`: hyperframes (chính), remotion (dự phòng), manim, blender.
 - `video-studio/app/`: PWA soạn spec. `.github/workflows/render.yml`: render trên GitHub bằng form. `pages.yml`: đưa trang cũ (`index.html` gốc) và app (`/app/`) lên Pages.
@@ -24,6 +30,8 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | HyperFrames + GSAP + three.js | Render OK trong sandbox và trên GitHub Actions |
 | Remotion | Render OK trong sandbox (cần Chromium) |
 | FFmpeg | OK |
+| Cắt ghép (`assemble.mjs`) | Chạy OK với dữ liệu giả; chưa thử flycam/giọng thật |
+| Nhận dạng giọng (`hyperframes transcribe`) | Có lệnh, chưa thử tiếng Việt |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |
 | Codespaces (`.devcontainer`) | Chưa thử |
