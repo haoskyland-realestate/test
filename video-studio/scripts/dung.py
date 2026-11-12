@@ -119,6 +119,43 @@ window.__timelines["main"]=tl; tl.seek(0);
         ff("-ss", str(seg3[i]), "-t", str(d_tr), "-i", f"{B}/cube.mp4", "-an", "-vf", f"fps={FPS},format=yuv420p",
            "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/tr{i}.mp4")
 
+# Chuyển cảnh gl-transitions: một khung WebGL trong HyperFrames, các chuyển cảnh nối tiếp, rồi cắt ra từng đoạn
+glx = [(i, d_tr, ty) for i, d_tr, ty in trs if TRANSITIONS[ty][1] == "gl"]
+if glx:
+    from effects import GL_LIB
+    gd = f"{B}/glc"; shutil.rmtree(gd, ignore_errors=True); os.makedirs(gd)
+    segs, imgs, off, seg_gl = [], [], 0.0, {}
+    for i, d_tr, ty in glx:
+        shutil.copy(f"{TD}/a{i}.jpg", gd); shutil.copy(f"{TD}/b{i}.jpg", gd)
+        imgs.append(f'<img id="a{i}" src="a{i}.jpg"><img id="b{i}" src="b{i}.jpg">')
+        segs.append({"name": TRANSITIONS[ty][2], "a": f"a{i}", "b": f"b{i}", "off": off, "d": d_tr})
+        seg_gl[i] = off; off += d_tr
+    used = {s_["name"]: GL_LIB[s_["name"]] for s_ in segs}
+    open(f"{gd}/index.html", "w", encoding="utf8").write(f"""<!doctype html><html><head><meta charset="UTF-8">
+<meta name="viewport" content="width={W}, height={H}"><script src="gsap.min.js"></script><style>
+*{{margin:0;padding:0}} html,body{{width:{W}px;height:{H}px;overflow:hidden;background:#000}} img{{position:absolute;left:-9999px}}
+#gl{{width:{W}px;height:{H}px;display:block}}</style></head><body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="{off}" data-width="{W}" data-height="{H}">
+<canvas id="gl" class="clip" width="{W}" height="{H}" data-start="0" data-duration="{off}" data-track-index="0"></canvas>{"".join(imgs)}</div>
+<script>{open(os.path.join(ROOT, "scripts", "gl_runtime.js"), encoding="utf8").read()}
+const LIB={json.dumps(used)}, SEG={json.dumps(segs)}, r=glT(document.getElementById("gl"),LIB), st={{t:0}};
+function draw(){{const t=st.t, s=SEG.find(x=>t>=x.off&&t<x.off+x.d)||SEG[SEG.length-1];
+ const a=document.getElementById(s.a), b=document.getElementById(s.b); if(!a.complete||!b.complete)return;
+ r.draw(s.name,a,b,Math.min(1,Math.max(0,(t-s.off)/s.d)));}}
+const tl=gsap.timeline({{paused:true}}); tl.to(st,{{t:{off},duration:{off},ease:"none",onUpdate:draw}},0);
+window.__timelines["main"]=tl; tl.seek(0); draw();
+</script></body></html>""")
+    shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), gd)
+    json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}}, open(f"{gd}/hyperframes.json", "w"))
+    open(f"{gd}/package.json", "w").write('{"name":"glc","private":true,"type":"module"}')
+    gkey = json.dumps([DRAFT] + [[open(f"{B}/shot{i}.key").read(), open(f"{B}/shot{i+1}.key").read(), ty, d_tr] for i, d_tr, ty in glx])
+    if not (os.path.exists(f"{B}/glc.mp4") and os.path.exists(f"{B}/glc.key") and open(f"{B}/glc.key").read() == gkey):
+        run([*HF, "render", "-o", f"{B}/glc.mp4", "-q", "draft" if DRAFT else "delivery", "--quiet"], cwd=gd)
+        open(f"{B}/glc.key", "w").write(gkey)
+    for i, d_tr, _ in glx:
+        ff("-ss", str(seg_gl[i]), "-t", str(d_tr), "-i", f"{B}/glc.mp4", "-an", "-vf", f"fps={FPS},format=yuv420p",
+           "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/tr{i}.mp4")
+
 # 4. Ghép: cảnh 0, chuyển cảnh 0 (nếu không phải cắt thẳng), cảnh 1, ...
 has_tr = {i for i, _, _ in trs}
 parts = []

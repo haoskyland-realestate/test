@@ -89,6 +89,7 @@
     #app { height:auto; } main, main.noL, main.noR { grid-template-columns:1fr; }
     #stage { height:56vh; max-height:none; flex:none; } #tlwrap { max-height:none; }
   }
+  dialog a { color: var(--lime); }
 </style>
 </head>
 <body>
@@ -101,7 +102,7 @@
     </div>
     <button class="ghost" id="undo" title="Hoàn tác (Ctrl+Z)">↶</button><button class="ghost" id="redo" title="Làm lại (Ctrl+Shift+Z)">↷</button>
     <button id="btnLib">▦ Thư viện</button><button class="ghost" id="btnHist">Lịch sử</button><button class="ghost" id="btnAI">Nhờ AI sửa</button>
-    <button class="ghost" id="save">Lưu</button><button id="draft">Dựng nháp</button><button class="lime" id="export">Xuất video</button>
+    <button class="ghost" id="save">Lưu</button><button id="draft">Dựng nháp</button><button class="lime" id="export">Xuất video</button><button class="ghost" id="nle" title="Xuất timeline để dựng tiếp trên Premiere Pro hoặc DaVinci Resolve">Premiere/DaVinci</button>
   </header>
   <nav id="tabs" aria-label="Nhóm chỉnh sửa"></nav>
   <main id="main">
@@ -548,6 +549,17 @@ async function masterCut(reportOnly) {
   }, 2500);
 }
 $("#draft").onclick = () => render(true); $("#export").onclick = () => render(false);
+// Xuất sang phần mềm dựng chuyên nghiệp (OpenTimelineIO): máy chủ ghi out/<tên>.otio/.xml/.srt rồi hiện link tải
+$("#nle").onclick = async () => {
+  if (!await save()) return;
+  toast("Đang xuất timeline…");
+  const r = await api(`${P()}/nle`, {method: "POST", body: "{}"}).catch(e => ({ok: false, log: (e.data && e.data.log) || e.message}));
+  if (!r.ok) return dlgShow(`<h3 class="err">Chưa xuất được</h3><pre style="white-space:pre-wrap;font-size:12px">${esc(r.log)}</pre>`);
+  const a = (ext, txt) => `<li><a href="/api/${P()}/nle/${ext}?t=${T}" download>${txt}</a></li>`;
+  dlgShow(`<h3>Đã xuất timeline</h3><ul>${a("xml", "Premiere Pro: file .xml (File → Import)")}${a("otio", "DaVinci Resolve: file .otio (File → Import → Timeline)")}${a("srt", "Phụ đề .srt")}</ul>
+    <p class="dim">File trỏ tới footage gốc trong thư mục dự án trên máy chạy studio; mở trên máy khác thì chọn “Relink/Locate” tới footage. Chuyển cảnh xuất thành hòa tan, chữ/zoom thành điểm đánh dấu (marker). Khung 9:16: đặt sequence 1080×1920 và chọn “Scale to frame size”.</p>
+    <p class="dim">${esc(r.log.trim())}</p>`);
+};
 function view() {
   const v = $("#viewSel").value, out = $("#out");
   setPlay(false);
@@ -560,12 +572,46 @@ $("#viewSel").onchange = view;
 
 // ---- Hộp thoại: Thư viện, Lịch sử, Nhờ AI sửa ----
 const dlg = $("#dlg"); function dlgShow(h) { $("#dlgBody").innerHTML = h; dlg.showModal(); }
-$("#btnLib").onclick = () => {
-  const can = sel && sel.k === "transitions" ? "transitions" : sel && sel.k === "texts" ? "anims" : null;
+// Xem thử chuyển cảnh gl-transitions ngay trong trình duyệt, trên ảnh của 2 đoạn kề nhau
+let GL = null, glr = null, glName = null, glRaf = 0, glImgs = null;
+async function glLoad() {
+  if (!window.glT) await new Promise((ok, no) => { const s = document.createElement("script"); s.src = "/gl_runtime.js"; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+  GL ??= await api("gl");
+}
+function glPreview(type) {
+  cancelAnimationFrame(glRaf); glName = type;
+  const info = $("#trinfo"), cv = $("#trc"); if (!info) return;
+  const i = sel && sel.k === "transitions" ? sel.i : 0, A = tl.clips[i], B = tl.clips[Math.min(i + 1, tl.clips.length - 1)];
+  info.innerHTML = `<b>${esc(type)}</b><div class="dim">${esc(FX.transitions[type].vi)}</div>`
+    + (sel && sel.k === "transitions" ? `<div class="row"><button class="lime" data-apply="${esc(type)}">Áp dụng cho chuyển cảnh ${i + 1} → ${i + 2}</button></div>` : `<div class="dim" style="margin-top:8px">Chọn một chuyển cảnh trên timeline để áp dụng.</div>`);
+  if (!type.startsWith("gl-")) { cv.getContext("webgl")?.clear?.(0); return info.insertAdjacentHTML("beforeend", `<div class="dim">Kiểu này xem bằng “Dựng nháp”.</div>`); }
+  const load = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = src; });
+  Promise.all([load(media("thumb", A.file + "@" + (+A.in + Math.max(0.3, A.dur - 0.3)).toFixed(1))), load(media("thumb", B.file + "@" + (+B.in + 0.3).toFixed(1)))]).then(([a, b]) => {
+    if (glName !== type) return;  // người dùng đã chọn hiệu ứng khác trong lúc chờ ảnh
+    if (!a || !b) return info.insertAdjacentHTML("beforeend", `<div class="dim">Chưa có ảnh cảnh (chưa có footage trên máy).</div>`);
+    glr ??= glT(cv, GL); const t0 = performance.now(), name = type.slice(3);
+    const tick = now => { const k = ((now - t0) / 1600) % 1; glr.draw(name, a, b, Math.min(1, k / 0.75)); glRaf = requestAnimationFrame(tick); };
+    glRaf = requestAnimationFrame(tick);
+  });
+}
+$("#btnLib").onclick = async () => {
+  const can = sel && sel.k === "texts" ? "anims" : null;
   const sec = (k, title) => `<h3>${title}</h3>` + Object.entries(FX[k]).map(([n, d]) => `<div class="it" style="margin-bottom:6px" ${can === k ? `data-apply="${n}"` : ""}><div class="h">${n}${can === k ? ' <span class="ok">— bấm để áp dụng</span>' : ""}</div><div class="m">${esc(d.vi || d)}</div></div>`).join("");
-  dlgShow(`<p class="dim">Chọn một chuyển cảnh hoặc khối chữ trên timeline để áp dụng trực tiếp.</p>${sec("transitions", "Chuyển cảnh")}${sec("anims", "Hiệu ứng chữ")}${sec("kinds", "Khối chữ")}${sec("looks", "Chỉnh màu")}`);
+  const trs = q => Object.entries(FX.transitions).filter(([n, d]) => !q || (n + " " + d.vi).toLowerCase().includes(q.toLowerCase()))
+    .map(([n, d]) => `<div class="it" style="margin-bottom:6px" data-try="${esc(n)}"><div class="h">${esc(n)}</div><div class="m">${esc(d.vi)}</div></div>`).join("");
+  dlgShow(`<h3>Chuyển cảnh (${Object.keys(FX.transitions).length})</h3>
+    <div class="row" style="align-items:flex-start;flex-wrap:nowrap"><canvas id="trc" width="180" height="320" style="border-radius:10px;background:#000;flex:none"></canvas>
+      <div style="flex:1;min-width:0"><input id="trq" placeholder="Tìm: zoom, lật, ánh sáng, mơ màng…" style="width:100%"><div id="trinfo" style="margin:10px 0"></div>
+      <div id="trlist" style="max-height:34vh;overflow:auto">${trs("")}</div></div></div>
+    ${sec("anims", "Hiệu ứng chữ")}${sec("kinds", "Khối chữ")}${sec("looks", "Bộ màu lọc")}`);
+  $("#trq").oninput = e => $("#trlist").innerHTML = trs(e.target.value);
+  glr = null;  // khung xem thử mới mỗi lần mở hộp thoại
+  await glLoad().catch(() => toast("Không tải được thư viện chuyển cảnh", "err"));
+  glPreview(sel && sel.k === "transitions" ? cur().type : "gl-CrossZoom");
 };
+dlg.addEventListener("close", () => cancelAnimationFrame(glRaf));
 $("#dlgBody").addEventListener("click", async e => {
+  const tr = e.target.closest("[data-try]"); if (tr) return glPreview(tr.dataset.try);
   const ap = e.target.closest("[data-apply]"); if (ap) { mutate(() => { if (sel.k === "transitions") { cur().type = ap.dataset.apply; delete cur().dur; } else cur().anim = ap.dataset.apply; }); return dlg.close(); }
   const hv = e.target.closest("[data-ver]"); if (hv) { const v = await api(`${P()}/history/${hv.dataset.ver}`); undoS.push(JSON.stringify(tl)); setRaw(JSON.stringify(v)); dlg.close(); toast("Đã mở phiên bản cũ. Bấm Lưu để giữ.", "ok"); }
   if (e.target.id === "copyAI") { navigator.clipboard?.writeText($("#aiOut").value).catch(() => {}); $("#aiOut").select(); toast("Đã chép yêu cầu.", "ok"); }

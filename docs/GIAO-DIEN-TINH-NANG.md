@@ -12,6 +12,8 @@ Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **T�
 | Lịch sử | Có | Mỗi lần Lưu giữ 1 bản, giữ 30 bản; mở lại bản cũ |
 | Nhờ AI sửa | Tạm | Soạn sẵn yêu cầu để dán cho Claude Code; gọi AI trong app cần khóa API, có phí → chờ Hào quyết |
 | Lưu / Dựng nháp / Xuất video | Có | Nháp: nhanh, chất lượng thấp (`out/<tên>.nhap.mp4`) |
+| Xuất sang Premiere / DaVinci | Có (12/11) | Nút “Premiere/DaVinci”: tải `.xml` (Premiere), `.otio` (DaVinci), `.srt`. Chưa mở thử trong phần mềm thật |
+| Thư viện chuyển cảnh gl-transitions | Có (12/11) | 212 hiệu ứng trong hộp Thư viện, ô tìm, khung xem thử WebGL, nút áp dụng |
 | Tab Chữ, Phụ đề, Cắt, Zoom, Minh hoạ, Cảnh trám, Âm thanh, Khung hình, Thương hiệu | Có | Có đếm số mục, tìm kiếm, Thêm |
 | Khung xem: phát/dừng, −1s/+1s, mốc giờ, vùng an toàn | Có | Phát bản xem trước nhẹ 540p tự tạo từ footage; chữ, phụ đề, minh hoạ, zoom, cảnh trám hiện đè đúng thời điểm (chữ chưa có chuyển động trong xem trước) |
 | Danh sách mục ở giữa (thẻ minh hoạ, phụ đề…) | Có | Ảnh nhỏ cho đoạn cắt và cảnh trám |

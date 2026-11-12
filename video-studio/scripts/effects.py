@@ -65,6 +65,22 @@ TRANSITIONS = {
     "circle": (0.6, "xfade", "circleopen", "Mở vòng tròn: tiết lộ, nhấn mạnh"),
 }
 
+# 212 chuyển cảnh từ thư viện gl-transitions (MIT, thu-vien-chuyen-nghiep/gl-transitions), dựng bằng WebGL.
+# Danh mục sinh bởi scripts/tao_gl_transitions.py, đã kiểm từng cái bằng scripts/kiem_gl.mjs. Tên dùng: "gl-<Tên>".
+import json as _json, os as _os
+GL_LIB = _json.load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "gl_transitions.json"), encoding="utf8"))
+_GL_VI = {  # tên tiếng Việt cho các hiệu ứng hợp video bất động sản; đặt lên đầu danh sách
+    "CrossZoom": "Phóng chéo mờ chuyển động", "Dreamy": "Mơ màng, sang trọng", "DreamyZoom": "Phóng mơ màng",
+    "WhipPan": "Lia nhanh ngang", "WhipTilt": "Lia nhanh dọc", "LightWipe": "Quét ánh sáng", "LensFlare": "Lóe sáng ống kính",
+    "FilmBurn": "Cháy phim", "Directional": "Trượt theo hướng", "ZoomInOut": "Phóng vào rồi ra", "BookFlip": "Lật sách",
+    "InvertedPageCurl": "Cuộn trang", "Doorway": "Mở cửa", "CircleIris": "Mở mống mắt tròn", "WindowBlinds": "Rèm cửa sổ",
+    "GlowDissolve": "Hòa tan phát sáng", "CameraShake": "Rung máy", "DefocusBlur": "Mất nét rồi rõ", "Morph": "Biến hình mềm",
+    "Swirl": "Xoáy",
+}
+for _n in sorted(GL_LIB, key=lambda n: (n not in _GL_VI, n)):
+    _vi = _GL_VI.get(_n)
+    TRANSITIONS["gl-" + _n] = (0.8, "gl", _n, (f"{_vi} · " if _vi else "") + f"{GL_LIB[_n]['desc'] or _n} (gl-transitions)")
+
 # Hiệu ứng chữ vào.
 TEXT_ANIMS = {
     "rise": "Từng từ trượt lên, mờ → rõ",

@@ -7,5 +7,5 @@ foreach ($id in "OpenJS.NodeJS.LTS", "Gyan.FFmpeg", "Git.Git", "Python.Python.3.
 Write-Host "Đóng PowerShell, mở lại, rồi chạy tiếp (trong thư mục video-studio):"
 Write-Host "  npm install"
 Write-Host "  git submodule update --init --depth 1     (tải thư viện chuyên nghiệp: thu-vien-chuyen-nghiep/)"
-Write-Host "  pip install numpy faster-whisper \"opencv-python-headless<5\"   (phụ đề tự động + master cut; lần đầu tải mô hình ~1,6 GB)"
+Write-Host "  pip install numpy faster-whisper \"opencv-python-headless<5\" opentimelineio otio-fcp-adapter   (phụ đề tự động, master cut, xuất Premiere/DaVinci; lần đầu tải mô hình ~1,6 GB)"
 Write-Host "Xong thì bấm đúp chay-studio.bat để mở app."

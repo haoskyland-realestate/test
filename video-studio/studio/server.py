@@ -58,10 +58,14 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not parts:
             return self.send(200, open(os.path.join(ROOT, "studio/index.html"), "rb").read(), "text/html; charset=utf-8")
+        if parts == ["gl_runtime.js"]:  # mã chạy chuyển cảnh WebGL (công khai, không chứa dữ liệu)
+            return self.send(200, open(os.path.join(ROOT, "scripts/gl_runtime.js"), "rb").read(), "text/javascript; charset=utf-8")
         if parts[0] != "api" or not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa. Mở đúng link máy chủ in ra."})
         if parts[1:] == ["effects"]:
             return self.send(200, effects_json())
+        if parts[1:] == ["gl"]:
+            return self.send(200, effects.GL_LIB, extra={"Cache-Control": "max-age=3600"})
         if parts[1:] == ["projects"]:
             return self.send(200, sorted(n for n in os.listdir(PROJ) if self.project(n)))
         if len(parts) < 3 or not (d := self.project(parts[2])):
@@ -94,6 +98,12 @@ class H(http.server.BaseHTTPRequestHandler):
             tail = open(log, encoding="utf8", errors="replace").read()[-1200:] if os.path.exists(log) else ""
             return self.send(200, {"running": bool(j and j.poll() is None), "code": j and j.poll(), "log": tail,
                                    "report": open(rp, encoding="utf8").read() if parts[3] == "mastercut" and os.path.exists(rp) else ""})
+        if parts[3] == "nle" and len(parts) == 5 and parts[4] in ("otio", "xml", "srt"):  # tải file xuất sang Premiere/DaVinci
+            f = os.path.join(ROOT, "out", f"{name}.{parts[4]}")
+            if not os.path.exists(f):
+                return self.send(404, {"error": "Chưa xuất, bấm nút Xuất sang Premiere/DaVinci trước"})
+            return self.send(200, open(f, "rb").read(), "application/octet-stream",
+                             {"Content-Disposition": f"attachment; filename*=UTF-8''{urllib.parse.quote(name)}.{parts[4]}"})
         if parts[3] == "render":
             j, nh = jobs.get(name, (None, False))
             log = os.path.join(d, "build", "render.log")
@@ -214,9 +224,12 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa"})
-        if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut") or not (d := self.project(parts[2])):
+        if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle") or not (d := self.project(parts[2])):
             return self.send(404, {"error": "Không có dự án này"})
         name = parts[2]
+        if parts[3] == "nle":  # xuất timeline sang Premiere/DaVinci: nhanh (vài giây), chạy luôn
+            r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "xuat_nle.py"), d], cwd=ROOT, capture_output=True, text=True, timeout=300)
+            return self.send(200 if r.returncode == 0 else 500, {"ok": r.returncode == 0, "log": (r.stdout + r.stderr)[-1500:]})
         if parts[3] in ("subtitles", "mastercut"):  # phụ đề tự động / master cut: chạy nền, ghi thẳng vào timeline.json
             key, script = (":pd", "phu_de.py") if parts[3] == "subtitles" else (":mc", "master_cut.py")
             if jobs.get(name + key) and jobs[name + key][0].poll() is None:
