@@ -2,7 +2,9 @@
 
 Lập 13/11/2026. App studio đọc kho này **trên PC** (nút **📦 Kho**). Kho không đưa lên GitHub và không chép vào từng dự án.
 
-## Kho chính: "TÀI NGUYÊN EDIT VIDEO" (tài khoản haotruyenthong, Claude xem ngày 13/11/2026)
+## Kho chính: `KHO-EDIT` (trước là "TÀI NGUYÊN EDIT VIDEO", tài khoản haotruyenthong)
+
+**13/11/2026 đã sắp lại theo `THU-VIEN-LUU-TRU.md` mục 7.** Bảng dưới là nội dung (tên thư mục cũ trong ngoặc của bảng mục 7).
 | Thư mục | Bên trong | Khoảng | App dùng |
 |---|---|---|---|
 | ĐÌNH VĂN MEDIA / Tài Nguyên / **Chú Thích BĐS** | 15 `.mov` biểu tượng định vị có hoạt hình, đặt tên theo tiện ích (truong-hoc, y te, sieu thi, cong vien, cang bien, khu cong nghiep, san van dong, golf, bien, giai-tri, cho truyen thong, thanh pho, vi tri du an, Label du an 2…); QuickTime Animation có kênh trong suốt, khung vuông 1500×1500, 30 giây | ~18 GB | **📍 Gắn chú thích theo lời nói**, hoặc + Phủ lên video rồi bấm vào khung xem để đặt chỗ |
@@ -15,7 +17,7 @@ Lập 13/11/2026. App studio đọc kho này **trên PC** (nút **📦 Kho**). K
 | ĐÌNH VĂN MEDIA / PLUGIN, Font Chữ | FXConsole, Saber (cài cho After Effects/Premiere), font `.zip` | | Tham khảo |
 | VÙNG AN TOÀN TIK TOK | 1 ảnh khung an toàn | | App đã có khung đỏ "Vùng an toàn" |
 
-Chọn thư mục **TÀI NGUYÊN EDIT VIDEO** làm thư mục kho trong app. File chú thích rất nặng (mỗi file 0,2–1,6 GB): để Drive ở chế độ "Sẵn có ngoại tuyến" cho thư mục này, nếu không, lần đầu xem hay dựng sẽ chờ Drive tải về.
+Chọn thư mục **KHO-EDIT** làm thư mục kho trong app. File chú thích rất nặng (mỗi file 0,2–1,6 GB): để Drive ở chế độ "Sẵn có ngoại tuyến" cho thư mục này, nếu không, lần đầu xem hay dựng sẽ chờ Drive tải về.
 
 ### Chú thích và radar: app đặt thế nào
 - App tự đo vùng có hình trong file (kênh trong suốt) để lấy **chân ghim** làm điểm đặt và chọn cỡ sao cho biểu tượng rộng khoảng 22% khung. Mặc định đặt giữa khung (trên dòng phụ đề).

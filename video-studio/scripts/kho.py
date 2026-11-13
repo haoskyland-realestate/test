@@ -28,7 +28,7 @@ DUOI = {e: k for k, (es, _, _) in LOAI.items() for e in es}
 GOI_Y = [("chu-thich", ("chu thich", "radar", "label", "callout", "location pin", "map pin")),
          ("overlay", ("overlay", "light leak", "leak", "dust", "bui", "khoi", "smoke", "film", "grain", "flare", "bokeh", "lens", "particle", "paper", "giay", "glitch")),
          ("chuyen-canh", ("transition", "chuyen canh", "chuyen")), ("nen", ("background", "nen", "bg", "backdrop")),
-         ("chu", ("title", "text", "typography", "chu", "tag", "lower third", "callout")), ("sfx", ("sfx", "sound", "effect", "whoosh", "hieu ung"))]
+         ("chu", ("title", "text", "typography", "chu", "tag", "lower third", "callout")), ("sfx", ("sfx", "sound", "effect", "whoosh", "hieu ung", "am thanh"))]
 
 
 def bo_dau(s):
@@ -84,8 +84,8 @@ def quet(goc):
             except OSError:
                 continue
             loai = DUOI.get(ext, "khac")
-            text = bo_dau(rel)
-            dung = next((g for g, ks in GOI_Y if any(k in text for k in ks)), "")
+            text = " " + " ".join(re.findall(r"[a-z0-9]+", bo_dau(rel))) + " "  # khớp nguyên từ: 'chu' không ăn vào 'chung'
+            dung = next((g for g, ks in GOI_Y if any(f" {k} " in text or f" {k}s " in text for k in ks)), "")
             lop, chu = tang(rel)
             gp = next((os.path.relpath(os.path.join(x, "GIAY-PHEP.md"), goc).replace("\\", "/") for x in _cha(d, goc)
                        if os.path.isfile(os.path.join(x, "GIAY-PHEP.md"))), "")
@@ -226,6 +226,14 @@ def chu_thich(tl, cm, dur=3.0):
     return tl, [(st, ten_chu_thich(p)) for st, p in sorted(da)]
 
 
+def quet_mot(rel):
+    """Nhóm dùng của một đường dẫn (dùng cho tự kiểm)."""
+    import tempfile
+    with tempfile.TemporaryDirectory() as g:
+        p = os.path.join(g, rel); os.makedirs(os.path.dirname(p), exist_ok=True); open(p, "wb").close()
+        return quet(g)["tep"][0]["dung"]
+
+
 def _tu_kiem():
     import tempfile
     with tempfile.TemporaryDirectory() as g:
@@ -267,6 +275,7 @@ def _tu_kiem():
             p = os.path.join(g, rel); os.makedirs(os.path.dirname(p), exist_ok=True); open(p, "wb").write(b"x")
         cm = quet(g)
         by = {t["p"]: t for t in cm["tep"]}
+        assert by["00_CHUNG/am-thanh/whoosh/whoosh_nhanh_01.wav"]["dung"] == "sfx" and quet_mot("Backgrounds/a b.mp4") == "nen"  # 'chung' không bị hiểu là chữ
         assert tang("10_THUONG-HIEU/hao-sky-land/x.png") == ("thuong-hieu", "hao-sky-land") and tang("00_CHUNG/x.wav") == ("chung", "")
         assert by["00_CHUNG/am-thanh/whoosh/whoosh_nhanh_01.wav"]["gp"] == "00_CHUNG/am-thanh/GIAY-PHEP.md"
         assert by["00_CHUNG/overlay/film-burn/film-burn_cam_01.mp4"]["gp"] == ""

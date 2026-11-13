@@ -67,34 +67,38 @@ Dùng sẵn **Google Drive cho máy tính** (Google Drive for desktop), không v
 - File chú thích/radar rất nặng (0,2–2 GB mỗi file): để trực tuyến, chỉ tải khi dùng tới.
 - Trong app chọn thư mục kho là `G:\My Drive\KHO-EDIT` rồi Quét. Quét chỉ đọc tên file nên không làm Drive tải 30 GB về.
 
-## 7. Dời kho hiện có sang cây mới (chưa làm, cần Hào cho phép)
+## 7. Kho thật sau khi dời (Claude làm 13/11/2026)
 
-Kho "TÀI NGUYÊN EDIT VIDEO" thuộc tài khoản **haotruyenthong**. Tài khoản đang nối với Claude (haoskyland) chỉ có **quyền xem**, nên Claude chưa dời được. Hai cách:
-1. **(Khuyên dùng)** Từ haotruyenthong, chia sẻ thư mục "TÀI NGUYÊN EDIT VIDEO" cho haoskyland quyền **Người chỉnh sửa** (Editor). Claude dời từng thư mục theo bảng dưới, ghi nhật ký để hoàn tác.
-2. Hào tự kéo thả trên drive.google.com theo bảng dưới (khoảng 15 phút).
+Thư mục gốc đã đổi tên **"TÀI NGUYÊN EDIT VIDEO" → `KHO-EDIT`** (vẫn thuộc tài khoản haotruyenthong; haoskyland có quyền chỉnh sửa). Chỉ dời và đổi tên, **không xoá file nào**. Dời trên Drive không tốn thêm dung lượng, mã file giữ nguyên.
 
-Dời trên Drive **không tốn thêm dung lượng, không đổi mã file**, và hoàn tác được (dời ngược lại). Đổi tên thư mục gốc thành `KHO-EDIT`.
+```
+KHO-EDIT/
+  00_CHUNG/
+    am-thanh/  whoosh/ · sang-trong/ (AM THANH LUXURY) · highlight/ (TIẾNG HIGHLIGHTER) · may-anh/ · ve-duong-vien/ · go-phim/ (GO BAN PHIM)
+               tong-hop-1/ (SFF 1: whoosh, chimes, nước…) · tong-hop-2/ (SFF 2: lối tắt tới UI_Whoosh, UI_Click, Camera_Shot…)
+    chu-thich/ bds/  15 ghim tiện ích, đã bỏ "Bản sao của": truong-hoc, y-te, sieu-thi, cong-vien, cang-bien, khu-cong-nghiep,
+                     san-van-dong, golf, bien, giai-tri, cho-truyen-thong, thanh-pho, vi-tri-du-an_tien, label-du-an_02
+               NGUON - Dinh Van Media (xem va tai ve)   ← tài liệu nguồn của bộ chú thích
+    radar/     radar_cam_01..03.mov
+    overlay/   17 file (tên số 1–14.mp4 chưa đặt tên theo nội dung)
+    nen/       ~30 nền (BACKGROUD cũ)
+    nhac/      3 bản business-time (LIST NHẠC cũ; chưa có GIAY-PHEP.md)
+    font/      font .zip (Font Chữ cũ; giải nén trên PC)
+    khung/     vùng an toàn TikTok
+    tham-khao/ plugin/ (FXConsole, Saber) · after-effects-icon/ (Animated Icons Pack)
+  10_THUONG-HIEU/hao-sky-land/   logo/ · mau/ · intro-outro/ · am-thanh/   (đang trống, chờ Hào bỏ logo, bảng màu)
+  20_DU-AN/hoc-mon/ · can-gio/  (đang trống)
+  90_CHO-PHAN-LOAI/  Sound Effect - ThuaanNguyeen.zip (2,2 GB: giải nén trên PC rồi xếp vào am-thanh/)
+  99_LUU-TRU/        logo-chu-dau-tu-khac/ (INDOCHINE, HAPPY ONE MORI, SETIA, HSL, RISA) · vo-rong_DINH-VAN-MEDIA/ · vo-rong_SOUND-EFFECT/
+                     NHAT-KY-DOI.md   ← 40 dòng: mã file, tên cũ, chỗ cũ, tên mới, chỗ mới (hoàn tác theo file này)
+```
 
-| Đang ở | Dời tới |
-|---|---|
-| ĐÌNH VĂN MEDIA / Tài Nguyên / Chú Thích BĐS | `00_CHUNG/chu-thich/bds/` (bỏ "Bản sao của" trong tên 15 file) |
-| ĐÌNH VĂN MEDIA / Tài Nguyên / Bộ Radar BĐS | `00_CHUNG/radar/` |
-| ĐÌNH VĂN MEDIA / PLUGIN | `00_CHUNG/tham-khao/plugin/` |
-| ĐÌNH VĂN MEDIA / Font Chữ (file .zip) | giải nén vào `00_CHUNG/font/`, file .zip vào `99_LUU-TRU/` |
-| OVERLAY | `00_CHUNG/overlay/` (chia `film-burn/`, `light-leak/` theo tên file; file tên số `1.mp4`…`14.mp4` vào `90_CHO-PHAN-LOAI/` chờ xem và đặt tên) |
-| BACKGROUD | `00_CHUNG/nen/` |
-| SOUND EFFECT / SFF 1, SFF 2: whoosh, MAY ANH, GO BAN PHIM, TIẾNG HIGHLIGHTER, AM THANH LUXURY, AM THANH VE DUONG VIEN | `00_CHUNG/am-thanh/whoosh/`, `may-anh/`, `go-phim/`, `highlight/`, `sang-trong/`, `ve-duong-vien/` |
-| SOUND EFFECT / Sound Effect - ThuaanNguyeen.zip | giải nén vào `90_CHO-PHAN-LOAI/`, file .zip vào `99_LUU-TRU/` |
-| LIST NHẠC KHÔNG BẢN QUYỀN YOUTUBE | `00_CHUNG/nhac/` + tạo `GIAY-PHEP.md` (tên kiểu Pixabay: kiểm điều khoản) |
-| Animated Icons Pack (After Effects) | `00_CHUNG/tham-khao/after-effects/` |
-| VÙNG AN TOÀN TIK TOK | `00_CHUNG/khung/` |
-| LOGO THƯƠNG HIỆU (INDOCHINE, HAPPY ONE MORI, SETIA, HSL, RISA) | `99_LUU-TRU/logo-chu-dau-tu-khac/` (không thuộc giỏ hàng hiện tại; chỉ dùng khi được phép) |
-| 4 thư mục trống của Hào (01_TYPOGRAPHY…04_SOUND_EFFECTS_SFX) và "HAO SKY LAND – THƯ VIỆN EDIT VIDEO" | dời vào `99_LUU-TRU/` (không xoá); tạo mới `10_THUONG-HIEU/hao-sky-land/` |
-| Gói người khác chia sẻ dạng .rar (Overlays, PAPER TRANSITION, Tài nguyên tóp tóp) | tải bản sao về, giải nén vào `90_CHO-PHAN-LOAI/` (lưu ý: chép vào Drive của Hào sẽ tính dung lượng) |
-
-**Nhật ký hoàn tác:** mỗi lần dời, Claude ghi một dòng `mã file · tên · thư mục cũ · thư mục mới · giờ` vào `KHO-EDIT/99_LUU-TRU/NHAT-KY-DOI.md`. Muốn hoàn tác: nhờ Claude "dời ngược theo nhật ký".
-
-**Việc của dự án trong repo:** timeline cũ có ghi `kho:` theo đường dẫn cũ sẽ báo thiếu file sau khi dời. Hiện chưa dự án thật nào dùng kho nên không ảnh hưởng.
+**Còn lại cho Hào / PC:**
+- Đổi quyền chia sẻ thư mục gốc từ "Bất kỳ ai có liên kết: Người chỉnh sửa" về "Bị hạn chế" (đã thêm riêng haoskyland thì Claude vẫn làm được).
+- Giải nén `90_CHO-PHAN-LOAI/Sound Effect - ThuaanNguyeen.zip` và `00_CHUNG/font/*.zip` trên PC.
+- Xem 14 overlay tên số, đặt tên theo nội dung (`film-burn_cam_01.mp4`, `light-leak_vang_01.mp4`…) hoặc nhờ Claude xem ảnh thu nhỏ rồi đặt.
+- "HSL" trong logo chủ đầu tư: nếu là logo Hào Sky Land thì dời sang `10_THUONG-HIEU/hao-sky-land/logo/`.
+- 4 thư mục trống Hào tạo trước đây (01_TYPOGRAPHY…04_SOUND_EFFECTS_SFX) nằm ngoài kho này, chưa động tới.
 
 ## 8. Đã làm và chưa làm
 
@@ -104,5 +108,5 @@ Dời trên Drive **không tốn thêm dung lượng, không đổi mã file**, 
 | Lấy theo nghĩa, ưu tiên dự án → thương hiệu → chung, báo giấy phép | Xong 13/11: lệnh `--chon` và địa chỉ `/api/kho/chon`, thử với kho giả |
 | Nút "Gợi ý" trong app (gõ ý muốn → chọn trong danh sách) | Chưa làm |
 | Mẫu edit tự xin tài nguyên kho theo nghĩa (vd. `edit-phim-01` xin "film burn" cho chuyển cảnh FilmBurn) | Chưa làm: cần đo điểm nhấn của file âm/overlay thật trước |
-| Dời kho thật trên Drive | **Chưa làm: chờ quyền chỉnh sửa và lời đồng ý của Hào** |
+| Dời kho thật trên Drive | Xong 13/11 (mục 7), có nhật ký hoàn tác. Code đã chạy với cây giống hệt (tên giả, file rỗng): nhận đúng nhóm, lấy đúng theo nghĩa, chú thích theo lời nói vẫn khớp tên mới |
 | Thử trên PC với Drive for desktop | Chưa thử |
