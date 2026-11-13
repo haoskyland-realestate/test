@@ -106,7 +106,7 @@ Drive/HaoSkyLand/
   footage-chuyen/      đưa footage từ điện thoại lên để PC tải (xong thì xoá bớt, Drive miễn phí chỉ 15 GB)
   thanh-pham/          bản chép của 04-thanh-pham để xem trên Mac/điện thoại
 ```
-Kho chính nằm trên PC; Drive không thay được ổ cứng.
+Footage gốc và thành phẩm chính nằm trên PC; Drive miễn phí không đủ chỗ cho footage.
 
 ## 6. Khi thêm thứ mới
 - Tài liệu mới: chọn đúng thư mục số trong `docs/`, thêm một dòng vào `docs/00-MUC-LUC.md`.
