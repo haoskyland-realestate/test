@@ -16,6 +16,7 @@ Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **T�
 | Dự án mới từ thư mục footage | Có (12/11) | Nút ＋ cạnh tên dự án: chọn thư mục trên PC (duyệt được từ điện thoại), chọn khung; nhạc .mp3/.wav trong thư mục chọn được ở tab Âm thanh |
 | Đặt chữ theo kịch bản | Có (13/11) | Tab Chữ → 📝: đọc cột "Chữ trên màn hình" của `KICH-BAN.md`, tìm lúc nói trong phụ đề (chịu được lỗi chính tả, lệch dấu), đặt chữ 3D; có bảng báo cáo từng chữ; hoàn tác được. `scripts/kich_ban.py` |
 | Kho hiệu ứng âm | Có (12/11) | Tab Hiệu ứng âm, hàng ♪ |
+| Kho tài nguyên (nút 📦 Kho) | Có (13/11) | Chọn thư mục kho trên PC, quét, tìm không dấu, lọc theo loại, ảnh thu nhỏ, nghe thử; + Âm tại kim, + Phủ hoà sáng / trong suốt (hàng ✦ Overlay mới), LUT làm màu đoạn. Xem `docs/04-thu-vien/KHO-TAI-NGUYEN.md` |
 | Thư viện mẫu edit | Có (13/11) | Nút ✦ Thư viện mẫu: 6 thẻ có xem trước chữ chuyển động, lọc theo loại, Áp mẫu, đọc Công thức. Thẻ so sánh 2 cột (khối chữ `compare`) |
 | Xuất sang Premiere / DaVinci | Có (12/11) | Nút “Premiere/DaVinci”: tải `.xml` (Premiere), `.otio` (DaVinci), `.srt`. Chưa mở thử trong phần mềm thật |
 | Thư viện chuyển cảnh gl-transitions | Có (12/11) | 212 hiệu ứng trong hộp Thư viện, ô tìm, khung xem thử WebGL, nút áp dụng |

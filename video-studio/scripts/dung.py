@@ -9,6 +9,7 @@ from effects import STYLES, LOOKS, TRANSITIONS
 from mau import khung, tu_can
 from am_thanh import tron_sfx
 from lop_chu import tao as tao_lop_chu
+from kho import duong_dan as kho_path
 
 DRAFT = "--nhap" in sys.argv[2:]
 if len(sys.argv) < 2 or any(a != "--nhap" for a in sys.argv[2:]):
@@ -52,6 +53,22 @@ _m = tl.get("audio", {}).get("music")
 if _m not in ("synth", None) and not os.path.exists(f"{B}/raw/{_m}"):
     sys.exit(f"Không thấy file nhạc {B}/raw/{_m} — chép file nhạc vào thư mục đó (hoặc chọn lại trong tab Âm thanh)")
 
+# Tài nguyên trong kho của Hào ("kho:<đường dẫn>"): overlay, LUT màu, âm. Thiếu thì dừng sớm, báo rõ file nào.
+_kho = [x["file"] for x in tl.get("overlays", []) + tl.get("sfx", []) if str(x["file"]).startswith("kho:")] + \
+       [c["look"] for c in shots if str(c.get("look", "")).startswith("kho:")]
+_thieu = [f for f in _kho if not (kho_path(f) and os.path.exists(kho_path(f)))]
+if _thieu:
+    sys.exit("Không thấy trong kho tài nguyên (chọn lại thư mục kho trong app, hoặc tải/giải nén file về PC):\n- " + "\n- ".join(_thieu))
+
+
+def loc_mau(look):
+    """Bộ lọc màu: filter có sẵn, hoặc file LUT .cube trong kho (đường dẫn thoát ký tự cho FFmpeg, kể cả ổ C: trên Windows)."""
+    if look in LOOKS:
+        return LOOKS[look][1]
+    p = kho_path(look).replace("\\", "/").replace(":", "\\:").replace("'", "\\'")
+    return f"lut3d=file='{p}'"
+
+
 # 2. Cắt từng cảnh về đúng khung (9:16 hoặc 16:9) từ 4K, chỉnh màu theo "look" (mặc định của phong cách), 30fps
 for i, s in enumerate(shots):
     look = s.get("look") or style["look"]
@@ -62,7 +79,7 @@ for i, s in enumerate(shots):
     ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an",
        "-vf", f"{khung(f'{B}/raw/' + s['file'], W, H, s.get('focus', 0), s.get('fit'))},"
               f"{tu_can(f'{B}/raw/' + s['file'], s['in'], s['dur']) if auto else 'null'},"
-              f"{LOOKS[look][1]},fps={FPS},format=yuv420p",
+              f"{loc_mau(look)},fps={FPS},format=yuv420p",
        "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/shot{i}.mp4")
     open(kf, "w").write(key)
 
@@ -215,6 +232,18 @@ for k, x in enumerate(brs):
               f"{tu_can(f'{B}/raw/' + x['file'], x['in'], x['dur'])},{LOOKS[style['look']][1]},fps={FPS},format=yuv420p",
        "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/br{k}.mp4")
 
+# Overlay từ kho (lá sáng, bụi, khói, giấy…): cắt về khung; "screen" giữ nền đen (đen = không đổi khi hoà sáng), "alpha" giữ kênh trong suốt
+ovs = tl.get("overlays", [])
+for k, x in enumerate(ovs):
+    src = kho_path(x["file"]) if str(x["file"]).startswith("kho:") else f"{B}/raw/{x['file']}"
+    anh = src.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
+    inp = ["-loop", "1", "-t", str(x["dur"]), "-i", src] if anh else ["-stream_loop", "-1", "-ss", str(x.get("in", 0)), "-t", str(x["dur"]), "-i", src]
+    vf = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS}"
+    if x.get("blend", "screen") == "alpha":
+        ff(*inp, "-an", "-vf", vf + ",format=rgba", "-c:v", "png", f"{B}/ov{k}.mov")
+    else:
+        ff(*inp, "-an", "-vf", vf + ",format=yuv420p", "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/ov{k}.mp4")
+
 # 7. Ghép cuối: nền (+ zoom) + cảnh trám + lớp chữ trong suốt + âm thanh
 os.makedirs(os.path.join(ROOT, "out"), exist_ok=True)
 ins = ["-i", f"{B}/base.mp4", "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav"]
@@ -229,15 +258,27 @@ for k, x in enumerate(brs):
     ins += ["-i", f"{B}/br{k}.mp4"]
     fc.append(f"[{3 + k}:v]setpts=PTS-STARTPTS+{x['start']}/TB[b{k}]")
     fc.append(f"[{cur}][b{k}]overlay=0:0:enable='between(t,{x['start']},{x['start'] + x['dur']})':eof_action=pass[o{k}]"); cur = f"o{k}"
+for k, x in enumerate(ovs):
+    i, op, s0 = 3 + len(brs) + k, x.get("opacity", 1), x["start"]
+    if x.get("blend", "screen") == "alpha":
+        ins += ["-i", f"{B}/ov{k}.mov"]
+        fc.append(f"[{i}:v]format=rgba,colorchannelmixer=aa={op},setpts=PTS-STARTPTS+{s0}/TB[v{k}]")
+        fc.append(f"[{cur}][v{k}]overlay=0:0:enable='between(t,{s0},{s0 + x['dur']})':eof_action=pass[w{k}]")
+    else:  # hoà sáng trên RGB (hoà trên YUV làm lệch màu); đệm đen trước/sau cho đủ dài video
+        ins += ["-i", f"{B}/ov{k}.mp4"]
+        fc.append(f"[{i}:v]tpad=start_duration={s0}:stop_mode=add:stop_duration={total:.2f}:color=black,trim=duration={total:.2f},format=gbrp[v{k}]")
+        fc.append(f"[{cur}]format=gbrp[g{k}]")
+        fc.append(f"[g{k}][v{k}]blend=all_mode=screen:all_opacity={op},format=yuv420p[w{k}]")
+    cur = f"w{k}"
 fc.append(f"[{cur}][1:v]overlay=0:0:shortest=1,format=yuv420p[v]")
 fc.append(f"[2:a]volume={mvol}[m]")
 mix = ["[m]"]
 if voice:
     ins += ["-i", f"{B}/voice.wav"]
-    fc.append(f"[{3 + len(brs)}:a]anull[vo]"); mix.insert(0, "[vo]")
+    fc.append(f"[{3 + len(brs) + len(ovs)}:a]anull[vo]"); mix.insert(0, "[vo]")
 if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-vien-am-thanh/) trộn sẵn thành một file
     ins += ["-i", f"{B}/sfx.wav"]
-    fc.append(f"[{3 + len(brs) + bool(voice)}:a]anull[sx]"); mix.append("[sx]")
+    fc.append(f"[{3 + len(brs) + len(ovs) + bool(voice)}:a]anull[sx]"); mix.append("[sx]")
 fc.append(f"{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0[a0]" if len(mix) > 1 else "[m]anull[a0]")
 # Chuẩn âm lượng EBU R128 cho mạng xã hội (−14 LUFS, đỉnh −1,5 dB), cùng thuật toán ffmpeg-normalize dùng
 fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")

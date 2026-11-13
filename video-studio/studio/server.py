@@ -14,6 +14,8 @@ from am_thanh import SFX, SFX_DIR  # noqa: E402
 from ap_mau import MAU, ap  # noqa: E402
 from kich_ban import dat_chu  # noqa: E402
 from lop_chu import tao as tao_lop_chu  # noqa: E402
+import kho  # noqa: E402
+import hashlib  # noqa: E402
 
 PROJ = os.path.join(ROOT, "projects")
 TOKEN = os.environ.get("STUDIO_TOKEN") or secrets.token_urlsafe(9)
@@ -169,6 +171,8 @@ class H(http.server.BaseHTTPRequestHandler):
         if len(parts) == 3 and parts[1] == "mau" and parts[2] in MAU:  # tài liệu công thức của một mẫu
             f = os.path.join(MAU[parts[2]]["_dir"], "MAU.md")
             return self.send(200, {"md": open(f, encoding="utf8").read() if os.path.exists(f) else ""})
+        if parts[1:2] == ["kho"]:
+            return self.kho_get(parts[2:], urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query))
         if parts[1:] == ["projects"]:
             return self.send(200, sorted(n for n in os.listdir(PROJ) if self.project(n)))
         if len(parts) < 3 or not (d := self.project(parts[2])):
@@ -217,6 +221,44 @@ class H(http.server.BaseHTTPRequestHandler):
                                    "has": {"nhap": os.path.exists(os.path.join(ROOT, "out", name + ".nhap.mp4")),
                                            "xuat": os.path.exists(os.path.join(ROOT, "out", name + ".mp4"))}})
         self.send(404, {"error": "Không có"})
+
+    def kho_get(self, sub, q):
+        """Kho tài nguyên: tìm kiếm, ảnh thu nhỏ, bản xem trước nhẹ, tải file gốc (chỉ trong thư mục kho)."""
+        g = lambda k, v="": (q.get(k) or [v])[0]
+        if not sub:
+            cm = kho.doc()
+            dem = {}
+            for t in cm["tep"]:
+                dem[t["loai"]] = dem.get(t["loai"], 0) + 1
+            return self.send(200, dict(kho.tim(cm, g("q"), g("loai"), int(g("trang", "0") or 0)), goc=cm["goc"], luc=cm.get("luc", ""), dem=dem,
+                                       loai={k: [v[1], v[2]] for k, v in kho.LOAI.items()}))
+        p = kho.duong_dan("kho:" + g("p"))
+        if not p or not os.path.isfile(p):
+            return self.send(404, {"error": "Không thấy file trong kho"})
+        ext = os.path.splitext(p)[1].lower()
+        if sub == ["tep"]:  # file gốc (âm thanh, ảnh, mp4/webm) cho trình duyệt phát thẳng
+            ct = {".wav": "audio/wav", ".mp3": "audio/mpeg", ".m4a": "audio/mp4", ".ogg": "audio/ogg", ".flac": "audio/flac", ".png": "image/png",
+                  ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".gif": "image/gif", ".mp4": "video/mp4", ".webm": "video/webm"}.get(ext)
+            return self.file(p, ct) if ct else self.send(415, {"error": "Loại file này không xem trực tiếp được"})
+        if sub in (["anh"], ["xem"]):
+            alpha = g("alpha") == "1"
+            h = hashlib.sha1(f"{p}|{os.path.getmtime(p)}|{alpha}".encode()).hexdigest()[:16]
+            out = os.path.join(kho.DIR, sub[0], h + (".jpg" if sub == ["anh"] else ".webm" if alpha else ".mp4"))
+            if not os.path.exists(out):
+                os.makedirs(os.path.dirname(out), exist_ok=True)
+                tmp = out + ".tmp" + os.path.splitext(out)[1]
+                if sub == ["anh"]:  # ảnh thu nhỏ: khung ở giây 1 (video) hoặc ảnh thu nhỏ
+                    cmd = (["-ss", "1"] if ext in kho.LOAI["video"][0] else []) + ["-i", p, "-frames:v", "1", "-vf", "scale=320:-2", "-q:v", "4", tmp]
+                else:  # bản xem trước 540p tối đa 20 giây; overlay trong suốt giữ kênh alpha (webm VP9)
+                    cmd = ["-t", "20", "-i", p, "-an", "-vf", "scale=-2:'min(540,ih)'"] + (
+                        ["-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-b:v", "1M", tmp] if alpha else
+                        ["-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-pix_fmt", "yuv420p", "-movflags", "+faststart", tmp])
+                r = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", *cmd], capture_output=True, timeout=300)
+                if r.returncode or not os.path.exists(tmp):
+                    return self.send(500, {"error": "Không tạo được bản xem trước"})
+                os.replace(tmp, out)
+            return self.file(out, "image/jpeg" if sub == ["anh"] else "video/webm" if alpha else "video/mp4")
+        return self.send(404, {"error": "Không có"})
 
     def thumb(self, d, spec):
         # spec: "<file>@<giây>" -> ảnh nhỏ của khung hình đó (lưu đệm trong build/thumbs)
@@ -347,6 +389,13 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(200, {"timeline": out, "sfx": sum(1 for x in out.get("sfx", []) if x.get("auto"))})
             except (ValueError, KeyError, TypeError) as ex:
                 return self.send(400, {"error": f"Không áp được mẫu: {ex}"})
+        if parts == ["api", "kho", "quet"]:  # chọn/quét lại thư mục kho tài nguyên (chỉ đọc tên file, không mở file)
+            try:
+                goc = (self.body() or {}).get("goc") or kho.goc_kho()
+                cm = kho.luu(goc)
+                return self.send(200, {"ok": True, "goc": cm["goc"], "tong": len(cm["tep"])})
+            except (ValueError, OSError) as ex:
+                return self.send(400, {"error": str(ex)})
         if parts == ["api", "new"]:
             try:
                 return self.send(200, tao_du_an(self.body() or {}))

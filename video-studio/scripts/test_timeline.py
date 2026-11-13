@@ -35,6 +35,12 @@ bad(lambda t: t["audio"].update(music="a.exe"), "audio.music")
 bad(lambda t: t.update(sfx=[{"start": 1, "dur": 0.5, "file": "khong-co"}]), "không có trong kho")
 bad(lambda t: t.update(sfx=[{"start": 1, "dur": 0.5}]), "Hiệu ứng âm 1: thiếu file")
 bad(lambda t: t.update(sfx=[{"start": 1, "dur": 0.5, "file": "chu_pop_01", "vol": 3}]), "'vol' từ 0 đến 2")
+bad(lambda t: t.update(overlays=[{"start": 1, "dur": 2, "file": "kho:a.mov", "blend": "multiply"}]), "'blend' là")
+bad(lambda t: t.update(overlays=[{"start": 1, "dur": 2, "file": "kho:a.mov", "opacity": 2}]), "'opacity' từ 0 đến 1")
+bad(lambda t: t["clips"][0].update(look="kho:a.png"), "chỉnh màu 'kho:a.png' chưa có")
+kh = copy.deepcopy(ok); kh["overlays"] = [{"start": 1, "dur": 2, "file": "kho:Overlays/leak.mov", "blend": "alpha", "opacity": 0.7}]
+kh["sfx"] = [{"start": 1, "dur": 0.5, "file": "kho:SFX/whoosh 01.wav"}]; kh["clips"][0]["look"] = "kho:LUT/Warm.cube"
+assert check(kh) == [], check(kh)
 sf = copy.deepcopy(ok); sf["sfx"] = [{"start": 12.5, "dur": 2.8, "file": "impact_boom_01"}]  # kéo quá cuối video: hợp lệ
 assert check(sf) == [], check(sf)
 bad(lambda t: t["meta"].update(style="neon"), "Phong cách 'neon' chưa có")

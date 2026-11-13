@@ -10,7 +10,8 @@
   "cards": [{"start": 5, "dur": 4, "step": "Bước 2", "title": "Giao cho ChatGPT", "items": ["Mở ChatGPT"]}],   # minh họa nền đen
   "zooms": [{"start": 3, "dur": 2, "scale": 1.07}],                    # phóng to khung (1.07 = 7%)
   "broll": [{"start": 8, "dur": 3, "file": "b.mp4", "id": "", "in": 0}],   # cảnh trám: phủ hình, giữ tiếng
-  "sfx": [{"start": 4.6, "dur": 0.6, "file": "whoosh_zoom_01", "vol": 1.0}],   # hiệu ứng âm: start = lúc file bắt đầu phát (scripts/am_thanh.py)
+  "sfx": [{"start": 4.6, "dur": 0.6, "file": "whoosh_zoom_01", "vol": 1.0}],   # file: tên trong thu-vien-am-thanh hoặc "kho:<đường dẫn>" trong kho tài nguyên
+  "overlays": [{"start": 2, "dur": 3, "file": "kho:Overlays/Light Leak 03.mov", "in": 0, "blend": "screen", "opacity": 0.8}],   # phủ lên video (scripts/kho.py)   # hiệu ứng âm: start = lúc file bắt đầu phát (scripts/am_thanh.py)
   "audio": {"music": "synth", "whoosh": true, "voice": false, "music_volume": 1.0}   # voice: giữ tiếng gốc của cảnh
                                                 # music: "synth" (nhạc tổng hợp), null (không nhạc) hoặc tên file nhạc trong build/raw/ (vd "nhac.mp3")
 }
@@ -69,7 +70,8 @@ def check(tl):
             e.append(f"Cảnh {i}: 'focus' phải từ -1 (lệch trái) đến 1 (lệch phải)")
         if c.get("fit", "crop") not in ("crop", "blur"):
             e.append(f"Cảnh {i}: 'fit' phải là 'crop' (phóng kín, cắt bớt) hoặc 'blur' (giữ trọn hình, nền mờ)")
-        if c.get("look", "trung-tinh") not in LOOKS:
+        lk = c.get("look", "trung-tinh")
+        if lk not in LOOKS and not (isinstance(lk, str) and lk.startswith("kho:") and lk.lower().endswith(".cube")):
             e.append(f"Cảnh {i}: chỉnh màu '{c.get('look')}' chưa có (đang có: {', '.join(LOOKS)})")
     trs = tl.get("transitions", [])
     if clips and len(trs) != len(clips) - 1:
@@ -102,7 +104,8 @@ def check(tl):
         elif x["start"] < 0 or x["dur"] <= 0 or x["start"] + x["dur"] > total + 0.01:
             e.append(f"Chữ {i}: {x['start']}s + {x['dur']}s nằm ngoài video ({total:.2f}s)")
     for key, name, need in (("subtitles", "Phụ đề", ["text"]), ("cards", "Minh họa", ["title"]),
-                            ("zooms", "Zoom", ["scale"]), ("broll", "Cảnh trám", ["file", "in"]), ("sfx", "Hiệu ứng âm", ["file"])):
+                            ("zooms", "Zoom", ["scale"]), ("broll", "Cảnh trám", ["file", "in"]), ("sfx", "Hiệu ứng âm", ["file"]),
+                            ("overlays", "Overlay", ["file"])):
         for i, x in enumerate(tl.get(key, []), 1):
             miss = [k for k in ["start", "dur"] + need if k not in x]
             if miss:
@@ -111,7 +114,11 @@ def check(tl):
                 e.append(f"{name} {i}: {x['start']}s + {x['dur']}s nằm ngoài video ({total:.2f}s)")
             elif key == "zooms" and not 1 <= x["scale"] <= 1.6:
                 e.append(f"Zoom {i}: 'scale' từ 1 đến 1.6 (1.07 = phóng 7%)")
-            elif key == "sfx" and x["file"] not in SFX:
+            elif key == "overlays" and x.get("blend", "screen") not in ("screen", "alpha"):
+                e.append(f"Overlay {i}: 'blend' là 'screen' (hoà sáng, cho overlay nền đen) hoặc 'alpha' (file có nền trong suốt)")
+            elif key == "overlays" and not 0 < x.get("opacity", 1) <= 1:
+                e.append(f"Overlay {i}: 'opacity' từ 0 đến 1")
+            elif key == "sfx" and x["file"] not in SFX and not str(x["file"]).startswith("kho:"):
                 e.append(f"Hiệu ứng âm {i}: '{x['file']}' không có trong kho (thu-vien-am-thanh/hieu-ung.json)")
             elif key == "sfx" and not 0 <= x.get("vol", 1) <= 2:
                 e.append(f"Hiệu ứng âm {i}: 'vol' từ 0 đến 2")

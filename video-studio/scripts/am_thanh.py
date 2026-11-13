@@ -9,6 +9,17 @@ _cat = os.path.join(ROOT, "thu-vien-am-thanh", "hieu-ung.json")
 SFX = json.load(open(_cat, encoding="utf8")) if os.path.exists(_cat) else {}
 
 
+def duong_dan_am(ten):
+    """Âm trong kho có sẵn (tên) hoặc trong kho tài nguyên của Hào ("kho:<đường dẫn>")."""
+    if ten.startswith("kho:"):
+        from kho import duong_dan
+        p = duong_dan(ten)
+        if not p or not os.path.exists(p):
+            raise FileNotFoundError(f"Không thấy {ten} trong kho tài nguyên (đã chọn đúng thư mục kho trong app chưa?)")
+        return p
+    return os.path.join(SFX_DIR, ten + ".wav")
+
+
 def tron_sfx(items, total, out):
     """Trộn các mục sfx thành file WAV stereo 44,1 kHz dài đúng `total` giây. Không có mục nào thì trả False."""
     items = [x for x in items if x["start"] < total]
@@ -16,7 +27,7 @@ def tron_sfx(items, total, out):
         return False
     ins, fc = [], []
     for k, x in enumerate(items):
-        ins += ["-i", os.path.join(SFX_DIR, x["file"] + ".wav")]
+        ins += ["-i", duong_dan_am(x["file"])]
         cut = max(0.0, -x["start"])  # âm bắt đầu trước giây 0 (điểm nhấn sát đầu video): bỏ phần đầu
         ms = int(max(0.0, x["start"]) * 1000)
         fc.append(f"[{k}:a]atrim=start={cut},asetpts=PTS-STARTPTS,aresample=44100,aformat=channel_layouts=stereo,"
