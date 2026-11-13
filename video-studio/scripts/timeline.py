@@ -107,8 +107,8 @@ def check(tl):
             from tag_chu import TAGS
             if x.get("tag") not in TAGS:
                 e.append(f"Chữ {i}: tag '{x.get('tag')}' chưa có (đang có: {', '.join(TAGS)})")
-            if not isinstance(x.get("o", {}), dict) or not 0 <= float(x.get("y", 0.24)) <= 1:
-                e.append(f"Chữ {i}: tag cần 'o' là bảng ô chữ, 'y' từ 0 đến 1")
+            if not isinstance(x.get("o", {}), dict) or not 0 <= float(x.get("y", 0.24)) <= 1 or not 0 <= float(x.get("x", 0.5)) <= 1:
+                e.append(f"Chữ {i}: tag cần 'o' là bảng ô chữ, 'x' và 'y' từ 0 đến 1")
         if kind == "stat" and not isinstance(x.get("value"), (int, float)):
             e.append(f"Chữ {i}: 'value' của số lớn phải là số")
         missing = [k for k in ["start", "dur"] + TEXT_KINDS[kind][0] if k not in x]
