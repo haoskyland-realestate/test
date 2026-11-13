@@ -13,7 +13,7 @@ Lập 13/11/2026. App studio đọc kho này **trên PC** (nút **📦 Kho**). K
 | BACKGROUD | ~30 `.mp4`: lưới, giấy, vải, bụi, địa hình, motion background | ~0,5 GB | Nền, cảnh trám |
 | SOUND EFFECT (SFF 1, SFF 2) + `Sound Effect - ThuaanNguyeen.zip` | `.wav` whoosh… (file zip 2,2 GB cần giải nén) | | + Âm tại kim |
 | LIST NHẠC KHÔNG BẢN QUYỀN YOUTUBE | `business-time…mp3` (tên kiểu thư viện Pixabay: kiểm điều khoản trước khi dùng) | | Nhạc nền |
-| LOGO THƯƠNG HIỆU | Logo dự án/chủ đầu tư (INDOCHINE, HAPPY ONE MORI, SETIA, HSL, RISA), **không phải logo Hào Sky Land** | | Chỉ dùng khi được phép dùng logo đó |
+| LOGO THƯƠNG HIỆU | Logo dự án/chủ đầu tư (INDOCHINE, HAPPY ONE MORI, SETIA, RISA). Logo HSL là logo Hào Sky Land, đã dời sang `10_THUONG-HIEU/hao-sky-land/logo/` | | Chỉ dùng khi được phép dùng logo đó |
 | ĐÌNH VĂN MEDIA / PLUGIN, Font Chữ | FXConsole, Saber (cài cho After Effects/Premiere), font `.zip` | | Tham khảo |
 | VÙNG AN TOÀN TIK TOK | 1 ảnh khung an toàn | | App đã có khung đỏ "Vùng an toàn" |
 

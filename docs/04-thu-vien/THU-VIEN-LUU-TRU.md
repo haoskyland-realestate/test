@@ -86,18 +86,16 @@ KHO-EDIT/
     font/      font .zip (Font Chữ cũ; giải nén trên PC)
     khung/     vùng an toàn TikTok
     tham-khao/ plugin/ (FXConsole, Saber) · after-effects-icon/ (Animated Icons Pack)
-  10_THUONG-HIEU/hao-sky-land/   logo/ · mau/ · intro-outro/ · am-thanh/   (đang trống, chờ Hào bỏ logo, bảng màu)
+  10_THUONG-HIEU/hao-sky-land/   logo/hao-sky-land_logo_01.png (Hào xác nhận 13/11) · mau/ · intro-outro/ · am-thanh/ (chờ bảng màu…)
   20_DU-AN/hoc-mon/ · can-gio/  (đang trống)
   90_CHO-PHAN-LOAI/  Sound Effect - ThuaanNguyeen.zip (2,2 GB: giải nén trên PC rồi xếp vào am-thanh/)
-  99_LUU-TRU/        logo-chu-dau-tu-khac/ (INDOCHINE, HAPPY ONE MORI, SETIA, HSL, RISA) · vo-rong_DINH-VAN-MEDIA/ · vo-rong_SOUND-EFFECT/
-                     NHAT-KY-DOI.md   ← 40 dòng: mã file, tên cũ, chỗ cũ, tên mới, chỗ mới (hoàn tác theo file này)
+  99_LUU-TRU/        logo-chu-dau-tu-khac/ (INDOCHINE, HAPPY ONE MORI, SETIA, RISA) · vo-rong_DINH-VAN-MEDIA/ · vo-rong_SOUND-EFFECT/
+                     NHAT-KY-DOI.md + NHAT-KY-DOI_02.md   ← 41 dòng: mã file, tên cũ, chỗ cũ, tên mới, chỗ mới (hoàn tác theo file này)
 ```
 
 **Còn lại cho Hào / PC:**
-- Đổi quyền chia sẻ thư mục gốc từ "Bất kỳ ai có liên kết: Người chỉnh sửa" về "Bị hạn chế" (đã thêm riêng haoskyland thì Claude vẫn làm được).
 - Giải nén `90_CHO-PHAN-LOAI/Sound Effect - ThuaanNguyeen.zip` và `00_CHUNG/font/*.zip` trên PC.
 - Xem 14 overlay tên số, đặt tên theo nội dung (`film-burn_cam_01.mp4`, `light-leak_vang_01.mp4`…) hoặc nhờ Claude xem ảnh thu nhỏ rồi đặt.
-- "HSL" trong logo chủ đầu tư: nếu là logo Hào Sky Land thì dời sang `10_THUONG-HIEU/hao-sky-land/logo/`.
 - 4 thư mục trống Hào tạo trước đây (01_TYPOGRAPHY…04_SOUND_EFFECTS_SFX) nằm ngoài kho này, chưa động tới.
 
 ## 8. Đã làm và chưa làm
