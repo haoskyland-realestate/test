@@ -37,23 +37,10 @@
   #left { display:flex; flex-direction:column; align-items:center; gap:10px; }
   #stage { position:relative; height:100%; max-height:calc(100% - 50px); aspect-ratio:9/16; background:#000; border-radius:12px; overflow:hidden; flex:1; }
   #stage.yt { aspect-ratio:16/9; height:auto; width:100%; flex:none; }
-  #stage.yt #ovl .blk { left:4.8%; right:auto; width:53%; bottom:11%; } #stage.yt #ovl .sub { top:auto; bottom:6.5%; left:5%; right:5%; }
-  #ovl .blk.t3 { top:27%; bottom:auto; left:4%; right:4%; text-align:center; } #ovl .t3 .l { font-size:2.3cqh; } #ovl .t3 .big { font-size:8.8cqh; line-height:1; text-shadow:0 .15cqh 0 #ccc,0 .3cqh 0 #aaa,0 .6cqh 1cqh #0008; }
-  #stage.yt #ovl .blk.t3 { left:0; right:0; width:auto; top:30%; }
-  #stage.yt #ovl .card { justify-content:center; padding:0 22%; }
   #stage video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform-origin:center; }
   #pb { display:none; } #out { display:none; object-fit:contain !important; }
   #ovl { position:absolute; inset:0; pointer-events:none; container-type:size; }
-  #ovl .blk { position:absolute; left:6.7%; right:13%; bottom:23%; font-weight:700; text-shadow:0 2px 8px #000; }
-  #ovl .l { font-size:3.2cqh; line-height:1.15; } #ovl .big { font-size:4.4cqh; } #ovl .hl { color:#f2c766; }
-  #ovl .tag { display:inline-block; font-size:1.5cqh; border:1px solid var(--gold); color:#f2c766; border-radius:2cqh; padding:.3cqh 1cqh; margin-bottom:1cqh; }
-  #ovl .num { font-size:9cqh; line-height:.9; color:transparent; -webkit-text-stroke:1px #f2c766; }
-  #ovl .sub { position:absolute; left:8%; right:8%; top:61.5%; text-align:center; } #ovl .sub > span { display:inline-block; background:#0b1b2b99; border-radius:1cqh; padding:.5cqh 1.2cqh; font-weight:800; font-size:3.1cqh; line-height:1.35; }
-  #ovl .sub .hl { display:inline-block; color:#14110a; background:#f2c766; font-size:1.2em; padding:0 .6cqh; border-radius:.6cqh; margin:0 .15cqh; }
-  #ovl .card { position:absolute; inset:0; background:#0b1b2b; display:flex; flex-direction:column; justify-content:flex-start; padding:17.7% 12% 0; }
-  #ovl .card .cs { text-align:center; font-size:1.6cqh; letter-spacing:.4cqh; color:#f2c766; text-transform:uppercase; }
-  #ovl .card .ct { text-align:center; font-size:4.8cqh; font-weight:800; color:#f2c766; text-transform:uppercase; margin:.5cqh 0 2.5cqh; line-height:1.05; }
-  #ovl .card .ci { background:#ffffff10; border-radius:1cqh; padding:1.1cqh 1.4cqh; margin-top:1cqh; font-size:2.3cqh; }
+  #ovf { position:absolute; left:0; top:0; border:0; pointer-events:none; transform-origin:0 0; background:transparent; }
   #ovl .safe { position:absolute; border:1px dashed #ff5a5acc; background:#ff5a5a14; }
   #msgStage { position:absolute; left:0; right:0; top:45%; text-align:center; color:var(--dim); padding:0 10px; }
   #ctrl { display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center; }
@@ -140,7 +127,7 @@
     <section class="box" id="left">
       <div id="stage">
         <video id="pv" playsinline preload="auto"></video><video id="pb" playsinline muted preload="auto"></video><video id="out" controls playsinline></video>
-        <div id="ovl"></div><div id="msgStage"></div>
+        <iframe id="ovf" title="Lớp chữ xem trước" tabindex="-1" aria-hidden="true"></iframe><div id="ovl"></div><div id="msgStage"></div>
       </div>
       <div id="ctrl">
         <button class="ghost" id="back">−1s</button><button class="lime" id="play">Phát</button><button class="ghost" id="fwd">+1s</button>
@@ -245,7 +232,25 @@ function stat() {
     + (dirty ? `<b>Chưa lưu</b>` : `<span class="ok">Đã lưu</span>`) + ` · ${esc(FX.styles[tl.meta.style || "hien-dai"].split(":")[0])}`;
 }
 
-function draw() { const yt = tl.meta.platform === "youtube"; $("#stage").classList.toggle("yt", yt); $("#main").classList.toggle("yt", yt); stat(); drawTabs(); drawList(); inspector(); drawTimeline(); renderFrame(); }
+// Lớp chữ xem trước: đúng mã bộ dựng dùng (scripts/lop_chu.py, qua /api/lopchu), tua theo kim → thấy chữ, phụ đề, thẻ, chuyển động như bản xuất
+let ovKey = "", ovTimer = 0, ovWH = [0, 0];
+function lopChu() {
+  const body = JSON.stringify({timeline: clean(tl)}); if (body === ovKey) return;
+  ovKey = body; clearTimeout(ovTimer);
+  ovTimer = setTimeout(async () => {
+    const r = await fetch("/api/lopchu", {method: "POST", headers: {"X-Token": T, "Content-Type": "application/json"}, body}).catch(() => null);
+    if (!r || !r.ok || body !== ovKey) return;  // timeline đang lỗi (bấm Lưu để xem lỗi) hoặc vừa đổi tiếp
+    const f = $("#ovf"), [w, h] = tl.meta.platform === "youtube" ? [1920, 1080] : [1080, 1920];
+    ovWH = [w, h]; f.style.width = w + "px"; f.style.height = h + "px";
+    f.onload = datLop; f.srcdoc = await r.text();
+  }, 350);
+}
+function datLop() {
+  const f = $("#ovf"); if (!ovWH[0]) return;
+  f.style.transform = `scale(${$("#stage").clientWidth / ovWH[0]})`;
+  try { f.contentWindow.dat && f.contentWindow.dat(now); } catch (e) { /* trang lớp chữ đang tải */ }
+}
+function draw() { lopChu(); const yt = tl.meta.platform === "youtube"; $("#stage").classList.toggle("yt", yt); $("#main").classList.toggle("yt", yt); stat(); drawTabs(); drawList(); inspector(); drawTimeline(); renderFrame(); }
 function drawTabs() {
   $("#tabs").innerHTML = TABS.map(([k, n]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${n}${Array.isArray(tl[k]) ? `<span class="n">${tl[k].length}</span>` : ""}</button>`).join("");
   $("#desc").textContent = TABS.find(x => x[0] === tab)[2];
@@ -400,17 +405,8 @@ function renderFrame() {
   const b = on("broll")[0];
   if (b && ensureProxy(b.file)) { pb.style.display = "block"; syncVideo(pb, b.file, +b.in + now - b.start, true); }
   else { pb.style.display = "none"; if (!pb.paused) pb.pause(); }
+  datLop();
   let h = "";
-  for (const x of on("texts")) {
-    if (x.kind === "title3d") { h += `<div class="blk t3">${x.top ? `<div class="l">${hl(x.top)}</div>` : ""}<div class="l big">${hl(x.big)}</div>${x.sub ? `<div class="l">${hl(x.sub)}</div>` : ""}</div>`; continue; }
-    h += `<div class="blk">` + (x.tag ? `<div class="tag">${esc(x.tag)}</div>` : "") + (x.num ? `<div class="num">${esc(x.num)}</div>` : "")
-      + (x.title ? `<div class="l">${hl(x.title)}</div>` : "") + (x.kind === "stat" ? `<div class="num">${esc(x.prefix || "")}${Number(x.value).toLocaleString("vi-VN")}${esc(x.suffix || "")}</div>` : "")
-      + (x.lines || x.items || []).map(l => `<div class="l ${x.kind === "hook" ? "big" : ""}">${x.items ? "✓ " : ""}${hl(l)}</div>`).join("")
-      + (x.text ? `<div class="l" style="font-size:2cqh">${esc(x.text)}</div>` : "") + (x.label ? `<div class="l">${hl(x.label)}</div>` : "")
-      + (x.sub ? `<div class="l" style="font-weight:400">${esc(x.sub)}</div>` : "") + `</div>`;
-  }
-  for (const x of on("subtitles")) h += `<div class="sub"><span>${hl(x.text)}</span></div>`;
-  for (const x of on("cards")) h += `<div class="card"><div class="cs">${esc(x.step || "")}</div><div class="ct">${esc(x.title)}</div>${(x.items || []).map((it, k) => `<div class="ci">${k + 1}. ${hl(it)}</div>`).join("")}</div>`;
   if ($("#safe").checked) h += tl.meta.platform === "youtube" ? `<div class="safe" style="inset:5%;background:none"></div>`
     : `<div class="safe" style="left:0;right:0;top:0;height:11.5%"></div><div class="safe" style="left:0;right:0;bottom:0;height:21.9%"></div><div class="safe" style="right:0;top:11.5%;bottom:21.9%;width:13%"></div>`;
   $("#ovl").innerHTML = h;
@@ -644,8 +640,8 @@ $("#nle").onclick = async () => {
 function view() {
   const v = $("#viewSel").value, out = $("#out");
   setPlay(false);
-  if (v === "edit") { out.style.display = "none"; out.pause(); $("#ovl").hidden = false; return renderFrame(); }
-  out.style.display = "block"; $("#ovl").hidden = true; $("#msgStage").textContent = "";
+  if (v === "edit") { out.style.display = "none"; out.pause(); $("#ovl").hidden = $("#ovf").hidden = false; return renderFrame(); }
+  out.style.display = "block"; $("#ovl").hidden = $("#ovf").hidden = true; $("#msgStage").textContent = "";
   out.onerror = () => $("#msgStage").textContent = v === "nhap" ? "Chưa có bản nháp. Bấm “Dựng nháp”." : "Chưa có bản xuất. Bấm “Xuất video”.";
   out.src = `/api/${P()}/video?t=${T}${v === "nhap" ? "&nhap=1" : ""}&v=${Date.now()}`;
 }

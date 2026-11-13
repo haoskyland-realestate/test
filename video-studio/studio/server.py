@@ -13,6 +13,7 @@ import effects  # noqa: E402
 from am_thanh import SFX, SFX_DIR  # noqa: E402
 from ap_mau import MAU, ap  # noqa: E402
 from kich_ban import dat_chu  # noqa: E402
+from lop_chu import tao as tao_lop_chu  # noqa: E402
 
 PROJ = os.path.join(ROOT, "projects")
 TOKEN = os.environ.get("STUDIO_TOKEN") or secrets.token_urlsafe(9)
@@ -147,6 +148,9 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not parts:
             return self.send(200, open(os.path.join(ROOT, "studio/index.html"), "rb").read(), "text/html; charset=utf-8")
+        if parts == ["gsap.min.js"]:  # thư viện chuyển động cho lớp chữ xem trước (công khai, không chứa dữ liệu)
+            return self.send(200, open(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), "rb").read(), "text/javascript; charset=utf-8",
+                             {"Cache-Control": "max-age=86400"})
         if parts == ["gl_runtime.js"]:  # mã chạy chuyển cảnh WebGL (công khai, không chứa dữ liệu)
             return self.send(200, open(os.path.join(ROOT, "scripts/gl_runtime.js"), "rb").read(), "text/javascript; charset=utf-8")
         if parts[0] != "api" or not ok:
@@ -325,6 +329,14 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa"})
+        if parts == ["api", "lopchu"]:  # lớp chữ xem trước: đúng mã bộ dựng dùng, cho timeline đang sửa (chưa cần lưu)
+            try:
+                tl = (self.body() or {}).get("timeline")
+                if not isinstance(tl, dict) or (errs := check(tl)):
+                    return self.send(400, {"errors": errs if isinstance(tl, dict) else ["Thiếu timeline"]})
+                return self.send(200, tao_lop_chu(tl).encode(), "text/html; charset=utf-8")
+            except (ValueError, KeyError, TypeError) as ex:
+                return self.send(400, {"errors": [str(ex)]})
         if parts == ["api", "apmau"]:  # áp mẫu edit: trả timeline mới, app tự giữ để hoàn tác rồi Hào bấm Lưu
             try:
                 req = self.body() or {}

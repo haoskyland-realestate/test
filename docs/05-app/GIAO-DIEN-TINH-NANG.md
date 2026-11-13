@@ -20,7 +20,7 @@ Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **T�
 | Xuất sang Premiere / DaVinci | Có (12/11) | Nút “Premiere/DaVinci”: tải `.xml` (Premiere), `.otio` (DaVinci), `.srt`. Chưa mở thử trong phần mềm thật |
 | Thư viện chuyển cảnh gl-transitions | Có (12/11) | 212 hiệu ứng trong hộp Thư viện, ô tìm, khung xem thử WebGL, nút áp dụng |
 | Tab Chữ, Phụ đề, Cắt, Zoom, Minh hoạ, Cảnh trám, Âm thanh, Khung hình, Thương hiệu | Có | Có đếm số mục, tìm kiếm, Thêm |
-| Khung xem: phát/dừng, −1s/+1s, mốc giờ, vùng an toàn | Có | Phát bản xem trước nhẹ 540p tự tạo từ footage; chữ, phụ đề, minh hoạ, zoom, cảnh trám hiện đè đúng thời điểm (chữ chưa có chuyển động trong xem trước) |
+| Khung xem: phát/dừng, −1s/+1s, mốc giờ, vùng an toàn | Có | Phát bản xem trước nhẹ 540p tự tạo từ footage; zoom, cảnh trám, filter màu. **Từ 13/11: lớp chữ, phụ đề, thẻ minh hoạ, thẻ so sánh chạy đúng chuyển động và kiểu chữ của bản xuất** (cùng mã `scripts/lop_chu.py` với bộ dựng), tự cập nhật 0,35 giây sau mỗi lần sửa, không cần Lưu |
 | Danh sách mục ở giữa (thẻ minh hoạ, phụ đề…) | Có | Ảnh nhỏ cho đoạn cắt và cảnh trám |
 | Khung chỉnh bên phải + Phím tắt | Có | Space, ←/→ từng khung, Shift+←/→ 1 giây, S tách, Delete xoá, Ctrl+S lưu |
 | Timeline: Tách, Xoá, mốc giờ, thu phóng −/+, Vừa khung | Có | |
@@ -39,4 +39,4 @@ Trạng thái: **Có** = đã làm và thử trên cloud bằng Chromium · **T�
 ## Việc tiếp theo đề xuất
 2. Chuẩn âm lượng (giọng to rõ, mức phổ biến cho TikTok); bản nháp mẫu đang hơi nhỏ (trung bình −28 dB).
 3. Logo, màu thật; mẫu bố cục khi Hào gửi.
-4. Chữ có chuyển động ngay trong khung xem trước.
+4. ~~Chữ có chuyển động ngay trong khung xem trước~~ (xong 13/11).
