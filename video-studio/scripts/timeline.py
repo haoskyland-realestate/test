@@ -103,6 +103,12 @@ def check(tl):
             continue
         if x.get("anim", "rise") not in TEXT_ANIMS:
             e.append(f"Chữ {i}: hiệu ứng '{x.get('anim')}' chưa có (đang có: {', '.join(TEXT_ANIMS)})")
+        if kind == "tag":
+            from tag_chu import TAGS
+            if x.get("tag") not in TAGS:
+                e.append(f"Chữ {i}: tag '{x.get('tag')}' chưa có (đang có: {', '.join(TAGS)})")
+            if not isinstance(x.get("o", {}), dict) or not 0 <= float(x.get("y", 0.24)) <= 1:
+                e.append(f"Chữ {i}: tag cần 'o' là bảng ô chữ, 'y' từ 0 đến 1")
         if kind == "stat" and not isinstance(x.get("value"), (int, float)):
             e.append(f"Chữ {i}: 'value' của số lớn phải là số")
         missing = [k for k in ["start", "dur"] + TEXT_KINDS[kind][0] if k not in x]

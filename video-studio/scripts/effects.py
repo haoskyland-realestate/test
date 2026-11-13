@@ -189,6 +189,7 @@ TEXT_KINDS = {
     "checklist": (["items"], "Danh sách kiểm, từng mục hiện dần có dấu ✓ (thêm 'title')"),
     "stat": (["value", "label"], "Số lớn chạy từ 0 (thêm 'prefix', 'suffix', 'decimals')"),
     "title3d": (["big"], "Chữ lớn giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub'); kiểu chữ và cách hiện theo phong cách"),
+    "tag": (["tag"], "Tag chữ có sẵn khung + chuyển động (scripts/tag_chu.py), chỉ điền ô chữ 'o'; 'y' 0..1 là vị trí dọc"),
     "compare": (["a_label", "a_value", "b_label", "b_value"], "Thẻ so sánh 2 cột (vd. Thuê nhà vs Trả góp), thêm 'title', 'note'"),
 }
 

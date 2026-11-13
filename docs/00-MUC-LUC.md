@@ -26,6 +26,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Xem lỗi Hào đã nghiệm thu và cách dựng đúng (màu da, chữ sau đầu, zoom): **đọc trước khi dựng** | `04-thu-vien/GHI-NHO-NGHIEM-THU.md` |
 | Chỉnh màu như đạo diễn hình ảnh: đo, đồng nhất cảnh, lấy màu video mẫu, giữ da | `04-thu-vien/CHINH-MAU.md` (skill `chinh-mau`) |
 | Làm video giải thích bằng tranh minh hoạ (bộ đạo cụ Flow + hệ thống tự chuyển động), câu lệnh Flow thử phong cách | `04-thu-vien/MINH-HOA.md` |
+| Dùng tag chữ có sẵn (10 kiểu: số lớn, bước, thanh tên, gạch chân…), điền chữ của mình | `04-thu-vien/THU-VIEN-TAG.md` |
 | Giọng nói AI (Voice Studio): so sánh CIT Voice Studio và VoiceStudio, giấy phép, cách tích hợp | `04-thu-vien/GIONG-NOI-AI.md` |
 | Xem 10 repo chuyên nghiệp và cái nào đã dùng | `04-thu-vien/THU-VIEN-CHUYEN-NGHIEP.md` |
 | Xem kế hoạch, đang ở bước nào | `03-ke-hoach/KE-HOACH-APP.md`, bảng Trạng thái trong `../CLAUDE.md` |
@@ -53,6 +54,7 @@ docs/
     THU-VIEN-HIEU-UNG.md           tự sinh từ effects.py (222 chuyển cảnh, 9 filter…)
     THU-VIEN-MAU.md                đặc tả mẫu
     CONG-THUC-VIRAL.md             hook, nhịp, khung video, chọn mẫu ★
+    THU-VIEN-TAG.md                10 tag chữ khung có sẵn, ô chữ, ví dụ ★
     MINH-HOA.md                    video tranh minh hoạ: phân tích mẫu, hướng làm, câu lệnh Flow ★
     CHINH-MAU.md                   đạo diễn màu: luật, số chuẩn, phong cách, lệnh ★
     GHI-NHO-NGHIEM-THU.md          lỗi đã nghiệm thu + cách dựng đúng, ảnh demo ★

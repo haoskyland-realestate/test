@@ -3,6 +3,8 @@ bộ dựng (dung.py → HyperFrames quay thành video) và khung xem trước c
 tua bằng window.dat(giây)), nên xem trước giống bản xuất: cùng chữ, cùng phong cách, cùng chuyển động."""
 import html, re
 
+import tag_chu
+
 from timeline import layout, size
 from effects import STYLES
 
@@ -55,7 +57,9 @@ def tao(tl):
         ch = an == "type"
         sel = f"#b{i}"
         a = [anim_in(an, sel, st0 + 0.25)]
-        if kind == "hook":
+        if kind == "tag":  # tag chữ có sẵn: tự lo cả vào, đổi chữ và ra
+            body, a = tag_chu.ve(s, sel, d, H, YT)
+        elif kind == "hook":
             body = f'<div class="tag">{html.escape(s["tag"])}</div>' + "".join(line(l, "big", ch) for l in s["lines"])
             a.append(f'tl.fromTo("{sel} .tag",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:{d(.5)}}},{st0:.2f});')
         elif kind == "section":
@@ -116,7 +120,7 @@ def tao(tl):
                   f'const o{i}={{v:0}};tl.to(o{i},{{v:{s["value"]},duration:{d(1.4)},ease:"power2.out",onUpdate:()=>fmt("{sel} .val",o{i}.v,{dec})}},{st0 + 0.1:.2f});']
         else:
             body = "".join(line(l, "mid", ch) for l in s["lines"])
-        a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind in ("title3d", "compare")
+        if kind != "tag": a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind in ("title3d", "compare")
                  else f'tl.to("{sel}",{{opacity:0,y:-40,duration:{d(.35)},ease:"power2.in"}},{st0 + du - 0.4 * SP:.2f});')
         blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}" data-start="{st0:.2f}" data-duration="{du:.2f}" '
                       f'data-track-index="{(6 if kind == "source" else 1 + i % 2)}">{body}</div>')
@@ -148,9 +152,11 @@ def tao(tl):
     .logo{top:44px;left:56px;font-size:24px}
     .title3d,.compare{left:0;right:0;width:auto;top:330px;bottom:auto}
     """
+    tags = [x["tag"] for x in tl.get("texts", []) if x.get("kind") == "tag"]
+    tag_font = f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?{tag_chu.FONTS}&display=swap">' if tags else ""
     return (f"""<!doctype html><html lang="vi"><head><meta charset="UTF-8">
     <meta name="viewport" content="width={W}, height={H}"><script src="gsap.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{style["fonts"]}&display=swap"><style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{style["fonts"]}&display=swap">{tag_font}<style>
     :root{{--scrim:{style["scrim"]};--accent:{style["accent"]};--hl:{style["hl"]};--text:{style["text"]};
      --display:"{style["display"]}",sans-serif;--body:"{style["body"]}",sans-serif;--dw:{style["display_weight"]}}}
     *{{margin:0;padding:0;box-sizing:border-box}}
@@ -209,6 +215,7 @@ def tao(tl):
     .ci b{{flex:none;width:64px;height:64px;border-radius:50%;background:var(--accent);color:{style["bg"]};display:flex;align-items:center;justify-content:center;font-size:36px}}
     {style.get("css", "")}
     {YT_CSS if YT else ""}
+    {".blk.tag{left:0;right:0;top:0;bottom:0;width:auto;zoom:" + ("0.62" if YT else "1") + "}.blk.tag>div>div{filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}" + tag_chu.css(tags) if tags else ""}
     </style></head><body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{W}" data-height="{H}">
     <div class="clip scrim" data-start="0" data-duration="{total:.2f}" data-track-index="0"></div>
