@@ -30,8 +30,10 @@ def tron_sfx(items, total, out):
         ins += ["-i", duong_dan_am(x["file"])]
         cut = max(0.0, -x["start"])  # âm bắt đầu trước giây 0 (điểm nhấn sát đầu video): bỏ phần đầu
         ms = int(max(0.0, x["start"]) * 1000)
+        p, hp = x.get("pitch", 1.0), x.get("hp")  # cao độ (đổi nhẹ để tai không nhận ra lặp), lọc trầm (không lấn giọng)
         fc.append(f"[{k}:a]atrim=start={cut},asetpts=PTS-STARTPTS,aresample=44100,aformat=channel_layouts=stereo,"
-                  f"volume={x.get('vol', 1.0)},adelay={ms}|{ms}[s{k}]")
+                  + (f"asetrate={44100 * p:.0f},aresample=44100," if p != 1.0 else "") + (f"highpass=f={hp}," if hp else "")
+                  + f"volume={x.get('vol', 1.0)},adelay={ms}|{ms}[s{k}]")
     fc.append("".join(f"[s{k}]" for k in range(len(items))) + f"amix=inputs={len(items)}:normalize=0:duration=longest,"
               f"apad,atrim=0:{total:.3f}[a]")
     subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", *ins, "-filter_complex", ";".join(fc), "-map", "[a]", out], check=True)

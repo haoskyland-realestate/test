@@ -74,5 +74,17 @@
   "sub": "cho căn hộ 60–80m2",
   "css": "font-family:Montserrat,sans-serif;font-weight:900;color:#fff;text-shadow:0 1px 0 #ccc,0 2px 0 #aaa,0 3px 0 #999,0 6px 10px rgba(0,0,0,.45)",
   "hieu_ung": "zoom-blur"
+ },
+ "nhip_chu": {
+  "vao": "whoosh_nhanh_01",
+  "tram": "impact_tram_01",
+  "lap_lanh": "ting_lap-lanh_01",
+  "ra": "whoosh_quat_01",
+  "vol": {
+   "vao": 0.45,
+   "tram": 0.55,
+   "lap_lanh": 0.3,
+   "ra": 0.22
+  }
  }
 }

@@ -301,15 +301,34 @@ for k, x in enumerate(ovs):
         fc.append(f"[{cur}]format=gbrp[g{k}]")
         fc.append(f"[g{k}][v{k}]blend=all_mode=screen:all_opacity={op},format=yuv420p[w{k}]")
     cur = f"w{k}"
-fc.append(f"[{cur}][1:v]overlay=0:0:shortest=1,format=yuv420p[v]")
+nv = 3 + len(brs) + len(ovs)  # chỉ số input âm thanh đầu tiên
+# Chữ sau đầu: dựng nền (đã zoom, cảnh trám, overlay) ra file, tách người trên chính file đó, rồi ghép nền → chữ → người
+sau = [(x["start"], x["start"] + x["dur"]) for x in tl.get("texts", []) if x.get("sau_dau")]
+if sau:
+    from tach_nguoi import mat_na
+    nen = f"{B}/base.mp4"
+    if fc:
+        nen = f"{B}/nen.mp4"
+        ff(*ins, "-filter_complex", ";".join(fc), "-map", f"[{cur}]", "-an", "-c:v", "libx264", "-crf", "12", "-preset", "fast", "-t", f"{total:.2f}", nen)
+    mk = hashlib.sha1(open(nen, "rb").read() + json.dumps(sau).encode()).hexdigest()  # nền hay khoảng chữ đổi thì tách lại
+    if not (os.path.exists(f"{B}/mask.mp4") and os.path.exists(f"{B}/mask.key") and open(f"{B}/mask.key").read() == mk):
+        mat_na(nen, sau, f"{B}/mask.mp4"); open(f"{B}/mask.key", "w").write(mk)
+    moc("tách người (chữ sau đầu)")
+    ins = ["-i", nen, "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav", "-i", f"{B}/mask.mp4"]
+    fc, cur, nv = [], "0:v", 4
+    bat = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b in sau)
+    fc += [f"[{cur}]split[n1][n2]", "[n1][1:v]overlay=0:0:shortest=1[t]", f"[3:v]format=gray,scale={W}:{H}[mk]",
+           "[n2]format=rgba[nr]", "[nr][mk]alphamerge[ps]", f"[t][ps]overlay=0:0:enable='{bat}',format=yuv420p[v]"]
+else:
+    fc.append(f"[{cur}][1:v]overlay=0:0:shortest=1,format=yuv420p[v]")
 fc.append(f"[2:a]volume={mvol}[m]")
 mix = ["[m]"]
 if voice:
     ins += ["-i", f"{B}/voice.wav"]
-    fc.append(f"[{3 + len(brs) + len(ovs)}:a]anull[vo]"); mix.insert(0, "[vo]")
+    fc.append(f"[{nv}:a]anull[vo]"); mix.insert(0, "[vo]")
 if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-vien-am-thanh/) trộn sẵn thành một file
     ins += ["-i", f"{B}/sfx.wav"]
-    fc.append(f"[{3 + len(brs) + len(ovs) + bool(voice)}:a]anull[sx]"); mix.append("[sx]")
+    fc.append(f"[{nv + bool(voice)}:a]anull[sx]"); mix.append("[sx]")
 fc.append(f"{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0[a0]" if len(mix) > 1 else "[m]anull[a0]")
 # Chuẩn âm lượng EBU R128 cho mạng xã hội (−14 LUFS, đỉnh −1,5 dB), cùng thuật toán ffmpeg-normalize dùng
 fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")

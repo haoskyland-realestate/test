@@ -44,7 +44,12 @@ Dự án `projects/zz-2026-11-13_tiktok_nghiem-thu` (video thô 77 giây, Hào �
 - Chữ có số liệu (giá, diện tích) **không được** để đầu che mất chữ số. Nếu đầu nằm giữa khung thì dời số sang hai bên hoặc lên cao.
 - Khi người đi lại (không đứng yên) thì chỉ dùng chữ sau đầu ở cảnh đứng nói; cảnh đi bộ để chữ ở trên cao như cũ.
 
-**Trạng thái:** demo tách người bằng OpenCV (GrabCut, cho một ảnh tĩnh, phải chỉnh tay). Để chạy cho cả video cần **mô hình tách người theo từng khung** (ví dụ MediaPipe Selfie Segmentation hoặc Robust Video Matting) chạy trên PC. **Chưa cài, chưa làm.** Việc cài thêm thư viện cần Hào đồng ý.
+**Trạng thái (13/11, Hào yêu cầu làm):** đã làm cho cả video. Thêm `"sau_dau": true` vào khối chữ (vd. `title3d`). Bộ dựng:
+1. dựng nền ra file;
+2. tách người từng khung bằng **MODNet** (giấy phép Apache-2.0, 25 MB, chạy bằng onnxruntime có sẵn, tự tải về `video-studio/models/` lần đầu), chỉ ở khoảng có chữ, làm mượt mép theo thời gian;
+3. ghép nền → chữ → người.
+
+Mã: `scripts/tach_nguoi.py`, `dung.py`. Tốc độ trên cloud: khoảng 0,3 giây mỗi khung hình. Khung xem trước của app chưa hiện hiệu ứng này, phải Dựng nháp mới thấy. Vật ở tiền cảnh (mặt bàn đá) cũng được tính là "người", nên chữ đặt thấp sẽ bị che.
 
 ### 3. Zoom in / zoom out chưa đẹp
 
@@ -72,4 +77,19 @@ Dự án `projects/zz-2026-11-13_tiktok_nghiem-thu` (video thô 77 giây, Hào �
 ## Việc cần làm để áp dụng (theo thứ tự)
 1. ~~Màu da~~: xong 13/11 (`chinh_mau.py`, chặn tăng rực trong `tu_can`).
 2. Zoom êm, neo theo mặt, phóng theo chữ lớn: sửa `dung.py` + `master_cut.py`.
-3. Chữ sau đầu: cần mô hình tách người theo từng khung (cài thêm trên PC), làm sau cùng.
+3. ~~Chữ sau đầu~~: xong 13/11 (`sau_dau`, MODNet).
+
+---
+
+## Lần 2: video Gladia, chữ sau đầu + âm theo nhịp chữ (13/11/2026)
+Hào: "ưng hiệu ứng chữ lúc ban đầu hơn (chữ trắng nổi 3D lao vào), nhưng vẫn giữ chữ phía sau đầu; kết hợp bộ âm cho nhịp chữ như chuyên gia âm thanh".
+
+### Luật âm theo nhịp chữ (mẫu có `nhip_chu`, mã `ap_mau.py`)
+| Lớp | Thời điểm | Âm mặc định | Âm lượng | Luật |
+|---|---|---|---|---|
+| Vào | **đỉnh** tiếng vút trùng khung chữ chạm | `whoosh_nhanh_01` | 0,45 | lọc trầm 150 Hz (không lấn giọng); hai tiếng vút cách nhau ≥ 0,4 s |
+| Chạm | khung chữ dừng | `chu_swish-pop_01` (theo mẫu) | 0,55 | có sẵn từ trước |
+| Trầm | chỉ chữ **đầu tiên** và chữ có **tiền, %** | `impact_tram_01` | 0,55 | không đặt cho mọi chữ: nghe nhàm, mất sức nặng |
+| Lấp lánh | chữ có số | `ting_lap-lanh_01` | 0,3 | thay tiếng ting số liệu cũ (hai tiếng ting chồng nhau nghe rối) |
+| Ra | lúc chữ tan | `whoosh_quat_01` | 0,22 | bỏ nếu chữ sau tới trong 0,6 s; lọc trầm 200 Hz |
+| Chung | | | | cao độ luân phiên 100% / 96% / 104% để tai không nhận ra một tiếng lặp lại; cả bài chuẩn −14 LUFS sau khi trộn |

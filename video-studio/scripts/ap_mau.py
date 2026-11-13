@@ -48,14 +48,15 @@ def ap(tl, mau, chi_am=False):
     sp = STYLES[tl["meta"].get("style", "hien-dai")]["speed"]
     new = []
 
-    def them(name, t):
+    def them(name, t, vol_=None, pitch=1.0, hp=None, cach=0.25):
         if not name or name not in SFX:
             return
         st = round(max(0.0, t - SFX[name]["diem_nhan"]), 2)
-        if st >= total - 0.05 or any(y["file"] == name and abs(y["start"] - st) < 0.25 for y in new):
+        if st >= total - 0.05 or any(y["file"] == name and abs(y["start"] - st) < cach for y in new):
             return  # không chồng hai tiếng giống nhau quá sát
         new.append({"start": st, "dur": round(min(SFX[name]["dai"], total - st), 2), "file": name,
-                    "vol": vol.get(SFX[name]["nhom"], 1.0), "auto": True})
+                    "vol": vol_ if vol_ is not None else vol.get(SFX[name]["nhom"], 1.0), "auto": True,
+                    **({"pitch": pitch} if pitch != 1.0 else {}), **({"hp": hp} if hp else {})})
 
     for t0, d, ty in L1["transitions"]:
         if ty == "cut":
@@ -72,6 +73,26 @@ def ap(tl, mau, chi_am=False):
             them(s.get("so_lieu"), x["start"] + 1.5 * sp)  # số chạy xong
         elif kind == "title3d" and re.search(r"\d", x.get("big", "")):
             them(s.get("so_lieu"), hit + 0.12)
+    # 3b. thiết kế âm theo nhịp chữ (mẫu có "nhip_chu"): vào (vút, đỉnh trùng lúc chữ chạm) → chạm (ở trên) → trầm (chữ mở đầu, số lớn)
+    #     → lấp lánh (số tiền, %) → ra (rất nhỏ, bỏ nếu chữ sau tới sát). Đổi cao độ ±4% luân phiên, lọc trầm tiếng vút.
+    nc = mau.get("nhip_chu")
+    if nc:
+        v = nc.get("vol", {})
+        ds = sorted((x for x in tl.get("texts", []) if x.get("kind", "line") in ("title3d", "hook", "stat", "tag", "line")), key=lambda x: x["start"])
+        for k, x in enumerate(ds):
+            kind = x.get("kind", "line")
+            hit = x["start"] + (0.25 if kind in ("title3d", "tag") else 0.3) * sp
+            pitch = (1.0, 0.96, 1.04)[k % 3]
+            so = bool(re.search(r"\d", x.get("big", "") + json.dumps(x.get("o", {}), ensure_ascii=False)))
+            them(nc.get("vao"), hit, v.get("vao", .45), pitch, hp=150, cach=0.4)
+            if k == 0 or kind == "hook" or (so and re.search(r"tỷ|tỉ|triệu|%", (x.get("big", "") + json.dumps(x.get("o", {}), ensure_ascii=False)).lower())):
+                them(nc.get("tram"), hit, v.get("tram", .55), cach=0.6)
+            if so and nc.get("lap_lanh"):  # lấp lánh thay tiếng ting số liệu (hai tiếng ting chồng nhau nghe rối)
+                new[:] = [y for y in new if not (y["file"] == s.get("so_lieu") and abs(y["start"] - hit) < 0.4)]
+                them(nc.get("lap_lanh"), hit + 0.08, v.get("lap_lanh", .3), pitch)
+            ra = x["start"] + x["dur"] - 0.2 * sp
+            if k + 1 >= len(ds) or ds[k + 1]["start"] - ra > 0.6:
+                them(nc.get("ra"), ra, v.get("ra", .22), pitch, hp=200, cach=0.4)
     tl["sfx"] += sorted(new, key=lambda y: y["start"])
     # 4. zoom nhấn ý đúng lúc chữ lớn hiện (xen_ke: cách một chữ một zoom → khung gần/xa xen kẽ)
     zc = mau.get("zoom_chu")
@@ -106,7 +127,8 @@ def _tu_kiem():
     assert out["texts"][1]["start"] == 4.5  # cảnh 2 không đổi chỗ (chuyển cảnh mới nằm sau nó)
     assert any(x["file"] == "chu_click_01" and "auto" not in x for x in out["sfx"]), "giữ mục tự thêm tay"
     files = [x["file"] for x in out["sfx"] if x.get("auto")]
-    assert "whoosh_zoom_01" in files and "ting_don_01" in files and files.count("chu_swish-pop_01") == 2, files
+    # mẫu có nhip_chu: tiếng lấp lánh thay tiếng ting số liệu ở chữ có số
+    assert "whoosh_zoom_01" in files and "ting_lap-lanh_01" in files and "ting_don_01" not in files and files.count("chu_swish-pop_01") == 2, files
     wz = next(x for x in out["sfx"] if x["file"] == "whoosh_zoom_01")
     t0, d, _ = layout(out)["transitions"][1]
     assert abs(wz["start"] + SFX["whoosh_zoom_01"]["diem_nhan"] - (t0 + d / 2)) < 0.02
@@ -116,6 +138,12 @@ def _tu_kiem():
     tl2 = copy.deepcopy(tl); tl2["texts"].append({"kind": "line", "start": 7.5, "dur": 1, "lines": ["Cảnh ba"]})
     out2 = ap(tl2, m)
     assert out2["texts"][2]["start"] == round(7.5 + 0.35, 2), out2["texts"][2]
+    # nhịp chữ: tiếng vút có đỉnh đúng lúc chữ chạm, đập trầm chỉ ở chữ đầu và chữ có tiền, cao độ luân phiên
+    vz = [x for x in out["sfx"] if x["file"] == "whoosh_nhanh_01"]
+    hit0 = 0.2 + 0.25 * STYLES["edit-phim"]["speed"]
+    assert vz and abs(vz[0]["start"] + SFX["whoosh_nhanh_01"]["diem_nhan"] - hit0) < 0.02 and vz[0]["hp"] == 150, vz
+    assert len([x for x in out["sfx"] if x["file"] == "impact_tram_01"]) == 1  # chữ đầu "2.4 TỶ"; chữ "Cảnh hai" không có
+    assert any(x["file"] == "ting_lap-lanh_01" for x in out["sfx"]) and any(x.get("pitch") == 0.96 for x in out["sfx"])
     print("OK", len(out["sfx"]), "hiệu ứng âm")
 
 
