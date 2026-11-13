@@ -60,6 +60,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Thư viện mẫu edit (nút ✦, 6 mẫu) | Xong 13/11: thêm 5 mẫu tự thiết kế (`talking-head-01` vàng cao cấp, `neon-01`, `chu-dong-01` nhiều màu, `giai-thich-01` thẻ sáng, `sang-trong-01` nghỉ dưỡng) + 4 phong cách, khối `compare` (so sánh 2 cột), kiểu chữ `word-pop`, zoom nhấn ý do mẫu tự thêm (`mau: true`); trang thư viện dạng thẻ có xem trước chuyển động, đọc công thức `MAU.md`; công thức chung `docs/04-thu-vien/CONG-THUC-VIRAL.md`. Dựng thử cả 5 bằng video giả, đã xem khung hình. Chưa dựng với footage của Hào; chưa đo hiệu quả thật |
 | Đặt chữ theo kịch bản (`scripts/kich_ban.py`, nút 📝 tab Chữ) | Xong 13/11: cột "Chữ trên màn hình" của `KICH-BAN.md` (`nhãn / *CHỮ LỚN* / dòng dưới`) → khối `title3d` đúng lúc nói, dò trong phụ đề (bỏ dấu, cho lệch 1 từ), không thấy thì theo cột Giây; dự án có mẫu edit thì rải lại âm (giữ chuyển cảnh). Tự kiểm + thử trong app với dự án mẫu. Chưa thử với giọng thật của Hào |
 | Sắp xếp tài liệu + phân việc AI | Xong 12/11: docs theo thư mục đánh số, `AI-NAO-VIEC-NAO.md`, quy ước tên/thư mục, nhân bản 3 mức, bộ mẫu `mau/`. Thư mục footage trên PC mới là đề xuất, chưa tạo |
+| Đạo diễn màu (`scripts/chinh_mau.py`, skill `chinh-mau`, `docs/04-thu-vien/CHINH-MAU.md`) | 13/11, tự xây (numpy + OpenCV + ffmpeg, không thêm thư viện): đo ám màu/sáng tối/cháy/da từng cảnh → cảnh chuẩn → phong cách có sẵn hoặc từ video mẫu → giữ da + trắng → mỗi cảnh một LUT `lut:mau/cNN.cube` (timeline, app, bộ dựng nhận) → báo cáo `MAU-SAC.md` + ảnh trước/sau; `--ap` chỉ chạy khi Hào duyệt. Tự kiểm đạt; thử trên Gladia (da giữ 38→38%) và 5 clip ngoài trời; dựng thật 18s đúng. Phát hiện: scrim của phong cách `hien-dai` làm tối 62% dưới khung suốt video (chờ Hào quyết). Chưa thử trên PC |
 | Nghiệm thu video Gladia (`projects/zz-2026-11-13_tiktok_nghiem-thu`) | 13/11: dựng 74s (cắt lặng, chữ 3D, film burn, chuyển cảnh, âm). Hào: "tạm ổn". Cần sửa: màu da cam (do tự cân tăng rực), chữ nên nằm sau đầu, zoom giật. Mới làm khung demo + `GHI-NHO-NGHIEM-THU.md`; **chưa sửa code** 3 điểm này |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |
@@ -74,7 +75,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 - Repo nội bộ (riêng tư).
 
 ## Hệ thống làm việc (Hào chốt 12/11/2026)
-`docs/01-he-thong/HE-THONG.md`: Anti xây phần mềm · GitHub giữ mã và bản v1 chạy tạm · **PC Windows 11 làm việc nặng** (tải footage, dựng) · Mac đọc báo cáo và nghiệm thu · điện thoại giao việc. Skill dự án: `.claude/skills/` (lap-storyboard, dung-video, bao-cao-nghiem-thu); MCP: `docs/01-he-thong/MCP-VA-SKILL.md`.
+`docs/01-he-thong/HE-THONG.md`: Anti xây phần mềm · GitHub giữ mã và bản v1 chạy tạm · **PC Windows 11 làm việc nặng** (tải footage, dựng) · Mac đọc báo cáo và nghiệm thu · điện thoại giao việc. Skill dự án: `.claude/skills/` (lap-storyboard, chinh-mau, dung-video, bao-cao-nghiem-thu); MCP: `docs/01-he-thong/MCP-VA-SKILL.md`.
 
 ## Kế hoạch đang theo
 `docs/03-ke-hoach/KE-HOACH-APP.md`: định dạng timeline → thư viện hiệu ứng → app timeline (PWA PC + điện thoại) → máy chủ cục bộ Windows → âm thanh.

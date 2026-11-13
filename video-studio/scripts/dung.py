@@ -57,6 +57,7 @@ if _m not in ("synth", None) and not os.path.exists(f"{B}/raw/{_m}"):
 _kho = [x["file"] for x in tl.get("overlays", []) + tl.get("sfx", []) if str(x["file"]).startswith("kho:")] + \
        [c["look"] for c in shots if str(c.get("look", "")).startswith("kho:")]
 _thieu = [f for f in _kho if not (kho_path(f) and os.path.exists(kho_path(f)))]
+_thieu += [c["look"] for c in shots if str(c.get("look", "")).startswith("lut:") and not os.path.exists(os.path.join(HERE, c["look"][4:]))]
 if _thieu:
     sys.exit("Không thấy trong kho tài nguyên (chọn lại thư mục kho trong app, hoặc tải/giải nén file về PC):\n- " + "\n- ".join(_thieu))
 
@@ -65,14 +66,15 @@ def loc_mau(look):
     """Bộ lọc màu: filter có sẵn, hoặc file LUT .cube trong kho (đường dẫn thoát ký tự cho FFmpeg, kể cả ổ C: trên Windows)."""
     if look in LOOKS:
         return LOOKS[look][1]
-    p = kho_path(look).replace("\\", "/").replace(":", "\\:").replace("'", "\\'")
+    p = (os.path.join(HERE, look[4:]) if look.startswith("lut:") else kho_path(look))  # lut: LUT của dự án (chinh_mau.py)
+    p = p.replace("\\", "/").replace(":", "\\:").replace("'", "\\'")
     return f"lut3d=file='{p}'"
 
 
 # 2. Cắt từng cảnh về đúng khung (9:16 hoặc 16:9) từ 4K, chỉnh màu theo "look" (mặc định của phong cách), 30fps
 for i, s in enumerate(shots):
     look = s.get("look") or style["look"]
-    auto = tl.get("meta", {}).get("auto_color", True)  # tự cân màu từng cảnh (mặc định bật)
+    auto = tl.get("meta", {}).get("auto_color", True) and not look.startswith("lut:")  # tự cân màu (LUT chinh_mau đã gồm cân màu)
     key = json.dumps([s["file"], s["in"], s["dur"], s.get("focus", 0), s.get("fit"), look, auto, DRAFT, 3, W])  # 2: có chuyển tông HDR
     kf = f"{B}/shot{i}.key"  # nhớ cảnh đã cắt; đổi file/mốc/lệch khung/màu thì tự cắt lại
     if os.path.exists(f"{B}/shot{i}.mp4") and os.path.exists(kf) and open(kf).read() == key: continue

@@ -29,7 +29,7 @@ Dự án `projects/zz-2026-11-13_tiktok_nghiem-thu` (video thô 77 giây, Hào �
 - Kiểm tra bằng số, không bằng mắt: da (vùng giữa mặt) nên ở **35–50% độ rực, sắc độ 14–20°**. Vượt 55% là cam.
 - Trắng của tủ, tường phải vẫn trắng sạch (đã kiểm trong demo).
 
-**Trạng thái:** mới là demo trên ảnh. **Chưa đưa vào `mau.py`/`effects.py`**: cần thêm màu `da-tu-nhien` và chặn tăng rực trong `tu_can`, rồi dựng thử một đoạn.
+**Trạng thái (13/11):** đã làm. `mau.tu_can` không tăng rực quá 5%. Bộ đạo diễn màu `scripts/chinh_mau.py` (`CHINH-MAU.md`) có bước giữ da: thử với video này, da giữ 38→38%, kể cả khi lấy màu từ ảnh mẫu tông cam (38→40%). Chưa dựng lại video Gladia.
 
 ### 2. Chữ che mặt: phải đặt chữ sau đầu
 
@@ -70,6 +70,6 @@ Dự án `projects/zz-2026-11-13_tiktok_nghiem-thu` (video thô 77 giây, Hào �
 ---
 
 ## Việc cần làm để áp dụng (theo thứ tự)
-1. Màu `da-tu-nhien` + chặn tăng rực trong `tu_can`: dễ, làm trước.
+1. ~~Màu da~~: xong 13/11 (`chinh_mau.py`, chặn tăng rực trong `tu_can`).
 2. Zoom êm, neo theo mặt, phóng theo chữ lớn: sửa `dung.py` + `master_cut.py`.
 3. Chữ sau đầu: cần mô hình tách người theo từng khung (cài thêm trên PC), làm sau cùng.

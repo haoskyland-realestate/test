@@ -320,7 +320,7 @@ function inspector() {
     h = `<h3>Đoạn ${sel.i + 1}</h3>${fld("file", o.file)}${fld("in", o.in, "number")}${fld("dur", o.dur, "number")}
       <label>Vừa khung</label><select data-f="fit"><option value="">Tự chọn (quay dọc làm YouTube: nền mờ)</option><option value="crop"${o.fit === "crop" ? " selected" : ""}>Phóng kín khung, cắt bớt</option><option value="blur"${o.fit === "blur" ? " selected" : ""}>Giữ trọn hình, hai bên nền mờ</option></select>
       <label>Lệch khung khi cắt: ${o.focus ?? 0} (-1 trái/trên, 1 phải/dưới)</label><input data-f="focus" type="range" min="-1" max="1" step="0.1" value="${o.focus ?? 0}">
-      <label>Chỉnh màu</label><select data-f="look">${opts(FX.looks, o.look, "Theo phong cách")}${String(o.look || "").startsWith("kho:") ? `<option value="${esc(o.look)}" selected>LUT kho: ${esc(tenKho(o.look))}</option>` : ""}</select>
+      <label>Chỉnh màu</label><select data-f="look">${opts(FX.looks, o.look, "Theo phong cách")}${String(o.look || "").startsWith("kho:") ? `<option value="${esc(o.look)}" selected>LUT kho: ${esc(tenKho(o.look))}</option>` : ""}${String(o.look || "").startsWith("lut:") ? `<option value="${esc(o.look)}" selected>Màu đạo diễn (chinh_mau): ${esc(o.look.slice(8))}</option>` : ""}</select>
       <div class="row"><button data-a="dup">Nhân bản</button><button data-a="left">← Lên trước</button><button data-a="right">Ra sau →</button></div>`;
   } else if (sel.k === "transitions") {
     h = `<h3>Chuyển cảnh ${sel.i + 1} → ${sel.i + 2}</h3><label>Kiểu</label><select data-f="type">${opts(FX.transitions, o.type)}</select>`

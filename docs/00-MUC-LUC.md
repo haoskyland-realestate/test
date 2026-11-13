@@ -23,6 +23,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Dùng kho tài nguyên 30 GB trên Drive (overlay, âm, LUT…) trong app, cách xếp thư mục | `04-thu-vien/KHO-TAI-NGUYEN.md` |
 | Biết tài nguyên nằm đâu trên Drive, đặt tên, máy tự chọn tài nguyên theo nghĩa | `04-thu-vien/THU-VIEN-LUU-TRU.md` |
 | Xem lỗi Hào đã nghiệm thu và cách dựng đúng (màu da, chữ sau đầu, zoom): **đọc trước khi dựng** | `04-thu-vien/GHI-NHO-NGHIEM-THU.md` |
+| Chỉnh màu như đạo diễn hình ảnh: đo, đồng nhất cảnh, lấy màu video mẫu, giữ da | `04-thu-vien/CHINH-MAU.md` (skill `chinh-mau`) |
 | Giọng nói AI (Voice Studio): so sánh CIT Voice Studio và VoiceStudio, giấy phép, cách tích hợp | `04-thu-vien/GIONG-NOI-AI.md` |
 | Xem 10 repo chuyên nghiệp và cái nào đã dùng | `04-thu-vien/THU-VIEN-CHUYEN-NGHIEP.md` |
 | Xem kế hoạch, đang ở bước nào | `03-ke-hoach/KE-HOACH-APP.md`, bảng Trạng thái trong `../CLAUDE.md` |
@@ -49,6 +50,7 @@ docs/
     THU-VIEN-HIEU-UNG.md           tự sinh từ effects.py (222 chuyển cảnh, 9 filter…)
     THU-VIEN-MAU.md                đặc tả mẫu
     CONG-THUC-VIRAL.md             hook, nhịp, khung video, chọn mẫu ★
+    CHINH-MAU.md                   đạo diễn màu: luật, số chuẩn, phong cách, lệnh ★
     GHI-NHO-NGHIEM-THU.md          lỗi đã nghiệm thu + cách dựng đúng, ảnh demo ★
     THU-VIEN-LUU-TRU.md            cây thư mục kho trên Drive, tầng, lấy theo nghĩa ★
     KHO-TAI-NGUYEN.md              kho tài nguyên edit trên Drive: chuẩn bị, app dùng được gì ★

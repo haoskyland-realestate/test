@@ -60,7 +60,8 @@ def can_bang(bright, contrast, color):
     """Bộ lọc eq đưa cảnh về mức chuẩn (sáng ~128, tương phản ~58, độ rực ~40). Chỉ tăng, không làm nhạt đi."""
     b = max(-0.03, min(0.06, (128 - bright) / 255 * 0.5))  # nội thất sáng thì giữ sáng, chỉ hạ rất nhẹ
     c = max(1.0, min(1.2, 58 / max(contrast, 1)))
-    s = 1.12 if color < 15 else max(1.0, min(1.3, 40 / max(color, 1)))  # cảnh gần như không màu (tường trắng): tăng nhẹ, tránh ngả màu
+    # không tăng rực quá 5%: cảnh nội thất trắng ít màu, tăng rực thì chỉ có da người bị đẩy cam (nghiệm thu Gladia 13/11)
+    s = 1.0 if color < 15 else max(1.0, min(1.05, 40 / max(color, 1)))
     return f"eq=brightness={b:.3f}:contrast={c:.3f}:saturation={s:.3f}"
 
 

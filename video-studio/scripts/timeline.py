@@ -72,7 +72,8 @@ def check(tl):
         if c.get("fit", "crop") not in ("crop", "blur"):
             e.append(f"Cảnh {i}: 'fit' phải là 'crop' (phóng kín, cắt bớt) hoặc 'blur' (giữ trọn hình, nền mờ)")
         lk = c.get("look", "trung-tinh")
-        if lk not in LOOKS and not (isinstance(lk, str) and lk.startswith("kho:") and lk.lower().endswith(".cube")):
+        if lk not in LOOKS and not (isinstance(lk, str) and lk.startswith(("kho:", "lut:")) and lk.lower().endswith(".cube")
+                                    and ".." not in lk):  # lut: = LUT riêng của dự án (scripts/chinh_mau.py), trong thư mục dự án
             e.append(f"Cảnh {i}: chỉnh màu '{c.get('look')}' chưa có (đang có: {', '.join(LOOKS)})")
     trs = tl.get("transitions", [])
     if clips and len(trs) != len(clips) - 1:
