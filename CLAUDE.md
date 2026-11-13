@@ -2,7 +2,7 @@
 
 File này Claude Code tự đọc mỗi phiên. Hào không cần nhắc lại những gì ghi ở đây.
 
-**Đọc trước khi nhận việc:** mục lục `docs/00-MUC-LUC.md`; việc nào giao AI nào `docs/01-he-thong/AI-NAO-VIEC-NAO.md` (Claude tự đề xuất chuyển AI khi việc hợp công cụ khác hơn, theo mục 6 của file đó); làm một video `docs/02-quy-trinh/QUY-TRINH-MOT-VIDEO.md`; đặt tên/thư mục `docs/01-he-thong/THU-MUC-VA-DAT-TEN.md`.
+**Đọc trước khi nhận việc:** mục lục `docs/00-MUC-LUC.md`; trước khi dựng video: `docs/04-thu-vien/GHI-NHO-NGHIEM-THU.md` (lỗi Hào đã chỉ ra); việc nào giao AI nào `docs/01-he-thong/AI-NAO-VIEC-NAO.md` (Claude tự đề xuất chuyển AI khi việc hợp công cụ khác hơn, theo mục 6 của file đó); làm một video `docs/02-quy-trinh/QUY-TRINH-MOT-VIDEO.md`; đặt tên/thư mục `docs/01-he-thong/THU-MUC-VA-DAT-TEN.md`.
 
 ## Mục đích
 Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu Hào Sky Land: bất động sản, góc nhìn dòng tiền, khách mục tiêu là nữ 35–55 tuổi ở trung tâm và khu Đông TP.HCM.
@@ -60,6 +60,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Thư viện mẫu edit (nút ✦, 6 mẫu) | Xong 13/11: thêm 5 mẫu tự thiết kế (`talking-head-01` vàng cao cấp, `neon-01`, `chu-dong-01` nhiều màu, `giai-thich-01` thẻ sáng, `sang-trong-01` nghỉ dưỡng) + 4 phong cách, khối `compare` (so sánh 2 cột), kiểu chữ `word-pop`, zoom nhấn ý do mẫu tự thêm (`mau: true`); trang thư viện dạng thẻ có xem trước chuyển động, đọc công thức `MAU.md`; công thức chung `docs/04-thu-vien/CONG-THUC-VIRAL.md`. Dựng thử cả 5 bằng video giả, đã xem khung hình. Chưa dựng với footage của Hào; chưa đo hiệu quả thật |
 | Đặt chữ theo kịch bản (`scripts/kich_ban.py`, nút 📝 tab Chữ) | Xong 13/11: cột "Chữ trên màn hình" của `KICH-BAN.md` (`nhãn / *CHỮ LỚN* / dòng dưới`) → khối `title3d` đúng lúc nói, dò trong phụ đề (bỏ dấu, cho lệch 1 từ), không thấy thì theo cột Giây; dự án có mẫu edit thì rải lại âm (giữ chuyển cảnh). Tự kiểm + thử trong app với dự án mẫu. Chưa thử với giọng thật của Hào |
 | Sắp xếp tài liệu + phân việc AI | Xong 12/11: docs theo thư mục đánh số, `AI-NAO-VIEC-NAO.md`, quy ước tên/thư mục, nhân bản 3 mức, bộ mẫu `mau/`. Thư mục footage trên PC mới là đề xuất, chưa tạo |
+| Nghiệm thu video Gladia (`projects/zz-2026-11-13_tiktok_nghiem-thu`) | 13/11: dựng 74s (cắt lặng, chữ 3D, film burn, chuyển cảnh, âm). Hào: "tạm ổn". Cần sửa: màu da cam (do tự cân tăng rực), chữ nên nằm sau đầu, zoom giật. Mới làm khung demo + `GHI-NHO-NGHIEM-THU.md`; **chưa sửa code** 3 điểm này |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |
 | Codespaces (`.devcontainer`) | Chưa thử |
