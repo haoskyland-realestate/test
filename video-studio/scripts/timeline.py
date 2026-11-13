@@ -11,7 +11,8 @@
   "zooms": [{"start": 3, "dur": 2, "scale": 1.07}],                    # phóng to khung (1.07 = 7%)
   "broll": [{"start": 8, "dur": 3, "file": "b.mp4", "id": "", "in": 0}],   # cảnh trám: phủ hình, giữ tiếng
   "sfx": [{"start": 4.6, "dur": 0.6, "file": "whoosh_zoom_01", "vol": 1.0}],   # file: tên trong thu-vien-am-thanh hoặc "kho:<đường dẫn>" trong kho tài nguyên
-  "overlays": [{"start": 2, "dur": 3, "file": "kho:Overlays/Light Leak 03.mov", "in": 0, "blend": "screen", "opacity": 0.8}],   # phủ lên video (scripts/kho.py)   # hiệu ứng âm: start = lúc file bắt đầu phát (scripts/am_thanh.py)
+  "overlays": [{"start": 2, "dur": 3, "file": "kho:Overlays/Light Leak 03.mov", "in": 0, "blend": "screen", "opacity": 0.8}],   # phủ lên video (scripts/kho.py)
+                                                # thêm "x", "y" (tâm, 0–1) và "size" (bề rộng so với khung) để đặt nhỏ ở một chỗ (chú thích, radar); không có thì phủ kín khung   # hiệu ứng âm: start = lúc file bắt đầu phát (scripts/am_thanh.py)
   "audio": {"music": "synth", "whoosh": true, "voice": false, "music_volume": 1.0}   # voice: giữ tiếng gốc của cảnh
                                                 # music: "synth" (nhạc tổng hợp), null (không nhạc) hoặc tên file nhạc trong build/raw/ (vd "nhac.mp3")
 }
@@ -118,6 +119,9 @@ def check(tl):
                 e.append(f"Overlay {i}: 'blend' là 'screen' (hoà sáng, cho overlay nền đen) hoặc 'alpha' (file có nền trong suốt)")
             elif key == "overlays" and not 0 < x.get("opacity", 1) <= 1:
                 e.append(f"Overlay {i}: 'opacity' từ 0 đến 1")
+            elif key == "overlays" and not (0 <= x.get("x", 0.5) <= 1 and 0 <= x.get("y", 0.5) <= 1 and 0.05 <= x.get("size", 1) <= 3
+                                            and 0 <= x.get("ax", 0.5) <= 1 and 0 <= x.get("ay", 0.5) <= 1):
+                e.append(f"Overlay {i}: vị trí 'x', 'y' từ 0 đến 1, cỡ 'size' từ 0,05 đến 3 (1 = rộng bằng khung)")
             elif key == "sfx" and x["file"] not in SFX and not str(x["file"]).startswith("kho:"):
                 e.append(f"Hiệu ứng âm {i}: '{x['file']}' không có trong kho (thu-vien-am-thanh/hieu-ung.json)")
             elif key == "sfx" and not 0 <= x.get("vol", 1) <= 2:

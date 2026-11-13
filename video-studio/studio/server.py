@@ -240,6 +240,14 @@ class H(http.server.BaseHTTPRequestHandler):
             ct = {".wav": "audio/wav", ".mp3": "audio/mpeg", ".m4a": "audio/mp4", ".ogg": "audio/ogg", ".flac": "audio/flac", ".png": "image/png",
                   ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".gif": "image/gif", ".mp4": "video/mp4", ".webm": "video/webm"}.get(ext)
             return self.file(p, ct) if ct else self.send(415, {"error": "Loại file này không xem trực tiếp được"})
+        if sub == ["thongtin"]:  # có kênh trong suốt không, dài bao lâu, khung bao nhiêu (để app tự chọn cách phủ)
+            r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=pix_fmt,width,height:format=duration",
+                                "-of", "json", p], capture_output=True, text=True, timeout=60)
+            j = json.loads(r.stdout or "{}"); st = (j.get("streams") or [{}])[0]
+            pf = st.get("pix_fmt", "")
+            alpha = bool(re.match(r"(argb|rgba|bgra|abgr|yuva|gbrap|ya8|ya16|pal8)", pf))
+            return self.send(200, {"alpha": alpha, "pix_fmt": pf, "w": st.get("width"), "h": st.get("height"),
+                                   "dur": float((j.get("format") or {}).get("duration") or 0), "cho": kho.dat_cho(kho.neo(p)) if alpha else None})
         if sub in (["anh"], ["xem"]):
             alpha = g("alpha") == "1"
             h = hashlib.sha1(f"{p}|{os.path.getmtime(p)}|{alpha}".encode()).hexdigest()[:16]
@@ -248,10 +256,12 @@ class H(http.server.BaseHTTPRequestHandler):
                 os.makedirs(os.path.dirname(out), exist_ok=True)
                 tmp = out + ".tmp" + os.path.splitext(out)[1]
                 if sub == ["anh"]:  # ảnh thu nhỏ: khung ở giây 1 (video) hoặc ảnh thu nhỏ
-                    cmd = (["-ss", "1"] if ext in kho.LOAI["video"][0] else []) + ["-i", p, "-frames:v", "1", "-vf", "scale=320:-2", "-q:v", "4", tmp]
+                    cmd = (["-ss", "1"] if ext in kho.LOAI["video"][0] else []) + ["-i", p, "-frames:v", "1", "-filter_complex",
+                           "[0:v]scale=320:200:force_original_aspect_ratio=decrease,format=rgba[f];color=0x3a4652:s=320x200[bg];[bg][f]overlay=(W-w)/2:(H-h)/2",
+                           "-q:v", "4", tmp]  # nền xám: file trong suốt (chú thích) vẫn thấy hình
                 else:  # bản xem trước 540p tối đa 20 giây; overlay trong suốt giữ kênh alpha (webm VP9)
                     cmd = ["-t", "20", "-i", p, "-an", "-vf", "scale=-2:'min(540,ih)'"] + (
-                        ["-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-b:v", "1M", tmp] if alpha else
+                        ["-c:v", "libvpx-vp9", "-pix_fmt", "yuva420p", "-b:v", "1M", "-deadline", "realtime", "-cpu-used", "8", tmp] if alpha else
                         ["-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-pix_fmt", "yuv420p", "-movflags", "+faststart", tmp])
                 r = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-y", *cmd], capture_output=True, timeout=300)
                 if r.returncode or not os.path.exists(tmp):
@@ -389,6 +399,15 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(200, {"timeline": out, "sfx": sum(1 for x in out.get("sfx", []) if x.get("auto"))})
             except (ValueError, KeyError, TypeError) as ex:
                 return self.send(400, {"error": f"Không áp được mẫu: {ex}"})
+        if parts == ["api", "kho", "chuthich"]:  # gắn biểu tượng chú thích đúng lúc lời nói nhắc tới tiện ích
+            try:
+                tl = (self.body() or {}).get("timeline")
+                if not isinstance(tl, dict) or (errs := check(tl)):
+                    return self.send(400, {"error": "Timeline đang lỗi, bấm Lưu xem lỗi trước"})
+                out, bao = kho.chu_thich(tl, kho.doc())
+                return self.send(200, {"timeline": out, "bao": bao})
+            except (ValueError, KeyError, TypeError) as ex:
+                return self.send(400, {"error": str(ex)})
         if parts == ["api", "kho", "quet"]:  # chọn/quét lại thư mục kho tài nguyên (chỉ đọc tên file, không mở file)
             try:
                 goc = (self.body() or {}).get("goc") or kho.goc_kho()

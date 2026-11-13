@@ -238,7 +238,14 @@ for k, x in enumerate(ovs):
     src = kho_path(x["file"]) if str(x["file"]).startswith("kho:") else f"{B}/raw/{x['file']}"
     anh = src.lower().endswith((".png", ".jpg", ".jpeg", ".webp"))
     inp = ["-loop", "1", "-t", str(x["dur"]), "-i", src] if anh else ["-stream_loop", "-1", "-ss", str(x.get("in", 0)), "-t", str(x["dur"]), "-i", src]
-    vf = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS}"
+    if any(k in x for k in ("x", "y", "size")):  # đặt nhỏ ở một chỗ (chú thích, radar): thu theo bề rộng, giữ tỉ lệ, không cắt
+        sw = max(2, round(W * x.get("size", 1)) // 2 * 2)
+        vf = f"scale=w={sw}:h={H}:force_original_aspect_ratio=decrease,fps={FPS}"
+        if x.get("blend", "screen") != "alpha":  # hoà sáng cần đủ khung: đệm đen quanh, đen không làm đổi hình
+            cx, cy = round(x.get("x", 0.5) * W), round(x.get("y", 0.5) * H)
+            vf += f",pad={W}:{H}:'max(0,min(ow-iw,{cx}-iw/2))':'max(0,min(oh-ih,{cy}-ih/2))':black"
+    else:
+        vf = f"scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},fps={FPS}"
     if x.get("blend", "screen") == "alpha":
         ff(*inp, "-an", "-vf", vf + ",format=rgba", "-c:v", "png", f"{B}/ov{k}.mov")
     else:
@@ -263,7 +270,9 @@ for k, x in enumerate(ovs):
     if x.get("blend", "screen") == "alpha":
         ins += ["-i", f"{B}/ov{k}.mov"]
         fc.append(f"[{i}:v]format=rgba,colorchannelmixer=aa={op},setpts=PTS-STARTPTS+{s0}/TB[v{k}]")
-        fc.append(f"[{cur}][v{k}]overlay=0:0:enable='between(t,{s0},{s0 + x['dur']})':eof_action=pass[w{k}]")
+        pos = (f"'{round(x.get('x', 0.5) * W)}-w*{x.get('ax', 0.5)}':'{round(x.get('y', 0.5) * H)}-h*{x.get('ay', 0.5)}'"  # điểm neo (chân ghim) rơi đúng (x, y)
+               if any(q in x for q in ("x", "y", "size")) else "0:0")
+        fc.append(f"[{cur}][v{k}]overlay={pos}:enable='between(t,{s0},{s0 + x['dur']})':eof_action=pass[w{k}]")
     else:  # hoà sáng trên RGB (hoà trên YUV làm lệch màu); đệm đen trước/sau cho đủ dài video
         ins += ["-i", f"{B}/ov{k}.mp4"]
         fc.append(f"[{i}:v]tpad=start_duration={s0}:stop_mode=add:stop_duration={total:.2f}:color=black,trim=duration={total:.2f},format=gbrp[v{k}]")
