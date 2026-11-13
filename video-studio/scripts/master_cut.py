@@ -75,8 +75,8 @@ def bo_noi_lai(words):
     while changed:
         changed = False
         n = [norm(w[0]) for w in words]
-        for i in range(len(words) - 2):
-            for j in range(i + 3, len(words) - 2):
+        for j in range(3, len(words) - 2):
+            for i in range(j - 3, -1, -1):  # lần nói trước GẦN NHẤT: cụm chung chung ("đây là không") lặp xa không phải nói lại
                 if words[j][1] - words[i][1] > 15:
                     break
                 if n[i:i + 3] != n[j:j + 3]:
@@ -85,6 +85,8 @@ def bo_noi_lai(words):
                 while i - k - 1 >= 0 and n[i - k - 1] == n[j - k - 1] and j - k - 1 > i:
                     k += 1
                 i0, j0 = i - k, j - k
+                if any(re.search(r"[.?!]$", w[0]) for w in words[i0:j0 - 1]):  # có câu đã nói trọn bên trong: không phải lần nói hỏng
+                    continue
                 pause = words[j0][1] - words[j0 - 1][2] + max(0, (words[j0][2] - words[j0][1]) - 0.6)
                 if pause < 0.4:  # nói liền mạch ("căn tứ lập, 4 căn tứ lập") không phải nói lại
                     continue

@@ -15,6 +15,13 @@ kept, dropped = bo_noi_lai(kep_tu(words))
 assert [w[0] for w in kept] == ["xin", "chào", "anh", "chị", "hiện", "tại"], kept
 assert len(dropped) == 2
 
+# Video Gladia 13/11: câu cuối lặp lại → chỉ bỏ lần trước gần nhất, không bỏ cả đoạn mở đầu dù "đây là không" xuất hiện từ đầu
+g = W([(t, i * 0.5, i * 0.5 + 0.4) for i, t in enumerate("Đây là không gian bếp tại dự án Gladia. anh chị thấy ở đây là không gian của gia đình mình.".split())])
+g += W([(t, 12 + i * 0.5, 12.4 + i * 0.5) for i, t in enumerate("Đây là không gian của gia đình mình. Buổi tối".split())])
+kept_g, drop_g = bo_noi_lai(g)
+assert [w[0] for w in kept_g][:4] == ["Đây", "là", "không", "gian"] and "Gladia." in [w[0] for w in kept_g], drop_g
+assert len(drop_g) == 1 and drop_g[0][2] == "đây là không gian của gia đình mình.", drop_g
+
 # Nhắc lại liền mạch không phải nói vấp
 s = W([("căn", 29.3, 29.5), ("tứ", 29.5, 29.7), ("lập", 29.7, 29.9), ("4", 29.9, 30.2), ("căn", 30.2, 30.4), ("tứ", 30.4, 30.5), ("lập", 30.5, 30.7)])
 assert bo_noi_lai(s)[0] == s
