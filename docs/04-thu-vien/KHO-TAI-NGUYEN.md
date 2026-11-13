@@ -32,7 +32,8 @@ Chọn thư mục **TÀI NGUYÊN EDIT VIDEO** làm thư mục kho trong app. Fil
 2. Giải nén các file `.rar` (7-Zip miễn phí) vào đúng thư mục theo bảng dưới. File `.rar` còn nằm trong kho thì app chỉ báo "cần giải nén".
 3. Mở app → **📦 Kho** → chọn thư mục gốc của kho → app quét (chỉ đọc tên file, 30 GB vẫn nhanh). Thêm hay giải nén file mới thì bấm **Quét lại**.
 
-### Cách xếp thư mục (giữ 4 thư mục Hào đã đặt, thêm phần còn lại)
+### Cách xếp thư mục
+**Đã thay bằng thiết kế mới: `THU-VIEN-LUU-TRU.md`** (tầng chung / thương hiệu / dự án, lấy theo nghĩa). Cây dưới đây là đề xuất cũ, giữ để đối chiếu.
 ```
 <KHO>\
   01_TYPOGRAPHY_AND_FONTS\        font .ttf/.otf (app chưa dùng trực tiếp, xem mục cuối)

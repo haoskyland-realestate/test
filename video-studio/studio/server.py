@@ -232,6 +232,8 @@ class H(http.server.BaseHTTPRequestHandler):
                 dem[t["loai"]] = dem.get(t["loai"], 0) + 1
             return self.send(200, dict(kho.tim(cm, g("q"), g("loai"), int(g("trang", "0") or 0)), goc=cm["goc"], luc=cm.get("luc", ""), dem=dem,
                                        loai={k: [v[1], v[2]] for k, v in kho.LOAI.items()}))
+        if sub == ["chon"]:  # lấy theo nghĩa: chỉ gợi ý, Hào bấm thêm mới vào video
+            return self.send(200, {"tep": kho.chon(kho.doc(), g("y"), g("th"), g("da"), g("loai"), 8)})
         p = kho.duong_dan("kho:" + g("p"))
         if not p or not os.path.isfile(p):
             return self.send(404, {"error": "Không thấy file trong kho"})

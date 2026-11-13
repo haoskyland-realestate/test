@@ -97,7 +97,9 @@ D:\HaoSkyLand\
 ```
 Bấm ＋ trong app → chọn `01-footage\hoc-mon\2026-11-15_nha-mau` → đặt tên theo mục 1.
 
-## 5. Google Drive: chỉ để chuyền và xem
+## 5. Google Drive: chuyền footage, xem thành phẩm, và **kho tài nguyên edit**
+
+Kho tài nguyên edit (âm, nhạc, overlay, thương hiệu, tài nguyên dự án) nằm trên Drive, PC tải khi cần: xem `docs/04-thu-vien/THU-VIEN-LUU-TRU.md`. Footage quay vẫn để trên PC như mục 4.
 
 ```
 Drive/HaoSkyLand/

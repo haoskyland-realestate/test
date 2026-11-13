@@ -3,7 +3,8 @@
 - quét thư mục → chỉ mục (loại, thẻ từ tên thư mục/tên file, dung lượng); chỉ đọc tên file, không mở file (quét 30 GB vẫn nhanh);
 - đổi tên dạng "kho:<đường dẫn trong kho>" (dùng trong timeline.json) thành đường dẫn thật, chặn đường dẫn thoát ra ngoài kho.
 Đường dẫn kho lưu ở video-studio/kho/cau-hinh.json, chỉ mục ở video-studio/kho/chi-muc.json (riêng từng máy, không lên GitHub).
-Chạy:  python3 scripts/kho.py <thư mục kho>     (quét và lưu)   ·   python3 scripts/kho.py --tu-kiem"""
+Chạy:  python3 scripts/kho.py <thư mục kho>     (quét và lưu)   ·   python3 scripts/kho.py --tu-kiem
+       python3 scripts/kho.py --chon "film burn" [hao-sky-land] [hoc-mon]   (lấy theo nghĩa, chỉ gợi ý)"""
 import json, os, re, subprocess, sys, time, unicodedata
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
@@ -42,6 +43,29 @@ def the(rel):
     return sorted({w for w in words if len(w) > 1 and not w.isdigit()})
 
 
+# Tầng của kho (THU-VIEN-LUU-TRU.md): thư mục cấp 1 quyết định file thuộc ai. Lấy theo thứ tự dự án → thương hiệu → chung.
+TANG = [("thuong-hieu", "thuong hieu"), ("du-an", "du an"), ("cho", "cho phan loai"), ("luu-tru", "luu tru")]
+
+
+def tang(rel):
+    """'10_THUONG-HIEU/hao-sky-land/logo/x.png' → ('thuong-hieu', 'hao-sky-land'); thư mục khác → ('chung', '')."""
+    parts = rel.replace("\\", "/").split("/")
+    dau = re.sub(r"[^a-z]+", " ", bo_dau(parts[0])).strip()
+    for k, w in TANG:
+        if w in dau:
+            return k, (bo_dau(parts[1]) if k in ("thuong-hieu", "du-an") and len(parts) > 2 else "")
+    return "chung", ""
+
+
+def _cha(d, goc):
+    """Thư mục d và các thư mục cha tới gốc kho (tìm GIAY-PHEP.md gần nhất)."""
+    while True:
+        yield d
+        if os.path.normcase(d) == os.path.normcase(goc) or os.path.dirname(d) == d:
+            return
+        d = os.path.dirname(d)
+
+
 def quet(goc):
     goc = os.path.abspath(goc)
     if not os.path.isdir(goc):
@@ -62,7 +86,10 @@ def quet(goc):
             loai = DUOI.get(ext, "khac")
             text = bo_dau(rel)
             dung = next((g for g, ks in GOI_Y if any(k in text for k in ks)), "")
-            out.append({"p": rel, "loai": loai, "dung": dung, "kb": round(size / 1024), "the": the(rel)})
+            lop, chu = tang(rel)
+            gp = next((os.path.relpath(os.path.join(x, "GIAY-PHEP.md"), goc).replace("\\", "/") for x in _cha(d, goc)
+                       if os.path.isfile(os.path.join(x, "GIAY-PHEP.md"))), "")
+            out.append({"p": rel, "loai": loai, "dung": dung, "kb": round(size / 1024), "the": the(rel), "lop": lop, "chu": chu, "gp": gp})
     return {"goc": goc, "luc": time.strftime("%Y-%m-%d %H:%M"), "tep": out}
 
 
@@ -98,6 +125,32 @@ def tim(cm, q="", loai="", trang=0, moi_trang=60):
     ws = bo_dau(q).split()
     kq = [t for t in cm["tep"] if (not loai or t["loai"] == loai or t["dung"] == loai) and all(w in bo_dau(t["p"]) for w in ws)]
     return {"tong": len(kq), "tep": kq[trang * moi_trang:(trang + 1) * moi_trang]}
+
+
+KHONG_CHEN = ("nen", "plugin", "mau-pm", "font", "khac")  # không tự đưa vào video được
+
+
+def chon(cm, y, thuong_hieu="", du_an="", loai="", n=5):
+    """Lấy theo nghĩa: 'film burn', 'whoosh nhanh', 'chu thich truong hoc' → các file hợp nhất, kèm lý do.
+    Điểm = số từ khớp (thẻ trùng hẳn tính hơn khớp một phần); cùng điểm thì tài nguyên của dự án > thương hiệu > chung.
+    Bỏ qua: thương hiệu/dự án khác, thư mục chờ phân loại, lưu trữ, file app không chèn được. Không tự chèn: Hào duyệt."""
+    ws = [w for w in re.findall(r"[a-z0-9]+", bo_dau(y)) if len(w) > 1]
+    th, da = bo_dau(thuong_hieu), bo_dau(du_an)
+    kq = []
+    for t in cm["tep"]:
+        lop, chu = t.get("lop", "chung"), t.get("chu", "")
+        if lop in ("cho", "luu-tru") or (lop == "thuong-hieu" and chu != th) or (lop == "du-an" and chu != da):
+            continue
+        if (loai and loai not in (t["loai"], t["dung"])) or (not loai and t["loai"] in KHONG_CHEN):
+            continue
+        text, tags = bo_dau(t["p"]), set(t["the"])
+        khop = [w for w in ws if w in text]
+        if not ws or len(khop) * 2 < len(ws):  # cần khớp ít nhất nửa số từ
+            continue
+        diem = sum(2 if w in tags else 1 for w in khop) + {"du-an": 0.5, "thuong-hieu": 0.3}.get(lop, 0)
+        kq.append((-diem, t["p"], dict(t, diem=round(diem, 1), vi_sao=f"khớp {', '.join(khop)}; tầng {lop}{' ' + chu if chu else ''}"
+                                                                     + ("" if t.get("gp") else "; chưa có GIAY-PHEP.md"))))
+    return [x[2] for x in sorted(kq)[:n]]
 
 
 def neo(p):
@@ -206,12 +259,33 @@ def _tu_kiem():
         assert len(out["overlays"]) == 4 and out["overlays"][0]["file"] == "kho:x.mov"
         again, _ = chu_thich(out, cm)
         assert len(again["overlays"]) == 4
+    # lấy theo nghĩa, theo tầng
+    with tempfile.TemporaryDirectory() as g:
+        for rel in ("00_CHUNG/overlay/film-burn/film-burn_cam_01.mp4", "00_CHUNG/am-thanh/whoosh/whoosh_nhanh_01.wav", "00_CHUNG/am-thanh/GIAY-PHEP.md",
+                    "10_THUONG-HIEU/hao-sky-land/am-thanh/whoosh_nhanh_hsl.wav", "10_THUONG-HIEU/khac/am-thanh/whoosh_nhanh_khac.wav",
+                    "20_DU-AN/hoc-mon/logo/logo-cdt.png", "90_CHO-PHAN-LOAI/whoosh nhanh moi.wav", "99_LUU-TRU/goi/Overlays.rar"):
+            p = os.path.join(g, rel); os.makedirs(os.path.dirname(p), exist_ok=True); open(p, "wb").write(b"x")
+        cm = quet(g)
+        by = {t["p"]: t for t in cm["tep"]}
+        assert tang("10_THUONG-HIEU/hao-sky-land/x.png") == ("thuong-hieu", "hao-sky-land") and tang("00_CHUNG/x.wav") == ("chung", "")
+        assert by["00_CHUNG/am-thanh/whoosh/whoosh_nhanh_01.wav"]["gp"] == "00_CHUNG/am-thanh/GIAY-PHEP.md"
+        assert by["00_CHUNG/overlay/film-burn/film-burn_cam_01.mp4"]["gp"] == ""
+        r = [x["p"] for x in chon(cm, "whoosh nhanh", thuong_hieu="Hào Sky Land".replace(" ", "-"))]
+        assert r == ["10_THUONG-HIEU/hao-sky-land/am-thanh/whoosh_nhanh_hsl.wav", "00_CHUNG/am-thanh/whoosh/whoosh_nhanh_01.wav"], r
+        assert [x["p"] for x in chon(cm, "whoosh nhanh")] == ["00_CHUNG/am-thanh/whoosh/whoosh_nhanh_01.wav"]
+        assert chon(cm, "film burn")[0]["p"].endswith("film-burn_cam_01.mp4") and chon(cm, "logo") == []
+        assert chon(cm, "logo", du_an="hoc-mon")[0]["p"] == "20_DU-AN/hoc-mon/logo/logo-cdt.png"
+        assert chon(cm, "overlays") == []  # file nén trong lưu trữ không bao giờ được chọn
     print("OK")
 
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["--tu-kiem"]:
         _tu_kiem(); sys.exit()
+    if sys.argv[1:2] == ["--chon"] and len(sys.argv) >= 3:  # python3 scripts/kho.py --chon "film burn" [thuong-hieu] [du-an]
+        for x in chon(doc(), sys.argv[2], *sys.argv[3:5]):
+            print(f"kho:{x['p']}   ({x['vi_sao']})")
+        sys.exit()
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     cm = luu(sys.argv[1])
