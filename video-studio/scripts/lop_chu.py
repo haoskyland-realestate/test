@@ -20,6 +20,11 @@ def words(text, chars=False):
     return " ".join(out)
 
 
+def co_chu_lon(big):
+    """Cỡ chữ lớn của title3d: chữ dài thì nhỏ lại cho vừa khung."""
+    return min(205, 1250 // max(len(big), 1))
+
+
 def line(text, cls="", chars=False):
     return f'<div class="line {cls}"><div class="in">{words(text, chars)}</div></div>'
 
@@ -94,7 +99,7 @@ def tao(tl):
         elif kind == "title3d":  # nhãn nhỏ trên, chữ lớn, dòng nhỏ dưới; kiểu chữ lớn hiện theo phong cách (t3anim)
             t3 = style.get("t3anim", "zoom-blur")
             body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "")
-                    + f'<div class="t3big" style="font-size:{min(205, 1250 // max(len(s["big"]), 1))}px">{words(s["big"], t3 == "type")}</div>'  # chữ dài thì nhỏ lại cho vừa khung
+                    + f'<div class="t3big" style="font-size:{co_chu_lon(s["big"])}px">{words(s["big"], t3 == "type")}</div>'  # chữ dài thì nhỏ lại cho vừa khung
                     + (f'<div class="t3sub">{words(s["sub"])}</div>' if s.get("sub") else ""))
             big = {"zoom-blur": f'tl.fromTo("{sel} .t3big",{{opacity:0,scale:1.5,filter:"blur(22px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out"}},{st0 + 0.15:.2f});',
                    "word-pop": f'tl.fromTo("{sel} .t3big .w",{{opacity:0,scale:.3,y:40}},{{opacity:1,scale:1,y:0,duration:{d(.35)},ease:"back.out(2.4)",stagger:{d(.1)}}},{st0 + 0.15:.2f});',
@@ -122,7 +127,8 @@ def tao(tl):
             body = "".join(line(l, "mid", ch) for l in s["lines"])
         if kind != "tag": a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind in ("title3d", "compare")
                  else f'tl.to("{sel}",{{opacity:0,y:-40,duration:{d(.35)},ease:"power2.in"}},{st0 + du - 0.4 * SP:.2f});')
-        blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}" data-start="{st0:.2f}" data-duration="{du:.2f}" '
+        vt = f' style="top:{s["top_px"]}px"' if s.get("top_px") is not None else ""  # chữ sau đầu: bộ dựng đặt ngang đầu người nói
+        blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}"{vt} data-start="{st0:.2f}" data-duration="{du:.2f}" '
                       f'data-track-index="{(6 if kind == "source" else 1 + i % 2)}">{body}</div>')
         anims += a
     # Phụ đề (dưới giữa màn hình) và minh họa (nền phủ kín, chữ + danh sách đánh số)

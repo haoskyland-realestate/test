@@ -207,6 +207,18 @@ if not (os.path.exists(f"{B}/base.mp4") and os.path.exists(f"{B}/base.key") and 
 moc("ghép nền")
 # 5. Lớp chữ động (nền trong suốt): scripts/lop_chu.py (app studio dùng cùng mã để xem trước)
 #    Chữ/phụ đề/thẻ không đổi thì dùng lại lớp đã dựng (chỉ đổi màu, cắt, âm thì không phải dựng lại phần chậm nhất này)
+# Chữ sau đầu: đặt khối chữ để chữ lớn chạm đỉnh đầu người nói (đầu che một phần chữ, như video mẫu)
+for x in tl.get("texts", []):
+    if x.get("sau_dau") and x.get("kind") == "title3d" and "top_px" not in x:
+        from tach_nguoi import dinh_dau
+        t = x["start"] + 0.8
+        y = dinh_dau(f"{B}/base.mp4", t)
+        if y is not None:
+            z = next((q["scale"] for q in tl.get("zooms", []) if q["start"] <= t <= q["start"] + q["dur"]), 1.0)
+            y = (y - 0.5) * z + 0.5  # zoom phóng từ tâm khung
+            from lop_chu import co_chu_lon
+            # nhãn trên ~55 px, rồi chữ lớn: 30% dưới của chữ lớn nằm sau đỉnh đầu
+            x["top_px"] = int(min(max(y * H - 55 - co_chu_lon(x["big"]) * 0.75, 200), H * 0.55))
 trang = tao_lop_chu(tl)
 okey = hashlib.sha1(json.dumps([trang, DRAFT, W, H]).encode()).hexdigest()
 if not (os.path.exists(f"{B}/overlay.webm") and os.path.exists(f"{B}/overlay.key") and open(f"{B}/overlay.key").read() == okey):

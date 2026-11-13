@@ -49,6 +49,7 @@ Dự án `projects/zz-2026-11-13_tiktok_nghiem-thu` (video thô 77 giây, Hào �
 2. tách người từng khung bằng **MODNet** (giấy phép Apache-2.0, 25 MB, chạy bằng onnxruntime có sẵn, tự tải về `video-studio/models/` lần đầu), chỉ ở khoảng có chữ, làm mượt mép theo thời gian;
 3. ghép nền → chữ → người.
 
+**Tự đặt chữ ngang đầu:** bộ dựng tìm đỉnh đầu ở giây thứ 0,8 của mỗi chữ (tính cả zoom), đặt khối chữ để khoảng 30% dưới của chữ lớn nằm sau đầu. Đặt tay thì ghi `top_px`. Dòng nhỏ dưới chữ lớn (`sub`) thường bị đầu che, nên chữ sau đầu nên để thông tin chính ở chữ lớn và nhãn trên.
 Mã: `scripts/tach_nguoi.py`, `dung.py`. Tốc độ trên cloud: khoảng 0,3 giây mỗi khung hình. Khung xem trước của app chưa hiện hiệu ứng này, phải Dựng nháp mới thấy. Vật ở tiền cảnh (mặt bàn đá) cũng được tính là "người", nên chữ đặt thấp sẽ bị che.
 
 ### 3. Zoom in / zoom out chưa đẹp

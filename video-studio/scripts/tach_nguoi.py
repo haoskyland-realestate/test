@@ -55,6 +55,19 @@ def mat_na(video, cuaso, out, le=0.25):
     return i
 
 
+def dinh_dau(video, t):
+    """Đỉnh đầu người lớn nhất ở giây t: tỉ lệ 0..1 theo chiều cao khung (None nếu không thấy người)."""
+    import onnxruntime as ort
+    raw = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-ss", f"{t:.2f}", "-i", video, "-frames:v", "1", "-vf", f"scale={IW}:{IH}",
+                          "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
+    if len(raw) != IW * IH * 3:
+        return None
+    x = (np.frombuffer(raw, np.uint8).reshape(IH, IW, 3).astype(np.float32) / 127.5 - 1).transpose(2, 0, 1)[None]
+    a = ort.InferenceSession(tai_mo_hinh(), providers=["CPUExecutionProvider"]).run(None, {"input": x})[0][0, 0] > 0.5
+    hang = np.where(a.sum(1) > IW * 0.02)[0]  # hàng có người (bỏ vài điểm lẻ)
+    return float(hang[0]) / IH if len(hang) else None
+
+
 def _tu_kiem():
     import tempfile
     with tempfile.TemporaryDirectory() as d:
