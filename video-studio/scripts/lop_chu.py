@@ -90,7 +90,7 @@ def tao(tl):
         elif kind == "title3d":  # nhãn nhỏ trên, chữ lớn, dòng nhỏ dưới; kiểu chữ lớn hiện theo phong cách (t3anim)
             t3 = style.get("t3anim", "zoom-blur")
             body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "")
-                    + f'<div class="t3big" style="font-size:{min(205, 1500 // max(len(s["big"]), 1))}px">{words(s["big"], t3 == "type")}</div>'  # chữ dài thì nhỏ lại cho vừa khung
+                    + f'<div class="t3big" style="font-size:{min(205, 1250 // max(len(s["big"]), 1))}px">{words(s["big"], t3 == "type")}</div>'  # chữ dài thì nhỏ lại cho vừa khung
                     + (f'<div class="t3sub">{words(s["sub"])}</div>' if s.get("sub") else ""))
             big = {"zoom-blur": f'tl.fromTo("{sel} .t3big",{{opacity:0,scale:1.5,filter:"blur(22px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out"}},{st0 + 0.15:.2f});',
                    "word-pop": f'tl.fromTo("{sel} .t3big .w",{{opacity:0,scale:.3,y:40}},{{opacity:1,scale:1,y:0,duration:{d(.35)},ease:"back.out(2.4)",stagger:{d(.1)}}},{st0 + 0.15:.2f});',
