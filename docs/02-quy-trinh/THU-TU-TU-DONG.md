@@ -30,7 +30,7 @@ footage ─ 0 ────┤                                          ├─ 2.
 | A1 | Nhận dạng giọng | `phu_de.py` (master cut gọi sẵn) | 0 | 78 giây (PC có card NVIDIA nhanh hơn nhiều) |
 | A2 | Soi footage: khung lưới, HDR hay không, quay dọc hay ngang, có mặt người không | `contact-sheet.sh`, Claude nhìn ảnh | 0, **chạy cùng lúc A1** | vài giây |
 | 1 | **Claude đọc lại lời nhận dạng**: tên riêng, số, từ chuyên ngành. Sai thì thêm vào `meta.sua_tu` (ví dụ `{"chủ tư": "chủ đầu tư"}`). Câu máy tự bịa ("Hãy subscribe", "Cảm ơn." ở cuối) tự bị lọc | Claude | A1 | 1 phút |
-| 2 | Master cut: cắt lặng, bỏ nói lặp, nhịp | `master_cut.py` | 1 | khoảng 1–2 phút |
+| 2 | Master cut: cắt lặng, bỏ nói lặp, nhịp | `master_cut.py` | 1 | chưa đo riêng (ước 1–2 phút) |
 | 3 | Đo màu từng cảnh, cảnh chuẩn, phong cách, LUT | `chinh_mau.py` (skill `chinh-mau`) | 2 (vì cần mốc cắt cuối) | 28 giây |
 | **DUYỆT 1** | Gửi Hào **một lần**: báo cáo cắt (`build/master-cut.md`) + ảnh màu trước/sau (`mau/truoc-sau.jpg`) + chỗ phụ đề đã sửa | Hào | 2, 3 | Hào xem 2 phút |
 | 4 | Chữ lớn theo kịch bản | `kich_ban.py` / nút 📝 | DUYỆT 1 (chữ bám lời đã cắt) | vài giây |
