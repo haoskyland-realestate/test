@@ -1,7 +1,7 @@
 # Làm một video, từ chủ đề đến đăng
 
 Lập 12/11/2026, theo hệ thống hiện tại (app studio trên PC). Thay cho `99-luu-tru/QUY-TRINH-FORM-GITHUB.md` và `99-luu-tru/QUY-TRINH-CAT-GHEP.md`.
-Câu lệnh cho từng bước: `mau/PROMPT-MAU.md` (cùng số thứ tự). Chọn AI: `01-he-thong/AI-NAO-VIEC-NAO.md`.
+Câu lệnh cho từng bước: `mau/PROMPT-MAU.md` (cùng số thứ tự). **Claude tự làm bước 6b → 10 theo thứ tự tối ưu trong `THU-TU-TU-DONG.md`** (chạy song song, 2 lần duyệt, dựng một lần). Chọn AI: `01-he-thong/AI-NAO-VIEC-NAO.md`.
 
 | # | Bước | Ai / công cụ | Ở đâu | Ra gì | Xong khi |
 |---|---|---|---|---|---|

@@ -214,7 +214,8 @@ def main(proj, only_report=False):
         fs = pth.phan_tich(raw, os.path.join(B, "analysis", c["file"] + ".json"))
         db = nang_luong(raw, os.path.join(B, "analysis", c["file"] + ".db.json"))
         thr = nguong(db)
-        words = lam_on_tu(phu_de.nhan_dang(raw, os.path.join(B, "transcripts", c["file"] + ".json")), db, thr)
+        tv = tl.get("meta", {}).get("tu_vung")
+        words = lam_on_tu(phu_de.sua_tu(phu_de.nhan_dang(raw, phu_de.file_dem(B, c["file"], tv), tv), tl.get("meta", {}).get("sua_tu")), db, thr)
         a, b = c["in"], c["in"] + c["dur"]
         spoken = [w for w in words if a <= (w[1] + w[2]) / 2 < b]
         talking = bool(spoken) or sum(f["face"] > 0.02 for f in fs) > len(fs) * 0.4

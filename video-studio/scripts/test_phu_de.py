@@ -27,3 +27,13 @@ assert dinh_dang("Xin chào anh chị") == "Xin chào anh chị"
 r = nhom_tu([w("dự", 0, .2), w("án", .2, .4), w("Gladia", .4, .8), w("Khang", 1.5, 1.8), w("Điền", 1.8, 2.0)])
 assert len(r) == 1, r
 print("OK")
+
+# Bảng sửa từ của dự án và lọc câu bịa (video Gladia 13/11)
+from phu_de import sua_tu, BIA
+w = [["thì", 0, 1], ["chủ", 1, 1.5], ["tư", 1.5, 2], ["có", 2, 3], ["bàn", 3, 3.5], ["giao", 3.5, 4], ["kẻ.", 4, 4.5]]
+r = sua_tu(w, {"chủ tư": "chủ đầu tư", "bàn giao kẻ": "bàn giao kèm"})
+assert [x[0] for x in r] == ["thì", "chủ", "đầu", "tư", "có", "bàn", "giao", "kèm."], r
+assert r[1][1] == 1 and r[3][2] == 2 and w[1][0] == "chủ"  # giữ khoảng giờ cũ, không sửa danh sách gốc
+assert BIA.search(" Hãy subscribe cho kênh") and BIA.search(" Cảm ơn. Cảm ơn.") and not BIA.search("bàn giao kèm")
+assert not BIA.search(" Cảm ơn anh chị đã xem nhà cùng em.")
+print("OK sửa từ")

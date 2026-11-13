@@ -56,6 +56,11 @@ def check(tl):
     meta = tl.get("meta", {})
     if meta.get("platform", "tiktok") not in PLATFORMS:
         e.append("'platform' phải là 'tiktok' (dọc 9:16) hoặc 'youtube' (ngang 16:9)")
+    tv = meta.get("tu_vung", [])
+    if not (isinstance(tv, list) and all(isinstance(x, str) for x in tv)):
+        e.append("meta.tu_vung phải là danh sách chữ (tên riêng, thuật ngữ cho nhận dạng giọng), ví dụ [\"Gladia\", \"chủ đầu tư\"]")
+    if not (isinstance(meta.get("sua_tu", {}), dict) and all(isinstance(k, str) and isinstance(v, str) for k, v in meta.get("sua_tu", {}).items())):
+        e.append("meta.sua_tu phải là bảng {\"từ nghe sai\": \"từ đúng\"}, ví dụ {\"chủ tư\": \"chủ đầu tư\"}")
     if meta.get("style", "hien-dai") not in STYLES:
         e.append(f"Phong cách '{meta.get('style')}' chưa có (đang có: {', '.join(STYLES)})")
     clips = tl.get("clips") or []

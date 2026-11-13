@@ -57,7 +57,37 @@ def dinh_dang(text):
     return " ".join(f"*{w}*" if h and not w.startswith("*") else w for w, h in zip(ws, hl))
 
 
-def nhan_dang(path, cache):
+# Câu Whisper hay tự bịa ở đoạn im/nhạc cuối video (không có trong lời nói thật)
+BIA = re.compile(r"subscribe|đăng ký kênh|ghiền mì gõ|cảm ơn các bạn đã (xem|theo dõi)|hẹn gặp lại các bạn trong|^\s*(cảm ơn[.!]?\s*)+$", re.I)
+
+
+def sua_tu(words, bang):
+    """Bảng sửa từ của dự án (meta.sua_tu, ví dụ {"chủ tư": "chủ đầu tư"}): thay cụm từ, chia lại mốc giờ trong khoảng cũ.
+    Áp mỗi lần đọc nhận dạng nên sửa bảng không phải nhận dạng lại; phụ đề và master cut đều dùng bản đã sửa."""
+    words = [list(w) for w in words]
+    for old, new in (bang or {}).items():
+        o, n = old.lower().split(), new.split()
+        i = 0
+        while o and i <= len(words) - len(o):
+            if [re.sub(r"[^\w]", "", w[0].lower()) for w in words[i:i + len(o)]] == [re.sub(r"[^\w]", "", x) for x in o]:
+                tail = re.sub(r"^.*?([^\w]*)$", r"\1", words[i + len(o) - 1][0])  # giữ dấu câu cuối cụm cũ
+                a, b = words[i][1], words[i + len(o) - 1][2]; st = (b - a) / len(n)
+                words[i:i + len(o)] = [[t + (tail if k == len(n) - 1 else ""), round(a + k * st, 2), round(a + (k + 1) * st, 2)] for k, t in enumerate(n)]
+                i += len(n)
+            else:
+                i += 1
+    return words
+
+
+def file_dem(proj_build, file, tu_vung=None):
+    """Tệp lưu đệm nhận dạng; có từ vựng dự án thì tên kèm mã từ vựng (đổi từ vựng là nhận dạng lại)."""
+    import hashlib
+    h = "." + hashlib.sha1("|".join(tu_vung).encode()).hexdigest()[:8] if tu_vung else ""
+    return os.path.join(proj_build, "transcripts", file + h + ".json")
+
+
+def nhan_dang(path, cache, tu_vung=None):
+    """tu_vung: tên riêng, thuật ngữ của dự án (meta.tu_vung trong timeline): nhận dạng đúng ngay, đỡ sửa phụ đề sau."""
     if os.path.exists(cache):
         return json.load(open(cache, encoding="utf8"))
     import numpy as np
@@ -75,8 +105,10 @@ def nhan_dang(path, cache):
         for k, (dev, ct) in enumerate(tries):
             try:
                 segs, _ = WhisperModel(name, device=dev, compute_type=ct).transcribe(
-                    audio, language="vi", word_timestamps=True, vad_filter=True, beam_size=5)
-                words = [[w.word.strip(), round(w.start, 2), round(w.end, 2)] for s in segs for w in s.words if w.word.strip()]
+                    audio, language="vi", word_timestamps=True, vad_filter=True, beam_size=5,
+                    initial_prompt=("Từ ngữ trong video: " + ", ".join(tu_vung) + ".") if tu_vung else None)
+                words = [[w.word.strip(), round(w.start, 2), round(w.end, 2)] for s in segs if not BIA.search(s.text)
+                         for w in s.words if w.word.strip()]
                 break
             except Exception as ex:
                 if k == len(tries) - 1:
@@ -103,7 +135,8 @@ def main(proj):
         if not os.path.exists(raw):
             sys.exit(f"Chưa có footage {c['file']} trong build/raw và cảnh không có 'id' Drive để tải")
         print(f"Nhận dạng đoạn {i + 1}: {c['file']}", flush=True)
-        words = nhan_dang(raw, os.path.join(proj, "build", "transcripts", c["file"] + ".json"))
+        tv = tl.get("meta", {}).get("tu_vung")
+        words = sua_tu(nhan_dang(raw, file_dem(os.path.join(proj, "build"), c["file"], tv), tv), tl.get("meta", {}).get("sua_tu"))
         a, b = c["in"], c["in"] + c["dur"]
         # từ nằm trong đoạn cắt (theo điểm giữa của từ), đổi sang giờ trên video thành phẩm
         inside = [(w, L["starts"][i] + max(s, a) - a, L["starts"][i] + min(e, b) - a) for w, s, e in words if a <= (s + e) / 2 < b]

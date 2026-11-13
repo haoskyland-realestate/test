@@ -2,7 +2,7 @@
 
 File này Claude Code tự đọc mỗi phiên. Hào không cần nhắc lại những gì ghi ở đây.
 
-**Đọc trước khi nhận việc:** mục lục `docs/00-MUC-LUC.md`; trước khi dựng video: `docs/04-thu-vien/GHI-NHO-NGHIEM-THU.md` (lỗi Hào đã chỉ ra); việc nào giao AI nào `docs/01-he-thong/AI-NAO-VIEC-NAO.md` (Claude tự đề xuất chuyển AI khi việc hợp công cụ khác hơn, theo mục 6 của file đó); làm một video `docs/02-quy-trinh/QUY-TRINH-MOT-VIDEO.md`; đặt tên/thư mục `docs/01-he-thong/THU-MUC-VA-DAT-TEN.md`.
+**Đọc trước khi nhận việc:** mục lục `docs/00-MUC-LUC.md`; trước khi dựng video: `docs/04-thu-vien/GHI-NHO-NGHIEM-THU.md` (lỗi Hào đã chỉ ra); việc nào giao AI nào `docs/01-he-thong/AI-NAO-VIEC-NAO.md` (Claude tự đề xuất chuyển AI khi việc hợp công cụ khác hơn, theo mục 6 của file đó); làm một video `docs/02-quy-trinh/QUY-TRINH-MOT-VIDEO.md`, thứ tự tự động khi dựng `docs/02-quy-trinh/THU-TU-TU-DONG.md`; đặt tên/thư mục `docs/01-he-thong/THU-MUC-VA-DAT-TEN.md`.
 
 ## Mục đích
 Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu Hào Sky Land: bất động sản, góc nhìn dòng tiền, khách mục tiêu là nữ 35–55 tuổi ở trung tâm và khu Đông TP.HCM.
@@ -61,6 +61,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Đặt chữ theo kịch bản (`scripts/kich_ban.py`, nút 📝 tab Chữ) | Xong 13/11: cột "Chữ trên màn hình" của `KICH-BAN.md` (`nhãn / *CHỮ LỚN* / dòng dưới`) → khối `title3d` đúng lúc nói, dò trong phụ đề (bỏ dấu, cho lệch 1 từ), không thấy thì theo cột Giây; dự án có mẫu edit thì rải lại âm (giữ chuyển cảnh). Tự kiểm + thử trong app với dự án mẫu. Chưa thử với giọng thật của Hào |
 | Sắp xếp tài liệu + phân việc AI | Xong 12/11: docs theo thư mục đánh số, `AI-NAO-VIEC-NAO.md`, quy ước tên/thư mục, nhân bản 3 mức, bộ mẫu `mau/`. Thư mục footage trên PC mới là đề xuất, chưa tạo |
 | Đạo diễn màu (`scripts/chinh_mau.py`, skill `chinh-mau`, `docs/04-thu-vien/CHINH-MAU.md`) | 13/11, tự xây (numpy + OpenCV + ffmpeg, không thêm thư viện): đo ám màu/sáng tối/cháy/da từng cảnh → cảnh chuẩn → phong cách có sẵn hoặc từ video mẫu → giữ da + trắng → mỗi cảnh một LUT `lut:mau/cNN.cube` (timeline, app, bộ dựng nhận) → báo cáo `MAU-SAC.md` + ảnh trước/sau; `--ap` chỉ chạy khi Hào duyệt. Tự kiểm đạt; thử trên Gladia (da giữ 38→38%) và 5 clip ngoài trời; dựng thật 18s đúng. Phát hiện: scrim của phong cách `hien-dai` làm tối 62% dưới khung suốt video (chờ Hào quyết). Chưa thử trên PC |
+| Thứ tự tự động + bộ dựng nhớ (`docs/02-quy-trinh/THU-TU-TU-DONG.md`) | 13/11: thứ tự song song, 2 lần duyệt; `dung.py` in thời gian từng bước, nhớ cảnh theo đúng bộ lọc (sửa lỗi dùng nhầm cảnh cũ), nhớ nền và lớp chữ (video 18s: lần đầu 3m40, chỉ đổi chữ 1m38, không đổi ~30s); `phu_de.py` có `meta.tu_vung`, `meta.sua_tu`, lọc câu bịa. Chưa đo trên PC |
 | Nghiệm thu video Gladia (`projects/zz-2026-11-13_tiktok_nghiem-thu`) | 13/11: dựng 74s (cắt lặng, chữ 3D, film burn, chuyển cảnh, âm). Hào: "tạm ổn". Cần sửa: màu da cam (do tự cân tăng rực), chữ nên nằm sau đầu, zoom giật. Mới làm khung demo + `GHI-NHO-NGHIEM-THU.md`; **chưa sửa code** 3 điểm này |
 | Manim | Có mã, chưa chạy thử |
 | Blender MCP | Mới có hướng dẫn, chưa thử |

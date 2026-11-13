@@ -12,4 +12,6 @@ Chạy trên máy mạnh (PC Windows) hoặc phiên cloud. Cần: Node 22, FFmpe
 3. Chạy trong `video-studio`: `python3 scripts/dung.py projects/<tên>` (chạy nền; 90 giây mất khoảng 10–20 phút trên cloud). Bộ dựng nhớ cảnh đã cắt: chỉ sửa chữ thì dựng lại nhanh, đổi cảnh thì tự cắt lại cảnh đó.
 4. Kết quả: `video-studio/out/<tên>.mp4`. Sau đó dùng skill `bao-cao-nghiem-thu`.
 
+Thứ tự các bước trước khi dựng và đổi gì thì dựng lại gì: `docs/02-quy-trinh/THU-TU-TU-DONG.md`. Chốt cắt và màu trước lần dựng đầu; sau đó chỉ sửa chữ/âm thì bộ dựng tự dùng lại phần cũ (xem dòng `⏱` trong log).
+
 Không đăng video lên đâu. Không đưa footage, `build/`, `out/` lên GitHub (đã có trong .gitignore).

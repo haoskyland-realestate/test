@@ -2,7 +2,7 @@
 Chạy trong video-studio:  python3 scripts/dung.py projects/<tên> [--nhap]   (--nhap: dựng nháp nhanh, chất lượng thấp → out/<tên>.nhap.mp4)
 Đầu vào: projects/<tên>/timeline.json (định dạng: scripts/timeline.py). Đầu ra: out/<tên>.mp4.
 Bản gốc đặt sẵn ở projects/<tên>/build/raw/<file>, hoặc tự tải từ Drive theo "id" (thư mục chia sẻ bằng link)."""
-import json, os, re, subprocess, shutil, html, sys
+import hashlib, json, os, re, subprocess, shutil, html, sys, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from timeline import check, layout, size
 from effects import STYLES, LOOKS, TRANSITIONS
@@ -38,6 +38,10 @@ def run(cmd, **kw):
     print("+", " ".join(cmd)[:160]); subprocess.run(cmd, check=True, **kw)
 
 def ff(*a): run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", *a])
+
+_t0 = [time.time()]
+def moc(ten):  # in thời gian từng bước, để biết bước nào tốn nhất
+    t = time.time(); print(f"⏱ {ten}: {t - _t0[0]:.0f}s", flush=True); _t0[0] = t
 
 # 1. Tải bản gốc các cảnh được chọn
 os.makedirs(f"{B}/raw", exist_ok=True)
@@ -75,16 +79,19 @@ def loc_mau(look):
 for i, s in enumerate(shots):
     look = s.get("look") or style["look"]
     auto = tl.get("meta", {}).get("auto_color", True) and not look.startswith("lut:")  # tự cân màu (LUT chinh_mau đã gồm cân màu)
-    key = json.dumps([s["file"], s["in"], s["dur"], s.get("focus", 0), s.get("fit"), look, auto, DRAFT, 3, W])  # 2: có chuyển tông HDR
-    kf = f"{B}/shot{i}.key"  # nhớ cảnh đã cắt; đổi file/mốc/lệch khung/màu thì tự cắt lại
+    vf = (f"{khung(f'{B}/raw/' + s['file'], W, H, s.get('focus', 0), s.get('fit'))},"
+          f"{tu_can(f'{B}/raw/' + s['file'], s['in'], s['dur']) if auto else 'null'},"
+          f"{loc_mau(look)},fps={FPS},format=yuv420p")
+    lut = os.path.join(HERE, look[4:]) if look.startswith("lut:") else ""
+    # nhớ cảnh đã cắt theo đúng bộ lọc (kể cả công thức tự cân màu, nội dung LUT): đổi gì thì cắt lại đúng cảnh đó
+    key = json.dumps([s["file"], s["in"], s["dur"], vf, os.path.getmtime(lut) if lut else 0, DRAFT, CRF])
+    kf = f"{B}/shot{i}.key"
     if os.path.exists(f"{B}/shot{i}.mp4") and os.path.exists(kf) and open(kf).read() == key: continue
-    ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an",
-       "-vf", f"{khung(f'{B}/raw/' + s['file'], W, H, s.get('focus', 0), s.get('fit'))},"
-              f"{tu_can(f'{B}/raw/' + s['file'], s['in'], s['dur']) if auto else 'null'},"
-              f"{loc_mau(look)},fps={FPS},format=yuv420p",
+    ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an", "-vf", vf,
        "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/shot{i}.mp4")
     open(kf, "w").write(key)
 
+moc("cắt + màu từng cảnh")
 # 3. Chuyển cảnh giữa khung cuối cảnh trước và khung đầu cảnh sau:
 #    css3d (khối, lật thẻ) dựng bằng HyperFrames; xfade (hòa tan, phóng, trượt...) dựng bằng FFmpeg.
 n = len(shots)
@@ -182,6 +189,7 @@ window.__timelines["main"]=tl; tl.seek(0); draw();
         ff("-ss", str(seg_gl[i]), "-t", str(d_tr), "-i", f"{B}/glc.mp4", "-an", "-vf", f"fps={FPS},format=yuv420p",
            "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/tr{i}.mp4")
 
+moc("chuyển cảnh")
 # 4. Ghép: cảnh 0, chuyển cảnh 0 (nếu không phải cắt thẳng), cảnh 1, ...
 has_tr = {i for i, _, _ in trs}
 parts = []
@@ -189,17 +197,28 @@ for i in range(n):
     parts.append(f"{B}/shot{i}.mp4")
     if i in has_tr:
         parts.append(f"{B}/tr{i}.mp4")
-open(f"{B}/list.txt", "w", encoding="utf8").write("".join(f"file '{p}'\n" for p in parts))
-ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, "-pix_fmt", "yuv420p", f"{B}/base.mp4")
+# cảnh và chuyển cảnh không đổi nội dung thì dùng lại nền đã ghép (chuyển cảnh mỗi lần tạo lại nên so nội dung, không so giờ sửa)
+bkey = json.dumps([[p, hashlib.sha1(open(p, "rb").read()).hexdigest()] for p in parts] + [CRF])
+if not (os.path.exists(f"{B}/base.mp4") and os.path.exists(f"{B}/base.key") and open(f"{B}/base.key").read() == bkey):
+    open(f"{B}/list.txt", "w", encoding="utf8").write("".join(f"file '{p}'\n" for p in parts))
+    ff("-f", "concat", "-safe", "0", "-i", f"{B}/list.txt", "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, "-pix_fmt", "yuv420p", f"{B}/base.mp4")
+    open(f"{B}/base.key", "w").write(bkey)
 
+moc("ghép nền")
 # 5. Lớp chữ động (nền trong suốt): scripts/lop_chu.py (app studio dùng cùng mã để xem trước)
-ov = f"{B}/overlay"; shutil.rmtree(ov, ignore_errors=True); os.makedirs(ov)
-shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), ov)
-open(f"{ov}/index.html", "w", encoding="utf8").write(tao_lop_chu(tl))
-json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
-          open(f"{ov}/hyperframes.json", "w"))
-open(f"{ov}/package.json", "w").write('{"name":"overlay","private":true,"type":"module"}')
-run([*HF, "render", "-o", f"{B}/overlay.webm", "--format", "webm", "-q", "draft" if DRAFT else "standard", "--quiet"], cwd=ov)
+#    Chữ/phụ đề/thẻ không đổi thì dùng lại lớp đã dựng (chỉ đổi màu, cắt, âm thì không phải dựng lại phần chậm nhất này)
+trang = tao_lop_chu(tl)
+okey = hashlib.sha1(json.dumps([trang, DRAFT, W, H]).encode()).hexdigest()
+if not (os.path.exists(f"{B}/overlay.webm") and os.path.exists(f"{B}/overlay.key") and open(f"{B}/overlay.key").read() == okey):
+    ov = f"{B}/overlay"; shutil.rmtree(ov, ignore_errors=True); os.makedirs(ov)
+    shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), ov)
+    open(f"{ov}/index.html", "w", encoding="utf8").write(trang)
+    json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
+              open(f"{ov}/hyperframes.json", "w"))
+    open(f"{ov}/package.json", "w").write('{"name":"overlay","private":true,"type":"module"}')
+    run([*HF, "render", "-o", f"{B}/overlay.webm", "--format", "webm", "-q", "draft" if DRAFT else "standard", "--quiet"], cwd=ov)
+    open(f"{B}/overlay.key", "w").write(okey)
+moc("lớp chữ")
 
 # 6. Âm thanh: giọng gốc của cảnh (nếu bật) + nhạc tổng hợp + tiếng vút ở tâm mỗi chuyển cảnh
 audio = tl.get("audio", {})
@@ -253,6 +272,7 @@ for k, x in enumerate(ovs):
     else:
         ff(*inp, "-an", "-vf", vf + ",format=yuv420p", "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/ov{k}.mp4")
 
+moc("âm thanh")
 # 7. Ghép cuối: nền (+ zoom) + cảnh trám + lớp chữ trong suốt + âm thanh
 os.makedirs(os.path.join(ROOT, "out"), exist_ok=True)
 ins = ["-i", f"{B}/base.mp4", "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav"]
@@ -296,4 +316,5 @@ fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")
 ff(*ins, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
    "-c:v", "libx264", "-crf", "28" if DRAFT else "19", "-preset", "veryfast" if DRAFT else "medium",
    "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{OUTNAME}.mp4"))
+moc("ghép cuối")
 print(f"Xong: out/{OUTNAME}.mp4 ({total:.1f}s, {n} cảnh)")
