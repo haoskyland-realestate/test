@@ -1,0 +1,97 @@
+{
+ "audio": {
+  "music": null,
+  "whoosh": false
+ },
+ "sfx": {
+  "chuyen_canh": {
+   "gl-CrossZoom": "whoosh_zoom_01",
+   "gl-WhipSpin": "whoosh_xoay_01",
+   "gl-FilmBurn": "anh-sang_chay_01",
+   "gl-Overexposure": "anh-sang_flash_01"
+  },
+  "truoc_chuyen_canh": {
+   "gl-FilmBurn": "riser_nguoc_01"
+  },
+  "chu": {
+   "title3d": "chu_swish-pop_01",
+   "line": "chu_swish-pop_01",
+   "hook": "impact_tram_01",
+   "section": "impact_hit_01",
+   "stat": "chu_swish-pop_01",
+   "lower": "chu_pop_01",
+   "quote": "chu_pop_01",
+   "checklist": "chu_tick_01",
+   "outro": "ting_ket_01"
+  },
+  "so_lieu": "ting_don_01",
+  "vol": {
+   "whoosh": 0.8,
+   "anh-sang": 0.8,
+   "riser": 0.5,
+   "chu": 0.55,
+   "ting": 0.45,
+   "impact": 0.9
+  }
+ },
+ "nhip_chu": {
+  "vao": "whoosh_nhanh_01",
+  "tram": "impact_tram_01",
+  "lap_lanh": "ting_lap-lanh_01",
+  "ra": "whoosh_quat_01",
+  "vol": {
+   "vao": 0.45,
+   "tram": 0.55,
+   "lap_lanh": 0.3,
+   "ra": 0.22
+  }
+ },
+ "nganh": [
+  "Bất động sản"
+ ],
+ "id": "talking-cam-01",
+ "ten": "Talking head cam: chữ động theo nhịp nói",
+ "loai": "talking head",
+ "the": "CHỮ ĐỘNG THEO LỜI",
+ "mo_ta": "Người nói trước máy, từng từ trắng hiện đúng lúc nói; cụm từ khoá nằm riêng một dòng: cam đậm, nghiêng, viết hoa, có quầng sáng. Cắt thẳng là chính, xen cảnh chèn và chớp sáng khi đổi ý.",
+ "nguon": "Phân tích kết quả dựng AI trong video hướng dẫn 12 phút Hào gửi 14/11/2026 (giây 266–500; chỉ lưu phân tích, không lưu video). Chi tiết: MAU.md",
+ "dung_cho": "Talking head: chia sẻ góc nhìn, giải thích dòng tiền, trả lời câu hỏi khách hay hỏi",
+ "meta": {
+  "style": "edit-phim",
+  "loi": {
+   "khoa": "#ff8a1a",
+   "hoa": true,
+   "xuong_dong": true,
+   "co": 46,
+   "co_khoa": 1.7,
+   "font": "'Barlow Condensed','Be Vietnam Pro',Arial,sans-serif",
+   "font_khoa": "'Barlow Condensed','Be Vietnam Pro',Impact,sans-serif",
+   "glow": "0 0 14px rgba(255,138,26,.65),0 2px 10px rgba(0,0,0,.8)",
+   "fonts": "family=Barlow+Condensed:ital,wght@0,600;1,800&family=Be+Vietnam+Pro:wght@600;800"
+  }
+ },
+ "chuyen_canh": {
+  "chu_ky": [
+   "cut",
+   "cut",
+   "gl-CrossZoom",
+   "cut",
+   "cut",
+   "cut",
+   "gl-Overexposure",
+   "cut"
+  ],
+  "dur": {
+   "gl-CrossZoom": 0.35,
+   "gl-Overexposure": 0.4
+  }
+ },
+ "xem_truoc": {
+  "nen": "linear-gradient(180deg,#3a1d0a,#120a05 70%)",
+  "top": "that's",
+  "big": "THE GAP",
+  "sub": "",
+  "css": "font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;font-style:italic;color:#ff8a1a;text-shadow:0 0 18px rgba(255,138,26,.6),0 3px 8px rgba(0,0,0,.7)",
+  "hieu_ung": "word-pop"
+ }
+}

@@ -25,7 +25,7 @@ def rut(tl, goc=None):
     """Trả (mẫu mới dạng dict, danh sách thay đổi so với mẫu gốc)."""
     base = copy.deepcopy(goc or {})
     m, bao = copy.deepcopy(base), []
-    meta = {k: v for k, v in tl.get("meta", {}).items() if k in ("style", "look")}
+    meta = {k: v for k, v in tl.get("meta", {}).items() if k in ("style", "look", "loi")}
     if meta and meta != {k: v for k, v in base.get("meta", {}).items() if k in meta}:
         bao.append(f"phong cách: {base.get('meta', {}).get('style', '—')} → {meta.get('style', base.get('meta', {}).get('style'))}")
     m["meta"] = {**base.get("meta", {}), **meta}

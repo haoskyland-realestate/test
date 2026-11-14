@@ -40,6 +40,7 @@ def tao(tl, phan=None):
             tl["subtitles"], tl["cards"] = [], []
     W, H = size(tl)
     YT = W > H
+    LO = tl.get("meta", {}).get("loi", {})  # kiểu chữ theo nhịp nói của mẫu (màu từ khoá, quầng sáng, phông…)
     L = layout(tl)
     starts, total = L["starts"], L["total"]
     style = STYLES[tl.get("meta", {}).get("style", "hien-dai")]
@@ -74,7 +75,10 @@ def tao(tl, phan=None):
         elif kind == "loi":  # từng từ hiện đúng lúc nói; từ khoá đỏ phát sáng, to hơn, nảy vào
             ws, hl = s["words"], set(s.get("hl", []))
             body, a = "", []
+            xd = tl.get("meta", {}).get("loi", {}).get("xuong_dong")  # cụm từ khoá nằm riêng một dòng bên dưới chữ thường (kiểu talking head cam)
             for k, (w, w0, w1) in enumerate(ws):
+                if xd and k and ((k in hl) != (k - 1 in hl)):
+                    body += "<br>"
                 body += f'<span class="lw{" lk" if k in hl else ""}" id="b{i}w{k}">{html.escape(w)}</span> '
                 if k in hl:
                     a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{w0:.2f});')
@@ -176,10 +180,11 @@ def tao(tl, phan=None):
     .title3d,.compare{left:0;right:0;width:auto;top:330px;bottom:auto}
     """
     tags = [x["tag"] for x in tl.get("texts", []) if x.get("kind") == "tag"]
+    lo_font = f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?{LO["fonts"]}&display=swap">' if LO.get("fonts") else ""
     tag_font = f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?{tag_chu.FONTS}&display=swap">' if tags else ""
     return (f"""<!doctype html><html lang="vi"><head><meta charset="UTF-8">
     <meta name="viewport" content="width={W}, height={H}"><script src="gsap.min.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{style["fonts"]}&display=swap">{tag_font}<style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{style["fonts"]}&display=swap">{tag_font}{lo_font}<style>
     :root{{--scrim:{style["scrim"]};--accent:{style["accent"]};--hl:{style["hl"]};--text:{style["text"]};
      --display:"{style["display"]}",sans-serif;--body:"{style["body"]}",sans-serif;--dw:{style["display_weight"]}}}
     *{{margin:0;padding:0;box-sizing:border-box}}
@@ -238,10 +243,10 @@ def tao(tl, phan=None):
     .ci b{{flex:none;width:64px;height:64px;border-radius:50%;background:var(--accent);color:{style["bg"]};display:flex;align-items:center;justify-content:center;font-size:36px}}
     {style.get("css", "")}
     {YT_CSS if YT else ""}
-    .blk.loi{{left:70px;right:70px;top:1000px;bottom:auto;width:auto;text-align:center;font-family:Montserrat,sans-serif;font-weight:600;font-size:50px;line-height:1.3;color:#fff;
+    .blk.loi{{left:70px;right:70px;top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
       text-shadow:0 2px 14px rgba(0,0,0,.75)}}
     .blk.loi .lw{{display:inline-block;margin:0 .14em}}
-    .blk.loi .lk{{font-style:italic;font-weight:800;font-size:1.5em;color:#ff2b2b;text-shadow:0 0 10px #ff1a1a,0 0 26px #ff0000,0 0 60px rgba(255,0,0,.6)}}
+    .blk.loi .lk{{font-style:italic;font-weight:800;font-size:{LO.get("co_khoa", 1.5)}em;color:{LO.get("khoa", "#ff2b2b")};{"font-family:" + LO["font_khoa"] + ";" if LO.get("font_khoa") else ""}{"text-transform:uppercase;" if LO.get("hoa") else ""}text-shadow:{LO.get("glow", "0 0 10px #ff1a1a,0 0 26px #ff0000,0 0 60px rgba(255,0,0,.6)")}}}
     {".blk.tag{left:0;right:0;top:0;bottom:0;width:auto;zoom:" + ("0.62" if YT else "1") + "}.blk.tag>div>div{filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}" + tag_chu.css(tags) if tags else ""}
     </style></head><body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{W}" data-height="{H}">
