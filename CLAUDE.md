@@ -68,7 +68,7 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 | Blender MCP | Mới có hướng dẫn, chưa thử |
 | Codespaces (`.devcontainer`) | Chưa thử |
 | Windows 11 (`setup-windows.ps1`, `chay-studio.bat`, `scripts/kiem_may.py`) | 13/11: cài một lệnh (winget + npm + pip + đặt PYTHONUTF8 + kiểm máy + dựng thử 6s); `chay-studio.bat` tự kiểm máy mỗi lần mở. Sửa lỗi chắc gặp trên Windows: `npx.cmd`, `python3`, chữ tiếng Việt (UTF-8). `kiem_may.py --dung-thu` đạt trên cloud (57s). **Chưa thử trên PC thật**; script PowerShell chưa chạy thử (máy cloud không có PowerShell) |
-| MacBook (`setup-mac.sh`, `chay-studio.command`, `docs/01-he-thong/CAI-TREN-MAC.md`) | 14/11: cài một lệnh (Homebrew + Node + FFmpeg + Python vào `.venv` + kiểm máy + dựng thử 6s), bấm đúp để mở app; `kiem_may.py` gợi ý lệnh brew trên Mac. **Chưa chạy thử trên Mac thật** |
+| MacBook (`setup-mac.sh`, `chay-studio.command`, `docs/01-he-thong/CAI-TREN-MAC.md`) | 14/11: cài một lệnh (Homebrew + Node + FFmpeg + Python vào `.venv` + kiểm máy + dựng thử 6s), bấm đúp để mở app; `kiem_may.py` gợi ý lệnh brew trên Mac. **14/11 chạy trên Mac thật: kiểm máy đạt, dựng thử 6s đạt (112 giây)** sau khi đổi sang `ffmpeg-full` (ffmpeg thường của Homebrew thiếu zscale). Chưa mở app trên Mac |
 | Trang Pages cũ | Có thể đã bị app thay ở gốc; cần chạy lại "Deploy site" và kiểm tra |
 
 ## Máy và công cụ (Hào xác nhận 12/11/2026)
