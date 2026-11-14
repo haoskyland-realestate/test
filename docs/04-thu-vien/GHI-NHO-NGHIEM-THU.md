@@ -121,3 +121,8 @@ Dùng 1 video mẫu để giống đúng style đó; 2–3 video để ra style 
 ## Thiết kế âm cho chữ theo nhịp nói (14/11/2026)
 Đo 3 video mẫu Open Residency: độ ồn −29, −25 và **−14,8 LUFS**: chỉ bản hoàn thiện có lớp nền liên tục (dải trầm–trung) cộng tiếng chạm; hai bản kia gần như chỉ có giọng. Đo tiếng cao tần so với mốc cắt: **không trùng hơn ngẫu nhiên** (9/31 mốc cắt so với 9,3 kỳ vọng), nên **không tách riêng được lớp hiệu ứng âm của video mẫu bằng máy**; phần thiết kế âm của mình dựa theo cách dựng chuyên nghiệp thông thường, không chép âm của người khác. Hào cho mốc giờ cụ thể ("giây X có tiếng gì") thì mình bám sát hơn.
 Các lớp âm: xem `MAU.md` của `talking-cam-01`. Mọi âm vào mẫu qua `am_loi` (đổi âm: sửa `mau.json`).
+
+## Tốc độ chuyển động chữ (Hào chốt 14/11/2026)
+- Chữ xuất hiện **chậm hơn** để nhìn rõ chuyển động: mọi chuyển động chữ và cảnh chèn dài gấp **1,5 lần** (`meta.cham_chu`, mặc định 1.5).
+- **Mọi chuyển động đều có ease in-out** (tăng tốc nhẹ rồi hãm lại), kể cả lúc chữ ra. Không dùng kiểu chạy đều hay dừng gắt. Mã: `lop_chu.em_dan` áp cho mọi chữ, thẻ, tag, cảnh chèn; chỉ thanh tiến độ chạy đều.
+- Chữ theo nhịp nói bắt đầu sớm 0,1 giây để rõ hẳn đúng lúc nói; cuối cụm mờ ra êm. Tiếng chạm của từ khoá dời theo (đỉnh chuyển động).

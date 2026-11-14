@@ -29,6 +29,17 @@ def line(text, cls="", chars=False):
     return f'<div class="line {cls}"><div class="in">{words(text, chars)}</div></div>'
 
 
+def em_dan(js, k=1.5):
+    """Mọi chuyển động chữ/thẻ: chậm lại k lần và có ease in-out (Hào chốt 14/11: chữ hiện chậm hơn để nhìn rõ chuyển động, không chuyển động nào
+    chạy đều hay dừng gắt). Thanh tiến độ và số chạy tuyến tính ("none") giữ nguyên."""
+    if 'ease:"none"' in js or "#prog" in js:
+        return js
+    js = re.sub(r'ease:"(?:expo|power\d|sine|circ|quad|cubic)\.(?:out|in)"', 'ease:"power2.inOut"', js)
+    js = re.sub(r'ease:"back\.out\(([\d.]+)\)"', lambda m: f'ease:"back.inOut({min(float(m.group(1)), 1.6)})"', js)
+    js = re.sub(r'(duration|stagger):([\d.]+)', lambda m: f"{m.group(1)}:{round(float(m.group(2)) * k, 3)}", js)
+    return js
+
+
 def bo_cuc_loi(ws, hl, xd, W, H, LO, top):
     """Bố cục chữ theo nhịp nói như người dựng chuyên nghiệp: chữ to nhất có thể mà vẫn nằm gọn chiều ngang (lề 70px), từ khoá to hơn chữ thường,
     cụm không rớt vào vùng giao diện TikTok (dưới 78% chiều cao) và không lên sát đỉnh. Trả (cỡ chữ thường px, cỡ từ khoá em, top px)."""
@@ -100,13 +111,14 @@ def tao(tl, phan=None):
                 extra = (('<i class="ul"></i>' if LO.get("gach_chan") else "") + (f'<b class="bd">{html.escape(LO["huy_hieu"])}</b>' if LO.get("huy_hieu") else "")) if k in hl else ""
                 body += f'<span class="lw{" lk" if k in hl else ""}"{f" style=font-size:{em}em" if k in hl else ""} id="b{i}w{k}">{html.escape(w)}{extra}</span> '
                 if k in hl:
-                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{w0:.2f});')
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{max(0, w0 - 0.1):.2f});')
                     if LO.get("gach_chan"):
                         a.append(f'tl.fromTo("#b{i}w{k} .ul",{{scaleX:0}},{{scaleX:1,duration:{d(.4)},ease:"power3.out"}},{w0 + 0.12:.2f});')
                     if LO.get("huy_hieu"):
                         a.append(f'tl.fromTo("#b{i}w{k} .bd",{{scale:0,rotate:-90}},{{scale:1,rotate:0,duration:{d(.45)},ease:"back.out(3)"}},{w0 + 0.18:.2f});')
                 else:
-                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.16)},ease:"power2.out"}},{w0:.2f});')
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.16)},ease:"power2.out"}},{max(0, w0 - 0.1):.2f});')
+            a.append(f'tl.to("{sel}",{{opacity:0,y:-12,duration:{d(.25)},ease:"power2.in"}},{max(st0, st0 + du - 0.4):.2f});')
             s = {**s, "top_px": top, "_co": co}
         elif kind == "hook":
             body = f'<div class="tag">{html.escape(s["tag"])}</div>' + "".join(line(l, "big", ch) for l in s["lines"])
@@ -321,7 +333,7 @@ def tao(tl, phan=None):
     function fmt(sel,v,dec){{document.querySelector(sel).textContent=v.toLocaleString("vi-VN",{{minimumFractionDigits:dec,maximumFractionDigits:dec}});}}
     const tl=gsap.timeline({{paused:true}});
     tl.to("#prog",{{scaleX:1,duration:{total:.2f},ease:"none"}},0);
-    {chr(10).join(anims)}
+    {chr(10).join(em_dan(x, float(tl.get('meta', {}).get('cham_chu', 1.5))) for x in anims)}
     window.__timelines=window.__timelines||{{}}; window.__timelines["main"]=tl; tl.seek(0);
     // Xem trước trong app (ngoài HyperFrames): tua tới giây t, ẩn/hiện từng lớp theo data-start/data-duration như HyperFrames
     window.dat=function(t){{tl.seek(t);document.querySelectorAll(".clip").forEach(e=>{{const s=+e.dataset.start,d=+e.dataset.duration;e.style.visibility=t>=s&&t<s+d?"visible":"hidden";}});}};

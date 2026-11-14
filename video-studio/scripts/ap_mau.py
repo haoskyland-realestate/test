@@ -110,8 +110,8 @@ def ap(tl, mau, chi_am=False):
                     continue  # cụm từ khoá nhiều từ: chỉ một lần chạm ở từ đầu
                 t0 = ws[q][1]
                 them(al.get("khoa_vut"), t0 - 0.06, vv.get("khoa_vut", .22), (1.0, 1.05)[k % 2], hp=250, cach=0.3)
-                them(al.get("khoa_cham"), t0 + 0.02, vv.get("khoa_cham", .3), cach=0.5)
-                them(al.get("khoa_lap"), t0 + 0.05, vv.get("khoa_lap", .16), cach=0.6)
+                them(al.get("khoa_cham"), t0 + 0.12, vv.get("khoa_cham", .3), cach=0.5)
+                them(al.get("khoa_lap"), t0 + 0.16, vv.get("khoa_lap", .16), cach=0.6)
         for j, x in enumerate(sorted(tl.get("cards", []), key=lambda q: q["start"])):
             kieu, st, en = x.get("kieu", "danh-sach"), x["start"], x["start"] + x["dur"]
             them(al.get("the_vao"), st + 0.1, vv.get("the_vao", .45), hp=150, cach=0.4)
