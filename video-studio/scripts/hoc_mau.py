@@ -31,9 +31,14 @@ def mau_nho(v, fps=2, w=64):
     return np.frombuffer(raw[: len(raw) // (w * h * 3) * (w * h * 3)], np.uint8).reshape(-1, h, w, 3)
 
 
-def cat_canh(v, nguong=0.3):
+def cat_canh(v, nguong=0.3, gop=0.5):
+    """Mốc cắt/chuyển cảnh; các mốc cách nhau < gop giây gộp thành một (một chuyển cảnh kéo dài nhiều khung)."""
     o = chay("ffmpeg", "-nostdin", "-i", v, "-vf", f"select='gt(scene,{nguong})',showinfo", "-f", "null", "-").stderr
-    return [round(float(t), 2) for t in re.findall(r"pts_time:([\d.]+)", o)]
+    out = []
+    for t in (round(float(t), 2) for t in re.findall(r"pts_time:([\d.]+)", o)):
+        if not out or t - out[-1] >= gop:
+            out.append(t)
+    return out
 
 
 def am_thanh(v):
@@ -62,7 +67,8 @@ def phan_tich(v):
     luma = k.mean(axis=(1, 2, 3))
     chop = [round(i / 2, 1) for i in range(1, len(luma) - 1) if luma[i] > 200 and luma[i] > luma[i - 1] + 40]  # chớp trắng
     toi = [round(i / 2, 1) for i in range(len(luma)) if luma[i] < 12]
-    cc = cat_canh(v)
+    nguong = 0.12 if float(luma.mean()) < 40 else 0.3  # video tối (nền đen) đổi cảnh ít chênh sáng: ngưỡng thấp hơn
+    cc = cat_canh(v, nguong)
     seg = []
     n = max(1, int(ti["dai"] // 10))
     for s in range(n):
@@ -71,7 +77,7 @@ def phan_tich(v):
         mx, mn = px.max(1), px.min(1)
         seg.append({"tu": round(s * ti["dai"] / n, 1), "sang": round(float(px.mean()) / 2.55, 1), "ruc": round(float(((mx - mn) / np.maximum(mx, 1)).mean()) * 100, 1),
                     "rgb": [int(c) for c in px.mean(0)]})
-    return {"thong_tin": ti, "cat": cc, "so_cat_tren_10s": round(len(cc) / max(ti["dai"], 1) * 10, 1), "chop_trang": chop, "khung_den": toi,
+    return {"thong_tin": ti, "cat": cc, "nguong_cat": nguong, "so_cat_tren_10s": round(len(cc) / max(ti["dai"], 1) * 10, 1), "chop_trang": chop, "khung_den": toi,
             "am": am_thanh(v) if ti["co_tieng"] else {"lufs": None, "dinh": []}, "mau_theo_doan": seg}
 
 
@@ -92,7 +98,7 @@ def viet(v, ten=None):
     t = r["thong_tin"]
     open(os.path.join(d, "BAO-CAO.md"), "w", encoding="utf8").write(
         f"# Đo video mẫu: {ten}\n\n- Cỡ {t['rong']}×{t['cao']}, {t['fps']} khung/giây, dài {t['dai']} giây.\n"
-        f"- Số lần cắt/chuyển cảnh: {len(r['cat'])} ({r['so_cat_tren_10s']} lần mỗi 10 giây). Mốc: {', '.join(map(str, r['cat'][:30]))}{'…' if len(r['cat']) > 30 else ''}\n"
+        f"- Số lần cắt/chuyển cảnh (ngưỡng {r['nguong_cat']}): {len(r['cat'])} ({r['so_cat_tren_10s']} lần mỗi 10 giây). Mốc: {', '.join(map(str, r['cat'][:30]))}{'…' if len(r['cat']) > 30 else ''}\n"
         f"- Chớp trắng (hợp chuyển cảnh cháy sáng/flash): {r['chop_trang'] or 'không thấy'}\n- Khung đen: {r['khung_den'] or 'không thấy'}\n"
         f"- Độ ồn: {r['am']['lufs']} LUFS; đỉnh âm (gồm cả chỗ bắt đầu nói; nghi tiếng vút/chạm khi trùng mốc chữ hoặc chuyển cảnh): {len(r['am']['dinh'])} chỗ, đầu tiên: {r['am']['dinh'][:12]}\n"
         f"- Màu theo từng đoạn: " + "; ".join(f"{s['tu']}s sáng {s['sang']}% rực {s['ruc']}%" for s in r["mau_theo_doan"]) + "\n\n"
