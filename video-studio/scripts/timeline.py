@@ -109,6 +109,12 @@ def check(tl):
                 e.append(f"Chữ {i}: tag '{x.get('tag')}' chưa có (đang có: {', '.join(TAGS)})")
             if not isinstance(x.get("o", {}), dict) or not 0 <= float(x.get("y", 0.24)) <= 1 or not 0 <= float(x.get("x", 0.5)) <= 1:
                 e.append(f"Chữ {i}: tag cần 'o' là bảng ô chữ, 'x' và 'y' từ 0 đến 1")
+        if kind == "loi":
+            w, hl = x.get("words"), x.get("hl", [])
+            if not (isinstance(w, list) and w and all(isinstance(q, list) and len(q) == 3 and isinstance(q[0], str) and all(isinstance(v, (int, float)) for v in q[1:]) for q in w)):
+                e.append(f"Chữ {i}: 'words' là danh sách [từ, giây bắt đầu, giây kết thúc]")
+            elif not (isinstance(hl, list) and all(isinstance(k, int) and 0 <= k < len(w) for k in hl)) or not 0 <= float(x.get("y", 0.56)) <= 1:
+                e.append(f"Chữ {i}: 'hl' là số thứ tự từ khoá trong 'words', 'y' từ 0 đến 1")
         if kind == "stat" and not isinstance(x.get("value"), (int, float)):
             e.append(f"Chữ {i}: 'value' của số lớn phải là số")
         missing = [k for k in ["start", "dur"] + TEXT_KINDS[kind][0] if k not in x]

@@ -71,6 +71,16 @@ def tao(tl, phan=None):
         a = [anim_in(an, sel, st0 + 0.25)]
         if kind == "tag":  # tag chữ có sẵn: tự lo cả vào, đổi chữ và ra
             body, a = tag_chu.ve(s, sel, d, H, YT)
+        elif kind == "loi":  # từng từ hiện đúng lúc nói; từ khoá đỏ phát sáng, to hơn, nảy vào
+            ws, hl = s["words"], set(s.get("hl", []))
+            body, a = "", []
+            for k, (w, w0, w1) in enumerate(ws):
+                body += f'<span class="lw{" lk" if k in hl else ""}" id="b{i}w{k}">{html.escape(w)}</span> '
+                if k in hl:
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{w0:.2f});')
+                else:
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.16)},ease:"power2.out"}},{w0:.2f});')
+            s = {**s, "top_px": int(s["top_px"]) if s.get("top_px") is not None else int(float(s.get("y", 0.56)) * H)}
         elif kind == "hook":
             body = f'<div class="tag">{html.escape(s["tag"])}</div>' + "".join(line(l, "big", ch) for l in s["lines"])
             a.append(f'tl.fromTo("{sel} .tag",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:{d(.5)}}},{st0:.2f});')
@@ -132,7 +142,7 @@ def tao(tl, phan=None):
                   f'const o{i}={{v:0}};tl.to(o{i},{{v:{s["value"]},duration:{d(1.4)},ease:"power2.out",onUpdate:()=>fmt("{sel} .val",o{i}.v,{dec})}},{st0 + 0.1:.2f});']
         else:
             body = "".join(line(l, "mid", ch) for l in s["lines"])
-        if kind != "tag": a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind in ("title3d", "compare")
+        if kind not in ("tag", "loi"): a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind in ("title3d", "compare")
                  else f'tl.to("{sel}",{{opacity:0,y:-40,duration:{d(.35)},ease:"power2.in"}},{st0 + du - 0.4 * SP:.2f});')
         vt = f' style="top:{s["top_px"]}px"' if s.get("top_px") is not None else ""  # chữ sau đầu: bộ dựng đặt ngang đầu người nói
         blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}"{vt} data-start="{st0:.2f}" data-duration="{du:.2f}" '
@@ -228,6 +238,10 @@ def tao(tl, phan=None):
     .ci b{{flex:none;width:64px;height:64px;border-radius:50%;background:var(--accent);color:{style["bg"]};display:flex;align-items:center;justify-content:center;font-size:36px}}
     {style.get("css", "")}
     {YT_CSS if YT else ""}
+    .blk.loi{{left:70px;right:70px;top:1000px;bottom:auto;width:auto;text-align:center;font-family:Montserrat,sans-serif;font-weight:600;font-size:50px;line-height:1.3;color:#fff;
+      text-shadow:0 2px 14px rgba(0,0,0,.75)}}
+    .blk.loi .lw{{display:inline-block;margin:0 .14em}}
+    .blk.loi .lk{{font-style:italic;font-weight:800;font-size:1.5em;color:#ff2b2b;text-shadow:0 0 10px #ff1a1a,0 0 26px #ff0000,0 0 60px rgba(255,0,0,.6)}}
     {".blk.tag{left:0;right:0;top:0;bottom:0;width:auto;zoom:" + ("0.62" if YT else "1") + "}.blk.tag>div>div{filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}" + tag_chu.css(tags) if tags else ""}
     </style></head><body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{W}" data-height="{H}">

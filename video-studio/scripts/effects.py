@@ -190,6 +190,7 @@ TEXT_KINDS = {
     "stat": (["value", "label"], "Số lớn chạy từ 0 (thêm 'prefix', 'suffix', 'decimals')"),
     "title3d": (["big"], "Chữ lớn giữa khung: nhãn nhỏ trên ('top') + chữ lớn + dòng nhỏ dưới ('sub'); kiểu chữ và cách hiện theo phong cách"),
     "tag": (["tag"], "Tag chữ có sẵn khung + chuyển động (scripts/tag_chu.py), chỉ điền ô chữ 'o'; 'y' 0..1 là vị trí dọc"),
+    "loi": (["words"], "Chữ theo nhịp lời nói: từng từ hiện đúng lúc nói; từ khoá đỏ phát sáng. 'words' = [[từ, giây bắt đầu, giây kết thúc]], 'hl' = số thứ tự từ khoá, 'y' 0..1 hoặc 'top_px'; 'bam_nguoi': đặt ngang ngực người nói (scripts/loi_nhip.py)"),
     "compare": (["a_label", "a_value", "b_label", "b_value"], "Thẻ so sánh 2 cột (vd. Thuê nhà vs Trả góp), thêm 'title', 'note'"),
 }
 

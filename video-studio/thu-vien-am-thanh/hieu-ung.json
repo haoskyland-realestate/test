@@ -166,5 +166,205 @@
   "dai": 0.35,
   "diem_nhan": 0.08,
   "nguon": "tổng hợp (scripts/tao_sfx.py)"
+ },
+ "whoosh_air-woosh_01": {
+  "nhom": "whoosh",
+  "vi": "Air woosh 2.32 s",
+  "dung_khi": "Chuyển cảnh, chữ bay vào",
+  "dai": 2.32,
+  "diem_nhan": 0.7,
+  "nguon": "Mixkit 1489 https://mixkit.co/free-sound-effects/whoosh/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_cinematic-whoosh-fast-tr_01": {
+  "nhom": "whoosh",
+  "vi": "Cinematic whoosh fast transition 1.33 s",
+  "dung_khi": "Chuyển cảnh, chữ bay vào",
+  "dai": 1.33,
+  "diem_nhan": 1.06,
+  "nguon": "Mixkit 1492 https://mixkit.co/free-sound-effects/whoosh/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_arrow-whoosh_01": {
+  "nhom": "whoosh",
+  "vi": "Arrow whoosh 1.1 s",
+  "dung_khi": "Chuyển cảnh, chữ bay vào",
+  "dai": 1.1,
+  "diem_nhan": 0.28,
+  "nguon": "Mixkit 1491 https://mixkit.co/free-sound-effects/whoosh/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_fast-whoosh-transition_01": {
+  "nhom": "whoosh",
+  "vi": "Fast whoosh transition 1.76 s",
+  "dung_khi": "Chuyển cảnh, chữ bay vào",
+  "dai": 1.76,
+  "diem_nhan": 0.72,
+  "nguon": "Mixkit 1490 https://mixkit.co/free-sound-effects/whoosh/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_explainer-video-pops-who_01": {
+  "nhom": "whoosh",
+  "vi": "Explainer video pops whoosh light pop 0.18 s",
+  "dung_khi": "Chuyển cảnh, chữ bay vào",
+  "dai": 0.18,
+  "diem_nhan": 0.02,
+  "nguon": "Mixkit 3005 https://mixkit.co/free-sound-effects/whoosh/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_metal-hit-woosh_01": {
+  "nhom": "whoosh",
+  "vi": "Metal hit woosh 0.48 s",
+  "dung_khi": "Chuyển cảnh, chữ bay vào",
+  "dai": 0.48,
+  "diem_nhan": 0.08,
+  "nguon": "Mixkit 1485 https://mixkit.co/free-sound-effects/whoosh/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "impact_wood-hard-hit_01": {
+  "nhom": "impact",
+  "vi": "Wood hard hit 0.42 s",
+  "dung_khi": "Chữ lớn chạm, nhấn ý",
+  "dai": 0.42,
+  "diem_nhan": 0.06,
+  "nguon": "Mixkit 2182 https://mixkit.co/free-sound-effects/impact/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "impact_metal-hammer-hit_01": {
+  "nhom": "impact",
+  "vi": "Metal hammer hit 0.77 s",
+  "dung_khi": "Chữ lớn chạm, nhấn ý",
+  "dai": 0.77,
+  "diem_nhan": 0.12,
+  "nguon": "Mixkit 833 https://mixkit.co/free-sound-effects/impact/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "impact_impact-of-a-blow_01": {
+  "nhom": "impact",
+  "vi": "Impact of a blow 0.59 s",
+  "dung_khi": "Chữ lớn chạm, nhấn ý",
+  "dai": 0.59,
+  "diem_nhan": 0.18,
+  "nguon": "Mixkit 2150 https://mixkit.co/free-sound-effects/impact/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_fast-small-sweep-transit_01": {
+  "nhom": "whoosh",
+  "vi": "Fast small sweep transition 0.78 s",
+  "dung_khi": "Chuyển cảnh",
+  "dai": 0.78,
+  "diem_nhan": 0.32,
+  "nguon": "Mixkit 166 https://mixkit.co/free-sound-effects/transition/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_air-zoom-vacuum_01": {
+  "nhom": "whoosh",
+  "vi": "Air zoom vacuum 1.27 s",
+  "dung_khi": "Chuyển cảnh",
+  "dai": 1.27,
+  "diem_nhan": 0.44,
+  "nguon": "Mixkit 2608 https://mixkit.co/free-sound-effects/transition/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "whoosh_vacuum-swoosh-transition_01": {
+  "nhom": "whoosh",
+  "vi": "Vacuum swoosh transition 2.26 s",
+  "dung_khi": "Chuyển cảnh",
+  "dai": 2.26,
+  "diem_nhan": 1.56,
+  "nguon": "Mixkit 1465 https://mixkit.co/free-sound-effects/transition/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "chu_camera-shutter-click_01": {
+  "nhom": "chu",
+  "vi": "Camera shutter click 0.35 s",
+  "dung_khi": "Chữ hiện, nút bấm",
+  "dai": 0.35,
+  "diem_nhan": 0.18,
+  "nguon": "Mixkit 1133 https://mixkit.co/free-sound-effects/click/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "chu_fast-double-click-on-mou_01": {
+  "nhom": "chu",
+  "vi": "Fast double click on mouse 0.47 s",
+  "dung_khi": "Chữ hiện, nút bấm",
+  "dai": 0.47,
+  "diem_nhan": 0.1,
+  "nguon": "Mixkit 275 https://mixkit.co/free-sound-effects/click/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "chu_select-click_01": {
+  "nhom": "chu",
+  "vi": "Select click 1.1 s",
+  "dung_khi": "Chữ hiện, nút bấm",
+  "dai": 1.1,
+  "diem_nhan": 0.06,
+  "nguon": "Mixkit 1109 https://mixkit.co/free-sound-effects/click/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "chu_long-pop_01": {
+  "nhom": "chu",
+  "vi": "Long pop 0.48 s",
+  "dung_khi": "Chữ nảy lên, thẻ xuất hiện",
+  "dai": 0.48,
+  "diem_nhan": 0.02,
+  "nguon": "Mixkit 2358 https://mixkit.co/free-sound-effects/pop/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "chu_hard-pop-click_01": {
+  "nhom": "chu",
+  "vi": "Hard pop click 1.17 s",
+  "dung_khi": "Chữ nảy lên, thẻ xuất hiện",
+  "dai": 1.17,
+  "diem_nhan": 0.04,
+  "nguon": "Mixkit 2364 https://mixkit.co/free-sound-effects/pop/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "chu_bubble-pop-up-alert-noti_01": {
+  "nhom": "chu",
+  "vi": "Bubble pop up alert notification 0.38 s",
+  "dung_khi": "Chữ nảy lên, thẻ xuất hiện",
+  "dai": 0.38,
+  "diem_nhan": 0.04,
+  "nguon": "Mixkit 2357 https://mixkit.co/free-sound-effects/pop/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "ting_correct-answer-tone_01": {
+  "nhom": "ting",
+  "vi": "Correct answer tone 1.96 s",
+  "dung_khi": "Số liệu, thông báo, thẻ",
+  "dai": 1.96,
+  "diem_nhan": 0.02,
+  "nguon": "Mixkit 2870 https://mixkit.co/free-sound-effects/notification/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "ting_software-interface-start_01": {
+  "nhom": "ting",
+  "vi": "Software interface start 2.35 s",
+  "dung_khi": "Số liệu, thông báo, thẻ",
+  "dai": 2.35,
+  "diem_nhan": 0.12,
+  "nguon": "Mixkit 2574 https://mixkit.co/free-sound-effects/notification/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "ting_sci-fi-click_01": {
+  "nhom": "ting",
+  "vi": "Sci fi click 0.7 s",
+  "dung_khi": "Số liệu, thông báo, thẻ",
+  "dai": 0.7,
+  "diem_nhan": 0.14,
+  "nguon": "Mixkit 900 https://mixkit.co/free-sound-effects/notification/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "glitch_small-electric-glitch_01": {
+  "nhom": "glitch",
+  "vi": "Small electric glitch 1.02 s",
+  "dung_khi": "Chữ giải mã, nhiễu hình",
+  "dai": 1.02,
+  "diem_nhan": 0.0,
+  "nguon": "Mixkit 2595 https://mixkit.co/free-sound-effects/glitch/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "glitch_glitch-static_01": {
+  "nhom": "glitch",
+  "vi": "Glitch static 1.4 s",
+  "dung_khi": "Chữ giải mã, nhiễu hình",
+  "dai": 1.4,
+  "diem_nhan": 0.14,
+  "nguon": "Mixkit 1457 https://mixkit.co/free-sound-effects/glitch/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "glitch_glitch-roar_01": {
+  "nhom": "glitch",
+  "vi": "Glitch roar 1.08 s",
+  "dung_khi": "Chữ giải mã, nhiễu hình",
+  "dai": 1.08,
+  "diem_nhan": 0.06,
+  "nguon": "Mixkit 1033 https://mixkit.co/free-sound-effects/glitch/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "riser_cinematic-trailer-riser_01": {
+  "nhom": "riser",
+  "vi": "Cinematic trailer riser 2.58 s",
+  "dung_khi": "Tăng dần trước chuyển cảnh mạnh",
+  "dai": 2.58,
+  "diem_nhan": 2.52,
+  "nguon": "Mixkit 790 https://mixkit.co/free-sound-effects/riser/ (Sound Effects Free License, tải 2026-11-14)"
  }
 }
