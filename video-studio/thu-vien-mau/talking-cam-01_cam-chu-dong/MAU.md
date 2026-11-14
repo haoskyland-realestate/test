@@ -10,7 +10,8 @@ Rút từ phần **kết quả dựng AI** trong video hướng dẫn 12 phút (
 | **Từ khoá** | Cụm 1–3 từ nằm **riêng một dòng bên dưới**: cam `#ff8a1a`, đậm, nghiêng, VIẾT HOA, phông hẹp, quầng sáng cam (vd. "PROBLEM", "WHAT YOU START", "LOOK AT YOUR LIFE") |
 | Cảnh chèn | Mỗi 8–10 giây một thẻ/đồ hoạ (thẻ trắng, dấu ✓ cam, sơ đồ quỹ đạo, thẻ kính mờ) rồi về người nói |
 | Nhịp cắt | Cắt thẳng là chính; chớp sáng hoặc phóng mờ khi đổi ý |
-| Âm | Tiếng vút nhẹ khi vào cảnh chèn; không nhạc nền ồn |
+| Âm (thiết kế nhiều lớp, `am_loi` trong `mau.json`) | Mỗi cụm chữ: pop trầm nhẹ (đổi cao độ xoay vòng) · **từ khoá**: vút trước 60ms + chạm gỗ + lấp lánh (cụm nhiều từ chỉ chạm một lần) · **cảnh chèn**: vút vào/ra · **số liệu**: trầm + lấp lánh · **quỹ đạo**: pop từng ý · **✓**: tick từng mục · nhạc nền tổng hợp nhỏ (`music_volume` 0,35), cả bài chuẩn −14 LUFS |
+| Hình thêm | Từ khoá có **gạch chân quét** và **huy hiệu ✦**; **zoom nhẹ 105%** đúng lúc từ khoá hiện (cách nhau ≥3 giây) |
 | Lỗi hay gặp ở vòng đầu | Chữ hiện rồi biến quá nhanh · không có ease in-out · chữ nhỏ · đồ hoạ đè lên người · 10 giây đầu chậm (xem `GHI-NHO-NGHIEM-THU.md`) |
 
 ## Cách dùng

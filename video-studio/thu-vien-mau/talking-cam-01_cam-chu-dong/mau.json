@@ -1,7 +1,8 @@
 {
  "audio": {
-  "music": null,
-  "whoosh": false
+  "music": "synth",
+  "whoosh": false,
+  "music_volume": 0.35
  },
  "sfx": {
   "chuyen_canh": {
@@ -67,7 +68,9 @@
    "font": "'Barlow Condensed','Be Vietnam Pro',Arial,sans-serif",
    "font_khoa": "'Barlow Condensed','Be Vietnam Pro',Impact,sans-serif",
    "glow": "0 0 14px rgba(255,138,26,.65),0 2px 10px rgba(0,0,0,.8)",
-   "fonts": "family=Barlow+Condensed:ital,wght@0,600;1,800&family=Be+Vietnam+Pro:wght@600;800"
+   "fonts": "family=Barlow+Condensed:ital,wght@0,600;1,800&family=Be+Vietnam+Pro:wght@600;800",
+   "gach_chan": true,
+   "huy_hieu": "✦"
   }
  },
  "chuyen_canh": {
@@ -93,5 +96,33 @@
   "sub": "",
   "css": "font-family:'Barlow Condensed',Impact,sans-serif;font-weight:800;font-style:italic;color:#ff8a1a;text-shadow:0 0 18px rgba(255,138,26,.6),0 3px 8px rgba(0,0,0,.7)",
   "hieu_ung": "word-pop"
+ },
+ "am_loi": {
+  "cum": "chu_pop_01",
+  "khoa_vut": "chu_swish-pop_01",
+  "khoa_cham": "impact_wood-hard-hit_01",
+  "khoa_lap": "ting_sci-fi-click_01",
+  "the_vao": "whoosh_zoom_01",
+  "the_ra": "whoosh_quat_01",
+  "so_tram": "impact_tram_01",
+  "so_lap": "ting_lap-lanh_01",
+  "muc_pop": "chu_swish-pop_01",
+  "muc_tick": "chu_tick_01",
+  "vol": {
+   "cum": 0.3,
+   "khoa_vut": 0.22,
+   "khoa_cham": 0.34,
+   "khoa_lap": 0.16,
+   "the_vao": 0.45,
+   "the_ra": 0.25,
+   "so_tram": 0.42,
+   "so_lap": 0.25,
+   "muc": 0.3
+  }
+ },
+ "zoom_khoa": {
+  "scale": 1.05,
+  "dur": 1.4,
+  "gian": 3.0
  }
 }

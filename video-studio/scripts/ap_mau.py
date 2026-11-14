@@ -97,7 +97,36 @@ def ap(tl, mau, chi_am=False):
             ra = x["start"] + x["dur"] - 0.2 * sp
             if k + 1 >= len(ds) or ds[k + 1]["start"] - ra > 0.6:
                 them(nc.get("ra"), ra, v.get("ra", .22), pitch, hp=200, cach=0.4)
+    # 3b. thiết kế âm cho chữ theo nhịp nói (kind "loi") và cảnh chèn đồ hoạ (cards.kieu), nhiều lớp như dựng chuyên nghiệp:
+    #     cụm chữ: pop trầm nhẹ; từ khoá: vút trước + chạm gỗ + lấp lánh; cảnh chèn: vút vào/ra, số liệu: trầm + lấp lánh, từng ý/mục: pop/tick
+    al = mau.get("am_loi")
+    if al:
+        vv = al.get("vol", {})
+        for k, x in enumerate(sorted((q for q in tl.get("texts", []) if q.get("kind") == "loi"), key=lambda q: q["start"])):
+            ws = x["words"]
+            them(al.get("cum"), ws[0][1], vv.get("cum", .3), (1.0, 0.94, 1.07)[k % 3], hp=120, cach=0.3)
+            for q in x.get("hl", []):
+                if q and (q - 1) in x.get("hl", []):
+                    continue  # cụm từ khoá nhiều từ: chỉ một lần chạm ở từ đầu
+                t0 = ws[q][1]
+                them(al.get("khoa_vut"), t0 - 0.06, vv.get("khoa_vut", .22), (1.0, 1.05)[k % 2], hp=250, cach=0.3)
+                them(al.get("khoa_cham"), t0 + 0.02, vv.get("khoa_cham", .3), cach=0.5)
+                them(al.get("khoa_lap"), t0 + 0.05, vv.get("khoa_lap", .16), cach=0.6)
+        for j, x in enumerate(sorted(tl.get("cards", []), key=lambda q: q["start"])):
+            kieu, st, en = x.get("kieu", "danh-sach"), x["start"], x["start"] + x["dur"]
+            them(al.get("the_vao"), st + 0.1, vv.get("the_vao", .45), hp=150, cach=0.4)
+            them(al.get("the_ra"), en - 0.2, vv.get("the_ra", .25), hp=200, cach=0.4)
+            if kieu == "so-lieu":
+                them(al.get("so_tram"), st + 0.3, vv.get("so_tram", .4), cach=0.6)
+                them(al.get("so_lap"), st + 0.35, vv.get("so_lap", .25), cach=0.6)
+            elif kieu in ("quy-dao", "checklist", "danh-sach"):
+                n0, gap, off = (0.5, 0.3, 0.12) if kieu == "quy-dao" else (0.4, 0.4, 0.2) if kieu == "checklist" else (0.45, 0.35, 0.1)
+                for q in range(len(x.get("items", []))):
+                    them(al.get("muc_" + ("tick" if kieu != "quy-dao" else "pop")), st + n0 + gap * q + off, vv.get("muc", .3), (1.0, 0.95, 1.06)[q % 3], cach=0.2)
+            elif kieu == "kinh":
+                them(al.get("the_vao"), st + 0.2, vv.get("the_vao", .45) * 0.6, cach=0.4)
     tl["sfx"] += sorted(new, key=lambda y: y["start"])
+    # 3c. khoảng lặng ngắn trước đỉnh cảnh chèn không làm ở đây: nhạc nền do audio.music_volume quyết định
     # 4. zoom nhấn ý đúng lúc chữ lớn hiện (xen_ke: cách một chữ một zoom → khung gần/xa xen kẽ)
     zc = mau.get("zoom_chu")
     if zc:
@@ -113,10 +142,34 @@ def ap(tl, mau, chi_am=False):
             if du > 0.3 and not any(z["start"] < st + du and st < z["start"] + z["dur"] for z in tl["zooms"]):
                 tl["zooms"].append({"start": st, "dur": du, "scale": zc.get("scale", 1.08), "mau": True})
         tl["zooms"].sort(key=lambda z: z["start"])
+    zk = mau.get("zoom_khoa")  # phóng nhẹ đúng lúc từ khoá hiện (chữ theo nhịp nói), cách nhau ≥ gian giây
+    if zk:
+        last = -9.0
+        for x in sorted((q for q in tl.get("texts", []) if q.get("kind") == "loi"), key=lambda q: q["start"]):
+            if not x.get("hl"):
+                continue
+            st = round(x["words"][x["hl"][0]][1] - 0.05, 2)
+            du = round(min(zk.get("dur", 1.4), total - st), 2)
+            if st - last >= zk.get("gian", 3.0) and du > 0.4 and not any(z["start"] < st + du and st < z["start"] + z["dur"] for z in tl["zooms"]):
+                tl["zooms"].append({"start": st, "dur": du, "scale": zk.get("scale", 1.05), "mau": True}); last = st
+        tl["zooms"].sort(key=lambda z: z["start"])
     return tl
 
 
+def _tu_kiem_loi():
+    tl = {"version": 1, "meta": {"platform": "tiktok"}, "audio": {"music": None, "voice": True}, "clips": [{"file": "a.mp4", "in": 0, "dur": 8}], "transitions": [],
+          "texts": [{"kind": "loi", "start": 0.5, "dur": 2, "words": [["Giá", 0.5, 0.8], ["77", 0.9, 1.2], ["tỷ", 1.2, 1.5]], "hl": [1, 2]}],
+          "cards": [{"kieu": "so-lieu", "start": 4, "dur": 2, "title": "giá", "value": "77 TỶ", "nguon": "lời nói"},
+                    {"kieu": "checklist", "start": 6.3, "dur": 1.5, "title": "Có", "items": ["a", "b", "c"]}]}
+    out = ap(tl, MAU["talking-cam-01"])
+    f = [x["file"] for x in out["sfx"]]
+    assert check(out) == [], check(out)
+    assert f.count("impact_wood-hard-hit_01") == 1 and "chu_pop_01" in f and "impact_tram_01" in f and f.count("chu_tick_01") == 3, f  # cụm từ khoá hai từ chỉ một lần chạm
+    assert any(z.get("mau") for z in out["zooms"]) and out["audio"]["music"] == "synth", out["zooms"]
+
+
 def _tu_kiem():
+    _tu_kiem_loi()
     tl = {"version": 1, "meta": {"platform": "tiktok"}, "audio": {"music": "synth", "voice": True},
           "clips": [{"file": "a.mp4", "in": 0, "dur": 4}, {"file": "b.mp4", "in": 0, "dur": 3}, {"file": "c.mp4", "in": 0, "dur": 3}],
           "transitions": [{"type": "cut"}, {"type": "cut"}],

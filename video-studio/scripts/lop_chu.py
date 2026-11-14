@@ -97,9 +97,14 @@ def tao(tl, phan=None):
             for k, (w, w0, w1) in enumerate(ws):
                 if xd and k and ((k in hl) != (k - 1 in hl)):
                     body += "<br>"
-                body += f'<span class="lw{" lk" if k in hl else ""}"{f" style=font-size:{em}em" if k in hl else ""} id="b{i}w{k}">{html.escape(w)}</span> '
+                extra = (('<i class="ul"></i>' if LO.get("gach_chan") else "") + (f'<b class="bd">{html.escape(LO["huy_hieu"])}</b>' if LO.get("huy_hieu") else "")) if k in hl else ""
+                body += f'<span class="lw{" lk" if k in hl else ""}"{f" style=font-size:{em}em" if k in hl else ""} id="b{i}w{k}">{html.escape(w)}{extra}</span> '
                 if k in hl:
                     a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{w0:.2f});')
+                    if LO.get("gach_chan"):
+                        a.append(f'tl.fromTo("#b{i}w{k} .ul",{{scaleX:0}},{{scaleX:1,duration:{d(.4)},ease:"power3.out"}},{w0 + 0.12:.2f});')
+                    if LO.get("huy_hieu"):
+                        a.append(f'tl.fromTo("#b{i}w{k} .bd",{{scale:0,rotate:-90}},{{scale:1,rotate:0,duration:{d(.45)},ease:"back.out(3)"}},{w0 + 0.18:.2f});')
                 else:
                     a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.16)},ease:"power2.out"}},{w0:.2f});')
             s = {**s, "top_px": top, "_co": co}
@@ -301,7 +306,9 @@ def tao(tl, phan=None):
     {YT_CSS if YT else ""}
     .blk.loi{{left:70px;right:70px;top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
       text-shadow:0 2px 14px rgba(0,0,0,.75)}}
-    .blk.loi .lw{{display:inline-block;margin:0 .14em}}
+    .blk.loi .lw{{display:inline-block;margin:0 .14em;position:relative}}
+    .blk.loi .ul{{position:absolute;left:0;right:0;bottom:-.06em;height:.07em;background:{LO.get("khoa", "#ff2b2b")};transform-origin:left;box-shadow:0 0 14px {LO.get("khoa", "#ff2b2b")}}}
+    .blk.loi .bd{{position:absolute;right:-.5em;top:-.35em;width:.62em;height:.62em;border-radius:50%;background:{LO.get("khoa", "#ff2b2b")};color:#fff;font-size:.5em;font-style:normal;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px {LO.get("khoa", "#ff2b2b")}}}
     .blk.loi .lk{{font-style:italic;font-weight:800;font-size:{LO.get("co_khoa", 1.5)}em;color:{LO.get("khoa", "#ff2b2b")};{"font-family:" + LO["font_khoa"] + ";" if LO.get("font_khoa") else ""}{"text-transform:uppercase;" if LO.get("hoa") else ""}text-shadow:{LO.get("glow", "0 0 10px #ff1a1a,0 0 26px #ff0000,0 0 60px rgba(255,0,0,.6)")}}}
     {".blk.tag{left:0;right:0;top:0;bottom:0;width:auto;zoom:" + ("0.62" if YT else "1") + "}.blk.tag>div>div{filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}" + tag_chu.css(tags) if tags else ""}
     </style></head><body>

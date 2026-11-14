@@ -117,3 +117,7 @@ Dùng 1 video mẫu để giống đúng style đó; 2–3 video để ra style 
 ## Bố cục chữ chuyên nghiệp (14/11/2026)
 - Chữ to nhất có thể mà vẫn nằm gọn chiều ngang (lề 70px); từ khoá to hơn chữ thường (mặc định ×2); cụm chữ không rớt vào vùng giao diện TikTok (dưới 78% chiều cao) và không lên sát đỉnh (trên 30%). Mã: `lop_chu.bo_cuc_loi`.
 - Cảnh chèn đồ hoạ (`cards`, trường `kieu`): `so-lieu` (một số lớn + nhãn + nguồn), `quy-dao` (tâm + 2–6 ý xoay quanh), `checklist` (dấu ✓ cam), `kinh` (thẻ kính một câu nhấn), `danh-sach` (cũ). Mỗi 8–10 giây một cảnh chèn rồi về người nói.
+
+## Thiết kế âm cho chữ theo nhịp nói (14/11/2026)
+Đo 3 video mẫu Open Residency: độ ồn −29, −25 và **−14,8 LUFS**: chỉ bản hoàn thiện có lớp nền liên tục (dải trầm–trung) cộng tiếng chạm; hai bản kia gần như chỉ có giọng. Đo tiếng cao tần so với mốc cắt: **không trùng hơn ngẫu nhiên** (9/31 mốc cắt so với 9,3 kỳ vọng), nên **không tách riêng được lớp hiệu ứng âm của video mẫu bằng máy**; phần thiết kế âm của mình dựa theo cách dựng chuyên nghiệp thông thường, không chép âm của người khác. Hào cho mốc giờ cụ thể ("giây X có tiếng gì") thì mình bám sát hơn.
+Các lớp âm: xem `MAU.md` của `talking-cam-01`. Mọi âm vào mẫu qua `am_loi` (đổi âm: sửa `mau.json`).
