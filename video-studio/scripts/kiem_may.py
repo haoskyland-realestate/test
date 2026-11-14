@@ -38,7 +38,7 @@ def kiem_python():
 def kiem_ffmpeg():
     exe = shutil.which("ffmpeg")
     if not exe:
-        return ghi(False, True, "FFmpeg", "Chưa cài: " + cai("Gyan.FFmpeg", "ffmpeg") + ", rồi mở lại cửa sổ lệnh")
+        return ghi(False, True, "FFmpeg", "Chưa cài: " + cai("Gyan.FFmpeg", "ffmpeg-full") + ", rồi mở lại cửa sổ lệnh")
     _, v = chay(["ffmpeg", "-hide_banner", "-version"])
     ghi(True, True, "FFmpeg", v.splitlines()[0][:60] if v else exe)
     _, f = chay(["ffmpeg", "-hide_banner", "-filters"])
@@ -47,7 +47,7 @@ def kiem_ffmpeg():
     can = {"zscale": "chuyển màu HDR của DJI/iPhone (thiếu thì video nhạt)", "tonemap": "chuyển màu HDR", "xfade": "chuyển cảnh",
            "loudnorm": "chuẩn âm lượng", "zoompan": "zoom", "boxblur": "nền mờ khung ngang"}
     thieu = [f"{k} ({v})" for k, v in can.items() if not re.search(rf"\s{k}\s", f)]
-    ghi(not thieu, True, "FFmpeg: bộ lọc cần dùng", "Thiếu " + ", ".join(thieu) + ". Cài bản đầy đủ: " + cai("Gyan.FFmpeg", "ffmpeg") if thieu else "")
+    ghi(not thieu, True, "FFmpeg: bộ lọc cần dùng", "Thiếu " + ", ".join(thieu) + ". Cài bản đầy đủ: " + cai("Gyan.FFmpeg", "ffmpeg-full") if thieu else "")
     thieu = [k for k in ("libx264", "aac") if not re.search(rf"\s{k}\s", e)] + [k for k in ("libvpx-vp9",) if not re.search(rf"\s{k}\s", d)]
     ghi(not thieu, True, "FFmpeg: mã hoá H.264, AAC, đọc VP9", "Thiếu " + ", ".join(thieu) if thieu else "")
     nv = bool(re.search(r"\sh264_nvenc\s", e))

@@ -13,6 +13,8 @@ Lập 14/11/2026. MacBook M1 8 GB chạy được app, dựng video ngắn để
    Script tự cài Homebrew, Node, FFmpeg, Python, thư viện dự án (vào thư mục `.venv`, không đụng Python của máy), rồi **kiểm máy và dựng thử 6 giây**. Có thể hỏi mật khẩu máy Mac lúc cài Homebrew.
 4. Cuối màn hình phải thấy "Máy đủ điều kiện chạy app" và dựng thử đạt. Lỗi thì chụp màn hình gửi Claude.
 
+**Lỗi "Thiếu zscale" (14/11/2026):** từ 01/2026 gói `ffmpeg` của Homebrew bị rút gọn, mất bộ lọc zscale. `setup-mac.sh` nay cài `ffmpeg-full` (không tự vào PATH, script tự thêm). Máy đã cài bản cũ thì chạy: `brew install ffmpeg-full` rồi chạy lại `bash setup-mac.sh`.
+
 ## Dùng hằng ngày
 - Bấm đúp `video-studio/chay-studio.command` (lần đầu Mac có thể chặn: chuột phải → Mở → Mở).
 - Mở đúng link có `?t=` in ra (bấm giữ Cmd rồi bấm link). Điện thoại cùng wifi mở link "Điện thoại".

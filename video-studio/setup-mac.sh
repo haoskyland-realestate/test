@@ -9,7 +9,9 @@ if ! command -v brew >/dev/null; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 echo "== Cài Node, FFmpeg, Python =="
-brew install node ffmpeg python@3.12
+# ffmpeg thường của Homebrew (từ 01/2026) thiếu bộ lọc zscale → dùng ffmpeg-full (không tự vào PATH nên thêm tay)
+brew install node ffmpeg-full python@3.12
+export PATH="$(brew --prefix ffmpeg-full)/bin:$PATH"
 echo "== Thư viện chữ động (npm) =="
 npm install
 echo "== Thư viện Python (vào .venv) =="
