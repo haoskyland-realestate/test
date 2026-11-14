@@ -29,3 +29,6 @@ Spec mẫu `videos/demo.json` chứa chỗ trống `[...]`, thay số liệu th�
 ## Môi trường
 - **GitHub trực tiếp:** nút Code → Codespaces → Create (dùng `.devcontainer/`), mở terminal gõ `./scripts/render.sh videos/demo.json hyperframes`. Hoặc dùng workflow Actions ở trên. **Chưa chạy thử Codespaces.**
 - **Windows 11 local:** chạy `setup-windows.ps1` một lần (cài Node, FFmpeg, Git, Python), rồi bấm đúp `chay-video.bat`. **Chưa chạy thử trên Windows.**
+
+## Thư viện mẫu
+Xem `engines/hyperframes/templates/README.md`. Chọn mẫu bằng trường `template` trong spec hoặc ô "Mẫu" trong form.

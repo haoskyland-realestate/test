@@ -1,0 +1,62 @@
+{
+ "id": "chu-dong-01",
+ "ten": "Chữ động nhiều màu",
+ "loai": "tin nhanh",
+ "the": "BẤT ĐỘNG SẢN",
+ "nganh": [
+  "Bất động sản"
+ ],
+ "mo_ta": "Mỗi câu một chùm chữ xếp chồng nhiều màu (trắng – xanh ngọc – cam – hồng), to nhỏ xen kẽ, từng từ bật ra theo lời nói; phụ đề nền trắng; lia nhanh giữa các ý.",
+ "dung_cho": "Tin nhanh dự án, liệt kê tiện ích, 5 điều cần biết",
+ "meta": {
+  "style": "chu-mau"
+ },
+ "audio": {
+  "music": null,
+  "whoosh": false
+ },
+ "chuyen_canh": {
+  "chu_ky": [
+   "cut",
+   "cut",
+   "gl-WhipPan",
+   "cut"
+  ],
+  "dur": {
+   "gl-WhipPan": 0.3
+  }
+ },
+ "sfx": {
+  "chuyen_canh": {
+   "gl-WhipPan": "whoosh_quat_01"
+  },
+  "chu": {
+   "title3d": "chu_pop_01",
+   "compare": "chu_pop_01",
+   "stat": "chu_pop_01",
+   "checklist": "chu_tick_01",
+   "hook": "impact_tram_01",
+   "outro": "ting_ket_01"
+  },
+  "so_lieu": "ting_don_01",
+  "vol": {
+   "whoosh": 0.7,
+   "chu": 0.6,
+   "ting": 0.45,
+   "impact": 0.8
+  }
+ },
+ "zoom_chu": {
+  "scale": 1.06,
+  "dur": 0.8,
+  "xen_ke": true
+ },
+ "xem_truoc": {
+  "nen": "linear-gradient(160deg,#2b4a5c,#0e1117)",
+  "top": "",
+  "big": "5 TIỆN ÍCH|ĐI BỘ|5 PHÚT",
+  "sub": "",
+  "css": "font-family:'Be Vietnam Pro',sans-serif;font-weight:900;text-transform:uppercase",
+  "hieu_ung": "stack"
+ }
+}

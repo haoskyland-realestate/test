@@ -5,7 +5,9 @@ const spec = JSON.parse(readFileSync(process.argv[2], "utf8"));
 const portrait = spec.platform !== "youtube"; // tiktok = 9:16, youtube = 16:9
 const [W, H] = portrait ? [1080, 1920] : [1920, 1080];
 const dir = new URL("../engines/hyperframes/", import.meta.url);
-const html = readFileSync(new URL("template.html", dir), "utf8")
+const tpl = spec.template || "cashflow-3d";
+if (!/^[\w-]+$/.test(tpl)) throw new Error("Tên mẫu không hợp lệ: " + tpl);
+const html = readFileSync(new URL(`templates/${tpl}.html`, dir), "utf8")
   .replaceAll("__RES__", portrait ? "portrait" : "landscape")
   .replaceAll("__W__", W).replaceAll("__H__", H).replaceAll("__DUR__", spec.duration)
   .replace("/*SPEC*/null", JSON.stringify(spec));

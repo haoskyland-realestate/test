@@ -1,0 +1,184 @@
+{
+ "version": 1,
+ "meta": {
+  "platform": "tiktok",
+  "title": "Video test đi xem nhà thô"
+ },
+ "clips": [
+  {
+   "file": "IMG_8644.MOV",
+   "id": "17yTjjoK3vXIdF7LpRuGkHN4GA77qpvq7",
+   "in": 13.0,
+   "dur": 9.2
+  },
+  {
+   "file": "IMG_8635.MOV",
+   "id": "1nqMXYGBYTx8y6wOTqaz9uDYCE-fbyQuM",
+   "in": 2.2,
+   "dur": 9.2
+  },
+  {
+   "file": "DJI_20250712_100734_675.mp4",
+   "id": "1FnjQ_adJoXjVhPPxoyQCpsjk0iKeCBuN",
+   "in": 8.0,
+   "dur": 9.2
+  },
+  {
+   "file": "IMG_8645.MOV",
+   "id": "1PRbEBDrhgyeHeidhUYfBNqnbCYutZr-A",
+   "in": 12.5,
+   "dur": 9.2
+  },
+  {
+   "file": "DJI_20250712_105058_708.mp4",
+   "id": "14UJ43DQUq9Hde8Ldzv55ctdHOROqVf23",
+   "in": 0.8,
+   "dur": 9.2
+  },
+  {
+   "file": "DJI_20250712_105253_409.mp4",
+   "id": "1JsLJY6uMiu5v1kgxlrBOqLl25Sq7RADq",
+   "in": 3.0,
+   "dur": 9.2
+  },
+  {
+   "file": "DJI_20250712_104207_920.mp4",
+   "id": "192tMM87HRjGke81C1ocNVUnrGaTvXeJ4",
+   "in": 40.0,
+   "dur": 9.2
+  },
+  {
+   "file": "DJI_20250712_101804_470.mp4",
+   "id": "1fk_aEV1WxBzb4NotOpbCpLiqNNHvzkNk",
+   "in": 22.0,
+   "dur": 9.2
+  },
+  {
+   "file": "DJI_20250712_105113_412.mp4",
+   "id": "1u-YvIF5v0J7TFWrwQ3AGLUUpZV2WN-I_",
+   "in": 47.0,
+   "dur": 9.2
+  }
+ ],
+ "transitions": [
+  {
+   "type": "cube-h"
+  },
+  {
+   "type": "cube-v"
+  },
+  {
+   "type": "cube-h"
+  },
+  {
+   "type": "cube-v"
+  },
+  {
+   "type": "cube-h"
+  },
+  {
+   "type": "cube-v"
+  },
+  {
+   "type": "cube-h"
+  },
+  {
+   "type": "cube-v"
+  }
+ ],
+ "texts": [
+  {
+   "kind": "hook",
+   "start": 0.4,
+   "dur": 8.6,
+   "tag": "ĐI XEM NHÀ CÙNG HÀO",
+   "lines": [
+    "Đi xem nhà thô,",
+    "em kiểm tra *3* *điều*",
+    "trước khi tư vấn."
+   ]
+  },
+  {
+   "kind": "section",
+   "start": 10.15,
+   "dur": 8.85,
+   "num": "01",
+   "title": "Vị trí & kết nối",
+   "lines": [
+    "Ra đường lớn, về trung tâm",
+    "mất *bao* *nhiêu* *phút*?"
+   ]
+  },
+  {
+   "kind": "line",
+   "start": 20.15,
+   "dur": 8.85,
+   "lines": [
+    "Đường nội khu rộng,",
+    "nhưng *giờ* *cao* *điểm* đi ra sao?"
+   ]
+  },
+  {
+   "kind": "section",
+   "start": 30.15,
+   "dur": 8.85,
+   "num": "02",
+   "title": "Tiện ích thật quanh nhà",
+   "lines": [
+    "Sân chơi, công viên, trường học:",
+    "cái nào *đã* *vận* *hành*?"
+   ]
+  },
+  {
+   "kind": "line",
+   "start": 40.15,
+   "dur": 8.85,
+   "lines": [
+    "Cây xanh đẹp trên ảnh,",
+    "đi bộ thật thì *bao* *xa*?"
+   ]
+  },
+  {
+   "kind": "section",
+   "start": 50.15,
+   "dur": 8.85,
+   "num": "03",
+   "title": "Bên trong căn nhà",
+   "lines": [
+    "Nhà thô: ánh sáng, công năng,",
+    "và *chi* *phí* *hoàn* *thiện*."
+   ]
+  },
+  {
+   "kind": "line",
+   "start": 60.15,
+   "dur": 8.85,
+   "lines": [
+    "Chi phí hoàn thiện",
+    "cũng nằm trong *bài* *toán* *dòng* *tiền*."
+   ]
+  },
+  {
+   "kind": "line",
+   "start": 70.15,
+   "dur": 8.85,
+   "lines": [
+    "Có lợi ích thì có rủi ro.",
+    "Nói rõ cả hai, *chị* *quyết* *định* *chắc* *hơn*."
+   ]
+  },
+  {
+   "kind": "outro",
+   "start": 80.15,
+   "dur": 8.85,
+   "lines": [
+    "Nhắn em để cùng tính thử"
+   ],
+   "note": "Video thử nghiệm · footage 12/07/2025"
+  }
+ ],
+ "audio": {
+  "music": "synth",
+  "whoosh": true
+ }
+}

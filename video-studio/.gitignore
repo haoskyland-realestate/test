@@ -5,3 +5,12 @@ out/
 renders/
 __pycache__/
 media/
+build/
+history/
+*.bak
+*.tmp
+projects/zz-*/
+kho/
+models/
+.venv/
+thu-vien-mau/_hoc/

@@ -1,0 +1,66 @@
+{
+ "id": "neon-01",
+ "ten": "Neon cam ánh sáng",
+ "loai": "talking head",
+ "the": "VIDEO TALKING HEAD",
+ "nganh": [
+  "Bất động sản"
+ ],
+ "mo_ta": "Chữ cam phát sáng gõ dần theo lời, số nổi cam, thẻ tối viền neon; khung gần – khung xa xen kẽ mỗi ý; quét sáng và loé khi đổi chương.",
+ "dung_cho": "Hook mạnh, cảnh đêm, căn hộ cao tầng, phân tích có số liệu nổi bật",
+ "meta": {
+  "style": "neon-cam"
+ },
+ "audio": {
+  "music": null,
+  "whoosh": false
+ },
+ "chuyen_canh": {
+  "chu_ky": [
+   "cut",
+   "gl-LightWipe",
+   "cut",
+   "cut",
+   "gl-Overexposure"
+  ],
+  "dur": {
+   "gl-LightWipe": 0.5,
+   "gl-Overexposure": 0.4
+  }
+ },
+ "sfx": {
+  "chuyen_canh": {
+   "gl-LightWipe": "whoosh_nhanh_01",
+   "gl-Overexposure": "anh-sang_flash_01"
+  },
+  "chu": {
+   "title3d": "chu_tick_01",
+   "compare": "impact_hit_01",
+   "stat": "chu_tick_01",
+   "checklist": "chu_tick_01",
+   "hook": "impact_boom_01",
+   "outro": "ting_ket_01"
+  },
+  "so_lieu": "ting_kep_01",
+  "vol": {
+   "whoosh": 0.7,
+   "anh-sang": 0.7,
+   "chu": 0.5,
+   "ting": 0.45,
+   "impact": 0.8
+  }
+ },
+ "zoom_chu": {
+  "scale": 1.12,
+  "dur": 1.4,
+  "xen_ke": true
+ },
+ "xem_truoc": {
+  "nen": "radial-gradient(circle at 50% 35%,#3a1a08,#0d0603 70%)",
+  "top": "Lãi suất sau ưu đãi",
+  "big": "THẢ NỔI",
+  "sub": "đây là rủi ro cần tính trước",
+  "css": "font-family:Montserrat,sans-serif;font-weight:900;color:#ffb36b;text-shadow:0 0 4px #ff8a2a,0 0 12px #ff6a00,0 0 26px #ff4d00",
+  "hieu_ung": "type"
+ }
+}

@@ -1,0 +1,40 @@
+[submodule "video-studio/thu-vien-chuyen-nghiep/OpenTimelineIO"]
+	path = video-studio/thu-vien-chuyen-nghiep/OpenTimelineIO
+	url = https://github.com/AcademySoftwareFoundation/OpenTimelineIO.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/gl-transitions"]
+	path = video-studio/thu-vien-chuyen-nghiep/gl-transitions
+	url = https://github.com/gl-transitions/gl-transitions.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/PySceneDetect"]
+	path = video-studio/thu-vien-chuyen-nghiep/PySceneDetect
+	url = https://github.com/Breakthrough/PySceneDetect.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/auto-editor"]
+	path = video-studio/thu-vien-chuyen-nghiep/auto-editor
+	url = https://github.com/WyattBlue/auto-editor.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/ffmpeg-normalize"]
+	path = video-studio/thu-vien-chuyen-nghiep/ffmpeg-normalize
+	url = https://github.com/slhck/ffmpeg-normalize.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/DeepFilterNet"]
+	path = video-studio/thu-vien-chuyen-nghiep/DeepFilterNet
+	url = https://github.com/Rikorose/DeepFilterNet.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/Practical-RIFE"]
+	path = video-studio/thu-vien-chuyen-nghiep/Practical-RIFE
+	url = https://github.com/hzwer/Practical-RIFE.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/Real-ESRGAN"]
+	path = video-studio/thu-vien-chuyen-nghiep/Real-ESRGAN
+	url = https://github.com/xinntao/Real-ESRGAN.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/colour"]
+	path = video-studio/thu-vien-chuyen-nghiep/colour
+	url = https://github.com/colour-science/colour.git
+	shallow = true
+[submodule "video-studio/thu-vien-chuyen-nghiep/motion-canvas"]
+	path = video-studio/thu-vien-chuyen-nghiep/motion-canvas
+	url = https://github.com/motion-canvas/motion-canvas.git
+	shallow = true
