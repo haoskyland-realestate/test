@@ -219,17 +219,27 @@ for x in tl.get("texts", []):
             from lop_chu import co_chu_lon
             # nhãn trên ~55 px, rồi chữ lớn: 30% dưới của chữ lớn nằm sau đỉnh đầu
             x["top_px"] = int(min(max(y * H - 55 - co_chu_lon(x["big"]) * 0.75, 200), H * 0.55))
-trang = tao_lop_chu(tl)
-okey = hashlib.sha1(json.dumps([trang, DRAFT, W, H]).encode()).hexdigest()
-if not (os.path.exists(f"{B}/overlay.webm") and os.path.exists(f"{B}/overlay.key") and open(f"{B}/overlay.key").read() == okey):
-    ov = f"{B}/overlay"; shutil.rmtree(ov, ignore_errors=True); os.makedirs(ov)
-    shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), ov)
-    open(f"{ov}/index.html", "w", encoding="utf8").write(trang)
-    json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
-              open(f"{ov}/hyperframes.json", "w"))
-    open(f"{ov}/package.json", "w").write('{"name":"overlay","private":true,"type":"module"}')
-    run([*HF, "render", "-o", f"{B}/overlay.webm", "--format", "webm", "-q", "draft" if DRAFT else "standard", "--quiet"], cwd=ov)
-    open(f"{B}/overlay.key", "w").write(okey)
+def dung_lop(phan, ten):
+    """Dựng một lớp chữ trong suốt ra {ten}.webm; chữ/phụ đề/thẻ không đổi thì dùng lại."""
+    trang = tao_lop_chu(tl, phan)
+    okey = hashlib.sha1(json.dumps([trang, DRAFT, W, H]).encode()).hexdigest()
+    if not (os.path.exists(f"{B}/{ten}.webm") and os.path.exists(f"{B}/{ten}.key") and open(f"{B}/{ten}.key").read() == okey):
+        ov = f"{B}/{ten}"; shutil.rmtree(ov, ignore_errors=True); os.makedirs(ov)
+        shutil.copy(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), ov)
+        open(f"{ov}/index.html", "w", encoding="utf8").write(trang)
+        json.dump({"paths": {"blocks": "compositions", "components": "compositions/components", "assets": "assets"}},
+                  open(f"{ov}/hyperframes.json", "w"))
+        open(f"{ov}/package.json", "w").write('{"name":"overlay","private":true,"type":"module"}')
+        run([*HF, "render", "-o", f"{B}/{ten}.webm", "--format", "webm", "-q", "draft" if DRAFT else "standard", "--quiet"], cwd=ov)
+        open(f"{B}/{ten}.key", "w").write(okey)
+
+
+CO_SAU = any(x.get("sau_dau") for x in tl.get("texts", []))
+# Có chữ sau đầu: lớp DƯỚI người (chữ sau đầu + lớp tối nền) và lớp TRÊN người (phụ đề, thẻ, chữ thường, logo) dựng riêng,
+# để người nói không che phụ đề (lỗi thấy ở demo chữ Gladia 14/11)
+dung_lop("sau" if CO_SAU else None, "overlay")
+if CO_SAU:
+    dung_lop("truoc", "overlay_tren")
 moc("lớp chữ")
 
 # 6. Âm thanh: giọng gốc của cảnh (nếu bật) + nhạc tổng hợp + tiếng vút ở tâm mỗi chuyển cảnh
@@ -324,11 +334,11 @@ if sau:
     if not (os.path.exists(f"{B}/mask.mp4") and os.path.exists(f"{B}/mask.key") and open(f"{B}/mask.key").read() == mk):
         mat_na(nen, sau, f"{B}/mask.mp4"); open(f"{B}/mask.key", "w").write(mk)
     moc("tách người (chữ sau đầu)")
-    ins = ["-i", nen, "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav", "-i", f"{B}/mask.mp4"]
-    fc, cur, nv = [], "0:v", 4
+    ins = ["-i", nen, "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "-i", f"{B}/music.wav", "-i", f"{B}/mask.mp4", "-c:v", "libvpx-vp9", "-i", f"{B}/overlay_tren.webm"]
+    fc, cur, nv = [], "0:v", 5
     bat = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b in sau)
     fc += [f"[{cur}]split[n1][n2]", "[n1][1:v]overlay=0:0:shortest=1[t]", f"[3:v]format=gray,scale={W}:{H}[mk]",
-           "[n2]format=rgba[nr]", "[nr][mk]alphamerge[ps]", f"[t][ps]overlay=0:0:enable='{bat}',format=yuv420p[v]"]
+           "[n2]format=rgba[nr]", "[nr][mk]alphamerge[ps]", f"[t][ps]overlay=0:0:enable='{bat}'[pp]", "[pp][4:v]overlay=0:0:shortest=1,format=yuv420p[v]"]
 else:
     fc.append(f"[{cur}][1:v]overlay=0:0:shortest=1,format=yuv420p[v]")
 fc.append(f"[2:a]volume={mvol}[m]")

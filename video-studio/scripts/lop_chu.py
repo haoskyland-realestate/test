@@ -29,8 +29,15 @@ def line(text, cls="", chars=False):
     return f'<div class="line {cls}"><div class="in">{words(text, chars)}</div></div>'
 
 
-def tao(tl):
-    """HTML lớp chữ của cả video (khung W×H theo nền tảng). Cần gsap.min.js nằm cùng địa chỉ."""
+def tao(tl, phan=None):
+    """HTML lớp chữ của cả video (khung W×H theo nền tảng). Cần gsap.min.js nằm cùng địa chỉ.
+    phan: None = tất cả; "sau" = chỉ chữ sau đầu, nằm DƯỚI người; "truoc" = phần còn lại (lớp tối nền, phụ đề, thẻ, chữ thường, logo, thanh tiến độ), nằm TRÊN người
+    (lớp tối nền phải ở trên người: để dưới thì người không bị tối trong lúc chữ sau đầu hiện, bàn đá/người loang sáng và nhảy sáng khi chữ vào/ra)."""
+    if phan:
+        sd = lambda x: bool(x.get("sau_dau"))
+        tl = {**tl, "texts": [x for x in tl.get("texts", []) if sd(x) == (phan == "sau")]}
+        if phan == "sau":
+            tl["subtitles"], tl["cards"] = [], []
     W, H = size(tl)
     YT = W > H
     L = layout(tl)
@@ -224,10 +231,8 @@ def tao(tl):
     {".blk.tag{left:0;right:0;top:0;bottom:0;width:auto;zoom:" + ("0.62" if YT else "1") + "}.blk.tag>div>div{filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}" + tag_chu.css(tags) if tags else ""}
     </style></head><body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{W}" data-height="{H}">
-    <div class="clip scrim" data-start="0" data-duration="{total:.2f}" data-track-index="0"></div>
-    <div class="clip topscrim" data-start="0" data-duration="{total:.2f}" data-track-index="5"></div>
-    <div class="clip logo" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>HÀO SKY LAND</div>
-    <div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>
+    {"" if phan == "sau" else f'<div class="clip scrim" data-start="0" data-duration="{total:.2f}" data-track-index="0"></div><div class="clip topscrim" data-start="0" data-duration="{total:.2f}" data-track-index="5"></div>'}
+    {"" if phan == "sau" else f'<div class="clip logo" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>HÀO SKY LAND</div><div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>'}
     {chr(10).join(blocks)}
     </div><script>
     // Số kiểu Việt Nam: 1.234,5
