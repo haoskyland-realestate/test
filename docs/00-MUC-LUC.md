@@ -13,6 +13,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Biết tuần này làm gì, ngày nào | `02-quy-trinh/NHIP-TUAN.md` |
 | Đặt tên video, sắp thư mục footage trên PC | `01-he-thong/THU-MUC-VA-DAT-TEN.md` |
 | Nhân bản: video mới, đổi khung, hay cả hệ thống cho ngành khác | `01-he-thong/NHAN-BAN-HE-THONG.md` |
+| Cài và chạy app studio trên MacBook | `01-he-thong/CAI-TREN-MAC.md` |
 | Biết máy nào làm việc gì (PC, Mac, điện thoại, GitHub, Anti) | `01-he-thong/HE-THONG.md` |
 | Cài skill, kết nối Claude với Blender/Drive (MCP) | `01-he-thong/MCP-VA-SKILL.md` |
 | Xem app studio có những nút gì | `05-app/GIAO-DIEN-TINH-NANG.md` |
@@ -41,6 +42,7 @@ docs/
     AI-NAO-VIEC-NAO.md             phân việc cho từng AI ★
     THU-MUC-VA-DAT-TEN.md          quy ước thư mục, đặt tên (repo, PC, Drive) ★
     NHAN-BAN-HE-THONG.md           nhân bản 3 mức ★
+    CAI-TREN-MAC.md                cài, chạy app trên MacBook ★
     HE-THONG.md                    vai trò từng máy
     MCP-VA-SKILL.md                skill và MCP
   02-quy-trinh/

@@ -1,11 +1,17 @@
 """Kiểm máy có đủ công cụ cho app studio chưa (Windows, Mac, Linux). Báo tiếng Việt: đạt / thiếu + cách sửa.
 Chạy trong video-studio:  python scripts/kiem_may.py              (nhanh, vài giây)
                            python scripts/kiem_may.py --dung-thu   (thêm: dựng thử video giả 6 giây, 1–3 phút, không cần footage)
-chay-studio.bat tự chạy bản nhanh mỗi lần mở app."""
+chay-studio.bat (Windows) / chay-studio.command (Mac) tự chạy bản nhanh mỗi lần mở app."""
 import importlib.util, os, platform, re, shutil, subprocess, sys, tempfile, time
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 WIN = os.name == "nt"
+MAC = platform.system() == "Darwin"
+
+
+def cai(goi_win, goi_mac):
+    """Lệnh cài thiếu theo máy: Windows dùng winget, Mac dùng Homebrew (hoặc chạy lại setup-mac.sh)."""
+    return f"brew install {goi_mac} (hoặc chạy lại: bash setup-mac.sh)" if MAC else f"winget install {goi_win}"
 ket_qua = []  # (đạt?, bắt buộc?, tên, ghi chú / cách sửa)
 
 
@@ -23,7 +29,7 @@ def chay(cmd, timeout=60):
 
 def kiem_python():
     ok = sys.version_info >= (3, 10)
-    ghi(ok, True, f"Python {platform.python_version()}", "" if ok else "Cần Python 3.10 trở lên: winget install Python.Python.3.12")
+    ghi(ok, True, f"Python {platform.python_version()}", "" if ok else "Cần Python 3.10 trở lên: " + cai("Python.Python.3.12", "python@3.12"))
     utf8 = sys.flags.utf8_mode or not WIN
     ghi(utf8, True, "Chế độ UTF-8 của Python (chữ tiếng Việt)",
         "" if utf8 else "Chạy lại setup-windows.ps1 (đặt PYTHONUTF8=1), hoặc mở app bằng chay-studio.bat")
@@ -32,7 +38,7 @@ def kiem_python():
 def kiem_ffmpeg():
     exe = shutil.which("ffmpeg")
     if not exe:
-        return ghi(False, True, "FFmpeg", "Chưa cài: winget install Gyan.FFmpeg, rồi mở lại cửa sổ lệnh")
+        return ghi(False, True, "FFmpeg", "Chưa cài: " + cai("Gyan.FFmpeg", "ffmpeg") + ", rồi mở lại cửa sổ lệnh")
     _, v = chay(["ffmpeg", "-hide_banner", "-version"])
     ghi(True, True, "FFmpeg", v.splitlines()[0][:60] if v else exe)
     _, f = chay(["ffmpeg", "-hide_banner", "-filters"])
@@ -41,7 +47,7 @@ def kiem_ffmpeg():
     can = {"zscale": "chuyển màu HDR của DJI/iPhone (thiếu thì video nhạt)", "tonemap": "chuyển màu HDR", "xfade": "chuyển cảnh",
            "loudnorm": "chuẩn âm lượng", "zoompan": "zoom", "boxblur": "nền mờ khung ngang"}
     thieu = [f"{k} ({v})" for k, v in can.items() if not re.search(rf"\s{k}\s", f)]
-    ghi(not thieu, True, "FFmpeg: bộ lọc cần dùng", "Thiếu " + ", ".join(thieu) + ". Cài bản đầy đủ: winget install Gyan.FFmpeg" if thieu else "")
+    ghi(not thieu, True, "FFmpeg: bộ lọc cần dùng", "Thiếu " + ", ".join(thieu) + ". Cài bản đầy đủ: " + cai("Gyan.FFmpeg", "ffmpeg") if thieu else "")
     thieu = [k for k in ("libx264", "aac") if not re.search(rf"\s{k}\s", e)] + [k for k in ("libvpx-vp9",) if not re.search(rf"\s{k}\s", d)]
     ghi(not thieu, True, "FFmpeg: mã hoá H.264, AAC, đọc VP9", "Thiếu " + ", ".join(thieu) if thieu else "")
     nv = bool(re.search(r"\sh264_nvenc\s", e))
@@ -52,11 +58,11 @@ def kiem_ffmpeg():
 def kiem_node():
     exe = shutil.which("node")
     if not exe:
-        return ghi(False, True, "Node.js", "Chưa cài: winget install OpenJS.NodeJS.LTS")
+        return ghi(False, True, "Node.js", "Chưa cài: " + cai("OpenJS.NodeJS.LTS", "node"))
     _, v = chay(["node", "--version"])
     m = re.search(r"v(\d+)", v)
     ok = bool(m and int(m[1]) >= 22)
-    ghi(ok, True, f"Node.js {v.strip()}", "" if ok else "HyperFrames cần Node 22 trở lên: winget install OpenJS.NodeJS.LTS")
+    ghi(ok, True, f"Node.js {v.strip()}", "" if ok else "HyperFrames cần Node 22 trở lên: " + cai("OpenJS.NodeJS.LTS", "node"))
     ghi(bool(shutil.which("npx")), True, "npx", "" if shutil.which("npx") else "Đi kèm Node.js: cài lại Node")
     gsap = os.path.exists(os.path.join(ROOT, "node_modules", "gsap", "dist", "gsap.min.js"))
     ghi(gsap, True, "Thư viện JS của dự án (npm install)", "" if gsap else "Trong thư mục video-studio chạy: npm install")

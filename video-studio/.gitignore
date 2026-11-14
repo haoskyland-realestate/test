@@ -12,3 +12,4 @@ history/
 projects/zz-*/
 kho/
 models/
+.venv/
