@@ -27,6 +27,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Xem lỗi Hào đã nghiệm thu và cách dựng đúng (màu da, chữ sau đầu, zoom): **đọc trước khi dựng** | `04-thu-vien/GHI-NHO-NGHIEM-THU.md` |
 | Chỉnh màu như đạo diễn hình ảnh: đo, đồng nhất cảnh, lấy màu video mẫu, giữ da | `04-thu-vien/CHINH-MAU.md` (skill `chinh-mau`) |
 | Làm video giải thích bằng tranh minh hoạ (bộ đạo cụ Flow + hệ thống tự chuyển động), câu lệnh Flow thử phong cách | `04-thu-vien/MINH-HOA.md` |
+| Học phong cách từ video mẫu thành mẫu trong thư viện; lưu chỉnh sửa vào mẫu; gói góp ý cho Claude Code | skill `hoc-mau` (`video-studio/scripts/hoc_mau.py`, `luu_vao_mau.py`; nút 💾 trong ✦ Thư viện mẫu, nút 📸 trong Nhờ AI sửa) |
 | Dùng tag chữ có sẵn (10 kiểu: số lớn, bước, thanh tên, gạch chân…), điền chữ của mình | `04-thu-vien/THU-VIEN-TAG.md` |
 | Giọng nói AI (Voice Studio): so sánh CIT Voice Studio và VoiceStudio, giấy phép, cách tích hợp | `04-thu-vien/GIONG-NOI-AI.md` |
 | Xem 10 repo chuyên nghiệp và cái nào đã dùng | `04-thu-vien/THU-VIEN-CHUYEN-NGHIEP.md` |

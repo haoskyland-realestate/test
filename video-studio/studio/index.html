@@ -787,6 +787,8 @@ function moThuVienMau() {
     <div class="mname">${esc(m.ten)}</div><div class="mdesc">${esc(m.mo_ta)}</div><div class="mdesc" style="margin-top:4px"><b>Hợp cho:</b> ${esc(m.dung_cho)}</div>
     <div class="row" style="margin:8px 0 0"><button class="lime" data-mau="${k}">${tl.meta.mau === k ? "Áp lại" : "Áp mẫu"}</button><button data-mdoc="${k}">Công thức</button></div></div>`).join("");
   dlgShow(`<h3 style="margin:0">✦ THƯ VIỆN MẪU EDIT</h3><div class="dim">Bấm Áp mẫu: đổi kiểu chữ, nhịp chuyển cảnh, hiệu ứng âm, zoom nhấn ý. Hoàn tác được. Nguyên tắc chung: docs/04-thu-vien/CONG-THUC-VIRAL.md</div>
+    <div class="row" style="margin:10px 0;align-items:center"><button id="saveMau" class="lime">💾 Lưu chỉnh sửa của video này thành mẫu</button><input id="saveMauTen" placeholder="Tên mẫu mới (tuỳ chọn)" style="min-width:200px"><label class="dim"><input type="checkbox" id="saveMauDe"> ghi đè mẫu gốc${tl.meta.mau ? " (" + esc(tl.meta.mau) + ")" : ""}</label></div>
+    <div class="dim" id="saveMauMsg">Lưu: phong cách, nhịp và độ dài chuyển cảnh, âm lượng hiệu ứng âm. Chưa lưu: kiểu/tốc độ/cỡ/vị trí chữ, zoom. Mặc định tạo bản mới, mẫu gốc giữ nguyên.</div>
     <div class="mchips">${chips}</div><div class="mgrid">${cards}</div>`, true);
 }
 function mdHtml(md) {  // Markdown đơn giản → HTML để đọc công thức trong app
@@ -802,6 +804,16 @@ function mdHtml(md) {  // Markdown đơn giản → HTML để đọc công th�
 }
 document.addEventListener("click", async e => {
   if (e.target.closest("#btnMau, [data-open-mau]")) return moThuVienMau();
+  if (e.target.closest("#saveMau")) {
+    const de = $("#saveMauDe").checked;
+    if (de && !confirm("Ghi đè mẫu gốc? Mẫu cũ được giữ lại thành file mau.json.bak.")) return;
+    try {
+      const r = await api("luumau", {method: "POST", body: JSON.stringify({timeline: clean(tl), ten: $("#saveMauTen").value, ghi_de: de})});
+      FX = await api("effects");
+      $("#saveMauMsg").innerHTML = `Đã lưu mẫu <b>${esc(r.id)}</b> (${esc(r.thu_muc)}).<br>${r.bao.length ? "Thay đổi: " + r.bao.map(esc).join("; ") : "Không có thay đổi so với mẫu gốc."}<br>Chưa lưu được: ${esc(r.chua_luu)}.`;
+    } catch (er) { $("#saveMauMsg").textContent = "Lỗi: " + er.message; }
+    return;
+  }
   const ch = e.target.closest("[data-mloai]"); if (ch) { mauLoai = ch.dataset.mloai; return moThuVienMau(); }
   const dc = e.target.closest("[data-mdoc]");
   if (dc) { const r = await api(`mau/${encodeURIComponent(dc.dataset.mdoc)}`).catch(e => ({md: e.message})); dlgShow(`<button data-open-mau="1">← Thư viện mẫu</button><div class="mdoc">${mdHtml(r.md)}</div>`, true); }
@@ -889,7 +901,17 @@ $("#btnHist").onclick = async () => {
 $("#btnAI").onclick = () => {
   dlgShow(`<h3>Nhờ AI sửa</h3><p class="dim">Gõ điều muốn sửa. Bản này soạn sẵn yêu cầu để dán cho Claude (Claude Code trên PC/Anti sửa thẳng file). Gọi AI ngay trong app cần khóa API và có tính phí — chưa bật.</p>
     <textarea id="aiReq" style="width:100%;min-height:70px" placeholder="Ví dụ: thêm phụ đề cho cả video, đổi chuyển cảnh thứ 2 thành hòa tan, rút đoạn 3 còn 4 giây"></textarea>
-    <div class="row"><button id="mkAI" class="lime">Soạn yêu cầu</button></div><textarea id="aiOut" style="width:100%;min-height:120px;margin-top:10px" readonly></textarea><div class="row"><button id="copyAI">Chép</button></div>`);
+    <div class="row"><button id="mkAI" class="lime">Soạn yêu cầu</button></div><textarea id="aiOut" style="width:100%;min-height:120px;margin-top:10px" readonly></textarea><div class="row"><button id="copyAI">Chép</button></div>
+    <hr style="border:0;border-top:1px solid var(--line);margin:14px 0"><b>Gói góp ý (kèm ảnh khung hình)</b><div class="dim">Lưu lời góp ý, mốc giờ hiện tại, timeline và ảnh khung vào thư mục dự án để Claude Code đọc. Lỗi về vị trí: chụp thêm màn hình và để cùng thư mục.</div>
+    <div class="row"><button id="gopy" class="lime">📸 Lưu gói góp ý tại ${now.toFixed(1)}s</button></div><div class="dim" id="gopyMsg"></div>`);
+  $("#gopy").onclick = async () => {
+    const note = $("#aiReq").value.trim(); if (!note) return $("#gopyMsg").textContent = "Gõ điều muốn sửa ở ô trên trước.";
+    let frame = ""; try { const v = $("#pv"), c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0); frame = c.toDataURL("image/jpeg", 0.85); } catch (e) {}
+    try {
+      const r = await api(`${P()}/gopy`, {method: "POST", body: JSON.stringify({note, t: now, timeline: clean(tl), frame})});
+      $("#gopyMsg").innerHTML = `Đã lưu vào <code>${esc(r.thu_muc)}</code>${r.anh ? " (có ảnh khung)" : " (chưa có ảnh khung)"}.<br>Nói với Claude Code: <b>${esc(r.lenh)}</b>`;
+    } catch (er) { $("#gopyMsg").textContent = "Lỗi: " + er.message; }
+  };
   $("#mkAI").onclick = () => $("#aiOut").value = `Sửa video "${name}": file video-studio/projects/${name}/timeline.json (định dạng: video-studio/scripts/timeline.py, hiệu ứng: docs/04-thu-vien/THU-VIEN-HIEU-UNG.md).\nYêu cầu: ${$("#aiReq").value}\nSau khi sửa chạy: python3 scripts/test_timeline.py (trong video-studio), báo lại đã đổi gì. Theo quy tắc nội dung trong CLAUDE.md, không tự điền số liệu dự án.`;
 };
 

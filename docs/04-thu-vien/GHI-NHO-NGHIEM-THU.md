@@ -94,3 +94,13 @@ Hào: "ưng hiệu ứng chữ lúc ban đầu hơn (chữ trắng nổi 3D lao 
 | Lấp lánh | chữ có số | `ting_lap-lanh_01` | 0,3 | thay tiếng ting số liệu cũ (hai tiếng ting chồng nhau nghe rối) |
 | Ra | lúc chữ tan | `whoosh_quat_01` | 0,22 | bỏ nếu chữ sau tới trong 0,6 s; lọc trầm 200 Hz |
 | Chung | | | | cao độ luân phiên 100% / 96% / 104% để tai không nhận ra một tiếng lặp lại; cả bài chuẩn −14 LUFS sau khi trộn |
+
+---
+
+## Bài học từ video hướng dẫn dạy AI học style (14/11/2026, Hào gửi, 12 phút)
+Quy trình người làm video dùng: một video mẫu và câu lệnh liệt kê rõ phải phân tích gì (nhịp, chữ, hiệu ứng, chuyển cảnh, font) → AI ghi lại thành skill → thử với một clip thô → góp ý 3–4 vòng. Lỗi thường gặp ở các vòng đầu và cách sửa:
+- Chữ hiện rồi biến quá nhanh: cho chậm lại; mọi chuyển động phải có ease in-out.
+- Chữ nhỏ, bố cục lệch: to lên, cân lại.
+- Đồ hoạ đè lên người nói: dời ra; lỗi về vị trí thì gửi **ảnh chụp khung** kèm góp ý (nút 📸 Lưu gói góp ý).
+- 10 giây đầu chậm: đây là đoạn quyết định người xem ở lại; dựng nhanh gọn nhất.
+Dùng 1 video mẫu để giống đúng style đó; 2–3 video để ra style riêng. Skill: `.claude/skills/hoc-mau/`.

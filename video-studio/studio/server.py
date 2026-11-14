@@ -13,6 +13,8 @@ import effects  # noqa: E402
 from am_thanh import SFX, SFX_DIR  # noqa: E402
 from ap_mau import MAU, ap  # noqa: E402
 from kich_ban import dat_chu  # noqa: E402
+from luu_vao_mau import luu as luu_mau  # noqa: E402
+import base64  # noqa: E402
 from lop_chu import tao as tao_lop_chu  # noqa: E402
 import kho  # noqa: E402
 import hashlib  # noqa: E402
@@ -401,6 +403,15 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(200, {"timeline": out, "sfx": sum(1 for x in out.get("sfx", []) if x.get("auto"))})
             except (ValueError, KeyError, TypeError) as ex:
                 return self.send(400, {"error": f"Không áp được mẫu: {ex}"})
+        if parts == ["api", "luumau"]:  # lưu chỉnh sửa của video vào mẫu (mặc định tạo bản mới, mẫu gốc giữ nguyên)
+            try:
+                req = self.body() or {}
+                tl = req.get("timeline")
+                if not isinstance(tl, dict) or (errs := check(tl)):
+                    return self.send(400, {"error": "Timeline đang lỗi, bấm Lưu xem lỗi trước"})
+                return self.send(200, luu_mau(tl, (req.get("ten") or "").strip()[:80] or None, bool(req.get("ghi_de"))))
+            except (ValueError, KeyError, TypeError, OSError) as ex:
+                return self.send(400, {"error": f"Không lưu được mẫu: {ex}"})
         if parts == ["api", "kho", "chuthich"]:  # gắn biểu tượng chú thích đúng lúc lời nói nhắc tới tiện ích
             try:
                 tl = (self.body() or {}).get("timeline")
@@ -422,9 +433,28 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(200, tao_du_an(self.body() or {}))
             except (ValueError, OSError) as ex:
                 return self.send(400, {"error": str(ex)})
-        if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle", "kichban") or not (d := self.project(parts[2])):
+        if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle", "kichban", "gopy") or not (d := self.project(parts[2])):
             return self.send(404, {"error": "Không có dự án này"})
         name = parts[2]
+        if parts[3] == "gopy":  # gói góp ý cho Claude Code: lời Hào + mốc giờ + timeline + ảnh khung hình hiện tại
+            req = self.body() or {}
+            note, t = str(req.get("note") or "").strip()[:4000], req.get("t")
+            if not note or not isinstance(req.get("timeline"), dict) or not isinstance(t, (int, float)):
+                return self.send(400, {"error": "Cần ghi điều muốn sửa"})
+            gd = os.path.join(d, "gop-y", time.strftime("%Y%m%d-%H%M%S"))
+            os.makedirs(gd, exist_ok=True)
+            json.dump(req["timeline"], open(os.path.join(gd, "timeline.json"), "w", encoding="utf8"), ensure_ascii=False, indent=1)
+            anh = ""
+            m = re.match(r"^data:image/(png|jpeg);base64,([A-Za-z0-9+/=]+)$", str(req.get("frame") or ""))
+            if m and len(m.group(2)) < 8_000_000:
+                anh = "khung." + ("png" if m.group(1) == "png" else "jpg")
+                open(os.path.join(gd, anh), "wb").write(base64.b64decode(m.group(2)))
+            ra = os.path.relpath(gd, os.path.join(ROOT, ".."))
+            open(os.path.join(gd, "y-kien.md"), "w", encoding="utf8").write(
+                f"# Góp ý cho dự án {name}\n\nMốc giờ: {t:.1f}s\n\nÝ kiến của Hào:\n{note}\n\n"
+                + (f"Ảnh khung hình (video gốc, chưa gồm chữ/hiệu ứng): {anh}. Hào nên chụp thêm màn hình app và để cùng thư mục này.\n" if anh else "Chưa có ảnh khung: Hào chụp màn hình app và để cùng thư mục này.\n")
+                + "\nCách xử lý cho Claude Code: đọc file này, timeline.json cùng thư mục, `video-studio/docs` liên quan (GHI-NHO-NGHIEM-THU.md). Lỗi chỉ là thông số thì sửa timeline của dự án; lỗi lặp lại cho mọi video thì sửa mẫu (thu-vien-mau/) hoặc mã.\n")
+            return self.send(200, {"ok": True, "thu_muc": ra, "anh": bool(anh), "lenh": f"Đọc {ra}/y-kien.md và sửa theo góp ý của Hào."})
         if parts[3] == "kichban":  # đặt chữ theo KICH-BAN.md + giọng nói; trả timeline mới, app giữ để hoàn tác
             kb = os.path.join(d, "KICH-BAN.md")
             if not os.path.exists(kb):
