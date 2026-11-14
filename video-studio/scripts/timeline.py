@@ -131,6 +131,12 @@ def check(tl):
                 e.append(f"{name} {i}: thiếu {', '.join(miss)}")
             elif x["start"] < 0 or x["dur"] <= 0 or x["start"] + (0 if key == "sfx" else x["dur"]) > total + 0.01:  # âm được kéo dài quá cuối, bộ trộn tự cắt
                 e.append(f"{name} {i}: {x['start']}s + {x['dur']}s nằm ngoài video ({total:.2f}s)")
+            elif key == "cards" and x.get("kieu", "danh-sach") not in ("danh-sach", "so-lieu", "quy-dao", "checklist", "kinh"):
+                e.append(f"Minh họa {i}: 'kieu' là danh-sach | so-lieu | quy-dao | checklist | kinh")
+            elif key == "cards" and x.get("kieu") == "so-lieu" and not (str(x.get("value", "")).strip() and str(x.get("nguon", "")).strip()):
+                e.append(f"Minh họa {i}: thẻ số liệu cần 'value' và 'nguon' (tên tài liệu + ngày; số không nguồn thì không đưa lên)")
+            elif key == "cards" and x.get("kieu") in ("quy-dao", "checklist") and not (isinstance(x.get("items"), list) and 2 <= len(x["items"]) <= 6):
+                e.append(f"Minh họa {i}: kiểu {x['kieu']} cần 'items' từ 2 đến 6 mục")
             elif key == "zooms" and not 1 <= x["scale"] <= 1.6:
                 e.append(f"Zoom {i}: 'scale' từ 1 đến 1.6 (1.07 = phóng 7%)")
             elif key == "overlays" and x.get("blend", "screen") not in ("screen", "alpha"):

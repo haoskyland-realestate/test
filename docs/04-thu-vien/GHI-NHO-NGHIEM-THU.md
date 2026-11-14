@@ -104,3 +104,16 @@ Quy trình người làm video dùng: một video mẫu và câu lệnh liệt k
 - Đồ hoạ đè lên người nói: dời ra; lỗi về vị trí thì gửi **ảnh chụp khung** kèm góp ý (nút 📸 Lưu gói góp ý).
 - 10 giây đầu chậm: đây là đoạn quyết định người xem ở lại; dựng nhanh gọn nhất.
 Dùng 1 video mẫu để giống đúng style đó; 2–3 video để ra style riêng. Skill: `.claude/skills/hoc-mau/`.
+
+---
+
+## QUY TẮC CỨNG: đối chiếu ghi âm và kịch bản, không đoán ý, hỏi Hào rồi mới dựng (Hào chốt 14/11/2026)
+1. **Viết ra text từ ghi âm** (nhận dạng giọng, `build/transcripts/`) và **đặt cạnh kịch bản** (`KICH-BAN.md`, `NGUON-SO-LIEU.md`) để so sánh trùng khớp. Không đoán ý Hào định nói gì.
+2. Mọi **chữ, số, tên, dữ kiện** hiện trên màn hình phải có một trong ba: (a) chính Hào nói trong ghi âm, (b) có trong `NGUON-SO-LIEU.md` với cột "Hào xác nhận" = rồi, (c) Hào duyệt riêng (`meta.da_duyet`). Số tiền, diện tích, pháp lý, chính sách phải có nguồn và ngày.
+3. **Không biết, không chắc, thông tin chưa kiểm chứng, lời nói khác kịch bản, còn `[...]`: HỎI HÀO trước, rồi mới dựng bản cuối.** Không tự điền, không tự sửa số cho "hợp lý".
+4. Máy làm hộ phần kiểm: `python3 scripts/doi_chieu.py projects/<tên>` → `build/doi-chieu.md`. `dung.py` tự chạy và **dừng (bản cuối)** khi còn mục cần hỏi; Hào đồng ý rồi mới thêm `meta.da_duyet` hoặc chạy `dung.py --da-duyet`. Bản nháp chỉ cảnh báo để còn xem bố cục.
+5. Chưa kiểm tự động: tên riêng, pháp lý, ý nghĩa của từ khoá. Claude vẫn đọc báo cáo và hỏi khi nghi ngờ. Thẻ số liệu (`kieu: "so-lieu"`) bắt buộc có `nguon`.
+
+## Bố cục chữ chuyên nghiệp (14/11/2026)
+- Chữ to nhất có thể mà vẫn nằm gọn chiều ngang (lề 70px); từ khoá to hơn chữ thường (mặc định ×2); cụm chữ không rớt vào vùng giao diện TikTok (dưới 78% chiều cao) và không lên sát đỉnh (trên 30%). Mã: `lop_chu.bo_cuc_loi`.
+- Cảnh chèn đồ hoạ (`cards`, trường `kieu`): `so-lieu` (một số lớn + nhãn + nguồn), `quy-dao` (tâm + 2–6 ý xoay quanh), `checklist` (dấu ✓ cam), `kinh` (thẻ kính một câu nhấn), `danh-sach` (cũ). Mỗi 8–10 giây một cảnh chèn rồi về người nói.

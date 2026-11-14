@@ -12,8 +12,8 @@ from lop_chu import tao as tao_lop_chu
 from kho import duong_dan as kho_path
 
 DRAFT = "--nhap" in sys.argv[2:]
-if len(sys.argv) < 2 or any(a != "--nhap" for a in sys.argv[2:]):
-    sys.exit("Dùng: python3 scripts/dung.py projects/<tên> [--nhap]")
+if len(sys.argv) < 2 or any(a not in ("--nhap", "--da-duyet") for a in sys.argv[2:]):
+    sys.exit("Dùng: python3 scripts/dung.py projects/<tên> [--nhap] [--da-duyet]")
 HERE = os.path.abspath(sys.argv[1])
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 NAME = os.path.basename(HERE)
@@ -24,6 +24,13 @@ errs = check(tl)
 if errs:
     sys.exit("timeline.json chưa hợp lệ:\n- " + "\n- ".join(errs))
 B = os.path.join(HERE, "build"); os.makedirs(B, exist_ok=True)
+# Cổng đối chiếu (scripts/doi_chieu.py): chữ/số trên màn hình phải khớp ghi âm hoặc nguồn đã duyệt. Bản cuối: dừng và hỏi Hào; bản nháp: chỉ cảnh báo.
+from doi_chieu import viet as doi_chieu
+_hoi, _ = doi_chieu(HERE)
+if _hoi:
+    print("ĐỐI CHIẾU (build/doi-chieu.md), cần hỏi Hào:\n- " + "\n- ".join(_hoi))
+    if not DRAFT and "--da-duyet" not in sys.argv:
+        sys.exit("DỪNG: còn mục chưa kiểm chứng. Hỏi Hào rồi ghi vào meta.da_duyet, hoặc chạy lại với --da-duyet sau khi Hào đồng ý.")
 W, H = size(tl)
 FPS = 30
 YT = W > H  # khung ngang YouTube
@@ -229,7 +236,7 @@ for x in tl.get("texts", []):
     elif x.get("kind") == "loi" and x.get("bam_nguoi") and "top_px" not in x:  # chữ theo nhịp nói: ngang ngực người nói (đỉnh đầu + 18% khung)
         y = dinh_dau_tai(x["start"] + 0.3)
         if y is not None:
-            x["top_px"] = int(min(max((y + 0.18) * H, 0.2 * H), 0.8 * H))
+            x["top_px"] = int((y + 0.18) * H)  # bố cục (lop_chu.bo_cuc_loi) tự kẹp trong vùng an toàn 30–78% chiều cao
 def dung_lop(phan, ten):
     """Dựng một lớp chữ trong suốt ra {ten}.webm; chữ/phụ đề/thẻ không đổi thì dùng lại."""
     trang = tao_lop_chu(tl, phan)

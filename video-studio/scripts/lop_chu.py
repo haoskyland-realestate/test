@@ -29,6 +29,23 @@ def line(text, cls="", chars=False):
     return f'<div class="line {cls}"><div class="in">{words(text, chars)}</div></div>'
 
 
+def bo_cuc_loi(ws, hl, xd, W, H, LO, top):
+    """Bố cục chữ theo nhịp nói như người dựng chuyên nghiệp: chữ to nhất có thể mà vẫn nằm gọn chiều ngang (lề 70px), từ khoá to hơn chữ thường,
+    cụm không rớt vào vùng giao diện TikTok (dưới 78% chiều cao) và không lên sát đỉnh. Trả (cỡ chữ thường px, cỡ từ khoá em, top px)."""
+    avail = W - 140
+    nor = " ".join(w for k, (w, _, _) in enumerate(ws) if k not in hl)
+    key = " ".join(w for k, (w, _, _) in enumerate(ws) if k in hl)
+    co = LO.get("co", 62)
+    dong = max(1, len(nor) / (2 if not xd and len(nor) > 28 else 1)) if nor else 1   # chữ thường tối đa 2 dòng khi không tách dòng từ khoá
+    co = max(40, min(co, avail / (max(dong, 1) * 0.55)))
+    em = LO.get("co_khoa", 1.9)
+    if key:
+        em = max(1.2, min(em, avail / (len(key) * 0.6 * co)))
+    cao = (co * 1.3 * (2 if not xd and len(nor) > 28 else 1) if nor else 0) + (co * em * 1.15 if key else 0)
+    top = int(min(max(top, 0.30 * H), 0.78 * H - cao))
+    return int(co), round(em, 2), top
+
+
 def tao(tl, phan=None):
     """HTML lớp chữ của cả video (khung W×H theo nền tảng). Cần gsap.min.js nằm cùng địa chỉ.
     phan: None = tất cả; "sau" = chỉ chữ sau đầu, nằm DƯỚI người; "truoc" = phần còn lại (lớp tối nền, phụ đề, thẻ, chữ thường, logo, thanh tiến độ), nằm TRÊN người
@@ -75,16 +92,17 @@ def tao(tl, phan=None):
         elif kind == "loi":  # từng từ hiện đúng lúc nói; từ khoá đỏ phát sáng, to hơn, nảy vào
             ws, hl = s["words"], set(s.get("hl", []))
             body, a = "", []
-            xd = tl.get("meta", {}).get("loi", {}).get("xuong_dong")  # cụm từ khoá nằm riêng một dòng bên dưới chữ thường (kiểu talking head cam)
+            xd = LO.get("xuong_dong")  # cụm từ khoá nằm riêng một dòng bên dưới chữ thường (kiểu talking head cam)
+            co, em, top = bo_cuc_loi(ws, hl, xd, W, H, LO, int(s["top_px"]) if s.get("top_px") is not None else int(float(s.get("y", 0.56)) * H))
             for k, (w, w0, w1) in enumerate(ws):
                 if xd and k and ((k in hl) != (k - 1 in hl)):
                     body += "<br>"
-                body += f'<span class="lw{" lk" if k in hl else ""}" id="b{i}w{k}">{html.escape(w)}</span> '
+                body += f'<span class="lw{" lk" if k in hl else ""}"{f" style=font-size:{em}em" if k in hl else ""} id="b{i}w{k}">{html.escape(w)}</span> '
                 if k in hl:
                     a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{w0:.2f});')
                 else:
                     a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.16)},ease:"power2.out"}},{w0:.2f});')
-            s = {**s, "top_px": int(s["top_px"]) if s.get("top_px") is not None else int(float(s.get("y", 0.56)) * H)}
+            s = {**s, "top_px": top, "_co": co}
         elif kind == "hook":
             body = f'<div class="tag">{html.escape(s["tag"])}</div>' + "".join(line(l, "big", ch) for l in s["lines"])
             a.append(f'tl.fromTo("{sel} .tag",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:{d(.5)}}},{st0:.2f});')
@@ -148,7 +166,7 @@ def tao(tl, phan=None):
             body = "".join(line(l, "mid", ch) for l in s["lines"])
         if kind not in ("tag", "loi"): a.append(f'tl.to("{sel}",{{opacity:0,filter:"blur(14px)",scale:1.08,duration:{d(.3)},ease:"power2.in"}},{st0 + du - 0.35 * SP:.2f});' if kind in ("title3d", "compare")
                  else f'tl.to("{sel}",{{opacity:0,y:-40,duration:{d(.35)},ease:"power2.in"}},{st0 + du - 0.4 * SP:.2f});')
-        vt = f' style="top:{s["top_px"]}px"' if s.get("top_px") is not None else ""  # chữ sau đầu: bộ dựng đặt ngang đầu người nói
+        vt = (f' style="top:{s["top_px"]}px' + (f";font-size:{s['_co']}px" if s.get("_co") else "") + '"') if s.get("top_px") is not None else ""  # chữ sau đầu: bộ dựng đặt ngang đầu người nói
         blocks.append(f'<div id="b{i}" class="clip blk {kind} a-{an}"{vt} data-start="{st0:.2f}" data-duration="{du:.2f}" '
                       f'data-track-index="{(6 if kind == "source" else 1 + i % 2)}">{body}</div>')
         anims += a
@@ -158,14 +176,38 @@ def tao(tl, phan=None):
         # cả dòng bật lên cùng lúc; từ khóa (số, tên riêng) nảy thêm cho nổi
         anims.append(f'tl.fromTo("#s{j} > span",{{opacity:0,scale:.85}},{{opacity:1,scale:1,duration:0.18,ease:"back.out(2)"}},{x["start"]:.2f});')
         anims.append(f'tl.fromTo("#s{j} .hl",{{scale:1.35}},{{scale:1,duration:0.3,ease:"back.out(3)"}},{x["start"] + 0.06:.2f});')
+    AC = LO.get("khoa", "#ff8a1a")  # màu nhấn của cảnh chèn đồ hoạ (cùng màu từ khoá của mẫu)
     for j, x in enumerate(tl.get("cards", [])):
-        items = "".join(f'<div class="ci"><b>{k + 1}</b>{words(it)}</div>' for k, it in enumerate(x.get("items", [])))
-        blocks.append(f'<div id="k{j}" class="clip card" data-start="{x["start"]:.2f}" data-duration="{x["dur"]:.2f}" data-track-index="8">'
-                      f'<div class="cw">{f"""<div class="cs">{html.escape(x["step"])}</div>""" if x.get("step") else ""}'
-                      f'<div class="ctt">{html.escape(x["title"])}</div>{items}</div></div>')
-        anims += [f'tl.fromTo("#k{j}",{{opacity:0}},{{opacity:1,duration:{d(.25)}}},{x["start"]:.2f});',
-                  f'tl.fromTo("#k{j} .ctt",{{opacity:0,y:40}},{{opacity:1,y:0,duration:{d(.5)},ease:"expo.out"}},{x["start"] + 0.1:.2f});',
-                  f'tl.fromTo("#k{j} .ci",{{opacity:0,x:-50}},{{opacity:1,x:0,duration:{d(.4)},ease:"power3.out",stagger:{d(.35)}}},{x["start"] + 0.45:.2f});']
+        kieu, st = x.get("kieu", "danh-sach"), x["start"]
+        if kieu == "danh-sach":
+            items = "".join(f'<div class="ci"><b>{k + 1}</b>{words(it)}</div>' for k, it in enumerate(x.get("items", [])))
+            body = (f'<div class="cs">{html.escape(x["step"])}</div>' if x.get("step") else "") + f'<div class="ctt">{html.escape(x["title"])}</div>{items}'
+            a = [f'tl.fromTo("#k{j} .ctt",{{opacity:0,y:40}},{{opacity:1,y:0,duration:{d(.5)},ease:"expo.out"}},{st + 0.1:.2f});',
+                 f'tl.fromTo("#k{j} .ci",{{opacity:0,x:-50}},{{opacity:1,x:0,duration:{d(.4)},ease:"power3.out",stagger:{d(.35)}}},{st + 0.45:.2f});']
+        elif kieu == "so-lieu":  # một con số lớn + nhãn + nguồn (nguồn bắt buộc: dữ kiện phải có tài liệu và ngày)
+            v = str(x["value"]); n = len(v)
+            co = 300 if n <= 3 else 240 if n <= 5 else 180 if n <= 7 else 130 if n <= 10 else 96  # số dài thì nhỏ lại cho vừa chiều ngang 940px
+            body = (f'<div class="cs">{html.escape(x["title"])}</div><div class="xv" style="font-size:{co}px;color:{AC};text-shadow:0 0 40px {AC}99">{html.escape(v)}</div>'
+                    f'<div class="xl">{html.escape(x.get("label", ""))}</div><div class="xn">Nguồn: {html.escape(x.get("nguon", ""))}</div>')
+            a = [f'tl.fromTo("#k{j} .xv",{{opacity:0,scale:.6,filter:"blur(14px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.55)},ease:"back.out(1.8)"}},{st + 0.15:.2f});',
+                 f'tl.fromTo("#k{j} .cs,#k{j} .xl,#k{j} .xn",{{opacity:0,y:30}},{{opacity:1,y:0,duration:{d(.4)},ease:"power3.out",stagger:{d(.18)}}},{st + 0.3:.2f});']
+        elif kieu == "quy-dao":  # tâm + 3–6 ý xoay quanh (vd. Gladia ở giữa; bếp đảo, bàn giao, sân vườn…)
+            its = x.get("items", []); m = len(its)
+            pos = "".join(f'<div class="qo" style="left:{50 + 42 * __import__("math").cos(6.2832 * q / m - 1.5708):.1f}%;top:{50 + 42 * __import__("math").sin(6.2832 * q / m - 1.5708):.1f}%">{html.escape(t)}</div>' for q, t in enumerate(its))
+            body = (f'<div class="cs">{html.escape(x["title"])}</div><div class="qd"><i class="r1"></i><i class="r2"></i><div class="qc">{html.escape(x.get("centre", ""))}</div>{pos}</div>')
+            a = [f'tl.fromTo("#k{j} .qc",{{scale:.4,opacity:0}},{{scale:1,opacity:1,duration:{d(.5)},ease:"back.out(2)"}},{st + 0.1:.2f});',
+                 f'tl.fromTo("#k{j} .r1,#k{j} .r2",{{scale:.3,opacity:0}},{{scale:1,opacity:1,duration:{d(.7)},ease:"expo.out",stagger:{d(.15)}}},{st + 0.15:.2f});',
+                 f'tl.fromTo("#k{j} .qo",{{opacity:0,scale:.5}},{{opacity:1,scale:1,duration:{d(.35)},ease:"back.out(2.2)",stagger:{d(.3)}}},{st + 0.5:.2f});']
+        elif kieu == "checklist":  # dấu ✓ cam từng mục
+            items = "".join(f'<div class="ci tk"><b>✓</b>{words(it)}</div>' for it in x.get("items", []))
+            body = f'<div class="ctt">{html.escape(x["title"])}</div>{items}'
+            a = [f'tl.fromTo("#k{j} .ctt",{{opacity:0,y:40}},{{opacity:1,y:0,duration:{d(.5)},ease:"expo.out"}},{st + 0.1:.2f});',
+                 f'tl.fromTo("#k{j} .ci",{{opacity:0,x:-60,scale:.9}},{{opacity:1,x:0,scale:1,duration:{d(.4)},ease:"back.out(1.6)",stagger:{d(.4)}}},{st + 0.4:.2f});']
+        else:  # "kinh": thẻ kính mờ một câu nhấn
+            body = f'<div class="kg"><div class="kt">{html.escape(x["title"])}</div>{f"""<div class="ks">{html.escape(x["sub"])}</div>""" if x.get("sub") else ""}</div>'
+            a = [f'tl.fromTo("#k{j} .kg",{{opacity:0,y:60,scale:.92}},{{opacity:1,y:0,scale:1,duration:{d(.55)},ease:"expo.out"}},{st + 0.1:.2f});']
+        blocks.append(f'<div id="k{j}" class="clip card {kieu}" data-start="{st:.2f}" data-duration="{x["dur"]:.2f}" data-track-index="8"><div class="cw">{body}</div></div>')
+        anims += [f'tl.fromTo("#k{j}",{{opacity:0}},{{opacity:1,duration:{d(.25)}}},{st:.2f});'] + a
     # Khung ngang YouTube: giữ nguyên thiết kế chữ của bản dọc, thu nhỏ (zoom) và đặt lại vị trí cho khung 1920×1080.
     # zoom thu nhỏ cả toạ độ của chính khối đó, nên số px ở đây là trước khi nhân 0,62.
     YT_CSS = """
@@ -241,6 +283,20 @@ def tao(tl, phan=None):
     .ctt{{font-family:var(--display);font-size:92px;font-weight:var(--dw);text-transform:uppercase;text-align:center;color:var(--hl);margin:10px 0 50px;line-height:1.05}}
     .ci{{display:flex;align-items:center;gap:26px;font-size:46px;font-weight:600;padding:22px 28px;margin-top:18px;border-radius:18px;background:rgba(255,255,255,.06)}}
     .ci b{{flex:none;width:64px;height:64px;border-radius:50%;background:var(--accent);color:{style["bg"]};display:flex;align-items:center;justify-content:center;font-size:36px}}
+    .card.so-lieu,.card.quy-dao,.card.checklist,.card.kinh{{background:radial-gradient(ellipse at 50% 35%,#3a1d0a 0%,#120a05 65%,#070707 100%);padding-top:0;align-items:center}}
+    .card .cw{{width:940px}} .card .cs{{font-size:34px;letter-spacing:7px;text-transform:uppercase;color:{AC};text-align:center;margin-bottom:26px}}
+    .xv{{font-family:var(--display);font-weight:900;text-align:center;line-height:1;white-space:nowrap}}
+    .xl{{font-size:56px;font-weight:600;text-align:center;margin-top:24px;color:#fff}}
+    .xn{{font-size:28px;text-align:center;margin-top:60px;color:rgba(255,255,255,.55)}}
+    .qd{{position:relative;width:940px;height:940px;margin:0 auto}}
+    .qd i{{position:absolute;border-radius:50%;border:3px solid {AC}66;left:50%;top:50%;transform:translate(-50%,-50%)}}
+    .qd .r1{{width:620px;height:620px}} .qd .r2{{width:900px;height:900px;border-color:{AC}33}}
+    .qc{{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:360px;height:360px;border-radius:50%;background:#1b1b1b;border:6px solid {AC};
+      box-shadow:0 0 60px {AC}88;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:60px;padding:20px;line-height:1.1}}
+    .qo{{position:absolute;transform:translate(-50%,-50%);padding:20px 34px;border-radius:44px;background:rgba(255,255,255,.12);border:3px solid {AC}aa;font-size:54px;font-weight:700;white-space:nowrap}}
+    .ci.tk b{{background:{AC}}}
+    .kg{{padding:70px 60px;border-radius:48px;background:rgba(255,255,255,.09);border:2px solid rgba(255,255,255,.22);backdrop-filter:blur(12px);text-align:center}}
+    .kt{{font-family:var(--display);font-size:84px;font-weight:900;line-height:1.1}} .ks{{font-size:42px;margin-top:26px;color:rgba(255,255,255,.7)}}
     {style.get("css", "")}
     {YT_CSS if YT else ""}
     .blk.loi{{left:70px;right:70px;top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
