@@ -3,11 +3,14 @@
 # Cài Homebrew (nếu chưa có), Node, FFmpeg, Python; thư viện dự án vào .venv (không đụng Python của máy); rồi kiểm máy + dựng thử 6 giây.
 set -e
 cd "$(dirname "$0")"
+[ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 if ! command -v brew >/dev/null; then
   echo "== Cài Homebrew (sẽ hỏi mật khẩu máy Mac) =="
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
+# để cửa sổ Terminal mới cũng thấy lệnh brew
+grep -q "brew shellenv" ~/.zprofile 2>/dev/null || echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 echo "== Cài Node, FFmpeg, Python =="
 # ffmpeg thường của Homebrew (từ 01/2026) thiếu bộ lọc zscale → dùng ffmpeg-full (không tự vào PATH nên thêm tay)
 brew install node ffmpeg-full python@3.12
