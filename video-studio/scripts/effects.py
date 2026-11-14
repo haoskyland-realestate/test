@@ -206,3 +206,17 @@ def catalog_md():
 
 if __name__ == "__main__":
     print(catalog_md(), end="")
+
+
+def zoom_bieu_thuc(zs, fps):
+    """Biểu thức zoom của ffmpeg zoompan cho các đoạn phóng: đẩy vào êm (smoothstep: chậm → nhanh → chậm) 0,5 giây rồi lùi ra êm
+    ≤1 giây ở cuối đoạn; giữ nguyên giữa đoạn. Thay cho kiểu nhảy cỡ bậc thang cũ (Hào nghiệm thu 13/11: zoom giật).
+    shortcut: các đoạn zoom chồng nhau thì cộng dồn, không giới hạn; zoom chồng không phải cách dùng bình thường."""
+    S = lambda p: f"(({p})*({p})*(3-2*({p})))"
+    terms = []
+    for x in zs:
+        a, b = x["start"], x["start"] + x["dur"]
+        ri, ro = round(min(0.5, x["dur"] / 3), 3), round(min(1.0, x["dur"] / 2.5), 3)
+        t = f"(in/{fps})"
+        terms.append(f"({x['scale']}-1)*({S(f'clip(({t}-{a})/{ri},0,1)')}-{S(f'clip(({t}-{b - ro:.3f})/{ro},0,1)')})")
+    return "1+" + "+".join(terms)

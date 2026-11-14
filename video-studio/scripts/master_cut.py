@@ -16,7 +16,7 @@ CUT_GAP = 0.30          # im lặng dài hơn thì cắt
 PAD_IN, PAD_OUT = 0.08, 0.14   # chừa trước khi nói / sau khi dứt lời (giữa câu)
 PAD_END = 0.30          # chừa sau cuối câu (dấu chấm, hỏi…) cho có nhịp nghỉ
 MIN_PIECE = 0.35        # mẩu ngắn hơn thì bỏ (trừ khi có chữ)
-PUNCH = 1.08            # phóng xen kẽ ở các chỗ cắt nhảy
+PUNCH = 1.05            # phóng xen kẽ ở các chỗ cắt nhảy (Hào: tối đa 104–106%; dung.py đẩy vào êm)
 BEAT = 4.0              # mẩu nói dài: đổi cỡ khung khoảng mỗi 4 giây, ở chỗ ngắt giữa hai từ
 
 norm = lambda w: re.sub(r"[^\w]", "", w.lower())

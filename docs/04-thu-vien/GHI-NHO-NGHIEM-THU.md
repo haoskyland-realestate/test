@@ -66,7 +66,7 @@ Mã: `scripts/tach_nguoi.py`, `dung.py`. Tốc độ trên cloud: khoảng 0,3 g
 - Cắt nhảy giữa hai mẩu nói cùng góc máy: đổi cỡ 100% ↔ 104% **ngay tại chỗ cắt** thì được (che vết cắt). Không đổi cỡ giữa một mẩu.
 - Video đi bộ (máy đang di chuyển) thì hạn chế zoom, vì chuyển động của máy đã đủ.
 
-**Trạng thái:** mới là demo trên ảnh và biểu đồ. **Chưa sửa `master_cut.py` (nhịp phóng) và `dung.py` (zoompan đang đổi cỡ bậc thang, phóng vào tâm).** Cần kiểm thêm: ở giây 4,04 bản đã dựng gần như không thấy đổi cỡ, nên có thể mốc zoom trong `dung.py` đang lệch giờ so với mốc trong timeline.
+**Trạng thái (14/11): đã sửa.** `effects.zoom_bieu_thuc`: đẩy vào êm (chậm → nhanh → chậm) 0,5 giây, lùi ra êm ≤1 giây, neo ở 38% chiều cao khung (42% với YouTube) thay vì tâm; `master_cut.PUNCH` giảm 1,08 → 1,05. Đo bằng dựng thật ô trắng 240px: 240 → 259 (×1,08) đúng mốc 1,0–3,0s, hết lệch giờ, bước lớn nhất mỗi khung ~2px (trước nhảy 8% trong 1 khung). Kiểm: `scripts/test_zoom.py`. **Chưa làm:** neo theo mặt thật (hiện neo cố định), chỉ phóng khi có lý do (chữ lớn, câu chốt) thay vì rải xen kẽ. Chưa thử trên footage thật của Hào.
 
 ### Những điều khác của lần này (đã sửa trong code)
 - Cắt khoảng lặng từng bỏ mất 13 giây mở đầu vì một câu nói lặp lại. Đã sửa: chỉ bỏ lần nói trước gần nhất, và không bỏ đoạn có câu đã nói trọn (`master_cut.py`, có bài kiểm thử).
@@ -77,7 +77,7 @@ Mã: `scripts/tach_nguoi.py`, `dung.py`. Tốc độ trên cloud: khoảng 0,3 g
 
 ## Việc cần làm để áp dụng (theo thứ tự)
 1. ~~Màu da~~: xong 13/11 (`chinh_mau.py`, chặn tăng rực trong `tu_can`).
-2. Zoom êm, neo theo mặt, phóng theo chữ lớn: sửa `dung.py` + `master_cut.py`.
+2. ~~Zoom êm~~: xong 14/11 (còn: neo theo mặt thật, phóng theo chữ lớn).
 3. ~~Chữ sau đầu~~: xong 13/11 (`sau_dau`, MODNet).
 
 ---

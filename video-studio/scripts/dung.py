@@ -5,7 +5,7 @@ Bản gốc đặt sẵn ở projects/<tên>/build/raw/<file>, hoặc tự tải
 import hashlib, json, os, re, subprocess, shutil, html, sys, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from timeline import check, layout, size
-from effects import STYLES, LOOKS, TRANSITIONS
+from effects import STYLES, LOOKS, TRANSITIONS, zoom_bieu_thuc
 from mau import khung, tu_can
 from am_thanh import tron_sfx
 from lop_chu import tao as tao_lop_chu
@@ -291,10 +291,8 @@ ins = ["-i", f"{B}/base.mp4", "-c:v", "libvpx-vp9", "-i", f"{B}/overlay.webm", "
 fc, cur = [], "0:v"
 zs = tl.get("zooms", [])
 if zs:  # phóng to khung trong từng đoạn (tính theo số khung hình)
-    z = "1"
-    for x in reversed(zs):
-        z = f"if(between(in,{round(x['start'] * FPS)},{round((x['start'] + x['dur']) * FPS)}),{x['scale']},{z})"
-    fc.append(f"[{cur}]zoompan=z='{z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={W}x{H}:fps={FPS}[z]"); cur = "z"
+    z = zoom_bieu_thuc(zs, FPS)
+    fc.append(f"[{cur}]zoompan=z='{z}':x='(iw-iw/zoom)*0.5':y='(ih-ih/zoom)*{0.42 if YT else 0.38}':d=1:s={W}x{H}:fps={FPS}[z]"); cur = "z"
 for k, x in enumerate(brs):
     ins += ["-i", f"{B}/br{k}.mp4"]
     fc.append(f"[{3 + k}:v]setpts=PTS-STARTPTS+{x['start']}/TB[b{k}]")

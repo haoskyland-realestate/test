@@ -32,6 +32,10 @@ def ap(tl, mau, chi_am=False):
     if not chi_am:
         tl.setdefault("meta", {}).update(mau.get("meta", {}), mau=mau["id"])
         tl.setdefault("audio", {}).update(mau.get("audio", {}))
+    if mau.get("sau_dau"):  # mẫu muốn chữ lớn nằm sau đầu người nói (tách người bằng MODNet khi dựng, chậm hơn: ~0,3 giây/khung trên CPU)
+        for x in tl.get("texts", []):
+            if x.get("kind") == "title3d":
+                x["sau_dau"] = True
     cc = mau.get("chuyen_canh", {})
     if cc.get("chu_ky") and not chi_am:
         ky = cc["chu_ky"]
@@ -122,6 +126,7 @@ def _tu_kiem():
     m = MAU["edit-phim-01"]
     out = ap(tl, m)
     assert check(out) == [], check(out)
+    assert out["texts"][0].get("sau_dau") is True and "sau_dau" not in out["texts"][1], out["texts"]  # mẫu bật chữ sau đầu chỉ cho title3d
     assert out["meta"]["style"] == "edit-phim" and out["audio"]["music"] is None and out["audio"]["voice"] is True
     assert [t["type"] for t in out["transitions"]] == ["cut", "gl-CrossZoom"]
     assert out["texts"][1]["start"] == 4.5  # cảnh 2 không đổi chỗ (chuyển cảnh mới nằm sau nó)
