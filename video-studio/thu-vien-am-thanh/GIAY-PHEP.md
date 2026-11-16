@@ -4,6 +4,7 @@
 |---|---|---|---|
 | Tự tổng hợp (`scripts/tao_sfx.py`) | 21 âm đầu | Không bản quyền, của Hào | 12/11/2026 |
 | **Mixkit** (`scripts/tai_sfx_mien_phi.py`), ghi từng file trong cột `nguon` của `hieu-ung.json` | 25 âm: whoosh, impact, click, pop, ting, glitch, riser | "Sound Effects Free License" của Mixkit: trang chính thức mixkit.co/llm-info/ nói miễn phí, không cần ghi nguồn, không cần đăng ký, dùng cho video thương mại | 14/11/2026 |
+| **Kho của Hào** (Drive `KHO-EDIT`, tài khoản haotruyenthong), tên `hsl_*` | 12 âm: pop, vút, vút-chạm, chuông, đếm số, tick, kim loại; nhạc nền `business-time` để trong dự án, không đưa vào repo | Hào cung cấp, coi là đã xác thực (Hào chốt 16/11/2026). Một số tên file gốc có dạng số của Pixabay/tiengdong.com: nguồn gốc giấy phép do Hào giữ | 16/11/2026 |
 
 Lưu ý:
 - Toàn văn điều khoản Mixkit nằm trong cửa sổ động trên https://mixkit.co/license/ (chưa đọc được bằng máy): **Hào đọc mục Sound Effects Free License trước khi đăng**. Thường các giấy phép loại này cấm bán lại hoặc phân phối file âm riêng lẻ: đừng đưa file trong thư mục này lên nơi chia sẻ công khai.

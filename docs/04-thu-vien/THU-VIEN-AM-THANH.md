@@ -21,6 +21,9 @@ File: `video-studio/thu-vien-am-thanh/hieu-ung/<tên>.wav`. Dùng tên ở cột
 | `whoosh_fast-small-sweep-transit_01` | Fast small sweep transition 0.78 s | Chuyển cảnh | 0.78s | 0.32s | Mixkit 166 https://mixkit.co/free-sound-effects/transition/ (Sound Effects Free License, tải 2026-11-14) |
 | `whoosh_air-zoom-vacuum_01` | Air zoom vacuum 1.27 s | Chuyển cảnh | 1.27s | 0.44s | Mixkit 2608 https://mixkit.co/free-sound-effects/transition/ (Sound Effects Free License, tải 2026-11-14) |
 | `whoosh_vacuum-swoosh-transition_01` | Vacuum swoosh transition 2.26 s | Chuyển cảnh | 2.26s | 1.56s | Mixkit 1465 https://mixkit.co/free-sound-effects/transition/ (Sound Effects Free License, tải 2026-11-14) |
+| `hsl_vut-nhanh_01` | small_whoosh_fast_3 0.86 s (kho Hào) | Từ khoá bay vào | 0.86s | 0.44s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'small_whoosh_fast_3'), Hào cung cấp 2026-11-16 |
+| `hsl_vut-the_01` | medium_whoosh_design_3 0.71 s (kho Hào) | Cảnh chèn vào | 0.71s | 0.32s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'medium_whoosh_design_3'), Hào cung cấp 2026-11-16 |
+| `hsl_vut-ra_01` | small_whoosh_design_2 0.17 s (kho Hào) | Cảnh chèn ra, chữ ra | 0.17s | 0.04s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'small_whoosh_design_2'), Hào cung cấp 2026-11-16 |
 
 ## chu
 | Tên | Âm | Dùng khi | Dài | Điểm nhấn | Nguồn |
@@ -35,6 +38,9 @@ File: `video-studio/thu-vien-am-thanh/hieu-ung/<tên>.wav`. Dùng tên ở cột
 | `chu_long-pop_01` | Long pop 0.48 s | Chữ nảy lên, thẻ xuất hiện | 0.48s | 0.02s | Mixkit 2358 https://mixkit.co/free-sound-effects/pop/ (Sound Effects Free License, tải 2026-11-14) |
 | `chu_hard-pop-click_01` | Hard pop click 1.17 s | Chữ nảy lên, thẻ xuất hiện | 1.17s | 0.04s | Mixkit 2364 https://mixkit.co/free-sound-effects/pop/ (Sound Effects Free License, tải 2026-11-14) |
 | `chu_bubble-pop-up-alert-noti_01` | Bubble pop up alert notification 0.38 s | Chữ nảy lên, thẻ xuất hiện | 0.38s | 0.04s | Mixkit 2357 https://mixkit.co/free-sound-effects/pop/ (Sound Effects Free License, tải 2026-11-14) |
+| `hsl_pop_01` | ui-pop-sound 0.04 s (kho Hào) | Cụm chữ hiện | 0.04s | 0.0s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'ui-pop-sound'), Hào cung cấp 2026-11-16 |
+| `hsl_not_01` | not 1 0.73 s (kho Hào) | Tick từng mục | 0.73s | 0.02s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'not 1'), Hào cung cấp 2026-11-16 |
+| `hsl_ui_01` | ui 1 0.81 s (kho Hào) | Pop từng ý quỹ đạo | 0.81s | 0.02s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'ui 1'), Hào cung cấp 2026-11-16 |
 
 ## ting
 | Tên | Âm | Dùng khi | Dài | Điểm nhấn | Nguồn |
@@ -46,6 +52,9 @@ File: `video-studio/thu-vien-am-thanh/hieu-ung/<tên>.wav`. Dùng tên ở cột
 | `ting_correct-answer-tone_01` | Correct answer tone 1.96 s | Số liệu, thông báo, thẻ | 1.96s | 0.02s | Mixkit 2870 https://mixkit.co/free-sound-effects/notification/ (Sound Effects Free License, tải 2026-11-14) |
 | `ting_software-interface-start_01` | Software interface start 2.35 s | Số liệu, thông báo, thẻ | 2.35s | 0.12s | Mixkit 2574 https://mixkit.co/free-sound-effects/notification/ (Sound Effects Free License, tải 2026-11-14) |
 | `ting_sci-fi-click_01` | Sci fi click 0.7 s | Số liệu, thông báo, thẻ | 0.7s | 0.14s | Mixkit 900 https://mixkit.co/free-sound-effects/notification/ (Sound Effects Free License, tải 2026-11-14) |
+| `hsl_chuong-nhanh_01` | small_whoosh_chimes_fast_2 0.88 s (kho Hào) | Lấp lánh từ khoá, số | 0.88s | 0.36s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'small_whoosh_chimes_fast_2'), Hào cung cấp 2026-11-16 |
+| `hsl_dem-so_01` | couting 1 1.14 s (kho Hào) | Số chạy, đếm | 1.14s | 0.52s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'couting 1'), Hào cung cấp 2026-11-16 |
+| `hsl_chuong-vut_01` | medium_whoosh_chimes_2 2 s (kho Hào) | Cảnh chèn sang trọng | 2.0s | 0.62s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'medium_whoosh_chimes_2'), Hào cung cấp 2026-11-16 |
 
 ## impact
 | Tên | Âm | Dùng khi | Dài | Điểm nhấn | Nguồn |
@@ -56,6 +65,9 @@ File: `video-studio/thu-vien-am-thanh/hieu-ung/<tên>.wav`. Dùng tên ở cột
 | `impact_wood-hard-hit_01` | Wood hard hit 0.42 s | Chữ lớn chạm, nhấn ý | 0.42s | 0.06s | Mixkit 2182 https://mixkit.co/free-sound-effects/impact/ (Sound Effects Free License, tải 2026-11-14) |
 | `impact_metal-hammer-hit_01` | Metal hammer hit 0.77 s | Chữ lớn chạm, nhấn ý | 0.77s | 0.12s | Mixkit 833 https://mixkit.co/free-sound-effects/impact/ (Sound Effects Free License, tải 2026-11-14) |
 | `impact_impact-of-a-blow_01` | Impact of a blow 0.59 s | Chữ lớn chạm, nhấn ý | 0.59s | 0.18s | Mixkit 2150 https://mixkit.co/free-sound-effects/impact/ (Sound Effects Free License, tải 2026-11-14) |
+| `hsl_vut-cham_01` | whoosh_hit_01 1.8 s (kho Hào) | Từ khoá chạm, chữ lớn | 1.8s | 0.56s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'whoosh_hit_01'), Hào cung cấp 2026-11-16 |
+| `hsl_vut-cham_02` | whoosh_hit_03 1.8 s (kho Hào) | Số liệu lớn, hook | 1.8s | 0.6s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'whoosh_hit_03'), Hào cung cấp 2026-11-16 |
+| `hsl_kim-loai_01` | metal 3 1.89 s (kho Hào) | Chạm kim loại | 1.89s | 0.6s | Kho của Hào trên Drive (KHO-EDIT, file gốc 'metal 3'), Hào cung cấp 2026-11-16 |
 
 ## riser
 | Tên | Âm | Dùng khi | Dài | Điểm nhấn | Nguồn |

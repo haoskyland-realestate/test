@@ -131,3 +131,10 @@ Các lớp âm: xem `MAU.md` của `talking-cam-01`. Mọi âm vào mẫu qua `a
 - **Từ nghe sai: Claude được đoán ý cho phù hợp nội dung, chủ đề** (vd. "bàn giao kẻ" → "bàn giao kèm", "chủ tư" → "chủ đầu tư"), ghi vào `meta.sua_tu` và **liệt kê các chỗ đã sửa** trong tin báo cho Hào. Không cần hỏi trước từng chữ.
 - **Thông tin Hào đưa đều đã xác thực**: lời Hào nói trong video và tài liệu Hào gửi được dùng thẳng; nguồn ghi "Hào cung cấp, <ngày>".
 - **Vẫn phải hỏi Hào** khi: thông tin không do Hào nói hay gửi (Claude tự tìm, tự suy ra số), các nguồn mâu thuẫn nhau, hoặc đoán ý mà có nhiều cách hiểu khác hẳn nhau về nghĩa (giá, pháp lý, chính sách).
+
+## Âm thanh chuyên nghiệp: bộ âm của Hào + cách trộn (Hào nhận xét 16/11/2026: "thiếu tính chuyên nghiệp")
+- Dùng **bộ âm của Hào** (Drive KHO-EDIT, 12 âm `hsl_*` trong `thu-vien-am-thanh/`), không dùng âm tổng hợp cho mẫu talking head.
+- **Không dày đặc:** pop cụm chữ chỉ cách một cụm, cụm có từ khoá đã có âm riêng thì không thêm pop; mỗi từ khoá: vút trước + vút-chạm + chuông nhẹ.
+- **Hiệu ứng nằm dưới giọng:** đo bản demo: giọng −23,8 LUFS, lớp hiệu ứng −29,7 LUFS (thấp hơn ~6 dB). Không để hiệu ứng to ngang giọng.
+- **Ducking:** nhạc nền tự nhỏ xuống khi Hào nói (nén theo giọng, đo thử: nhỏ đi 13,5 dB lúc nói), lên lại lúc nghỉ. Mã: `dung.py` (sidechaincompress).
+- Âm có đuôi dài (vút-chạm 4–6 giây) cắt còn 1,8 giây, mờ đuôi.

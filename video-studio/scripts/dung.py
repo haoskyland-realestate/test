@@ -263,7 +263,7 @@ moc("lớp chữ")
 # 6. Âm thanh: giọng gốc của cảnh (nếu bật) + nhạc tổng hợp + tiếng vút ở tâm mỗi chuyển cảnh
 audio = tl.get("audio", {})
 voice = audio.get("voice", False)
-mvol = audio.get("music_volume", 1.0) * (0.25 if voice else 1.0)  # có giọng thì nhạc nhỏ xuống
+mvol = audio.get("music_volume", 1.0) * (0.35 if voice else 1.0)  # có giọng thì nhạc nhỏ xuống (thêm ducking khi đang nói)
 if audio.get("music", "synth") == "synth":
     wh = [str(t0 + d / 2) for t0, d, ty in L["transitions"] if ty != "cut"] if audio.get("whoosh", True) else []
     run([sys.executable, os.path.join(ROOT, "scripts/music.py"), f"{total:.2f}", f"{B}/music.wav", *wh])
@@ -363,7 +363,10 @@ fc.append(f"[2:a]volume={mvol}[m]")
 mix = ["[m]"]
 if voice:
     ins += ["-i", f"{B}/voice.wav"]
-    fc.append(f"[{nv}:a]anull[vo]"); mix.insert(0, "[vo]")
+    # nhạc tự nhỏ xuống khi có giọng (ducking, như dựng chuyên nghiệp): giọng làm khoá nén cho nhạc
+    fc.append(f"[{nv}:a]asplit=2[vo][vk]")
+    fc.append("[m][vk]sidechaincompress=threshold=0.02:ratio=8:attack=15:release=400:makeup=1[md]")
+    mix[0] = "[md]"; mix.insert(0, "[vo]")
 if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-vien-am-thanh/) trộn sẵn thành một file
     ins += ["-i", f"{B}/sfx.wav"]
     fc.append(f"[{nv + bool(voice)}:a]anull[sx]"); mix.append("[sx]")

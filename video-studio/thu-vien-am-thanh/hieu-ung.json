@@ -366,5 +366,101 @@
   "dai": 2.58,
   "diem_nhan": 2.52,
   "nguon": "Mixkit 790 https://mixkit.co/free-sound-effects/riser/ (Sound Effects Free License, tải 2026-11-14)"
+ },
+ "hsl_pop_01": {
+  "nhom": "chu",
+  "vi": "ui-pop-sound 0.04 s (kho Hào)",
+  "dung_khi": "Cụm chữ hiện",
+  "dai": 0.04,
+  "diem_nhan": 0.0,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'ui-pop-sound'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_vut-nhanh_01": {
+  "nhom": "whoosh",
+  "vi": "small_whoosh_fast_3 0.86 s (kho Hào)",
+  "dung_khi": "Từ khoá bay vào",
+  "dai": 0.86,
+  "diem_nhan": 0.44,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'small_whoosh_fast_3'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_vut-cham_01": {
+  "nhom": "impact",
+  "vi": "whoosh_hit_01 1.8 s (kho Hào)",
+  "dung_khi": "Từ khoá chạm, chữ lớn",
+  "dai": 1.8,
+  "diem_nhan": 0.56,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'whoosh_hit_01'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_chuong-nhanh_01": {
+  "nhom": "ting",
+  "vi": "small_whoosh_chimes_fast_2 0.88 s (kho Hào)",
+  "dung_khi": "Lấp lánh từ khoá, số",
+  "dai": 0.88,
+  "diem_nhan": 0.36,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'small_whoosh_chimes_fast_2'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_vut-the_01": {
+  "nhom": "whoosh",
+  "vi": "medium_whoosh_design_3 0.71 s (kho Hào)",
+  "dung_khi": "Cảnh chèn vào",
+  "dai": 0.71,
+  "diem_nhan": 0.32,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'medium_whoosh_design_3'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_vut-ra_01": {
+  "nhom": "whoosh",
+  "vi": "small_whoosh_design_2 0.17 s (kho Hào)",
+  "dung_khi": "Cảnh chèn ra, chữ ra",
+  "dai": 0.17,
+  "diem_nhan": 0.04,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'small_whoosh_design_2'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_dem-so_01": {
+  "nhom": "ting",
+  "vi": "couting 1 1.14 s (kho Hào)",
+  "dung_khi": "Số chạy, đếm",
+  "dai": 1.14,
+  "diem_nhan": 0.52,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'couting 1'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_vut-cham_02": {
+  "nhom": "impact",
+  "vi": "whoosh_hit_03 1.8 s (kho Hào)",
+  "dung_khi": "Số liệu lớn, hook",
+  "dai": 1.8,
+  "diem_nhan": 0.6,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'whoosh_hit_03'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_chuong-vut_01": {
+  "nhom": "ting",
+  "vi": "medium_whoosh_chimes_2 2 s (kho Hào)",
+  "dung_khi": "Cảnh chèn sang trọng",
+  "dai": 2.0,
+  "diem_nhan": 0.62,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'medium_whoosh_chimes_2'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_not_01": {
+  "nhom": "chu",
+  "vi": "not 1 0.73 s (kho Hào)",
+  "dung_khi": "Tick từng mục",
+  "dai": 0.73,
+  "diem_nhan": 0.02,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'not 1'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_ui_01": {
+  "nhom": "chu",
+  "vi": "ui 1 0.81 s (kho Hào)",
+  "dung_khi": "Pop từng ý quỹ đạo",
+  "dai": 0.81,
+  "diem_nhan": 0.02,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'ui 1'), Hào cung cấp 2026-11-16"
+ },
+ "hsl_kim-loai_01": {
+  "nhom": "impact",
+  "vi": "metal 3 1.89 s (kho Hào)",
+  "dung_khi": "Chạm kim loại",
+  "dai": 1.89,
+  "diem_nhan": 0.6,
+  "nguon": "Kho của Hào trên Drive (KHO-EDIT, file gốc 'metal 3'), Hào cung cấp 2026-11-16"
  }
 }

@@ -104,7 +104,8 @@ def ap(tl, mau, chi_am=False):
         vv = al.get("vol", {})
         for k, x in enumerate(sorted((q for q in tl.get("texts", []) if q.get("kind") == "loi"), key=lambda q: q["start"])):
             ws = x["words"]
-            them(al.get("cum"), ws[0][1], vv.get("cum", .3), (1.0, 0.94, 1.07)[k % 3], hp=120, cach=0.3)
+            if not x.get("hl") and k % 2 == 0 and not any(abs(y["start"] - ws[0][1]) < 0.8 for y in new):
+                them(al.get("cum"), ws[0][1], vv.get("cum", .3), (1.0, 0.94, 1.07)[k % 3], hp=120, cach=0.3)  # cách một cụm, cụm có từ khoá đã có âm riêng: không dày đặc
             for q in x.get("hl", []):
                 if q and (q - 1) in x.get("hl", []):
                     continue  # cụm từ khoá nhiều từ: chỉ một lần chạm ở từ đầu
@@ -164,8 +165,9 @@ def _tu_kiem_loi():
     out = ap(tl, MAU["talking-cam-01"])
     f = [x["file"] for x in out["sfx"]]
     assert check(out) == [], check(out)
-    assert f.count("impact_wood-hard-hit_01") == 1 and "chu_pop_01" in f and "impact_tram_01" in f and f.count("chu_tick_01") == 3, f  # cụm từ khoá hai từ chỉ một lần chạm
-    assert any(z.get("mau") for z in out["zooms"]) and out["audio"]["music"] == "synth", out["zooms"]
+    al = MAU["talking-cam-01"]["am_loi"]
+    assert f.count(al["khoa_cham"]) == 1 and al["cum"] not in f and al["so_tram"] in f and f.count(al["muc_tick"]) == 3, f  # cụm từ khoá hai từ chỉ một lần chạm
+    assert all(x in SFX for x in f) and any(z.get("mau") for z in out["zooms"]), out["zooms"]
 
 
 def _tu_kiem():

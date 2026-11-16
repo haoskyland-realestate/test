@@ -1,8 +1,7 @@
 {
  "audio": {
-  "music": "synth",
-  "whoosh": false,
-  "music_volume": 0.35
+  "music": null,
+  "whoosh": false
  },
  "sfx": {
   "chuyen_canh": {
@@ -15,36 +14,36 @@
    "gl-FilmBurn": "riser_nguoc_01"
   },
   "chu": {
-   "title3d": "chu_swish-pop_01",
-   "line": "chu_swish-pop_01",
-   "hook": "impact_tram_01",
-   "section": "impact_hit_01",
-   "stat": "chu_swish-pop_01",
-   "lower": "chu_pop_01",
-   "quote": "chu_pop_01",
-   "checklist": "chu_tick_01",
-   "outro": "ting_ket_01"
+   "title3d": "hsl_pop_01",
+   "line": "hsl_pop_01",
+   "hook": "hsl_pop_01",
+   "section": "hsl_pop_01",
+   "stat": "hsl_pop_01",
+   "lower": "hsl_pop_01",
+   "quote": "hsl_pop_01",
+   "checklist": "hsl_pop_01",
+   "outro": "hsl_pop_01"
   },
-  "so_lieu": "ting_don_01",
+  "so_lieu": "hsl_dem-so_01",
   "vol": {
-   "whoosh": 0.8,
-   "anh-sang": 0.8,
-   "riser": 0.5,
-   "chu": 0.55,
-   "ting": 0.45,
-   "impact": 0.9
+   "whoosh": 0.48,
+   "anh-sang": 0.48,
+   "riser": 0.3,
+   "chu": 0.33,
+   "ting": 0.27,
+   "impact": 0.54
   }
  },
  "nhip_chu": {
-  "vao": "whoosh_nhanh_01",
-  "tram": "impact_tram_01",
-  "lap_lanh": "ting_lap-lanh_01",
-  "ra": "whoosh_quat_01",
+  "vao": "hsl_vut-nhanh_01",
+  "tram": "hsl_vut-cham_02",
+  "lap_lanh": "hsl_chuong-vut_01",
+  "ra": "hsl_vut-ra_01",
   "vol": {
-   "vao": 0.45,
-   "tram": 0.55,
-   "lap_lanh": 0.3,
-   "ra": 0.22
+   "vao": 0.24,
+   "tram": 0.27,
+   "lap_lanh": 0.132,
+   "ra": 0.15
   }
  },
  "nganh": [
@@ -98,26 +97,26 @@
   "hieu_ung": "word-pop"
  },
  "am_loi": {
-  "cum": "chu_pop_01",
-  "khoa_vut": "chu_swish-pop_01",
-  "khoa_cham": "impact_wood-hard-hit_01",
-  "khoa_lap": "ting_sci-fi-click_01",
-  "the_vao": "whoosh_zoom_01",
-  "the_ra": "whoosh_quat_01",
-  "so_tram": "impact_tram_01",
-  "so_lap": "ting_lap-lanh_01",
-  "muc_pop": "chu_swish-pop_01",
-  "muc_tick": "chu_tick_01",
+  "cum": "hsl_pop_01",
+  "khoa_vut": "hsl_vut-nhanh_01",
+  "khoa_cham": "hsl_vut-cham_01",
+  "khoa_lap": "hsl_chuong-nhanh_01",
+  "the_vao": "hsl_vut-the_01",
+  "the_ra": "hsl_vut-ra_01",
+  "so_tram": "hsl_vut-cham_02",
+  "so_lap": "hsl_dem-so_01",
+  "muc_pop": "hsl_ui_01",
+  "muc_tick": "hsl_not_01",
   "vol": {
-   "cum": 0.3,
-   "khoa_vut": 0.22,
-   "khoa_cham": 0.34,
-   "khoa_lap": 0.16,
-   "the_vao": 0.45,
-   "the_ra": 0.25,
-   "so_tram": 0.42,
-   "so_lap": 0.25,
-   "muc": 0.3
+   "cum": 0.21,
+   "khoa_vut": 0.18,
+   "khoa_cham": 0.192,
+   "khoa_lap": 0.108,
+   "the_vao": 0.27,
+   "the_ra": 0.18,
+   "so_tram": 0.24,
+   "so_lap": 0.18,
+   "muc": 0.192
   }
  },
  "zoom_khoa": {
