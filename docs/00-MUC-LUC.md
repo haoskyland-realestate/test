@@ -30,6 +30,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Học phong cách từ video mẫu thành mẫu trong thư viện; lưu chỉnh sửa vào mẫu; gói góp ý cho Claude Code | skill `hoc-mau` (`video-studio/scripts/hoc_mau.py`, `luu_vao_mau.py`; nút 💾 trong ✦ Thư viện mẫu, nút 📸 trong Nhờ AI sửa) |
 | Kho skill thiết kế theo phong cách video mẫu (chữ theo nhịp nói, từ khoá đỏ phát sáng, chữ bám người, thẻ tên giải mã, cảnh chèn, nguồn miễn phí…) | `video-studio/thu-vien-skill/README.md` |
 | Âm thanh miễn phí: nguồn, giấy phép | `video-studio/thu-vien-am-thanh/GIAY-PHEP.md`, `scripts/tai_sfx_mien_phi.py` |
+| Dựng talking head 5 bước: text từ giọng → AI chọn hook/tiêu đề/từ khoá/số liệu → khung hình → chuyển động → ghép | skill `dung-talking-head`, `video-studio/scripts/ban_dung.py` |
 | Dùng tag chữ có sẵn (10 kiểu: số lớn, bước, thanh tên, gạch chân…), điền chữ của mình | `04-thu-vien/THU-VIEN-TAG.md` |
 | Giọng nói AI (Voice Studio): so sánh CIT Voice Studio và VoiceStudio, giấy phép, cách tích hợp | `04-thu-vien/GIONG-NOI-AI.md` |
 | Xem 10 repo chuyên nghiệp và cái nào đã dùng | `04-thu-vien/THU-VIEN-CHUYEN-NGHIEP.md` |
