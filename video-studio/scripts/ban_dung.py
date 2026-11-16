@@ -24,7 +24,8 @@ def doc_loi(pj):
     f = file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung"))
     if not os.path.exists(f):
         sys.exit("Chưa có text từ ghi âm: chạy loi_nhip.py hoặc phu_de.py trước (cần build/voice.wav).")
-    return tl, json.load(open(f, encoding="utf8"))
+    from phu_de import sua_tu  # từ nghe sai đã sửa theo ngữ cảnh (meta.sua_tu), áp mỗi lần đọc
+    return tl, sua_tu(json.load(open(f, encoding="utf8")), tl.get("meta", {}).get("sua_tu"))
 
 
 def chep(pj):

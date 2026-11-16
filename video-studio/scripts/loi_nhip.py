@@ -78,6 +78,8 @@ if __name__ == "__main__":
         if not os.path.exists(va):
             sys.exit("Chưa có build/voice.wav: dựng nháp một lần (dung.py --nhap) rồi chạy lại.")
         words = nhan_dang(va, file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung")), tl.get("meta", {}).get("tu_vung"))
+        from phu_de import sua_tu
+        words = sua_tu(words, tl.get("meta", {}).get("sua_tu"))
         out, n = dat(tl, words, "--giu-phu-de" in sys.argv, "--ngang-nguc" in sys.argv)
         import shutil; shutil.copy(os.path.join(pj, "timeline.json"), os.path.join(pj, "timeline.json.bak"))
         json.dump(out, open(os.path.join(pj, "timeline.json"), "w", encoding="utf8"), ensure_ascii=False, indent=1)

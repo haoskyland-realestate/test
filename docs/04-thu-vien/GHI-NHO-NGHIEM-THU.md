@@ -126,3 +126,8 @@ Các lớp âm: xem `MAU.md` của `talking-cam-01`. Mọi âm vào mẫu qua `a
 - Chữ xuất hiện **chậm hơn** để nhìn rõ chuyển động: mọi chuyển động chữ và cảnh chèn dài gấp **1,5 lần** (`meta.cham_chu`, mặc định 1.5).
 - **Mọi chuyển động đều có ease in-out** (tăng tốc nhẹ rồi hãm lại), kể cả lúc chữ ra. Không dùng kiểu chạy đều hay dừng gắt. Mã: `lop_chu.em_dan` áp cho mọi chữ, thẻ, tag, cảnh chèn; chỉ thanh tiến độ chạy đều.
 - Chữ theo nhịp nói bắt đầu sớm 0,1 giây để rõ hẳn đúng lúc nói; cuối cụm mờ ra êm. Tiếng chạm của từ khoá dời theo (đỉnh chuyển động).
+
+## CẬP NHẬT quy tắc đối chiếu (Hào chốt 16/11/2026, thay một phần mục "QUY TẮC CỨNG" ở trên)
+- **Từ nghe sai: Claude được đoán ý cho phù hợp nội dung, chủ đề** (vd. "bàn giao kẻ" → "bàn giao kèm", "chủ tư" → "chủ đầu tư"), ghi vào `meta.sua_tu` và **liệt kê các chỗ đã sửa** trong tin báo cho Hào. Không cần hỏi trước từng chữ.
+- **Thông tin Hào đưa đều đã xác thực**: lời Hào nói trong video và tài liệu Hào gửi được dùng thẳng; nguồn ghi "Hào cung cấp, <ngày>".
+- **Vẫn phải hỏi Hào** khi: thông tin không do Hào nói hay gửi (Claude tự tìm, tự suy ra số), các nguồn mâu thuẫn nhau, hoặc đoán ý mà có nhiều cách hiểu khác hẳn nhau về nghĩa (giá, pháp lý, chính sách).

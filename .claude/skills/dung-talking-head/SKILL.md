@@ -7,7 +7,7 @@ description: Dựng video talking head (Hào nói trước máy) theo đúng 5 b
 
 Đọc trước: `docs/04-thu-vien/GHI-NHO-NGHIEM-THU.md` (quy tắc đối chiếu, tốc độ chữ, bố cục). Công cụ: `video-studio/scripts/ban_dung.py`. Chạy trong `video-studio`.
 
-1. **Text từ giọng nói.** Có `build/voice.wav` (dựng nháp một lần) và `meta.tu_vung`. `python3 scripts/loi_nhip.py projects/<tên>` (nhận dạng) rồi `python3 scripts/ban_dung.py chep projects/<tên>` → `build/LOI-NOI.md`: từng câu, số thứ tự từng từ, giây. **Không sửa, không đoán.** Từ nghe sai (vd. "kẻ" có thể là "kèm") thì ghi lại để hỏi Hào; Hào xác nhận thì thêm `meta.sua_tu`.
+1. **Text từ giọng nói.** Có `build/voice.wav` (dựng nháp một lần) và `meta.tu_vung`. `python3 scripts/loi_nhip.py projects/<tên>` (nhận dạng) rồi `python3 scripts/ban_dung.py chep projects/<tên>` → `build/LOI-NOI.md`: từng câu, số thứ tự từng từ, giây. **Không sửa, không đoán.** Từ nghe sai thì **đoán ý theo nội dung chủ đề** (vd. "bàn giao kẻ" → "bàn giao kèm"), thêm vào `meta.sua_tu`, báo Hào danh sách chỗ đã sửa. Lời Hào nói và tài liệu Hào gửi coi là đã xác thực (nguồn "Hào cung cấp, <ngày>").
 2. **AI xác định vai trò** (Claude, người dựng chuyên nghiệp). Đọc `LOI-NOI.md`, viết `projects/<tên>/BAN-DUNG.json`:
    - `hook`: 2–4 từ gây chú ý trong **3 giây đầu** (chữ lớn sau đầu).
    - `tieu-de`: mỗi ý/phòng/chủ đề mới một tiêu đề 1–3 từ (chữ lớn), cách nhau ≥ 4 giây.
