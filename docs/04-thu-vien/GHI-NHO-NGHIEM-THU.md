@@ -138,3 +138,10 @@ Các lớp âm: xem `MAU.md` của `talking-cam-01`. Mọi âm vào mẫu qua `a
 - **Hiệu ứng nằm dưới giọng:** đo bản demo: giọng −23,8 LUFS, lớp hiệu ứng −29,7 LUFS (thấp hơn ~6 dB). Không để hiệu ứng to ngang giọng.
 - **Ducking:** nhạc nền tự nhỏ xuống khi Hào nói (nén theo giọng, đo thử: nhỏ đi 13,5 dB lúc nói), lên lại lúc nghỉ. Mã: `dung.py` (sidechaincompress).
 - Âm có đuôi dài (vút-chạm 4–6 giây) cắt còn 1,8 giây, mờ đuôi.
+
+## Version 2 talking head "sang trọng châu Âu" (16/11/2026)
+- Tạo **bản V2 riêng** (dự án mới), không ghi đè V1, để so sánh.
+- Hook do Hào viết được dùng thẳng (`"cua_hao": true` trong `BAN-DUNG.json`); số trong hook (77 tỷ) vẫn khớp lời nói.
+- **B-roll chỉ lấy từ footage thật của chính dự án**, khúc không có người hoặc người rất nhỏ, khớp ý câu nói; không đủ footage thì báo Hào, không tạo cảnh giả.
+- Chữ trên nền nội thất sáng (tủ trắng, đá trắng) cần bóng và quầng tối nhẹ sau khối chữ, nếu không chữ kem/trắng chìm mất.
+- Phong cách chậm sẵn (×1,3) thì giảm `cham_chu` (1,15), tránh chậm chồng chậm làm thẻ ngắn chưa kịp hiện hết đã tắt.

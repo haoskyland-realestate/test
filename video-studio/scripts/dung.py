@@ -364,7 +364,9 @@ mix = ["[m]"]
 if voice:
     ins += ["-i", f"{B}/voice.wav"]
     # nhạc tự nhỏ xuống khi có giọng (ducking, như dựng chuyên nghiệp): giọng làm khoá nén cho nhạc
-    fc.append(f"[{nv}:a]asplit=2[vo][vk]")
+    # audio.lam_sach_giong: giọng rõ, sạch, có chiều sâu: bỏ ù dưới 80 Hz, khử ồn nền nhẹ, nén nhẹ cho đều, nâng vùng rõ chữ 3–4 kHz
+    gl = "highpass=f=80,afftdn=nf=-25,acompressor=threshold=-21dB:ratio=2.5:attack=8:release=120:makeup=2,equalizer=f=3500:t=q:w=1.2:g=2," if audio.get("lam_sach_giong") else ""
+    fc.append(f"[{nv}:a]{gl}asplit=2[vo][vk]")
     fc.append("[m][vk]sidechaincompress=threshold=0.02:ratio=8:attack=15:release=400:makeup=1[md]")
     mix[0] = "[md]"; mix.insert(0, "[vo]")
 if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-vien-am-thanh/) trộn sẵn thành một file

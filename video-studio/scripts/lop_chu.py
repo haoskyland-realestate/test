@@ -156,7 +156,7 @@ def tao(tl, phan=None):
             t3 = style.get("t3anim", "zoom-blur")
             body = ((f'<div class="t3top">{words(s["top"])}</div>' if s.get("top") else "")
                     + f'<div class="t3big" style="font-size:{co_chu_lon(s["big"])}px">{words(s["big"], t3 == "type")}</div>'  # chữ dài thì nhỏ lại cho vừa khung
-                    + (f'<div class="t3sub">{words(s["sub"])}</div>' if s.get("sub") else ""))
+                    + (f'<div class="t3sub">{"<br>".join(words(q) for q in s["sub"].split(" / "))}</div>' if s.get("sub") else ""))  # " / " trong sub = xuống dòng
             big = {"zoom-blur": f'tl.fromTo("{sel} .t3big",{{opacity:0,scale:1.5,filter:"blur(22px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.45)},ease:"expo.out"}},{st0 + 0.15:.2f});',
                    "word-pop": f'tl.fromTo("{sel} .t3big .w",{{opacity:0,scale:.3,y:40}},{{opacity:1,scale:1,y:0,duration:{d(.35)},ease:"back.out(2.4)",stagger:{d(.1)}}},{st0 + 0.15:.2f});',
                    "type": f'tl.fromTo("{sel} .t3big .c",{{opacity:0}},{{opacity:1,duration:0.01,stagger:{d(.045)}}},{st0 + 0.15:.2f});',
@@ -300,7 +300,7 @@ def tao(tl, phan=None):
     .ctt{{font-family:var(--display);font-size:92px;font-weight:var(--dw);text-transform:uppercase;text-align:center;color:var(--hl);margin:10px 0 50px;line-height:1.05}}
     .ci{{display:flex;align-items:center;gap:26px;font-size:46px;font-weight:600;padding:22px 28px;margin-top:18px;border-radius:18px;background:rgba(255,255,255,.06)}}
     .ci b{{flex:none;width:64px;height:64px;border-radius:50%;background:var(--accent);color:{style["bg"]};display:flex;align-items:center;justify-content:center;font-size:36px}}
-    .card.so-lieu,.card.quy-dao,.card.checklist,.card.kinh{{background:radial-gradient(ellipse at 50% 35%,#3a1d0a 0%,#120a05 65%,#070707 100%);padding-top:0;align-items:center}}
+    .card.so-lieu,.card.quy-dao,.card.checklist,.card.kinh{{background:{LO.get('nen_the', 'radial-gradient(ellipse at 50% 35%,#3a1d0a 0%,#120a05 65%,#070707 100%)')};padding-top:0;align-items:center}}
     .card .cw{{width:940px}} .card .cs{{font-size:34px;letter-spacing:7px;text-transform:uppercase;color:{AC};text-align:center;margin-bottom:26px}}
     .xv{{font-family:var(--display);font-weight:900;text-align:center;line-height:1;white-space:nowrap}}
     .xl{{font-size:56px;font-weight:600;text-align:center;margin-top:24px;color:#fff}}
@@ -315,6 +315,7 @@ def tao(tl, phan=None):
     .kg{{padding:70px 60px;border-radius:48px;background:rgba(255,255,255,.09);border:2px solid rgba(255,255,255,.22);backdrop-filter:blur(12px);text-align:center}}
     .kt{{font-family:var(--display);font-size:84px;font-weight:900;line-height:1.1}} .ks{{font-size:42px;margin-top:26px;color:rgba(255,255,255,.7)}}
     {style.get("css", "")}
+    {LO.get("css", "")}
     {YT_CSS if YT else ""}
     .blk.loi{{left:70px;right:70px;top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
       text-shadow:0 2px 14px rgba(0,0,0,.75)}}

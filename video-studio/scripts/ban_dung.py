@@ -8,6 +8,7 @@
   5. Chuyển động + âm: áp mẫu (vd. talking-cam-01) → dựng bản cuối (dung.py) → ghép.
 Chạy trong video-studio:  python3 scripts/ban_dung.py chep projects/<tên>   ·   python3 scripts/ban_dung.py ap projects/<tên>   ·   tự kiểm: --tu-kiem
 BAN-DUNG.json: {"vai": [{"vai": "hook|tieu-de|tu-khoa|so-lieu|cta", "tu": [từ đầu, từ cuối], "chu": "(tuỳ chọn) chữ hiện, phải gồm từ đã nói",
+                         "sub": "(tuỳ chọn) dòng dưới chữ lớn", "sau_dau": true/false, "cua_hao": true = câu Hào tự viết (không cần là lời đã nói),
                          "nhan": "(tuỳ chọn) nhãn nhỏ trên, cũng phải là lời đã nói", "nguon": "(số liệu) tài liệu + ngày"}]}"""
 import json, os, re, sys
 
@@ -50,7 +51,7 @@ def kiem_ban(bd, w):
         elif not (isinstance(a, int) and isinstance(b, int) and 0 <= a <= b < len(w)):
             loi.append(f"mục {k}: 'tu' phải là [từ đầu, từ cuối] trong 0–{len(w) - 1}")
         else:
-            for f in ("chu", "nhan"):
+            for f in (() if v.get("cua_hao") else ("chu", "nhan", "sub")):  # cua_hao: câu Hào tự viết cho màn hình (Hào cung cấp = đã xác thực)
                 la = [t for t in toks(v.get(f, "")) if t not in noi]
                 if la:
                     loi.append(f"mục {k}: chữ «{', '.join(la)}» trong '{f}' KHÔNG có trong lời nói — không tự thêm chữ, hỏi Hào")
@@ -92,7 +93,7 @@ def ap(tl, w, bd):
                                 "value": chu.upper(), "label": v.get("nhan_duoi", ""), "nguon": v["nguon"], "ban_dung": True})
         else:
             tl["texts"].append({"kind": "title3d", "start": round(st, 2), "dur": round(min(max(1.8, en - st + 0.8), total - st), 2), "top": v.get("nhan", ""),
-                                "big": chu.upper(), "sau_dau": v["vai"] == "hook", "ban_dung": True, "vai": v["vai"]})
+                                "big": chu.upper(), "sub": v.get("sub", ""), "sau_dau": v.get("sau_dau", v["vai"] == "hook"), "ban_dung": True, "vai": v["vai"]})
     tl["texts"].sort(key=lambda x: x["start"])
     return tl
 
