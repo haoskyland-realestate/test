@@ -11,11 +11,12 @@ foreach ($id in "OpenJS.NodeJS.LTS", "Gyan.FFmpeg", "Git.Git", "Python.Python.3.
 [Environment]::SetEnvironmentVariable("PYTHONUTF8", "1", "User"); $env:PYTHONUTF8 = "1"
 # Nạp lại PATH để dùng ngay công cụ vừa cài, không cần mở lại cửa sổ
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
-$py = if (Get-Command python -ErrorAction SilentlyContinue) { "python" } else { "py" }
+# Ưu tiên "py" (trình chạy Python thật): "python" có thể là lối tắt mở Microsoft Store
+$py = if (Get-Command py -ErrorAction SilentlyContinue) { "py" } else { "python" }
 $ErrorActionPreference = "Continue"
 npm install
-git submodule update --init --depth 1
-& $py -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter
+if (Test-Path ..\.git) { git submodule update --init --depth 1 }  # bản zip không có git: bỏ qua
+& $py -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime
 Write-Host ""
 Write-Host "Kiểm máy và dựng thử video giả 6 giây (1–3 phút):"
 & $py scripts\kiem_may.py --dung-thu
