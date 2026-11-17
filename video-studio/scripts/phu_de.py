@@ -120,6 +120,8 @@ def nhan_dang(path, cache, tu_vung=None):
 
 
 def main(proj):
+    from thu_vien import can
+    can("numpy", "faster_whisper")
     p = os.path.join(proj, "timeline.json")
     tl = json.load(open(p, encoding="utf8"))
     if (errs := check(tl)):

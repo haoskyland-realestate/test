@@ -11,16 +11,23 @@ foreach ($id in "OpenJS.NodeJS.LTS", "Gyan.FFmpeg", "Git.Git", "Python.Python.3.
 [Environment]::SetEnvironmentVariable("PYTHONUTF8", "1", "User"); $env:PYTHONUTF8 = "1"
 # Nạp lại PATH để dùng ngay công cụ vừa cài, không cần mở lại cửa sổ
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
-# Ưu tiên "py" (trình chạy Python thật): "python" có thể là lối tắt mở Microsoft Store
-# Luôn dùng Python 3.12: bản mới hơn (3.13/3.14) có thể chưa có gói faster-whisper/opencv, cài hỏng cả lượt
-function Py { if (Get-Command py -ErrorAction SilentlyContinue) { py -3.12 @args } else { python @args } }
 $ErrorActionPreference = "Continue"
 npm install
 if (Test-Path ..\.git) { git submodule update --init --depth 1 }  # bản zip không có git: bỏ qua
-Py -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime
+# MỘT Python cố định cho cả dự án: .venv tạo từ Python 3.12 (không phụ thuộc "python"/"py" mặc định của Windows,
+# vốn có thể là 3.13/3.14 hoặc lối tắt Microsoft Store). --system-site-packages: dùng lại thư viện đã cài trong 3.12, không cài trùng.
+$PYX = ".venv\Scripts\python.exe"
+if (-not (Test-Path $PYX)) {
+  if (-not (Get-Command py -ErrorAction SilentlyContinue)) { Write-Host "Không thấy trình chạy 'py'. Cài Python 3.12: winget install Python.Python.3.12, rồi chạy lại."; exit 1 }
+  py -3.12 -m venv --system-site-packages .venv
+  if (-not (Test-Path $PYX)) { Write-Host "Không tạo được .venv bằng Python 3.12 (py -3.12). Kiểm: py -0p"; exit 1 }
+}
+& $PYX -m pip install --upgrade pip
+# pip bỏ qua gói đã có ("Requirement already satisfied"), chỉ cài gói còn thiếu
+& $PYX -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime
 Write-Host ""
 Write-Host "Kiểm máy và dựng thử video giả 6 giây (1–3 phút):"
-Py scripts\kiem_may.py --dung-thu
+& $PYX scripts\kiem_may.py --dung-thu
 Write-Host ""
 Write-Host "Nếu dòng cuối là 'Máy đủ điều kiện chạy app.': bấm đúp chay-studio.bat để mở app."
 Write-Host "Nếu còn THIẾU: đóng PowerShell, mở lại, chạy lại .\setup-windows.ps1 (lần sau nhanh hơn), hoặc chụp màn hình gửi Claude."

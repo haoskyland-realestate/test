@@ -478,6 +478,10 @@ class H(http.server.BaseHTTPRequestHandler):
                 only = bool((self.body() or {}).get("report_only"))
             except Exception:
                 only = False
+            from thu_vien import thieu, lenh_cai
+            t = thieu("numpy", "faster_whisper", *(["cv2"] if script == "master_cut.py" else []))
+            if t:  # báo ngay trên app, không chạy rồi mới lỗi giữa chừng
+                return self.send(400, {"error": f"Thiếu thư viện {', '.join(t)} trong Python {sys.executable}. Cài: {lenh_cai(t)}"})
             os.makedirs(os.path.join(d, "build"), exist_ok=True)
             log = open(os.path.join(d, "build", script.replace(".py", ".log")), "w", encoding="utf8")
             jobs[name + key] = (subprocess.Popen([sys.executable, os.path.join(ROOT, "scripts", script), d] + (["--chi-phan-tich"] if only else []),
@@ -511,6 +515,7 @@ if __name__ == "__main__":
     lan = "--lan" in sys.argv
     port = int(os.environ.get("STUDIO_PORT", "8765"))
     srv = http.server.ThreadingHTTPServer(("0.0.0.0" if lan else "127.0.0.1", port), H)
+    print(f"Python: {sys.executable} (bản {sys.version.split()[0]})")
     print(f"App timeline: http://127.0.0.1:{port}/?t={TOKEN}")
     if lan:
         print(f"Điện thoại cùng wifi: http://{lan_ip()}:{port}/?t={TOKEN}")

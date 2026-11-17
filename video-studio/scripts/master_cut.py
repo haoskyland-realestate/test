@@ -8,6 +8,9 @@ Báo cáo: projects/<tên>/build/master-cut.md. Bản cũ: timeline.json.bak (ap
 import difflib, json, os, re, shutil, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+if __name__ == "__main__":  # kiểm thư viện TRƯỚC khi nạp phần phân tích hình (nó cần numpy, OpenCV): báo rõ Python nào thiếu gì
+    from thu_vien import can
+    can("numpy", "cv2", "faster_whisper")
 from timeline import check, layout
 import phan_tich_hinh as pth
 

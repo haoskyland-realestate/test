@@ -29,7 +29,7 @@ def chay(cmd, timeout=60):
 
 def kiem_python():
     ok = sys.version_info >= (3, 10)
-    ghi(ok, True, f"Python {platform.python_version()}", "" if ok else "Cần Python 3.10 trở lên: " + cai("Python.Python.3.12", "python@3.12"))
+    ghi(ok, True, f"Python {platform.python_version()} ({sys.executable})", "" if ok else "Cần Python 3.10 trở lên: " + cai("Python.Python.3.12", "python@3.12"))
     utf8 = sys.flags.utf8_mode or not WIN
     ghi(utf8, True, "Chế độ UTF-8 của Python (chữ tiếng Việt)",
         "" if utf8 else "Chạy lại setup-windows.ps1 (đặt PYTHONUTF8=1), hoặc mở app bằng chay-studio.bat")
@@ -74,7 +74,9 @@ def kiem_thu_vien_python():
         ("faster_whisper", "faster-whisper (phụ đề tự động)", False, "pip install faster-whisper"),
         ("cv2", "OpenCV (master cut chấm điểm khung hình)", False, 'pip install "opencv-python-headless<5"'),
         ("opentimelineio", "OpenTimelineIO (xuất Premiere/DaVinci)", False, "pip install opentimelineio otio-fcp-adapter"),
+        ("onnxruntime", "onnxruntime (chữ nằm sau đầu)", False, "pip install onnxruntime"),
     ):
+        sua = sua.replace("pip install", f'"{sys.executable}" -m pip install')  # cài vào ĐÚNG Python đang chạy app
         ok = importlib.util.find_spec(mod) is not None
         note = "" if ok else sua
         if ok and mod == "cv2":
