@@ -1,0 +1,11 @@
+{
+  "platform": "tiktok",
+  "voice": "media/voice.m4a",
+  "logo": "../../brand/logo.png",
+  "captions": "captions.srt",
+  "scenes": [
+    { "clip": "media/flycam1.mp4", "in": 12.0, "out": 18.5 },
+    { "clip": "media/flycam1.mp4", "in": 40.0, "out": 46.0, "focus": -0.5 },
+    { "image": "../../brand/outro.png", "dur": 3 }
+  ]
+}

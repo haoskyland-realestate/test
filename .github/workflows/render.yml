@@ -7,6 +7,7 @@ on:
       bullets:  { description: "Các ý chính, ngăn cách bằng dấu |", default: "Ý 1|Ý 2|Rủi ro cần lưu ý" }
       platform: { description: "tiktok (9:16) hoặc youtube (16:9)", default: "tiktok", type: choice, options: [tiktok, youtube] }
       duration: { description: "Số giây", default: "15" }
+      template: { description: "Mẫu (hyperframes): cashflow-3d hoặc text-only", default: "cashflow-3d" }
       engine:   { description: "Engine dựng", default: "hyperframes", type: choice, options: [hyperframes, remotion, manim] }
 jobs:
   render:
@@ -24,9 +25,9 @@ jobs:
           if [ "${{ inputs.engine }}" = manim ]; then sudo apt-get install -y libcairo2-dev libpango1.0-dev pkg-config && pip install manim; fi
       - run: npm install --no-audit --no-fund
       - name: Tạo spec từ form
-        env: { T: "${{ inputs.title }}", H: "${{ inputs.hook }}", B: "${{ inputs.bullets }}", P: "${{ inputs.platform }}", D: "${{ inputs.duration }}", E: "${{ inputs.engine }}" }
+        env: { T: "${{ inputs.title }}", H: "${{ inputs.hook }}", B: "${{ inputs.bullets }}", P: "${{ inputs.platform }}", D: "${{ inputs.duration }}", E: "${{ inputs.engine }}", M: "${{ inputs.template }}" }
         run: |
-          node -e 'const e=process.env;require("fs").writeFileSync("videos/form.json",JSON.stringify({title:e.T,hook:e.H,bullets:e.B.split("|").map(s=>s.trim()).filter(Boolean),platform:e.P,duration:Math.max(5,Math.min(180,+e.D||15)),engine:e.E}))'
+          node -e 'const e=process.env;require("fs").writeFileSync("videos/form.json",JSON.stringify({title:e.T,hook:e.H,bullets:e.B.split("|").map(s=>s.trim()).filter(Boolean),platform:e.P,duration:Math.max(5,Math.min(180,+e.D||15)),engine:e.E,template:e.M}))'
       - run: ./scripts/render.sh videos/form.json "${{ inputs.engine }}"
       - uses: actions/upload-artifact@v4
         with: { name: video, path: video-studio/out/form.*.mp4 }

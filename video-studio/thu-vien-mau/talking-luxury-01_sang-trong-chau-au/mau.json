@@ -1,0 +1,120 @@
+{
+ "audio": {
+  "music": null,
+  "whoosh": false,
+  "lam_sach_giong": true
+ },
+ "sfx": {
+  "chuyen_canh": {
+   "gl-CrossZoom": "whoosh_zoom_01",
+   "gl-WhipSpin": "whoosh_xoay_01",
+   "gl-FilmBurn": "anh-sang_chay_01",
+   "gl-Overexposure": "anh-sang_flash_01"
+  },
+  "truoc_chuyen_canh": {
+   "gl-FilmBurn": "riser_nguoc_01"
+  },
+  "chu": {
+   "title3d": "hsl_pop_01",
+   "line": "hsl_pop_01",
+   "hook": "hsl_pop_01",
+   "section": "hsl_pop_01",
+   "stat": "hsl_pop_01",
+   "lower": "hsl_pop_01",
+   "quote": "hsl_pop_01",
+   "checklist": "hsl_pop_01",
+   "outro": "hsl_pop_01"
+  },
+  "so_lieu": "hsl_dem-so_01",
+  "vol": {
+   "whoosh": 0.48,
+   "anh-sang": 0.48,
+   "riser": 0.3,
+   "chu": 0.33,
+   "ting": 0.27,
+   "impact": 0.54
+  }
+ },
+ "nhip_chu": {
+  "vao": "hsl_vut-nhanh_01",
+  "tram": "hsl_vut-cham_02",
+  "lap_lanh": "hsl_chuong-vut_01",
+  "ra": "hsl_vut-ra_01",
+  "vol": {
+   "vao": 0.192,
+   "tram": 0.216,
+   "lap_lanh": 0.106,
+   "ra": 0.12
+  }
+ },
+ "nganh": [
+  "Bất động sản"
+ ],
+ "id": "talking-luxury-01",
+ "ten": "Talking head sang trọng châu Âu",
+ "loai": "talking head",
+ "the": "SANG TRỌNG",
+ "mo_ta": "Bất động sản cao cấp kiểu châu Âu: màu ấm sang, chữ có chân champagne, chuyển động chậm, xen cảnh nội thất (B-roll) theo lời, thẻ số liệu nền xanh than, âm nhẹ và sạch, nhạc nền tự nhỏ khi nói.",
+ "nguon": "Hào yêu cầu 16/11/2026 (Version 2 talking head HSL): European Luxury Real Estate Talking Head",
+ "dung_cho": "Review biệt thự, căn hộ cao cấp, nghỉ dưỡng; khách nữ 35–55",
+ "meta": {
+  "style": "sang-trong",
+  "cham_chu": 1.15,
+  "loi": {
+   "khoa": "#d8b878",
+   "hoa": false,
+   "xuong_dong": true,
+   "co": 58,
+   "co_khoa": 1.55,
+   "gach_chan": true,
+   "font": "'Be Vietnam Pro',Arial,sans-serif",
+   "font_khoa": "'Playfair Display',Georgia,serif",
+   "glow": "0 2px 18px rgba(0,0,0,.55)",
+   "nen_the": "radial-gradient(ellipse at 50% 32%,#2b303b 0%,#14171d 62%,#08090c 100%)",
+   "fonts": "family=Playfair+Display:ital,wght@0,600;1,600&family=Be+Vietnam+Pro:wght@500;600",
+   "css": ".t3big{font-weight:600;color:#f6efe2;text-shadow:0 4px 28px rgba(0,0,0,.75),0 0 60px rgba(0,0,0,.35)}.t3sub{font-size:46px;font-weight:600;color:#f6efe2;text-shadow:0 2px 16px rgba(0,0,0,.85)}.t3top{text-shadow:0 2px 12px rgba(0,0,0,.8)}.blk.title3d::before{content:'';position:absolute;left:-90px;right:-90px;top:-70px;bottom:-70px;background:radial-gradient(ellipse at center,rgba(8,10,14,.5),rgba(8,10,14,0) 70%);z-index:-1}"
+  }
+ },
+ "chuyen_canh": {
+  "chu_ky": [
+   "cut"
+  ],
+  "dur": {}
+ },
+ "xem_truoc": {
+  "nen": "linear-gradient(180deg,#2b303b,#0c0e12 75%)",
+  "top": "giá khoảng",
+  "big": "77 Tỷ",
+  "sub": "một căn biệt thự",
+  "css": "font-family:'Playfair Display',Georgia,serif;font-weight:600;font-style:italic;color:#d8b878;text-shadow:0 2px 14px rgba(0,0,0,.6)",
+  "hieu_ung": "blur"
+ },
+ "am_loi": {
+  "cum": null,
+  "khoa_vut": "hsl_vut-nhanh_01",
+  "khoa_cham": "hsl_vut-cham_01",
+  "khoa_lap": "hsl_chuong-nhanh_01",
+  "the_vao": "hsl_vut-the_01",
+  "the_ra": "hsl_vut-ra_01",
+  "so_tram": "hsl_vut-cham_02",
+  "so_lap": "hsl_dem-so_01",
+  "muc_pop": "hsl_ui_01",
+  "muc_tick": "hsl_not_01",
+  "vol": {
+   "cum": 0.168,
+   "khoa_vut": 0.144,
+   "khoa_cham": 0.154,
+   "khoa_lap": 0.086,
+   "the_vao": 0.216,
+   "the_ra": 0.144,
+   "so_tram": 0.192,
+   "so_lap": 0.144,
+   "muc": 0.154
+  }
+ },
+ "zoom_khoa": {
+  "scale": 1.03,
+  "dur": 2.2,
+  "gian": 4.0
+ }
+}

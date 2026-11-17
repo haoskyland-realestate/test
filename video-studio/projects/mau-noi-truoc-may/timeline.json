@@ -1,0 +1,26 @@
+{
+ "version": 1,
+ "meta": {"platform": "tiktok", "style": "hien-dai", "title": "Mẫu video nói trước máy"},
+ "clips": [
+  {"file": "DJI_20250712_101804_470.mp4", "id": "1fk_aEV1WxBzb4NotOpbCpLiqNNHvzkNk", "in": 2, "dur": 6},
+  {"file": "DJI_20250712_101804_470.mp4", "id": "1fk_aEV1WxBzb4NotOpbCpLiqNNHvzkNk", "in": 10, "dur": 5},
+  {"file": "DJI_20250712_101804_470.mp4", "id": "1fk_aEV1WxBzb4NotOpbCpLiqNNHvzkNk", "in": 22, "dur": 6},
+  {"file": "DJI_20250712_101804_470.mp4", "id": "1fk_aEV1WxBzb4NotOpbCpLiqNNHvzkNk", "in": 34, "dur": 5}
+ ],
+ "transitions": [{"type": "cut"}, {"type": "cut"}, {"type": "cut"}],
+ "texts": [
+  {"kind": "hook", "start": 0.2, "dur": 3.6, "tag": "ĐI XEM NHÀ CÙNG HÀO", "lines": ["Đi xem nhà *thô*,", "em kiểm tra *3* *điều*"]},
+  {"kind": "line", "start": 17.2, "dur": 3.4, "lines": ["Có lợi ích thì *có* *rủi* *ro*"]}
+ ],
+ "subtitles": [
+  {"start": 4.0, "dur": 2.0, "text": "(Phụ đề mẫu: sẽ lấy từ giọng nói thật)"},
+  {"start": 6.2, "dur": 2.0, "text": "Phụ đề mẫu *câu* *hai*"},
+  {"start": 11.4, "dur": 2.4, "text": "Phụ đề mẫu câu ba"},
+  {"start": 19.6, "dur": 2.0, "text": "Phụ đề mẫu câu bốn"}
+ ],
+ "zooms": [{"start": 6.0, "dur": 2.5, "scale": 1.07}, {"start": 17.0, "dur": 3.0, "scale": 1.08}],
+ "cards": [{"start": 11.0, "dur": 3.6, "step": "Bước 1", "title": "Kiểm tra vị trí", "items": ["Đường ra trục chính", "Thời gian về trung tâm", "Tiện ích đã vận hành"]}],
+ "broll": [{"start": 14.8, "dur": 2.0, "file": "IMG_8645.MOV", "id": "1PRbEBDrhgyeHeidhUYfBNqnbCYutZr-A", "in": 13},
+           {"start": 9.0, "dur": 1.8, "file": "IMG_8635.MOV", "id": "1nqMXYGBYTx8y6wOTqaz9uDYCE-fbyQuM", "in": 4}],
+ "audio": {"music": "synth", "whoosh": false, "voice": true, "music_volume": 1.0}
+}

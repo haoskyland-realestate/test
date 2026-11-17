@@ -1,0 +1,114 @@
+{
+ "vai": [
+  {
+   "vai": "hook",
+   "tu": [
+    0,
+    8
+   ],
+   "chu": "1.080 ha",
+   "nhan": "Vinhomes Saigon Park",
+   "sub": "bao nhiêu phần trăm cây xanh, / bao nhiêu phần trăm xây dựng?",
+   "sau_dau": false
+  },
+  {
+   "vai": "so-lieu",
+   "tu": [
+    76,
+    77
+   ],
+   "nhan": "Vinhomes Grand Park, quận 9",
+   "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026"
+  },
+  {
+   "vai": "so-lieu",
+   "tu": [
+    95,
+    96
+   ],
+   "nhan": "Vinhomes Saigon Park",
+   "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026"
+  },
+  {
+   "vai": "so-lieu",
+   "tu": [
+    124,
+    124
+   ],
+   "nhan": "mật độ xây dựng",
+   "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026"
+  },
+  {
+   "vai": "tu-khoa",
+   "tu": [
+    131,
+    131
+   ]
+  },
+  {
+   "vai": "tu-khoa",
+   "tu": [
+    139,
+    140
+   ]
+  },
+  {
+   "vai": "tu-khoa",
+   "tu": [
+    178,
+    178
+   ]
+  },
+  {
+   "vai": "tieu-de",
+   "tu": [
+    193,
+    195
+   ],
+   "nhan": "quy hoạch mặt bằng mới nhất"
+  },
+  {
+   "vai": "tu-khoa",
+   "tu": [
+    199,
+    200
+   ]
+  },
+  {
+   "vai": "tu-khoa",
+   "tu": [
+    233,
+    234
+   ]
+  },
+  {
+   "vai": "tu-khoa",
+   "tu": [
+    244,
+    244
+   ]
+  },
+  {
+   "vai": "tieu-de",
+   "tu": [
+    279,
+    281
+   ],
+   "nhan": "Hào lưu ý"
+  },
+  {
+   "vai": "tu-khoa",
+   "tu": [
+    289,
+    292
+   ]
+  },
+  {
+   "vai": "cta",
+   "tu": [
+    344,
+    348
+   ]
+  }
+ ]
+}

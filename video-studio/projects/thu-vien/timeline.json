@@ -1,0 +1,257 @@
+{
+ "version": 1,
+ "meta": {
+  "platform": "tiktok",
+  "style": "sang-trong",
+  "title": "Demo thư viện hiệu ứng v1"
+ },
+ "clips": [
+  {
+   "file": "IMG_8644.MOV",
+   "id": "17yTjjoK3vXIdF7LpRuGkHN4GA77qpvq7",
+   "in": 14,
+   "dur": 3.5
+  },
+  {
+   "file": "IMG_8635.MOV",
+   "id": "1nqMXYGBYTx8y6wOTqaz9uDYCE-fbyQuM",
+   "in": 3.5,
+   "dur": 3.5
+  },
+  {
+   "file": "DJI_20250712_100734_675.mp4",
+   "id": "1FnjQ_adJoXjVhPPxoyQCpsjk0iKeCBuN",
+   "in": 9,
+   "dur": 3.5
+  },
+  {
+   "file": "DJI_20250712_105058_708.mp4",
+   "id": "14UJ43DQUq9Hde8Ldzv55ctdHOROqVf23",
+   "in": 1,
+   "dur": 3.5
+  },
+  {
+   "file": "DJI_20250712_104001_722.mp4",
+   "id": "1TmEgayMUYBKsmU7B2Rzi4gO2Js1oze_v",
+   "in": 25,
+   "dur": 3.5
+  },
+  {
+   "file": "DJI_20250712_105253_409.mp4",
+   "id": "1JsLJY6uMiu5v1kgxlrBOqLl25Sq7RADq",
+   "in": 3,
+   "dur": 3.5
+  },
+  {
+   "file": "DJI_20250712_101804_470.mp4",
+   "id": "1fk_aEV1WxBzb4NotOpbCpLiqNNHvzkNk",
+   "in": 22,
+   "dur": 3.5
+  },
+  {
+   "file": "DJI_20250712_104001_722.mp4",
+   "id": "1TmEgayMUYBKsmU7B2Rzi4gO2Js1oze_v",
+   "in": 5,
+   "dur": 3.5
+  },
+  {
+   "file": "IMG_8645.MOV",
+   "id": "1PRbEBDrhgyeHeidhUYfBNqnbCYutZr-A",
+   "in": 13,
+   "dur": 3.5
+  },
+  {
+   "file": "DJI_20250712_105058_708.mp4",
+   "id": "14UJ43DQUq9Hde8Ldzv55ctdHOROqVf23",
+   "in": 6,
+   "dur": 4.0
+  }
+ ],
+ "transitions": [
+  {
+   "type": "cube-h"
+  },
+  {
+   "type": "flip"
+  },
+  {
+   "type": "fade"
+  },
+  {
+   "type": "dip"
+  },
+  {
+   "type": "zoom"
+  },
+  {
+   "type": "slide"
+  },
+  {
+   "type": "wipe"
+  },
+  {
+   "type": "circle"
+  },
+  {
+   "type": "cube-v"
+  }
+ ],
+ "texts": [
+  {
+   "kind": "hook",
+   "anim": "pop",
+   "tag": "THƯ VIỆN HIỆU ỨNG",
+   "lines": [
+    "Bộ hiệu ứng *v1*",
+    "cho Hào Sky Land"
+   ],
+   "start": 0.3,
+   "dur": 3.15
+  },
+  {
+   "kind": "section",
+   "anim": "mask",
+   "num": "01",
+   "title": "Chuyển cảnh",
+   "lines": [
+    "9 kiểu, chọn theo tên"
+   ],
+   "start": 4.45,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Khối 3D xoay ngang · cube-h",
+   "start": 4.45,
+   "dur": 2.6
+  },
+  {
+   "kind": "lower",
+   "title": "Thanh tiêu đề",
+   "sub": "tên, chức danh, địa điểm",
+   "start": 8.75,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Lật thẻ 3D · flip",
+   "start": 8.75,
+   "dur": 2.6
+  },
+  {
+   "kind": "quote",
+   "anim": "blur",
+   "lines": [
+    "Có lợi ích thì",
+    "có rủi ro."
+   ],
+   "by": "Hào Sky Land",
+   "start": 12.75,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Hòa tan · fade",
+   "start": 12.75,
+   "dur": 2.6
+  },
+  {
+   "kind": "stat",
+   "value": 1250,
+   "suffix": " tr",
+   "label": "Số chạy từ 0 · *số* *mẫu*",
+   "start": 16.85,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Tối dần rồi sáng · dip",
+   "start": 16.85,
+   "dur": 2.6
+  },
+  {
+   "kind": "checklist",
+   "title": "Danh sách kiểm",
+   "items": [
+    "Pháp lý",
+    "Tiến độ",
+    "Dòng tiền"
+   ],
+   "start": 20.85,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Phóng xuyên · zoom",
+   "start": 20.85,
+   "dur": 2.6
+  },
+  {
+   "kind": "line",
+   "anim": "type",
+   "lines": [
+    "Hiệu ứng *gõ* *chữ*",
+    "cho tin nhanh"
+   ],
+   "start": 24.75,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Trượt ngang · slide",
+   "start": 24.75,
+   "dur": 2.6
+  },
+  {
+   "kind": "line",
+   "anim": "track",
+   "lines": [
+    "Giãn chữ",
+    "sang trọng"
+   ],
+   "start": 28.75,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Quét ngang · wipe",
+   "start": 28.75,
+   "dur": 2.6
+  },
+  {
+   "kind": "section",
+   "num": "02",
+   "title": "Phong cách",
+   "lines": [
+    "Sang trọng · Hiện đại · Tối giản"
+   ],
+   "start": 32.85,
+   "dur": 3.15
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Mở vòng tròn · circle",
+   "start": 32.85,
+   "dur": 2.6
+  },
+  {
+   "kind": "outro",
+   "lines": [
+    "Nhắn em để cùng tính thử"
+   ],
+   "note": "Demo thư viện hiệu ứng v1",
+   "start": 37.15,
+   "dur": 3.65
+  },
+  {
+   "kind": "source",
+   "text": "Vừa dùng: Khối 3D xoay dọc · cube-v",
+   "start": 37.15,
+   "dur": 2.6
+  }
+ ],
+ "audio": {
+  "music": "synth",
+  "whoosh": true
+ }
+}

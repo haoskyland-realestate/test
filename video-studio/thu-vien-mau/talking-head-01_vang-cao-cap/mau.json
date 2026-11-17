@@ -1,0 +1,52 @@
+{
+ "id": "talking-head-01",
+ "ten": "Chuyên gia vàng cao cấp",
+ "loai": "talking head",
+ "the": "VIDEO TALKING HEAD",
+ "nganh": [
+  "Bất động sản",
+  "Tài chính"
+ ],
+ "mo_ta": "Nói trước máy kiểu chuyên gia: chữ Anton vàng ánh kim căn giữa, từng từ bật ra đúng nhịp nói, zoom nhấn mỗi ý, thẻ minh hoạ nền đen viền vàng cho quy trình và trước–sau, tiếng hiệu ứng nhẹ.",
+ "dung_cho": "Phân tích dòng tiền, so sánh vay – thuê, trả lời câu hỏi khách hay hỏi",
+ "meta": {
+  "style": "vang-cao-cap"
+ },
+ "audio": {
+  "music": null,
+  "whoosh": false
+ },
+ "chuyen_canh": {
+  "chu_ky": [
+   "cut"
+  ]
+ },
+ "sfx": {
+  "chu": {
+   "title3d": "chu_swish-pop_01",
+   "compare": "impact_hit_01",
+   "stat": "chu_tick_01",
+   "checklist": "chu_tick_01",
+   "hook": "impact_tram_01",
+   "outro": "ting_ket_01"
+  },
+  "so_lieu": "ting_don_01",
+  "vol": {
+   "chu": 0.35,
+   "ting": 0.35,
+   "impact": 0.6
+  }
+ },
+ "zoom_chu": {
+  "scale": 1.1,
+  "dur": 1.0
+ },
+ "xem_truoc": {
+  "nen": "radial-gradient(circle at 50% 30%,#5a4a3a,#1a1410 70%)",
+  "top": "Dòng tiền",
+  "big": "6 TRIỆU",
+  "sub": "mỗi tháng, sau khi trừ tiền vay",
+  "css": "font-family:Anton,sans-serif;background:linear-gradient(180deg,#fff6cf,#f3cf6e 42%,#c78f22 68%,#f7dc8c);-webkit-background-clip:text;background-clip:text;color:transparent",
+  "hieu_ung": "word-pop"
+ }
+}

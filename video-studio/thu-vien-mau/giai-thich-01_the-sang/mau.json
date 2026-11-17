@@ -1,0 +1,57 @@
+{
+ "id": "giai-thich-01",
+ "ten": "Thẻ giải thích sáng",
+ "loai": "giải thích",
+ "the": "HƯỚNG DẪN",
+ "nganh": [
+  "Bất động sản",
+  "Tài chính"
+ ],
+ "mo_ta": "Thẻ trắng bo góc chữ đen dễ đọc, nhãn BƯỚC màu cam, danh sách tích, thẻ so sánh 2 cột, minh hoạ nền kem; trượt ngang giữa các bước; không zoom để mắt đọc yên.",
+ "dung_cho": "Thủ tục vay, các bước mua, giấy tờ cần có, so sánh 2 phương án",
+ "meta": {
+  "style": "giai-thich-sang"
+ },
+ "audio": {
+  "music": null,
+  "whoosh": false
+ },
+ "chuyen_canh": {
+  "chu_ky": [
+   "cut",
+   "slide"
+  ],
+  "dur": {
+   "slide": 0.35
+  }
+ },
+ "sfx": {
+  "chuyen_canh": {
+   "slide": "whoosh_quat_01"
+  },
+  "chu": {
+   "title3d": "chu_pop_01",
+   "compare": "impact_hit_01",
+   "stat": "chu_tick_01",
+   "checklist": "chu_tick_01",
+   "hook": "chu_swish-pop_01",
+   "outro": "ting_ket_01"
+  },
+  "so_lieu": "ting_don_01",
+  "vol": {
+   "whoosh": 0.6,
+   "chu": 0.55,
+   "ting": 0.4,
+   "impact": 0.6
+  }
+ },
+ "xem_truoc": {
+  "nen": "linear-gradient(180deg,#d9d4cb,#f7f3ec)",
+  "top": "BƯỚC 2",
+  "big": "Thẩm định",
+  "sub": "ngân hàng định giá căn hộ",
+  "css": "font-family:'Be Vietnam Pro',sans-serif;font-weight:800;color:#1d1d1f;background:#fff;padding:2px 12px 5px;border-radius:10px;box-shadow:0 6px 16px rgba(0,0,0,.25)",
+  "hieu_ung": "rise",
+  "top_css": "background:#ff7a1a;color:#fff;padding:2px 10px;border-radius:20px;font-weight:800"
+ }
+}
