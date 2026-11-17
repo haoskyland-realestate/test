@@ -43,7 +43,8 @@
    "xa bàn": "sa bàn",
    "1 .080": "1.080",
    "3 .3": "3,3",
-   "75 %": "75"
+   "75 %": "75",
+   "hectare": "ha"
   },
   "cham_chu": 1.15,
   "loi": {
@@ -165,7 +166,7 @@
    "start": 0,
    "dur": 3.86,
    "top": "Vinhomes Saigon Park",
-   "big": "1.080 HECTARE",
+   "big": "1.080 ha",
    "sub": "bao nhiêu phần trăm cây xanh, / bao nhiêu phần trăm xây dựng?",
    "sau_dau": false,
    "ban_dung": true,
@@ -1056,7 +1057,7 @@
    "dur": 1.58,
    "words": [
     [
-     "hectare,",
+     "ha,",
      41.06,
      41.62
     ],
@@ -1974,7 +1975,7 @@
      82.68
     ],
     [
-     "hectare,",
+     "ha,",
      82.68,
      83.22
     ],
@@ -2626,7 +2627,7 @@
    "start": 17.74,
    "dur": 2.14,
    "title": "Vinhomes Grand Park, quận 9",
-   "value": "271 HECTARE",
+   "value": "271 ha",
    "label": "",
    "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026",
    "ban_dung": true
@@ -2636,7 +2637,7 @@
    "start": 24.38,
    "dur": 2.48,
    "title": "Vinhomes Saigon Park",
-   "value": "1.080 HECTARE",
+   "value": "1.080 ha",
    "label": "",
    "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026",
    "ban_dung": true
@@ -2655,7 +2656,7 @@
    "kieu": "quy-dao",
    "start": 44.9,
    "dur": 5.0,
-   "title": "hơn 800 hectare dành cho",
+   "title": "hơn 800 ha dành cho",
    "centre": "CÔNG CỘNG",
    "items": [
     "Đại học quốc tế",

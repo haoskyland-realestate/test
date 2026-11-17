@@ -10,13 +10,18 @@ Chạy trong video-studio:  python3 scripts/ban_dung.py chep projects/<tên>   �
 BAN-DUNG.json: {"vai": [{"vai": "hook|tieu-de|tu-khoa|so-lieu|cta", "tu": [từ đầu, từ cuối], "chu": "(tuỳ chọn) chữ hiện, phải gồm từ đã nói",
                          "sub": "(tuỳ chọn) dòng dưới chữ lớn", "sau_dau": true/false, "cua_hao": true = câu Hào tự viết (không cần là lời đã nói),
                          "nhan": "(tuỳ chọn) nhãn nhỏ trên, cũng phải là lời đã nói", "nguon": "(số liệu) tài liệu + ngày"}]}"""
-import json, os, re, sys
+import json, re, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from doi_chieu import toks
 import loi_nhip
 
 VAI = ("hook", "tieu-de", "tu-khoa", "so-lieu", "cta")
+
+
+def hoa(s):
+    """Viết hoa chữ lớn nhưng giữ đơn vị viết thường đúng chính tả (1.080 ha, 50 m²)."""
+    return re.sub(r"(\d) (HA|M²|M2|KM)\b", lambda m: m.group(1) + " " + m.group(2).lower(), s.upper())
 
 
 def doc_loi(pj):
@@ -93,10 +98,10 @@ def ap(tl, w, bd):
         chu = v.get("chu") or " ".join(x[0] for x in w[a:b + 1]).strip(".,!?")
         if v["vai"] == "so-lieu":
             tl["cards"].append({"kieu": "so-lieu", "start": round(st, 2), "dur": round(min(max(2.0, en - st + 0.6), total - st), 2), "title": v.get("nhan", ""),
-                                "value": chu.upper(), "label": v.get("nhan_duoi", ""), "nguon": v["nguon"], "ban_dung": True})
+                                "value": hoa(chu), "label": v.get("nhan_duoi", ""), "nguon": v["nguon"], "ban_dung": True})
         else:
             tl["texts"].append({"kind": "title3d", "start": round(st, 2), "dur": round(min(max(1.8, en - st + 0.8), total - st), 2), "top": v.get("nhan", ""),
-                                "big": chu.upper(), "sub": v.get("sub", ""), "sau_dau": v.get("sau_dau", v["vai"] == "hook"), "ban_dung": True, "vai": v["vai"]})
+                                "big": hoa(chu), "sub": v.get("sub", ""), "sau_dau": v.get("sau_dau", v["vai"] == "hook"), "ban_dung": True, "vai": v["vai"]})
     tl["texts"].sort(key=lambda x: x["start"])
     return tl
 
