@@ -41,14 +41,15 @@ def chu_hien(tl):
     return out
 
 
-def loi_noi(pj):
-    """Tập từ đã nói trong mọi ghi âm của dự án (text nhận dạng giọng đã lưu), None nếu chưa nhận dạng."""
+def loi_noi(pj, bang=None):
+    """Tập từ đã nói trong mọi ghi âm của dự án (text nhận dạng giọng đã lưu, đã áp meta.sua_tu), None nếu chưa nhận dạng."""
+    from phu_de import sua_tu
     fs = glob.glob(os.path.join(pj, "build", "transcripts", "*.json"))
     if not fs:
         return None
     ws = set()
     for f in fs:
-        for w in json.load(open(f, encoding="utf8")):
+        for w in sua_tu(json.load(open(f, encoding="utf8")), bang):
             ws.update(toks(w[0]))
     return ws
 
@@ -80,7 +81,7 @@ def kiem(pj):
     """Trả (danh sách mục cần hỏi Hào, ghi chú). Rỗng = đủ điều kiện dựng."""
     tl = json.load(open(os.path.join(pj, "timeline.json"), encoding="utf8"))
     hoi, ghi = [], []
-    noi = loi_noi(pj)
+    noi = loi_noi(pj, tl.get("meta", {}).get("sua_tu"))
     duyet = {t for d in tl.get("meta", {}).get("da_duyet", []) for t in so_trong(d)} | nguon_duyet(pj)
     if noi is None:
         hoi.append("CHƯA CÓ text từ ghi âm (build/transcripts/): chạy nhận dạng giọng (phu_de.py hoặc master cut) để đối chiếu.")
