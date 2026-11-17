@@ -145,3 +145,24 @@ Các lớp âm: xem `MAU.md` của `talking-cam-01`. Mọi âm vào mẫu qua `a
 - **B-roll chỉ lấy từ footage thật của chính dự án**, khúc không có người hoặc người rất nhỏ, khớp ý câu nói; không đủ footage thì báo Hào, không tạo cảnh giả.
 - Chữ trên nền nội thất sáng (tủ trắng, đá trắng) cần bóng và quầng tối nhẹ sau khối chữ, nếu không chữ kem/trắng chìm mất.
 - Phong cách chậm sẵn (×1,3) thì giảm `cham_chu` (1,15), tránh chậm chồng chậm làm thẻ ngắn chưa kịp hiện hết đã tắt.
+
+## Video Saigon Park (17/11/2026): quy trình duyệt và lỗi đã sửa tận gốc
+
+- **Hai lần duyệt trước bản cuối (Hào chốt 17/11):**
+  1. Storyboard: `scripts/storyboard.py` ra `STORYBOARD.md` + ảnh lưới.
+  2. Bản xem 540×960: `dung.py --xem`.
+  3. Bản cuối.
+  Không dựng khi Hào chưa duyệt bước trước. Lý do: dựng thẳng bản 1080 rồi mới thấy lỗi thì mất ~20 phút mỗi lần, Hào phải chờ 4 lần.
+- **Tự soát trước khi gửi:** soát bằng máy, không chỉ nhìn vài khung.
+  - Khung đen: dò khung tối bất thường.
+  - Hình khớp tiếng: thời lượng từng cảnh khớp số khung.
+  - Chữ chồng chữ, chữ tràn mép.
+  - Cảnh trám ngắn dưới 1 giây.
+- **Chính tả:**
+  - Đơn vị viết thường đúng chuẩn: `1.080 ha`, không "HECTARE" hay "HA", kể cả trong tiêu đề viết hoa (`ban_dung.hoa`).
+  - Lời nói "hectare" hiện thành "ha" (`meta.sua_tu`).
+- **Lỗi bộ dựng đã sửa 17/11:**
+  - Cảnh trám hụt 1–2 khung lộ khung đen.
+  - Mỗi cảnh làm tròn khung lên nên hình trễ dần so với tiếng (0,4s sau 12 cảnh).
+  - Chữ theo nhịp nói chồng lên chữ lớn.
+  - Ý trong sơ đồ quỹ đạo tràn mép.

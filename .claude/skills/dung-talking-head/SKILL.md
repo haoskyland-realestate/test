@@ -3,7 +3,7 @@ name: dung-talking-head
 description: Dựng video talking head (Hào nói trước máy) theo đúng 5 bước Hào chốt: text từ giọng nói → AI xác định hook, tiêu đề, từ khoá, số liệu → khung hình → chuyển động và âm → ghép. Dùng khi Hào nói "dựng talking head", "làm video nói trước máy", "chữ theo lời nói".
 ---
 
-# Dựng talking head: 5 bước, mỗi bước có đầu ra để Hào xem
+# Dựng talking head: mỗi bước có đầu ra để Hào xem; 2 lần duyệt (storyboard, bản xem 540×960) trước bản cuối
 
 **Không dùng app** (Hào chốt 17/11): Claude chạy thẳng các lệnh dưới đây. Trên PC Windows, mọi lệnh `python` là `.venv\Scripts\python.exe` (tạo bằng `setup-windows.ps1`), chạy trong `video-studio`; trên cloud/Mac là `python3` hoặc `.venv/bin/python`. Thiếu thư viện thì công cụ tự báo lệnh cài đúng.
 
@@ -21,4 +21,6 @@ description: Dựng video talking head (Hào nói trước máy) theo đúng 5 b
    Chữ hiện ra phải là **chữ Hào đã nói** (`chu`, `nhan` đều được kiểm; sai là công cụ chặn). **Gửi Hào bảng vai trò** (vai, chữ, giây) cùng danh sách từ nghe sai trước khi đi tiếp.
 3. **Khung hình.** `python3 scripts/ban_dung.py ap projects/<tên>` → timeline: hook/tiêu đề thành chữ lớn, số liệu thành thẻ, phần còn lại là chữ theo nhịp nói ngang ngực, bố cục tự kẹp vùng an toàn. Rồi `python3 scripts/doi_chieu.py projects/<tên>`.
 4. **Chuyển động + âm.** Áp mẫu: `python scripts/ap_mau.py projects/<tên> talking-luxury-01` (hoặc `talking-cam-01`; danh sách mẫu: thư mục `thu-vien-mau/`): chuyển cảnh, âm nhiều lớp, zoom theo từ khoá; mọi chuyển động chậm 1,5 lần, ease in-out.
-5. **Xem khung tĩnh rồi ghép.** `python scripts/dung.py projects/<tên> --nhap`, chụp khung ở mỗi vai (hook, tiêu đề, từ khoá, số liệu), gửi Hào. **Hào duyệt + hết câu hỏi** mới chạy `dung.py` bản cuối (bộ dựng tự dừng nếu số/chữ chưa kiểm chứng).
+5. **Storyboard → Hào duyệt** (Hào chốt 17/11, bắt buộc): `python scripts/storyboard.py projects/<tên>` → `STORYBOARD.md` (từng cảnh: giây, hình, lời nói, chữ trên màn hình, chuyển cảnh) + `build/storyboard.jpg` (ảnh lưới). Gửi Hào cả hai cùng mục "Cần Hào trả lời". Tự soát trước khi gửi: cảnh trám < 1 giây, chữ chồng chữ, chính tả (đơn vị `ha`, số kiểu Việt). **Chưa duyệt thì không dựng.**
+6. **Bản xem 540×960 → Hào duyệt:** `python scripts/dung.py projects/<tên> --xem` → `out/<tên>.xem.mp4` (nhẹ, nhanh, cùng chữ/vị trí với bản cuối). Tự soát bằng máy trước khi gửi: khung đen, hình khớp tiếng, chụp khung ở mỗi vai. Gửi Hào video.
+7. **Bản cuối** chỉ khi Hào duyệt bản xem + hết câu hỏi: `python scripts/dung.py projects/<tên>` (bộ dựng tự dừng nếu số/chữ chưa kiểm chứng).

@@ -19,6 +19,7 @@
 | Thông tin Hào nói hoặc gửi là đã xác thực ("Hào cung cấp, <ngày>"); từ nghe sai được sửa theo ngữ cảnh (`meta.sua_tu`) và báo lại | `CLAUDE.md`, mục Quy tắc làm việc |
 | Chính tả: đơn vị viết thường đúng chuẩn (`1.080 ha`, `50 m²`) kể cả khi tiêu đề viết hoa; số kiểu Việt (`1.080`, `3,3`) | `ban_dung.hoa()`, `meta.sua_tu` |
 | Chuyển động: mọi chữ ease in-out, chậm lại (`meta.cham_chu`) | `lop_chu.em_dan()` |
+| Hai lần duyệt trước bản cuối (Hào chốt 17/11): storyboard → bản xem 540×960 → bản cuối | `scripts/storyboard.py`, `dung.py --xem` |
 | Không sao chép tài nguyên người khác; học cấu trúc, tự dựng lại | `thu-vien-mau/README.md` |
 | Phải hỏi Hào trước: đăng công khai, gửi tin cho khách, xoá/ghi đè dữ liệu quan trọng, đổi trang công khai, phát sinh chi phí, gộp vào `main` | `CLAUDE.md` |
 | Không đưa vào repo: thu nhập, ngày sinh, thông tin khách, khoá API, token | `CLAUDE.md` |
@@ -31,7 +32,9 @@
    - (2) AI chọn hook, tiêu đề, từ khoá, số liệu (`BAN-DUNG.json`);
    - (3) khung hình;
    - (4) chuyển động và âm;
-   - (5) dựng nháp, Hào duyệt, rồi dựng bản cuối.
+   - (5) storyboard, Hào duyệt;
+   - (6) bản xem 540×960, Hào duyệt;
+   - (7) bản cuối.
 2. **Video flycam/cắt ghép:** `QUY-TRINH-MOT-VIDEO.md` → `lap-storyboard` → `dung-video` → `bao-cao-nghiem-thu`.
 3. **Thứ tự tự động khi dựng:** `docs/02-quy-trinh/THU-TU-TU-DONG.md`.
 
@@ -43,7 +46,8 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 |---|---|---|---|
 | Dự án | Tạo dự án từ thư mục footage (không cần app) | `scripts/du_an_moi.py` | Cloud |
 | Dự án | Định dạng timeline v1 (cảnh, chữ, âm, cảnh chèn, zoom, B-roll, overlay) | `scripts/timeline.py`, test `test_timeline.py` | Cloud |
-| Dựng | Dựng MP4 (nháp `--nhap`, bản cuối), nhớ bước đã làm | `scripts/dung.py projects/<tên>` | Cloud, Mac (dựng thử 6s) |
+| Duyệt | Storyboard từng cảnh (giây, ảnh, lời nói, chữ, chuyển cảnh) + ảnh lưới | `scripts/storyboard.py projects/<tên>` | Cloud (Saigon Park 24 cảnh, 46s) |
+| Dựng | Dựng MP4: bản xem 540×960 `--xem` để Hào duyệt, nháp `--nhap`, bản cuối; nhớ bước đã làm | `scripts/dung.py projects/<tên>` | Cloud, Mac (dựng thử 6s) |
 | Dựng | Tự cắt im lặng, nói vấp, chọn khúc đẹp, zoom xen kẽ | `scripts/master_cut.py`, `phan_tich_hinh.py` | Cloud |
 | Giọng | Phụ đề/text từ giọng (Whisper tiếng Việt, mốc từng từ) | `scripts/phu_de.py` | Cloud |
 | Chữ | Chữ theo nhịp nói, từ khoá phát sáng, ngang ngực người nói | `scripts/loi_nhip.py` | Cloud |

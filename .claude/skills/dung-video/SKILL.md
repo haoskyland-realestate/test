@@ -9,7 +9,7 @@ Chạy trên máy mạnh (PC Windows) hoặc phiên cloud. Cần: Node 22, FFmpe
 
 1. Kiểm tra `video-studio/projects/<tên>/timeline.json` đã được Hào duyệt; chạy `python3 scripts/test_timeline.py` để chắc file hợp lệ.
 2. Footage: đặt bản gốc vào `projects/<tên>/build/raw/<file>` (hoặc để trống, bộ dựng tự tải từ Drive theo `id`).
-3. **Trước khi dựng bản cuối:** `python3 scripts/doi_chieu.py projects/<tên>`; còn mục cần hỏi thì HỎI Hào, không đoán, không dựng. Rồi chạy trong `video-studio`: `python3 scripts/dung.py projects/<tên>` (chạy nền; 90 giây mất khoảng 10–20 phút trên cloud). Bộ dựng nhớ cảnh đã cắt: chỉ sửa chữ thì dựng lại nhanh, đổi cảnh thì tự cắt lại cảnh đó.
+3. **Hai lần duyệt trước (Hào chốt 17/11):** storyboard `python3 scripts/storyboard.py projects/<tên>` → Hào duyệt → bản xem 540×960 `python3 scripts/dung.py projects/<tên> --xem` → Hào duyệt. **Trước khi dựng bản cuối:** `python3 scripts/doi_chieu.py projects/<tên>`; còn mục cần hỏi thì HỎI Hào, không đoán, không dựng. Rồi chạy trong `video-studio`: `python3 scripts/dung.py projects/<tên>` (chạy nền; 90 giây mất khoảng 10–20 phút trên cloud). Bộ dựng nhớ cảnh đã cắt: chỉ sửa chữ thì dựng lại nhanh, đổi cảnh thì tự cắt lại cảnh đó.
 4. Kết quả: `video-studio/out/<tên>.mp4`. Sau đó dùng skill `bao-cao-nghiem-thu`.
 
 Thứ tự các bước trước khi dựng và đổi gì thì dựng lại gì: `docs/02-quy-trinh/THU-TU-TU-DONG.md`. Chốt cắt và màu trước lần dựng đầu; sau đó chỉ sửa chữ/âm thì bộ dựng tự dùng lại phần cũ (xem dòng `⏱` trong log).
