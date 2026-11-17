@@ -1,0 +1,3375 @@
+{
+ "version": 1,
+ "meta": {
+  "platform": "tiktok",
+  "style": "sang-trong",
+  "title": "Vinhomes Saigon Park: quy mô và mật độ xây dựng",
+  "tu_vung": [
+   "Vinhomes Saigon Park",
+   "Vinhomes Grand Park",
+   "Hóc Môn",
+   "héc-ta",
+   "Vinschool",
+   "Vincom",
+   "mật độ xây dựng",
+   "phân khu",
+   "phân kỳ",
+   "liền kề",
+   "song lập",
+   "đơn lập",
+   "Hào"
+  ],
+  "sua_tu": {
+   "Hùng": "Hào",
+   "hồ điều hòa cảnh, quang": "hồ điều hòa cảnh quan",
+   "thấp từng": "thấp tầng",
+   "nhảy nhà liên kề": "dãy nhà liền kề",
+   "sông lập": "song lập",
+   "Sầm Quốc": "sầm uất",
+   "dành chọn": "dành trọn",
+   "theo tầng phân kỳ": "theo từng phân kỳ",
+   "Vinhomes Sài Gòn Park": "Vinhomes Saigon Park",
+   "FinHom Sài Gòn Bắc": "Vinhomes Saigon Park",
+   "3K 4Kip": "3 ca 4 kíp",
+   "xem hết đếp này": "xem hết clip này",
+   "Hùng lưu ý một số điểm": "Hào lưu ý một số điểm",
+   "mức độ xây dựng": "mật độ xây dựng",
+   "phương khu": "phân khu",
+   "nhảy nhà": "dãy nhà",
+   "cấp Vinhomeschool": "cấp Vinschool",
+   "mại Vinhomeschool": "mại Vincom",
+   "Vinhomeschool Sài Gòn Bắc": "Vinhomes Saigon Park",
+   "3K 4 kiếp": "3 ca 4 kíp",
+   "xa bàn": "sa bàn",
+   "1 .080": "1.080",
+   "3 .3": "3,3",
+   "75 %": "75"
+  },
+  "cham_chu": 1.15,
+  "loi": {
+   "khoa": "#d8b878",
+   "hoa": false,
+   "xuong_dong": true,
+   "co": 58,
+   "co_khoa": 1.55,
+   "gach_chan": true,
+   "font": "'Be Vietnam Pro',Arial,sans-serif",
+   "font_khoa": "'Playfair Display',Georgia,serif",
+   "glow": "0 2px 18px rgba(0,0,0,.55)",
+   "nen_the": "radial-gradient(ellipse at 50% 32%,#2b303b 0%,#14171d 62%,#08090c 100%)",
+   "fonts": "family=Playfair+Display:ital,wght@0,600;1,600&family=Be+Vietnam+Pro:wght@500;600",
+   "css": ".t3big{font-weight:600;color:#f6efe2;text-shadow:0 4px 28px rgba(0,0,0,.75),0 0 60px rgba(0,0,0,.35)}.t3sub{font-size:46px;font-weight:600;color:#f6efe2;text-shadow:0 2px 16px rgba(0,0,0,.85)}.t3top{text-shadow:0 2px 12px rgba(0,0,0,.8)}.blk.title3d::before{content:'';position:absolute;left:-90px;right:-90px;top:-70px;bottom:-70px;background:radial-gradient(ellipse at center,rgba(8,10,14,.5),rgba(8,10,14,0) 70%);z-index:-1}"
+  },
+  "mau": "talking-luxury-01"
+ },
+ "clips": [
+  {
+   "file": "canh-dau-tien.MOV",
+   "in": 1.95,
+   "dur": 13.86
+  },
+  {
+   "file": "voice.MOV",
+   "in": 1.38,
+   "dur": 14.58
+  },
+  {
+   "file": "voice.MOV",
+   "in": 16.16,
+   "dur": 13.34
+  },
+  {
+   "file": "voice.MOV",
+   "in": 29.62,
+   "dur": 3.0
+  },
+  {
+   "file": "voice.MOV",
+   "in": 32.78,
+   "dur": 1.64
+  },
+  {
+   "file": "voice.MOV",
+   "in": 34.68,
+   "dur": 1.76
+  },
+  {
+   "file": "voice.MOV",
+   "in": 36.72,
+   "dur": 8.28
+  },
+  {
+   "file": "voice.MOV",
+   "in": 45.12,
+   "dur": 15.48
+  },
+  {
+   "file": "voice.MOV",
+   "in": 60.78,
+   "dur": 4.6
+  },
+  {
+   "file": "voice.MOV",
+   "in": 65.6,
+   "dur": 6.82
+  },
+  {
+   "file": "voice.MOV",
+   "in": 72.64,
+   "dur": 3.16
+  },
+  {
+   "file": "canh-cuoi-cung.MOV",
+   "in": 2.29,
+   "dur": 17.44
+  }
+ ],
+ "transitions": [
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  },
+  {
+   "type": "cut"
+  }
+ ],
+ "texts": [
+  {
+   "kind": "title3d",
+   "start": 0,
+   "dur": 3.86,
+   "top": "Vinhomes Saigon Park",
+   "big": "1.080 HECTARE",
+   "sub": "bao nhiêu phần trăm cây xanh, / bao nhiêu phần trăm xây dựng?",
+   "sau_dau": true,
+   "ban_dung": true,
+   "vai": "hook"
+  },
+  {
+   "kind": "loi",
+   "start": 3.31,
+   "dur": 0.9,
+   "words": [
+    [
+     "thì",
+     3.36,
+     3.42
+    ],
+    [
+     "chủ",
+     3.42,
+     3.58
+    ],
+    [
+     "đầu",
+     3.58,
+     3.7
+    ],
+    [
+     "tư",
+     3.7,
+     3.86
+    ],
+    [
+     "Vinhomes",
+     3.86,
+     4.26
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 4.21,
+   "dur": 0.98,
+   "words": [
+    [
+     "dành",
+     4.26,
+     4.56
+    ],
+    [
+     "bao",
+     4.56,
+     4.7
+    ],
+    [
+     "nhiêu",
+     4.7,
+     4.86
+    ],
+    [
+     "phần",
+     4.86,
+     5.06
+    ],
+    [
+     "trăm",
+     5.06,
+     5.24
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 5.19,
+   "dur": 0.7,
+   "words": [
+    [
+     "cho",
+     5.24,
+     5.38
+    ],
+    [
+     "tỷ",
+     5.38,
+     5.52
+    ],
+    [
+     "lệ",
+     5.52,
+     5.64
+    ],
+    [
+     "cây",
+     5.64,
+     5.8
+    ],
+    [
+     "xanh",
+     5.8,
+     5.94
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 5.89,
+   "dur": 1.08,
+   "words": [
+    [
+     "và",
+     5.94,
+     6.12
+    ],
+    [
+     "mặt",
+     6.12,
+     6.24
+    ],
+    [
+     "nước,",
+     6.24,
+     6.42
+    ],
+    [
+     "bao",
+     6.66,
+     6.84
+    ],
+    [
+     "nhiêu",
+     6.84,
+     7.02
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 6.97,
+   "dur": 0.76,
+   "words": [
+    [
+     "phần",
+     7.02,
+     7.22
+    ],
+    [
+     "trăm",
+     7.22,
+     7.4
+    ],
+    [
+     "cho",
+     7.4,
+     7.54
+    ],
+    [
+     "tỷ",
+     7.54,
+     7.68
+    ],
+    [
+     "lệ",
+     7.68,
+     7.78
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 7.73,
+   "dur": 1.1,
+   "words": [
+    [
+     "xây",
+     7.78,
+     7.92
+    ],
+    [
+     "dựng,",
+     7.92,
+     8.12
+    ],
+    [
+     "thì",
+     8.22,
+     8.5
+    ],
+    [
+     "hãy",
+     8.5,
+     8.7
+    ],
+    [
+     "cùng",
+     8.7,
+     8.88
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 8.83,
+   "dur": 1.1,
+   "words": [
+    [
+     "Hào",
+     8.88,
+     9.06
+    ],
+    [
+     "xem",
+     9.06,
+     9.25
+    ],
+    [
+     "hết",
+     9.25,
+     9.43
+    ],
+    [
+     "clip",
+     9.43,
+     9.62
+    ],
+    [
+     "này.",
+     9.62,
+     9.8
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 9.93,
+   "dur": 0.98,
+   "words": [
+    [
+     "Để",
+     9.98,
+     10.3
+    ],
+    [
+     "khám",
+     10.3,
+     10.48
+    ],
+    [
+     "phá",
+     10.48,
+     10.66
+    ],
+    [
+     "dự",
+     10.66,
+     10.84
+    ],
+    [
+     "án",
+     10.84,
+     10.96
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 10.91,
+   "dur": 1.08,
+   "words": [
+    [
+     "Vinhomes",
+     10.96,
+     11.26
+    ],
+    [
+     "Saigon",
+     11.26,
+     11.54
+    ],
+    [
+     "Park,",
+     11.54,
+     11.74
+    ],
+    [
+     "chủ",
+     11.82,
+     11.92
+    ],
+    [
+     "đầu",
+     11.92,
+     12.04
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 11.99,
+   "dur": 0.94,
+   "words": [
+    [
+     "tư",
+     12.04,
+     12.18
+    ],
+    [
+     "Vinhomes",
+     12.18,
+     12.54
+    ],
+    [
+     "sẽ",
+     12.54,
+     12.68
+    ],
+    [
+     "xây",
+     12.68,
+     12.82
+    ],
+    [
+     "dựng",
+     12.82,
+     12.98
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 12.93,
+   "dur": 1.06,
+   "words": [
+    [
+     "như",
+     12.98,
+     13.06
+    ],
+    [
+     "thế",
+     13.06,
+     13.18
+    ],
+    [
+     "nào",
+     13.18,
+     13.32
+    ],
+    [
+     "nha.",
+     13.32,
+     13.54
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 14.03,
+   "dur": 1.2,
+   "words": [
+    [
+     "Nếu",
+     14.08,
+     14.48
+    ],
+    [
+     "bạn",
+     14.48,
+     14.64
+    ],
+    [
+     "từng",
+     14.64,
+     14.94
+    ],
+    [
+     "đến",
+     14.94,
+     15.06
+    ],
+    [
+     "đại",
+     15.06,
+     15.28
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 15.23,
+   "dur": 1.58,
+   "words": [
+    [
+     "đô",
+     15.28,
+     15.48
+    ],
+    [
+     "thị",
+     15.48,
+     15.66
+    ],
+    [
+     "Vinhomes",
+     15.66,
+     16.14
+    ],
+    [
+     "Grand",
+     16.14,
+     16.54
+    ],
+    [
+     "Park,",
+     16.54,
+     16.7
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 16.81,
+   "dur": 0.7,
+   "words": [
+    [
+     "quận",
+     16.86,
+     16.94
+    ],
+    [
+     "9,",
+     16.94,
+     17.1
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 17.51,
+   "dur": 0.78,
+   "words": [
+    [
+     "rộng",
+     17.56,
+     17.84
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 19.51,
+   "dur": 1.06,
+   "words": [
+    [
+     "và",
+     19.56,
+     19.78
+    ],
+    [
+     "thấy",
+     19.78,
+     20.0
+    ],
+    [
+     "nó",
+     20.0,
+     20.2
+    ],
+    [
+     "như",
+     20.2,
+     20.4
+    ],
+    [
+     "một",
+     20.4,
+     20.62
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 20.57,
+   "dur": 1.38,
+   "words": [
+    [
+     "quận",
+     20.62,
+     20.98
+    ],
+    [
+     "thu",
+     20.98,
+     21.2
+    ],
+    [
+     "nhỏ,",
+     21.2,
+     21.56
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 21.95,
+   "dur": 1.58,
+   "words": [
+    [
+     "thì",
+     22.0,
+     22.14
+    ],
+    [
+     "Vinhomes",
+     22.14,
+     22.56
+    ],
+    [
+     "Saigon",
+     22.56,
+     22.92
+    ],
+    [
+     "Park",
+     22.92,
+     23.14
+    ],
+    [
+     "có",
+     23.14,
+     23.58
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 23.53,
+   "dur": 1.4,
+   "words": [
+    [
+     "quy",
+     23.58,
+     23.76
+    ],
+    [
+     "mô",
+     23.76,
+     24.02
+    ],
+    [
+     "lên",
+     24.02,
+     24.24
+    ],
+    [
+     "đến",
+     24.24,
+     24.48
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 26.53,
+   "dur": 1.56,
+   "words": [
+    [
+     "tức",
+     26.58,
+     26.82
+    ],
+    [
+     "là",
+     26.82,
+     26.98
+    ],
+    [
+     "gấp",
+     26.98,
+     27.24
+    ],
+    [
+     "3,3",
+     27.24,
+     27.84
+    ],
+    [
+     "lần.",
+     27.84,
+     28.14
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 28.09,
+   "dur": 1.8,
+   "words": [
+    [
+     "Nhưng",
+     28.14,
+     28.98
+    ],
+    [
+     "con",
+     28.98,
+     29.28
+    ],
+    [
+     "số",
+     29.28,
+     29.5
+    ],
+    [
+     "ấn",
+     29.5,
+     29.7
+    ],
+    [
+     "tượng",
+     29.7,
+     29.94
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 29.89,
+   "dur": 1.12,
+   "words": [
+    [
+     "nhất",
+     29.94,
+     30.16
+    ],
+    [
+     "không",
+     30.16,
+     30.48
+    ],
+    [
+     "phải",
+     30.48,
+     30.66
+    ],
+    [
+     "là",
+     30.66,
+     30.86
+    ],
+    [
+     "diện",
+     30.86,
+     31.06
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 31.01,
+   "dur": 1.26,
+   "words": [
+    [
+     "tích,",
+     31.06,
+     31.3
+    ],
+    [
+     "mà",
+     31.52,
+     31.7
+    ],
+    [
+     "chính",
+     31.7,
+     31.9
+    ],
+    [
+     "là",
+     31.9,
+     32.12
+    ],
+    [
+     "mật",
+     32.12,
+     32.32
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 32.27,
+   "dur": 1.52,
+   "words": [
+    [
+     "độ",
+     32.32,
+     32.52
+    ],
+    [
+     "xây",
+     32.52,
+     32.72
+    ],
+    [
+     "dựng",
+     32.72,
+     32.92
+    ],
+    [
+     "toàn",
+     32.92,
+     33.22
+    ],
+    [
+     "khu,",
+     33.22,
+     33.54
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 33.79,
+   "dur": 0.98,
+   "words": [
+    [
+     "chỉ",
+     33.84,
+     34.02
+    ],
+    [
+     "khoảng",
+     34.02,
+     34.32
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 35.21,
+   "dur": 1.86,
+   "words": [
+    [
+     "Điều",
+     35.26,
+     36.04
+    ],
+    [
+     "đó",
+     36.04,
+     36.26
+    ],
+    [
+     "có",
+     36.26,
+     36.58
+    ],
+    [
+     "nghĩa",
+     36.58,
+     36.9
+    ],
+    [
+     "là",
+     36.9,
+     37.12
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 37.07,
+   "dur": 2.12,
+   "words": [
+    [
+     "gần",
+     37.12,
+     37.68
+    ],
+    [
+     "75%",
+     37.68,
+     38.5
+    ],
+    [
+     "diện",
+     38.5,
+     38.86
+    ],
+    [
+     "tích",
+     38.86,
+     39.02
+    ],
+    [
+     "còn",
+     39.02,
+     39.24
+    ]
+   ],
+   "hl": [
+    1
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 39.19,
+   "dur": 1.82,
+   "words": [
+    [
+     "lại,",
+     39.24,
+     39.54
+    ],
+    [
+     "tương",
+     39.84,
+     40.12
+    ],
+    [
+     "đương",
+     40.12,
+     40.34
+    ],
+    [
+     "hơn",
+     40.34,
+     40.62
+    ],
+    [
+     "800",
+     40.62,
+     41.06
+    ]
+   ],
+   "hl": [
+    4
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 41.01,
+   "dur": 1.58,
+   "words": [
+    [
+     "hectare,",
+     41.06,
+     41.62
+    ],
+    [
+     "được",
+     41.9,
+     42.04
+    ],
+    [
+     "chủ",
+     42.04,
+     42.24
+    ],
+    [
+     "đầu",
+     42.24,
+     42.4
+    ],
+    [
+     "tư",
+     42.4,
+     42.64
+    ]
+   ],
+   "hl": [
+    0
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 42.59,
+   "dur": 1.06,
+   "words": [
+    [
+     "dành",
+     42.64,
+     42.88
+    ],
+    [
+     "trọn",
+     42.88,
+     43.18
+    ],
+    [
+     "cho",
+     43.18,
+     43.38
+    ],
+    [
+     "các",
+     43.38,
+     43.52
+    ],
+    [
+     "công",
+     43.52,
+     43.7
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 43.65,
+   "dur": 1.7,
+   "words": [
+    [
+     "trình",
+     43.7,
+     43.98
+    ],
+    [
+     "công",
+     43.98,
+     44.3
+    ],
+    [
+     "cộng,",
+     44.3,
+     44.62
+    ],
+    [
+     "cụm",
+     44.86,
+     45.18
+    ],
+    [
+     "trường",
+     45.18,
+     45.4
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 45.35,
+   "dur": 1.3,
+   "words": [
+    [
+     "đại",
+     45.4,
+     45.6
+    ],
+    [
+     "học",
+     45.6,
+     45.78
+    ],
+    [
+     "quốc",
+     45.78,
+     46.02
+    ],
+    [
+     "tế,",
+     46.02,
+     46.28
+    ],
+    [
+     "đại",
+     46.52,
+     46.7
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 46.65,
+   "dur": 1.12,
+   "words": [
+    [
+     "đô",
+     46.7,
+     46.88
+    ],
+    [
+     "thị,",
+     46.88,
+     47.1
+    ],
+    [
+     "công",
+     47.26,
+     47.36
+    ],
+    [
+     "viên",
+     47.36,
+     47.56
+    ],
+    [
+     "sinh",
+     47.56,
+     47.82
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 47.77,
+   "dur": 1.54,
+   "words": [
+    [
+     "thái,",
+     47.82,
+     48.04
+    ],
+    [
+     "hồ",
+     48.26,
+     48.54
+    ],
+    [
+     "điều",
+     48.54,
+     48.81
+    ],
+    [
+     "hòa",
+     48.81,
+     49.09
+    ],
+    [
+     "cảnh",
+     49.09,
+     49.36
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 49.31,
+   "dur": 1.6,
+   "words": [
+    [
+     "quan,",
+     49.36,
+     49.64
+    ],
+    [
+     "và",
+     49.94,
+     50.3
+    ],
+    [
+     "hệ",
+     50.3,
+     50.5
+    ],
+    [
+     "thống",
+     50.5,
+     50.72
+    ],
+    [
+     "trường",
+     50.72,
+     50.96
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 50.91,
+   "dur": 1.32,
+   "words": [
+    [
+     "học",
+     50.96,
+     51.14
+    ],
+    [
+     "liên",
+     51.14,
+     51.48
+    ],
+    [
+     "cấp",
+     51.48,
+     51.88
+    ],
+    [
+     "Vinschool.",
+     51.88,
+     52.28
+    ]
+   ],
+   "hl": [
+    3
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 52.23,
+   "dur": 3.18,
+   "words": [
+    [
+     "Theo",
+     52.28,
+     53.08
+    ],
+    [
+     "bản",
+     53.08,
+     53.3
+    ],
+    [
+     "vẽ",
+     53.3,
+     54.96
+    ],
+    [
+     "quy",
+     54.96,
+     55.16
+    ],
+    [
+     "hoạch",
+     55.16,
+     55.46
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 55.41,
+   "dur": 1.26,
+   "words": [
+    [
+     "mặt",
+     55.46,
+     55.68
+    ],
+    [
+     "bằng",
+     55.68,
+     55.88
+    ],
+    [
+     "mới",
+     55.88,
+     56.08
+    ],
+    [
+     "nhất,",
+     56.08,
+     56.32
+    ],
+    [
+     "dự",
+     56.58,
+     56.72
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 56.67,
+   "dur": 1.32,
+   "words": [
+    [
+     "án",
+     56.72,
+     56.9
+    ],
+    [
+     "được",
+     56.9,
+     57.06
+    ],
+    [
+     "chia",
+     57.06,
+     57.28
+    ],
+    [
+     "làm",
+     57.28,
+     57.54
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "title3d",
+   "start": 57.44,
+   "dur": 1.8,
+   "top": "quy hoạch mặt bằng mới nhất",
+   "big": "2 PHÂN KHU",
+   "sub": "",
+   "sau_dau": false,
+   "ban_dung": true,
+   "vai": "tieu-de"
+  },
+  {
+   "kind": "loi",
+   "start": 58.11,
+   "dur": 1.78,
+   "words": [
+    [
+     "chính,",
+     58.16,
+     58.42
+    ],
+    [
+     "phân",
+     58.76,
+     59.06
+    ],
+    [
+     "khu",
+     59.06,
+     59.36
+    ],
+    [
+     "thấp",
+     59.36,
+     59.64
+    ],
+    [
+     "tầng",
+     59.64,
+     59.94
+    ]
+   ],
+   "hl": [
+    3,
+    4
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 59.89,
+   "dur": 1.6,
+   "words": [
+    [
+     "sinh",
+     59.94,
+     60.44
+    ],
+    [
+     "thái",
+     60.44,
+     60.6
+    ],
+    [
+     "ven",
+     60.6,
+     60.82
+    ],
+    [
+     "sông",
+     60.82,
+     61.12
+    ],
+    [
+     "với",
+     61.12,
+     61.54
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 61.49,
+   "dur": 1.68,
+   "words": [
+    [
+     "các",
+     61.54,
+     61.76
+    ],
+    [
+     "dãy",
+     61.76,
+     62.0
+    ],
+    [
+     "nhà",
+     62.0,
+     62.24
+    ],
+    [
+     "liền",
+     62.24,
+     62.54
+    ],
+    [
+     "kề,",
+     62.54,
+     62.86
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 63.17,
+   "dur": 1.58,
+   "words": [
+    [
+     "biệt",
+     63.22,
+     63.4
+    ],
+    [
+     "thự",
+     63.4,
+     63.62
+    ],
+    [
+     "đơn",
+     63.62,
+     63.84
+    ],
+    [
+     "lập,",
+     63.84,
+     64.38
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 64.75,
+   "dur": 1.84,
+   "words": [
+    [
+     "song",
+     64.8,
+     65.07
+    ],
+    [
+     "lập,",
+     65.07,
+     65.34
+    ],
+    [
+     "biệt",
+     65.64,
+     66.22
+    ],
+    [
+     "thự",
+     66.22,
+     66.4
+    ],
+    [
+     "đơn",
+     66.4,
+     66.64
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 66.59,
+   "dur": 1.84,
+   "words": [
+    [
+     "lập,",
+     66.64,
+     66.88
+    ],
+    [
+     "song",
+     67.04,
+     67.31
+    ],
+    [
+     "lập,",
+     67.31,
+     67.58
+    ],
+    [
+     "mang",
+     67.76,
+     68.2
+    ],
+    [
+     "phong",
+     68.2,
+     68.48
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 68.43,
+   "dur": 1.56,
+   "words": [
+    [
+     "cách",
+     68.48,
+     68.74
+    ],
+    [
+     "nghỉ",
+     68.74,
+     69.0
+    ],
+    [
+     "dưỡng",
+     69.0,
+     69.28
+    ],
+    [
+     "yên",
+     69.28,
+     69.48
+    ],
+    [
+     "bình,",
+     69.48,
+     69.72
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 69.99,
+   "dur": 1.28,
+   "words": [
+    [
+     "và",
+     70.04,
+     70.36
+    ],
+    [
+     "phân",
+     70.36,
+     70.58
+    ],
+    [
+     "khu",
+     70.58,
+     70.8
+    ],
+    [
+     "cao",
+     70.8,
+     71.1
+    ],
+    [
+     "tầng",
+     71.1,
+     71.32
+    ]
+   ],
+   "hl": [
+    3,
+    4
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 71.27,
+   "dur": 1.32,
+   "words": [
+    [
+     "năng",
+     71.32,
+     71.54
+    ],
+    [
+     "động,",
+     71.54,
+     71.78
+    ],
+    [
+     "bao",
+     72.04,
+     72.16
+    ],
+    [
+     "quanh",
+     72.16,
+     72.48
+    ],
+    [
+     "khu",
+     72.48,
+     72.64
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 72.59,
+   "dur": 1.96,
+   "words": [
+    [
+     "trung",
+     72.64,
+     72.86
+    ],
+    [
+     "tâm",
+     72.86,
+     73.04
+    ],
+    [
+     "thương",
+     73.04,
+     73.28
+    ],
+    [
+     "mại",
+     73.28,
+     73.94
+    ],
+    [
+     "Vincom",
+     73.94,
+     74.6
+    ]
+   ],
+   "hl": [
+    4
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 74.55,
+   "dur": 1.0,
+   "words": [
+    [
+     "và",
+     74.6,
+     74.62
+    ],
+    [
+     "trục",
+     74.62,
+     74.88
+    ],
+    [
+     "đại",
+     74.88,
+     75.06
+    ],
+    [
+     "lộ",
+     75.06,
+     75.26
+    ],
+    [
+     "thương",
+     75.26,
+     75.6
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 75.55,
+   "dur": 0.62,
+   "words": [
+    [
+     "mại",
+     75.6,
+     75.8
+    ],
+    [
+     "sầm",
+     75.8,
+     76.01
+    ],
+    [
+     "uất.",
+     76.01,
+     76.22
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 76.17,
+   "dur": 1.94,
+   "words": [
+    [
+     "Tuy",
+     76.22,
+     77.1
+    ],
+    [
+     "nhiên,",
+     77.1,
+     77.38
+    ],
+    [
+     "Hào",
+     77.64,
+     77.78
+    ],
+    [
+     "lưu",
+     77.78,
+     78.04
+    ],
+    [
+     "ý",
+     78.04,
+     78.16
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 78.11,
+   "dur": 0.96,
+   "words": [
+    [
+     "một",
+     78.16,
+     78.34
+    ],
+    [
+     "số",
+     78.34,
+     78.58
+    ],
+    [
+     "điểm",
+     78.58,
+     78.8
+    ],
+    [
+     "rất",
+     78.8,
+     78.98
+    ],
+    [
+     "thực",
+     78.98,
+     79.12
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 79.07,
+   "dur": 0.68,
+   "words": [
+    [
+     "tế.",
+     79.12,
+     79.48
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 79.75,
+   "dur": 1.32,
+   "words": [
+    [
+     "Với",
+     79.8,
+     80.28
+    ],
+    [
+     "một",
+     80.28,
+     80.42
+    ],
+    [
+     "đại",
+     80.42,
+     80.64
+    ],
+    [
+     "đô",
+     80.64,
+     80.84
+    ],
+    [
+     "thị",
+     80.84,
+     81.12
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 81.07,
+   "dur": 2.56,
+   "words": [
+    [
+     "gần",
+     81.12,
+     81.58
+    ],
+    [
+     "1.080",
+     81.58,
+     82.68
+    ],
+    [
+     "hectare,",
+     82.68,
+     83.22
+    ],
+    [
+     "chủ",
+     83.42,
+     83.56
+    ],
+    [
+     "đầu",
+     83.56,
+     83.68
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 83.63,
+   "dur": 1.72,
+   "words": [
+    [
+     "tư",
+     83.68,
+     83.92
+    ],
+    [
+     "sẽ",
+     83.92,
+     84.14
+    ],
+    [
+     "triển",
+     84.14,
+     84.38
+    ],
+    [
+     "khai",
+     84.38,
+     84.64
+    ],
+    [
+     "theo",
+     84.64,
+     84.9
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "title3d",
+   "start": 84.8,
+   "dur": 1.8,
+   "top": "Hào lưu ý",
+   "big": "TỪNG PHÂN KỲ",
+   "sub": "",
+   "sau_dau": false,
+   "ban_dung": true,
+   "vai": "tieu-de"
+  },
+  {
+   "kind": "loi",
+   "start": 85.63,
+   "dur": 0.94,
+   "words": [
+    [
+     "xây",
+     85.68,
+     85.94
+    ],
+    [
+     "dựng.",
+     85.94,
+     86.22
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 86.57,
+   "dur": 1.06,
+   "words": [
+    [
+     "Với",
+     86.62,
+     86.98
+    ],
+    [
+     "tiến",
+     86.98,
+     87.14
+    ],
+    [
+     "độ",
+     87.14,
+     87.26
+    ],
+    [
+     "xây",
+     87.26,
+     87.48
+    ],
+    [
+     "dựng",
+     87.48,
+     87.68
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 87.63,
+   "dur": 1.22,
+   "words": [
+    [
+     "3",
+     87.68,
+     87.96
+    ],
+    [
+     "ca",
+     87.96,
+     88.23
+    ],
+    [
+     "4",
+     88.23,
+     88.5
+    ],
+    [
+     "kíp,",
+     88.5,
+     88.78
+    ],
+    [
+     "thì",
+     88.86,
+     88.9
+    ]
+   ],
+   "hl": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 88.85,
+   "dur": 1.16,
+   "words": [
+    [
+     "những",
+     88.9,
+     89.14
+    ],
+    [
+     "căn",
+     89.14,
+     89.42
+    ],
+    [
+     "nhà",
+     89.42,
+     89.62
+    ],
+    [
+     "phố",
+     89.62,
+     89.9
+    ],
+    [
+     "đầu",
+     89.9,
+     90.06
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 90.01,
+   "dur": 1.04,
+   "words": [
+    [
+     "tiên",
+     90.06,
+     90.38
+    ],
+    [
+     "của",
+     90.38,
+     90.52
+    ],
+    [
+     "dự",
+     90.52,
+     90.66
+    ],
+    [
+     "án",
+     90.66,
+     90.82
+    ],
+    [
+     "Vinhomes",
+     90.82,
+     91.1
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 91.05,
+   "dur": 1.14,
+   "words": [
+    [
+     "Saigon",
+     91.1,
+     91.38
+    ],
+    [
+     "Park",
+     91.38,
+     91.66
+    ],
+    [
+     "sẽ",
+     91.66,
+     91.86
+    ],
+    [
+     "bàn",
+     91.86,
+     92.04
+    ],
+    [
+     "giao",
+     92.04,
+     92.24
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 92.19,
+   "dur": 1.04,
+   "words": [
+    [
+     "cho",
+     92.24,
+     92.52
+    ],
+    [
+     "quý",
+     92.52,
+     92.7
+    ],
+    [
+     "khách",
+     92.7,
+     92.92
+    ],
+    [
+     "hàng",
+     92.92,
+     93.1
+    ],
+    [
+     "vào",
+     93.1,
+     93.28
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 93.23,
+   "dur": 0.96,
+   "words": [
+    [
+     "quý",
+     93.28,
+     93.46
+    ],
+    [
+     "2",
+     93.46,
+     93.72
+    ],
+    [
+     "hoặc",
+     93.72,
+     94.0
+    ],
+    [
+     "quý",
+     94.0,
+     94.12
+    ],
+    [
+     "3",
+     94.12,
+     94.24
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 94.19,
+   "dur": 0.92,
+   "words": [
+    [
+     "2017.",
+     94.24,
+     94.76
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 95.11,
+   "dur": 1.08,
+   "words": [
+    [
+     "Nếu",
+     95.16,
+     95.52
+    ],
+    [
+     "quý",
+     95.52,
+     95.68
+    ],
+    [
+     "anh",
+     95.68,
+     95.8
+    ],
+    [
+     "chị",
+     95.8,
+     95.98
+    ],
+    [
+     "muốn",
+     95.98,
+     96.24
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 96.19,
+   "dur": 0.94,
+   "words": [
+    [
+     "tham",
+     96.24,
+     96.46
+    ],
+    [
+     "quan",
+     96.46,
+     96.62
+    ],
+    [
+     "thực",
+     96.62,
+     96.78
+    ],
+    [
+     "tế",
+     96.78,
+     97.0
+    ],
+    [
+     "tiến",
+     97.0,
+     97.18
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 97.13,
+   "dur": 0.74,
+   "words": [
+    [
+     "độ",
+     97.18,
+     97.3
+    ],
+    [
+     "xây",
+     97.3,
+     97.5
+    ],
+    [
+     "dựng",
+     97.5,
+     97.64
+    ],
+    [
+     "của",
+     97.64,
+     97.74
+    ],
+    [
+     "dự",
+     97.74,
+     97.92
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 97.87,
+   "dur": 1.08,
+   "words": [
+    [
+     "án",
+     97.92,
+     98.1
+    ],
+    [
+     "hoặc",
+     98.1,
+     98.52
+    ],
+    [
+     "sa",
+     98.52,
+     98.71
+    ],
+    [
+     "bàn",
+     98.71,
+     98.9
+    ],
+    [
+     "của",
+     98.9,
+     99.0
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 98.95,
+   "dur": 0.9,
+   "words": [
+    [
+     "dự",
+     99.0,
+     99.18
+    ],
+    [
+     "án,",
+     99.18,
+     99.36
+    ],
+    [
+     "thì",
+     99.46,
+     99.54
+    ],
+    [
+     "hãy",
+     99.54,
+     99.7
+    ],
+    [
+     "liên",
+     99.7,
+     99.9
+    ]
+   ],
+   "hl": [
+    4
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 99.85,
+   "dur": 0.86,
+   "words": [
+    [
+     "hệ",
+     99.9,
+     100.06
+    ],
+    [
+     "với",
+     100.06,
+     100.18
+    ],
+    [
+     "em",
+     100.18,
+     100.3
+    ],
+    [
+     "Hào,",
+     100.3,
+     100.5
+    ],
+    [
+     "để",
+     100.66,
+     100.76
+    ]
+   ],
+   "hl": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 100.71,
+   "dur": 1.22,
+   "words": [
+    [
+     "Hào",
+     100.76,
+     101.04
+    ],
+    [
+     "có",
+     101.04,
+     101.54
+    ],
+    [
+     "thể",
+     101.54,
+     101.7
+    ],
+    [
+     "dẫn",
+     101.7,
+     101.86
+    ],
+    [
+     "anh",
+     101.86,
+     101.98
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 101.93,
+   "dur": 1.14,
+   "words": [
+    [
+     "chị",
+     101.98,
+     102.1
+    ],
+    [
+     "đi",
+     102.1,
+     102.2
+    ],
+    [
+     "tham",
+     102.2,
+     102.34
+    ],
+    [
+     "quan",
+     102.34,
+     102.52
+    ],
+    [
+     "nha.",
+     102.52,
+     102.82
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 103.07,
+   "dur": 0.89,
+   "words": [
+    [
+     "Xin",
+     103.12,
+     103.22
+    ],
+    [
+     "chào!",
+     103.22,
+     103.54
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  }
+ ],
+ "subtitles": [],
+ "audio": {
+  "music": null,
+  "whoosh": false,
+  "voice": true,
+  "music_volume": 1.0,
+  "lam_sach_giong": true
+ },
+ "cards": [
+  {
+   "kieu": "so-lieu",
+   "start": 17.74,
+   "dur": 2.14,
+   "title": "Vinhomes Grand Park, quận 9",
+   "value": "271 HECTARE",
+   "label": "",
+   "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026",
+   "ban_dung": true
+  },
+  {
+   "kieu": "so-lieu",
+   "start": 24.38,
+   "dur": 2.48,
+   "title": "Vinhomes Saigon Park",
+   "value": "1.080 HECTARE",
+   "label": "",
+   "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026",
+   "ban_dung": true
+  },
+  {
+   "kieu": "so-lieu",
+   "start": 34.22,
+   "dur": 2.0,
+   "title": "mật độ xây dựng",
+   "value": "25%",
+   "label": "",
+   "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026",
+   "ban_dung": true
+  },
+  {
+   "kieu": "quy-dao",
+   "start": 44.9,
+   "dur": 5.0,
+   "title": "hơn 800 hectare dành cho",
+   "centre": "CÔNG CỘNG",
+   "items": [
+    "Đại học quốc tế",
+    "Công viên sinh thái",
+    "Hồ điều hòa",
+    "Vinschool"
+   ],
+   "ban_dung": true
+  }
+ ],
+ "zooms": [
+  {
+   "start": 3.86,
+   "dur": 4.06,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 12.02,
+   "dur": 1.84,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 17.84,
+   "dur": 3.83,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 25.66,
+   "dur": 2.78,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 32.5,
+   "dur": 4.08,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 37.63,
+   "dur": 2.2,
+   "scale": 1.03,
+   "mau": true
+  },
+  {
+   "start": 41.78,
+   "dur": 3.0,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 46.42,
+   "dur": 1.76,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 52.47,
+   "dur": 3.99,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 60.44,
+   "dur": 3.99,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 68.48,
+   "dur": 3.46,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 73.89,
+   "dur": 2.2,
+   "scale": 1.03,
+   "mau": true
+  },
+  {
+   "start": 76.54,
+   "dur": 4.1,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 83.36,
+   "dur": 3.16,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 87.63,
+   "dur": 2.2,
+   "scale": 1.03,
+   "mau": true
+  },
+  {
+   "start": 90.52,
+   "dur": 3.74,
+   "scale": 1.05,
+   "auto": true
+  },
+  {
+   "start": 98.52,
+   "dur": 5.44,
+   "scale": 1.05,
+   "auto": true
+  }
+ ],
+ "broll": [
+  {
+   "start": 13.86,
+   "dur": 6.54,
+   "file": "grandpark_len-den.mp4",
+   "in": 1.0
+  },
+  {
+   "start": 20.4,
+   "dur": 4.5,
+   "file": "IMG_9680.MOV",
+   "in": 0.4
+  },
+  {
+   "start": 24.9,
+   "dur": 3.54,
+   "file": "IMG_9681.MOV",
+   "in": 0.2
+  },
+  {
+   "start": 28.44,
+   "dur": 5.4,
+   "file": "IMG_9659.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 33.84,
+   "dur": 5.4,
+   "file": "IMG_9660.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 39.24,
+   "dur": 3.85,
+   "file": "IMG_9661.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 43.09,
+   "dur": 3.93,
+   "file": "IMG_9676.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 47.02,
+   "dur": 2.0,
+   "file": "IMG_9662.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 49.02,
+   "dur": 7.44,
+   "file": "IMG_9683.MOV",
+   "in": 1.0
+  },
+  {
+   "start": 56.46,
+   "dur": 7.8,
+   "file": "IMG_9678.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 64.26,
+   "dur": 5.78,
+   "file": "IMG_9677.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 70.04,
+   "dur": 1.9,
+   "file": "IMG_9679.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 71.94,
+   "dur": 4.6,
+   "file": "IMG_9649.MOV",
+   "in": 0.5
+  },
+  {
+   "start": 76.54,
+   "dur": 4.0,
+   "file": "IMG_9650.MOV",
+   "in": 0.0
+  },
+  {
+   "start": 80.54,
+   "dur": 2.82,
+   "file": "IMG_9682.MOV",
+   "in": 6.0
+  },
+  {
+   "start": 83.36,
+   "dur": 2.62,
+   "file": "IMG_9679.MOV",
+   "in": 1.9
+  },
+  {
+   "start": 85.98,
+   "dur": 0.54,
+   "file": "IMG_9682.MOV",
+   "in": 9.0
+  }
+ ],
+ "sfx": [
+  {
+   "start": 0.0,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.192,
+   "auto": true,
+   "hp": 150
+  },
+  {
+   "start": 0.0,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_02",
+   "vol": 0.216,
+   "auto": true
+  },
+  {
+   "start": 0.0,
+   "dur": 2.0,
+   "file": "hsl_chuong-vut_01",
+   "vol": 0.106,
+   "auto": true
+  },
+  {
+   "start": 0.33,
+   "dur": 0.04,
+   "file": "hsl_pop_01",
+   "vol": 0.33,
+   "auto": true
+  },
+  {
+   "start": 3.56,
+   "dur": 0.17,
+   "file": "hsl_vut-ra_01",
+   "vol": 0.12,
+   "auto": true,
+   "hp": 200
+  },
+  {
+   "start": 17.44,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_02",
+   "vol": 0.192,
+   "auto": true
+  },
+  {
+   "start": 17.52,
+   "dur": 0.71,
+   "file": "hsl_vut-the_01",
+   "vol": 0.216,
+   "auto": true,
+   "hp": 150
+  },
+  {
+   "start": 17.57,
+   "dur": 1.14,
+   "file": "hsl_dem-so_01",
+   "vol": 0.144,
+   "auto": true
+  },
+  {
+   "start": 19.64,
+   "dur": 0.17,
+   "file": "hsl_vut-ra_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 200
+  },
+  {
+   "start": 24.08,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_02",
+   "vol": 0.192,
+   "auto": true
+  },
+  {
+   "start": 24.16,
+   "dur": 0.71,
+   "file": "hsl_vut-the_01",
+   "vol": 0.216,
+   "auto": true,
+   "hp": 150
+  },
+  {
+   "start": 24.21,
+   "dur": 1.14,
+   "file": "hsl_dem-so_01",
+   "vol": 0.144,
+   "auto": true
+  },
+  {
+   "start": 26.62,
+   "dur": 0.17,
+   "file": "hsl_vut-ra_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 200
+  },
+  {
+   "start": 33.92,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_02",
+   "vol": 0.192,
+   "auto": true
+  },
+  {
+   "start": 34.0,
+   "dur": 0.71,
+   "file": "hsl_vut-the_01",
+   "vol": 0.216,
+   "auto": true,
+   "hp": 150
+  },
+  {
+   "start": 34.05,
+   "dur": 1.14,
+   "file": "hsl_dem-so_01",
+   "vol": 0.144,
+   "auto": true
+  },
+  {
+   "start": 35.98,
+   "dur": 0.17,
+   "file": "hsl_vut-ra_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 200
+  },
+  {
+   "start": 37.18,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 250
+  },
+  {
+   "start": 37.24,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 37.48,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  },
+  {
+   "start": 40.12,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "pitch": 1.05,
+   "hp": 250
+  },
+  {
+   "start": 40.18,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 40.42,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  },
+  {
+   "start": 40.56,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 250
+  },
+  {
+   "start": 44.68,
+   "dur": 0.71,
+   "file": "hsl_vut-the_01",
+   "vol": 0.216,
+   "auto": true,
+   "hp": 150
+  },
+  {
+   "start": 45.5,
+   "dur": 0.81,
+   "file": "hsl_ui_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 45.8,
+   "dur": 0.81,
+   "file": "hsl_ui_01",
+   "vol": 0.154,
+   "auto": true,
+   "pitch": 0.95
+  },
+  {
+   "start": 46.1,
+   "dur": 0.81,
+   "file": "hsl_ui_01",
+   "vol": 0.154,
+   "auto": true,
+   "pitch": 1.06
+  },
+  {
+   "start": 46.4,
+   "dur": 0.81,
+   "file": "hsl_ui_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 49.66,
+   "dur": 0.17,
+   "file": "hsl_vut-ra_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 200
+  },
+  {
+   "start": 51.38,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "pitch": 1.05,
+   "hp": 250
+  },
+  {
+   "start": 51.44,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 51.68,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  },
+  {
+   "start": 57.23,
+   "dur": 2.0,
+   "file": "hsl_chuong-vut_01",
+   "vol": 0.106,
+   "auto": true,
+   "pitch": 0.96
+  },
+  {
+   "start": 57.33,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.192,
+   "auto": true,
+   "pitch": 0.96,
+   "hp": 150
+  },
+  {
+   "start": 57.36,
+   "dur": 1.14,
+   "file": "hsl_dem-so_01",
+   "vol": 0.27,
+   "auto": true
+  },
+  {
+   "start": 57.77,
+   "dur": 0.04,
+   "file": "hsl_pop_01",
+   "vol": 0.33,
+   "auto": true
+  },
+  {
+   "start": 58.86,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "pitch": 1.05,
+   "hp": 250
+  },
+  {
+   "start": 58.92,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 58.94,
+   "dur": 0.17,
+   "file": "hsl_vut-ra_01",
+   "vol": 0.12,
+   "auto": true,
+   "pitch": 0.96,
+   "hp": 200
+  },
+  {
+   "start": 59.16,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  },
+  {
+   "start": 70.3,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 250
+  },
+  {
+   "start": 70.36,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 70.6,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  },
+  {
+   "start": 73.44,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 250
+  },
+  {
+   "start": 73.5,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 73.74,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  },
+  {
+   "start": 84.69,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.192,
+   "auto": true,
+   "pitch": 1.04,
+   "hp": 150
+  },
+  {
+   "start": 85.12,
+   "dur": 0.04,
+   "file": "hsl_pop_01",
+   "vol": 0.33,
+   "auto": true
+  },
+  {
+   "start": 86.3,
+   "dur": 0.17,
+   "file": "hsl_vut-ra_01",
+   "vol": 0.12,
+   "auto": true,
+   "pitch": 1.04,
+   "hp": 200
+  },
+  {
+   "start": 87.18,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "pitch": 1.05,
+   "hp": 250
+  },
+  {
+   "start": 87.24,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 87.48,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  },
+  {
+   "start": 99.2,
+   "dur": 0.86,
+   "file": "hsl_vut-nhanh_01",
+   "vol": 0.144,
+   "auto": true,
+   "hp": 250
+  },
+  {
+   "start": 99.26,
+   "dur": 1.8,
+   "file": "hsl_vut-cham_01",
+   "vol": 0.154,
+   "auto": true
+  },
+  {
+   "start": 99.5,
+   "dur": 0.88,
+   "file": "hsl_chuong-nhanh_01",
+   "vol": 0.086,
+   "auto": true
+  }
+ ]
+}
