@@ -290,8 +290,8 @@ brs = tl.get("broll", [])
 for k, x in enumerate(brs):
     ff("-ss", str(x["in"]), "-t", str(x["dur"]), "-i", f"{B}/raw/{x['file']}", "-an",
        "-vf", f"{khung(f'{B}/raw/' + x['file'], W, H, x.get('focus', 0), x.get('fit'))},"
-              f"{tu_can(f'{B}/raw/' + x['file'], x['in'], x['dur'])},{LOOKS[style['look']][1]},fps={FPS},format=yuv420p",
-       "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/br{k}.mp4")
+              f"{tu_can(f'{B}/raw/' + x['file'], x['in'], x['dur'])},{LOOKS[style['look']][1]},fps={FPS},tpad=stop_mode=clone:stop_duration=0.2,format=yuv420p",
+       "-t", str(x["dur"]), "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/br{k}.mp4")  # tpad: làm tròn khung không để lộ khung đen cuối đoạn
 
 # Overlay từ kho (lá sáng, bụi, khói, giấy…): cắt về khung; "screen" giữ nền đen (đen = không đổi khi hoà sáng), "alpha" giữ kênh trong suốt
 ovs = tl.get("overlays", [])

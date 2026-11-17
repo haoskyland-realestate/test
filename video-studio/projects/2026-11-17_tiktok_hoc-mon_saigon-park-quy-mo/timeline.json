@@ -167,44 +167,9 @@
    "top": "Vinhomes Saigon Park",
    "big": "1.080 HECTARE",
    "sub": "bao nhiêu phần trăm cây xanh, / bao nhiêu phần trăm xây dựng?",
-   "sau_dau": true,
+   "sau_dau": false,
    "ban_dung": true,
    "vai": "hook"
-  },
-  {
-   "kind": "loi",
-   "start": 3.31,
-   "dur": 0.9,
-   "words": [
-    [
-     "thì",
-     3.36,
-     3.42
-    ],
-    [
-     "chủ",
-     3.42,
-     3.58
-    ],
-    [
-     "đầu",
-     3.58,
-     3.7
-    ],
-    [
-     "tư",
-     3.7,
-     3.86
-    ],
-    [
-     "Vinhomes",
-     3.86,
-     4.26
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
   },
   {
    "kind": "loi",
@@ -1477,24 +1442,9 @@
   },
   {
    "kind": "loi",
-   "start": 58.11,
-   "dur": 1.78,
+   "start": 59.31,
+   "dur": 1.46,
    "words": [
-    [
-     "chính,",
-     58.16,
-     58.42
-    ],
-    [
-     "phân",
-     58.76,
-     59.06
-    ],
-    [
-     "khu",
-     59.06,
-     59.36
-    ],
     [
      "thấp",
      59.36,
@@ -1504,20 +1454,7 @@
      "tầng",
      59.64,
      59.94
-    ]
-   ],
-   "hl": [
-    3,
-    4
-   ],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 59.89,
-   "dur": 1.6,
-   "words": [
+    ],
     [
      "sinh",
      59.94,
@@ -1532,7 +1469,20 @@
      "ven",
      60.6,
      60.82
-    ],
+    ]
+   ],
+   "hl": [
+    0,
+    1
+   ],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 60.77,
+   "dur": 1.42,
+   "words": [
     [
      "sông",
      60.82,
@@ -1542,17 +1492,7 @@
      "với",
      61.12,
      61.54
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 61.49,
-   "dur": 1.68,
-   "words": [
+    ],
     [
      "các",
      61.54,
@@ -1567,7 +1507,17 @@
      "nhà",
      62.0,
      62.24
-    ],
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 62.19,
+   "dur": 1.6,
+   "words": [
     [
      "liền",
      62.24,
@@ -1577,17 +1527,7 @@
      "kề,",
      62.54,
      62.86
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 63.17,
-   "dur": 1.58,
-   "words": [
+    ],
     [
      "biệt",
      63.22,
@@ -1602,7 +1542,17 @@
      "đơn",
      63.62,
      63.84
-    ],
+    ]
+   ],
+   "hl": [],
+   "auto_loi": true,
+   "bam_nguoi": true
+  },
+  {
+   "kind": "loi",
+   "start": 63.79,
+   "dur": 0.96,
+   "words": [
     [
      "lập,",
      63.84,
@@ -2088,26 +2038,6 @@
    "sau_dau": false,
    "ban_dung": true,
    "vai": "tieu-de"
-  },
-  {
-   "kind": "loi",
-   "start": 85.63,
-   "dur": 0.94,
-   "words": [
-    [
-     "xây",
-     85.68,
-     85.94
-    ],
-    [
-     "dựng.",
-     85.94,
-     86.22
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
   },
   {
    "kind": "loi",
@@ -3078,6 +3008,7 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
+   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3100,7 +3031,6 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
-   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3123,6 +3053,7 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
+   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3177,7 +3108,6 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
-   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3231,7 +3161,6 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
-   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3263,6 +3192,7 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
+   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3285,6 +3215,7 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
+   "pitch": 1.05,
    "hp": 250
   },
   {

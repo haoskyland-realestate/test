@@ -70,7 +70,10 @@ def ap(tl, w, bd):
     tl["texts"] = [x for x in tl.get("texts", []) if not (x.get("auto_loi") or x.get("ban_dung"))]
     tl["cards"] = [x for x in tl.get("cards", []) if not x.get("ban_dung")]
     # chữ theo nhịp nói cho phần còn lại; từ khoá do AI chọn (không dùng luật đoán số/tiền)
-    con = [(i, x) for i, x in enumerate(w) if not trong(i)]
+    # chữ lớn hiện lâu hơn lúc nói (tối thiểu 1,8s, thêm 0,8s) nên bỏ chữ theo nhịp nói rơi vào lúc đó, tránh chồng chữ
+    hien = [(max(0, w[v["tu"][0]][1] - 0.1), max(w[v["tu"][0]][1] - 0.1 + 1.8, w[v["tu"][1]][2] + 0.8)) for v in lon if v["vai"] != "so-lieu"]
+    che = lambda x: any(a <= x[1] < b for a, b in hien)
+    con = [(i, x) for i, x in enumerate(w) if not trong(i) and not che(x)]
     nhom_tu, cur = [], []
     for i, x in con:
         if cur and i != cur[-1][0] + 1:
@@ -100,12 +103,12 @@ def ap(tl, w, bd):
 
 def _tu_kiem():
     w = [["Giá", 0.0, 0.3], ["khoảng", 0.3, 0.6], ["77", 0.6, 0.9], ["tỷ", 0.9, 1.2], ["một", 1.2, 1.4], ["căn.", 1.4, 1.7],
-         ["Bếp", 2.0, 2.3], ["đảo", 2.3, 2.6], ["rộng", 2.6, 2.9], ["lắm.", 2.9, 3.2]]
-    bd = {"vai": [{"vai": "so-lieu", "tu": [2, 3], "nhan": "giá khoảng", "nguon": "lời nói"}, {"vai": "hook", "tu": [6, 7]}, {"vai": "tu-khoa", "tu": [8, 8]}]}
+         ["Bếp", 2.0, 2.3], ["đảo", 2.3, 2.6], ["to", 2.6, 2.9], ["rộng", 4.0, 4.3], ["lắm.", 4.3, 4.6]]
+    bd = {"vai": [{"vai": "so-lieu", "tu": [2, 3], "nhan": "giá khoảng", "nguon": "lời nói"}, {"vai": "hook", "tu": [6, 7]}, {"vai": "tu-khoa", "tu": [9, 9]}]}
     assert kiem_ban(bd, w) == [], kiem_ban(bd, w)
     assert any("KHÔNG có" in e for e in kiem_ban({"vai": [{"vai": "hook", "tu": [0, 1], "chu": "GIÁ RẺ"}]}, w))   # chữ Hào không nói → chặn
     assert any("nguon" in e for e in kiem_ban({"vai": [{"vai": "so-lieu", "tu": [2, 3]}]}, w))
-    tl = {"version": 1, "meta": {}, "audio": {}, "clips": [{"file": "a.mp4", "in": 0, "dur": 4}], "transitions": []}
+    tl = {"version": 1, "meta": {}, "audio": {}, "clips": [{"file": "a.mp4", "in": 0, "dur": 5}], "transitions": []}
     out = ap(tl, w, bd)
     from timeline import check
     assert check(out) == [], check(out)
@@ -114,6 +117,7 @@ def _tu_kiem():
     loi = [x for x in out["texts"] if x.get("kind") == "loi"]
     assert not any(q[0] in ("77", "Bếp") for x in loi for q in x["words"]), loi    # phần đã thành chữ lớn/thẻ không lặp lại
     assert any(x["hl"] and x["words"][x["hl"][0]][0] == "rộng" for x in loi), loi  # từ khoá do bản dựng chọn
+    assert not any(q[0] == "to" for x in loi for q in x["words"]), loi  # nói lúc chữ lớn còn hiện: bỏ, không chồng chữ
     print("OK")
 
 

@@ -310,7 +310,7 @@ def tao(tl, phan=None):
     .qd .r1{{width:620px;height:620px}} .qd .r2{{width:900px;height:900px;border-color:{AC}33}}
     .qc{{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:360px;height:360px;border-radius:50%;background:#1b1b1b;border:6px solid {AC};
       box-shadow:0 0 60px {AC}88;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:60px;padding:20px;line-height:1.1}}
-    .qo{{position:absolute;transform:translate(-50%,-50%);padding:20px 34px;border-radius:44px;background:rgba(255,255,255,.12);border:3px solid {AC}aa;font-size:54px;font-weight:700;white-space:nowrap}}
+    .qo{{position:absolute;transform:translate(-50%,-50%);padding:20px 34px;border-radius:44px;background:rgba(255,255,255,.12);border:3px solid {AC}aa;font-size:54px;font-weight:700;max-width:330px;width:max-content;text-align:center;line-height:1.15}}
     .ci.tk b{{background:{AC}}}
     .kg{{padding:70px 60px;border-radius:48px;background:rgba(255,255,255,.09);border:2px solid rgba(255,255,255,.22);backdrop-filter:blur(12px);text-align:center}}
     .kt{{font-family:var(--display);font-size:84px;font-weight:900;line-height:1.1}} .ks{{font-size:42px;margin-top:26px;color:rgba(255,255,255,.7)}}
