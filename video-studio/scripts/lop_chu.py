@@ -210,7 +210,7 @@ def tao(tl, phan=None):
                  f'tl.fromTo("#k{j} .cs,#k{j} .xl,#k{j} .xn",{{opacity:0,y:30}},{{opacity:1,y:0,duration:{d(.4)},ease:"power3.out",stagger:{d(.18)}}},{st + 0.3:.2f});']
         elif kieu == "quy-dao":  # tâm + 3–6 ý xoay quanh (vd. Gladia ở giữa; bếp đảo, bàn giao, sân vườn…)
             its = x.get("items", []); m = len(its)
-            pos = "".join(f'<div class="qo" style="left:{50 + 42 * __import__("math").cos(6.2832 * q / m - 1.5708):.1f}%;top:{50 + 42 * __import__("math").sin(6.2832 * q / m - 1.5708):.1f}%">{html.escape(t)}</div>' for q, t in enumerate(its))
+            pos = "".join(f'<div class="qo" style="left:{50 + 36 * __import__("math").cos(6.2832 * q / m - 1.5708):.1f}%;top:{50 + 36 * __import__("math").sin(6.2832 * q / m - 1.5708):.1f}%">{html.escape(t)}</div>' for q, t in enumerate(its))
             body = (f'<div class="cs">{html.escape(x["title"])}</div><div class="qd"><i class="r1"></i><i class="r2"></i><div class="qc">{html.escape(x.get("centre", ""))}</div>{pos}</div>')
             a = [f'tl.fromTo("#k{j} .qc",{{scale:.4,opacity:0}},{{scale:1,opacity:1,duration:{d(.5)},ease:"back.out(2)"}},{st + 0.1:.2f});',
                  f'tl.fromTo("#k{j} .r1,#k{j} .r2",{{scale:.3,opacity:0}},{{scale:1,opacity:1,duration:{d(.7)},ease:"expo.out",stagger:{d(.15)}}},{st + 0.15:.2f});',
