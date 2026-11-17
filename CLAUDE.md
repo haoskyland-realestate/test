@@ -88,6 +88,9 @@ Làm video ngắn đăng TikTok (9:16) và YouTube (16:9) cho thương hiệu H�
 ## Hệ thống làm việc (Hào chốt 12/11/2026)
 `docs/01-he-thong/HE-THONG.md`: Anti xây phần mềm · GitHub giữ mã và bản v1 chạy tạm · **PC Windows 11 làm việc nặng** (tải footage, dựng) · Mac đọc báo cáo và nghiệm thu · điện thoại giao việc. Skill dự án: `.claude/skills/` (lap-storyboard, chinh-mau, dung-video, bao-cao-nghiem-thu); MCP: `docs/01-he-thong/MCP-VA-SKILL.md`.
 
+## Làm việc KHÔNG cần app (Hào chốt 17/11/2026)
+Hào giao việc thẳng cho Claude Code (trên PC qua Anti, hoặc cloud); Claude chạy lệnh, không bắt Hào mở app studio. Quy trình: skill `dung-talking-head` (bước 0 tạo dự án từ thư mục footage bằng `scripts/du_an_moi.py`). Trên PC luôn dùng `.venv\Scripts\python.exe` trong `video-studio`. **Xoá app (`studio/`) chỉ sau khi Hào test đạt với kho video trên PC và đồng ý xoá** (đang chờ test).
+
 ## Kế hoạch đang theo
 `docs/03-ke-hoach/KE-HOACH-APP.md`: định dạng timeline → thư viện hiệu ứng → app timeline (PWA PC + điện thoại) → máy chủ cục bộ Windows → âm thanh.
 
