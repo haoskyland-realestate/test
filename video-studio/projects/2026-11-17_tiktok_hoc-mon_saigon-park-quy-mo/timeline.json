@@ -2774,15 +2774,15 @@
  "broll": [
   {
    "start": 13.86,
-   "dur": 6.54,
+   "dur": 4.18,
    "file": "grandpark_len-den.mp4",
    "in": 1.0
   },
   {
-   "start": 20.4,
-   "dur": 4.5,
+   "start": 19.88,
+   "dur": 5.02,
    "file": "IMG_9680.MOV",
-   "in": 0.4
+   "in": 0
   },
   {
    "start": 24.9,
@@ -2792,15 +2792,15 @@
   },
   {
    "start": 28.44,
-   "dur": 5.4,
+   "dur": 5.8,
    "file": "IMG_9659.MOV",
    "in": 0.0
   },
   {
-   "start": 33.84,
-   "dur": 5.4,
+   "start": 36.22,
+   "dur": 3.02,
    "file": "IMG_9660.MOV",
-   "in": 0.0
+   "in": 2.38
   },
   {
    "start": 39.24,
