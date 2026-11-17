@@ -83,18 +83,21 @@ def loc_mau(look):
 
 
 # 2. Cắt từng cảnh về đúng khung (9:16 hoặc 16:9) từ 4K, chỉnh màu theo "look" (mặc định của phong cách), 30fps
+cum = 0.0
 for i, s in enumerate(shots):
+    # số khung theo mốc cộng dồn: làm tròn từng cảnh không cộng dồn thành hình trễ hơn tiếng (lệch 0,4s sau 12 cảnh)
+    nk = round((cum + s["dur"]) * FPS) - round(cum * FPS); cum += s["dur"] + (L["transitions"][i][1] if i < len(L["transitions"]) else 0)
     look = s.get("look") or style["look"]
     auto = tl.get("meta", {}).get("auto_color", True) and not look.startswith("lut:")  # tự cân màu (LUT chinh_mau đã gồm cân màu)
     vf = (f"{khung(f'{B}/raw/' + s['file'], W, H, s.get('focus', 0), s.get('fit'))},"
           f"{tu_can(f'{B}/raw/' + s['file'], s['in'], s['dur']) if auto else 'null'},"
-          f"{loc_mau(look)},fps={FPS},format=yuv420p")
+          f"{loc_mau(look)},fps={FPS},tpad=stop_mode=clone:stop_duration=0.2,format=yuv420p")
     lut = os.path.join(HERE, look[4:]) if look.startswith("lut:") else ""
     # nhớ cảnh đã cắt theo đúng bộ lọc (kể cả công thức tự cân màu, nội dung LUT): đổi gì thì cắt lại đúng cảnh đó
-    key = json.dumps([s["file"], s["in"], s["dur"], vf, os.path.getmtime(lut) if lut else 0, DRAFT, CRF])
+    key = json.dumps([s["file"], s["in"], s["dur"], vf, os.path.getmtime(lut) if lut else 0, DRAFT, CRF, nk])
     kf = f"{B}/shot{i}.key"
     if os.path.exists(f"{B}/shot{i}.mp4") and os.path.exists(kf) and open(kf).read() == key: continue
-    ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an", "-vf", vf,
+    ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an", "-vf", vf, "-frames:v", str(nk),
        "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/shot{i}.mp4")
     open(kf, "w").write(key)
 
