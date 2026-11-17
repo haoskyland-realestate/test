@@ -12,14 +12,15 @@ foreach ($id in "OpenJS.NodeJS.LTS", "Gyan.FFmpeg", "Git.Git", "Python.Python.3.
 # Nạp lại PATH để dùng ngay công cụ vừa cài, không cần mở lại cửa sổ
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
 # Ưu tiên "py" (trình chạy Python thật): "python" có thể là lối tắt mở Microsoft Store
-$py = if (Get-Command py -ErrorAction SilentlyContinue) { "py" } else { "python" }
+# Luôn dùng Python 3.12: bản mới hơn (3.13/3.14) có thể chưa có gói faster-whisper/opencv, cài hỏng cả lượt
+function Py { if (Get-Command py -ErrorAction SilentlyContinue) { py -3.12 @args } else { python @args } }
 $ErrorActionPreference = "Continue"
 npm install
 if (Test-Path ..\.git) { git submodule update --init --depth 1 }  # bản zip không có git: bỏ qua
-& $py -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime
+Py -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime
 Write-Host ""
 Write-Host "Kiểm máy và dựng thử video giả 6 giây (1–3 phút):"
-& $py scripts\kiem_may.py --dung-thu
+Py scripts\kiem_may.py --dung-thu
 Write-Host ""
 Write-Host "Nếu dòng cuối là 'Máy đủ điều kiện chạy app.': bấm đúp chay-studio.bat để mở app."
 Write-Host "Nếu còn THIẾU: đóng PowerShell, mở lại, chạy lại .\setup-windows.ps1 (lần sau nhanh hơn), hoặc chụp màn hình gửi Claude."
