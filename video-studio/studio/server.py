@@ -69,8 +69,7 @@ def thoi_luong(path):
         return 0
 
 
-def tao_du_an(req):
-    """Dự án mới: từ thư mục footage (mỗi video thành một đoạn, cắt thẳng) hoặc nhân bản một dự án (đổi khung)."""
+def kiem_ten(req):
     name, platform = str(req.get("name", "")).strip(), req.get("platform", "tiktok")
     if not SAFE.match(name):
         raise ValueError("Tên dự án chỉ gồm chữ, số, gạch ngang (-) hoặc gạch dưới (_), không dấu cách")
@@ -79,6 +78,21 @@ def tao_du_an(req):
     d = os.path.join(PROJ, name)
     if os.path.exists(d):
         raise ValueError(f"Đã có dự án '{name}', chọn tên khác")
+    return name, platform, d
+
+
+TAI = {}  # tiến độ tải Drive theo tên dự án (app hỏi lại mỗi 2 giây)
+
+
+def tao_du_an(req, bao=lambda **k: None):
+    """Dự án mới: từ thư mục footage (mỗi video thành một đoạn, cắt thẳng), từ link thư mục Google Drive (tải về video-studio/tai-ve/<tên>/ rồi làm như thư mục),
+    hoặc nhân bản một dự án (đổi khung)."""
+    name, platform, d = kiem_ten(req)
+    if req.get("drive"):
+        from tai_drive import tai
+        dich = os.path.join(ROOT, "tai-ve", name)
+        tai(str(req["drive"]), dich, bao)
+        req = {**req, "folder": dich}
     raw = os.path.join(d, "build", "raw")
     if req.get("from"):
         src = os.path.join(PROJ, str(req["from"]))
@@ -163,6 +177,16 @@ class H(http.server.BaseHTTPRequestHandler):
             return self.send(200, effects_json())
         if parts[1:] == ["gl"]:
             return self.send(200, effects.GL_LIB, extra={"Cache-Control": "max-age=3600"})
+        if parts[1:] == ["newjob"]:  # tiến độ tạo dự án từ Google Drive
+            name = (urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("name") or [""])[0]
+            return self.send(200, TAI.get(name) or {"buoc": "khong-co"})
+        if parts[1:] == ["drive"]:  # xem trước danh sách file trong link thư mục Drive
+            try:
+                from tai_drive import liet_ke
+                link = (urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("link") or [""])[0]
+                return self.send(200, {"files": [t for _, t in liet_ke(link)]})
+            except (ValueError, OSError) as ex:
+                return self.send(400, {"error": f"Không đọc được thư mục Drive: {ex}"})
         if parts[1:] == ["browse"]:
             try:
                 return self.send(200, duyet((urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("path") or [""])[0]))
@@ -430,7 +454,22 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(400, {"error": str(ex)})
         if parts == ["api", "new"]:
             try:
-                return self.send(200, tao_du_an(self.body() or {}))
+                req = self.body() or {}
+                if not req.get("drive"):
+                    return self.send(200, tao_du_an(req))
+                name = kiem_ten(req)[0]
+                if TAI.get(name, {}).get("buoc") in ("tai", "tao"):
+                    raise ValueError("Dự án này đang tải, chờ xong")
+                TAI[name] = {"buoc": "tai", "i": 0, "n": 0, "ten": "", "da": 0, "tong": 0}
+
+                def chay():  # tải Drive có thể mất nhiều phút: chạy nền, app hỏi tiến độ qua /api/newjob
+                    try:
+                        r = tao_du_an(req, lambda **k: TAI.update({name: {"buoc": "tai", **k}}))
+                        TAI[name] = {"buoc": "xong", **r}
+                    except Exception as ex:  # lỗi mạng/ổ đĩa: báo lại cho app, file tải dở nằm ở tai-ve/ (tải lại sẽ bỏ qua file đủ)
+                        TAI[name] = {"buoc": "loi", "error": str(ex)}
+                __import__("threading").Thread(target=chay, daemon=True).start()
+                return self.send(200, {"job": name})
             except (ValueError, OSError) as ex:
                 return self.send(400, {"error": str(ex)})
         if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle", "kichban", "gopy") or not (d := self.project(parts[2])):

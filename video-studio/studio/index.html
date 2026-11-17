@@ -112,6 +112,11 @@
     #stage { height:56vh; max-height:none; flex:none; } #tlwrap { max-height:none; }
   }
   dialog a { color: var(--lime); }
+.npSrc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 10px}
+.npSrc button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px;border-radius:12px;border:1px solid var(--line);background:transparent;text-align:left;font-size:22px}
+.npSrc button b{font-size:15px} .npSrc button span{font-size:12px;opacity:.65}
+.npSrc button.on{border-color:var(--lime,#d7f25a);background:rgba(215,242,90,.08)}
+.npBar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:8px} .npBar i{display:block;height:100%;width:0;background:var(--lime,#d7f25a);transition:width .4s}
 </style>
 </head>
 <body>
@@ -824,8 +829,26 @@ async function newProject(from = null, platform = "tiktok") {
   dlgShow(`<h3>${from ? "Nhân bản dự án " + esc(from) : "Dự án mới"}</h3>
     <label>Tên dự án (không dấu cách, vd: hoc-mon-dong-tien)</label><input id="npName" value="${from ? esc(from) + "-" + platform : ""}" style="width:100%">
     <label style="display:block;margin-top:10px">Khung</label><select id="npPf"><option value="tiktok">TikTok dọc 9:16</option><option value="youtube"${platform === "youtube" ? " selected" : ""}>YouTube ngang 16:9</option></select>
-    ${from ? "" : `<label style="display:block;margin-top:10px">Thư mục footage trên máy chạy studio</label><div id="npBr" class="dim">Đang mở…</div>`}
+    ${from ? "" : `<label style="display:block;margin-top:12px">Nhập footage từ</label>
+    <div class="npSrc"><button class="on" data-src="may">💻<b>Từ máy này</b><span>Chọn thư mục trên máy chạy studio</span></button>
+      <button data-src="drive">☁️<b>Từ Google Drive</b><span>Dán link thư mục, tự tải về</span></button></div>
+    <div id="npMay"><div id="npBr" class="dim">Đang mở…</div></div>
+    <div id="npDrive" hidden><input id="npLink" placeholder="https://drive.google.com/drive/folders/…" style="width:100%">
+      <div class="dim" style="margin-top:6px">Thư mục phải chia sẻ “Bất kỳ ai có đường liên kết”. Video tải về <code>video-studio/tai-ve/&lt;tên dự án&gt;/</code>.</div>
+      <div id="npDs" style="margin-top:6px"></div><div class="npBar" hidden><i></i></div></div>`}
     <div class="row"><button class="lime" id="npGo">Tạo</button></div><p class="dim" id="npMsg"></p>`);
+  let src = "may";
+  document.querySelectorAll(".npSrc [data-src]").forEach(b => b.onclick = () => {
+    src = b.dataset.src; document.querySelectorAll(".npSrc button").forEach(x => x.classList.toggle("on", x === b));
+    $("#npMay").hidden = src !== "may"; $("#npDrive").hidden = src !== "drive"; if (src === "drive") $("#npLink").focus();
+  });
+  const xemDrive = async () => {  // dán link là thấy ngay có bao nhiêu video trong thư mục
+    const link = $("#npLink").value.trim(); if (!link) return $("#npDs").textContent = "";
+    $("#npDs").textContent = "Đang đọc thư mục…";
+    try { const r = await api("drive?link=" + encodeURIComponent(link)); $("#npDs").innerHTML = `<b>${r.files.length} file</b>: ${esc(r.files.slice(0, 8).join(", "))}${r.files.length > 8 ? "…" : ""}`; }
+    catch (e) { $("#npDs").textContent = e.message; }
+  };
+  if (!from) { $("#npLink").onchange = xemDrive; $("#npLink").onpaste = () => setTimeout(xemDrive, 50); }
   const br = async path => {
     try { cur = await api("browse?path=" + encodeURIComponent(path || "")); } catch (e) { return $("#npMsg").textContent = e.message; }
     const go = p => `data-go="${esc(p)}"`;
@@ -840,10 +863,22 @@ async function newProject(from = null, platform = "tiktok") {
   $("#npGo").onclick = async () => {
     if (dirty && !(from ? await save() : confirm("Dự án đang mở có thay đổi chưa lưu. Bỏ qua?"))) return;
     const body = {name: $("#npName").value.trim(), platform: $("#npPf").value};
-    if (from) body.from = from; else body.folder = cur && cur.path;
-    $("#npGo").disabled = true; $("#npMsg").textContent = from ? "Đang nhân bản…" : "Đang đưa footage vào dự án (cùng ổ đĩa thì tức thì; khác ổ phải chép, có thể mất vài phút)…";
+    if (from) body.from = from; else if (src === "drive") body.drive = $("#npLink").value.trim(); else body.folder = cur && cur.path;
+    $("#npGo").disabled = true; $("#npMsg").textContent = from ? "Đang nhân bản…" : body.drive ? "Đang tải từ Google Drive…" : "Đang đưa footage vào dự án (cùng ổ đĩa thì tức thì; khác ổ phải chép, có thể mất vài phút)…";
     try {
-      const r = await api("new", {method: "POST", body: JSON.stringify(body)});
+      let r = await api("new", {method: "POST", body: JSON.stringify(body)});
+      if (r.job) {  // tải Drive chạy nền: hỏi tiến độ mỗi 2 giây, hiện thanh tải từng file
+        $(".npBar").hidden = false;
+        for (;;) {
+          await new Promise(ok => setTimeout(ok, 2000));
+          const j = await api("newjob?name=" + encodeURIComponent(r.job));
+          if (j.buoc === "loi") throw new Error(j.error);
+          if (j.buoc === "xong") { r = j; break; }
+          const pc = j.tong ? Math.round(100 * j.da / j.tong) : 0;
+          $(".npBar i").style.width = (j.n ? 100 * ((j.i - 1) + pc / 100) / j.n : 0) + "%";
+          $("#npMsg").textContent = j.n ? `Đang tải ${j.i}/${j.n}: ${j.ten} (${pc}%, ${(j.da / 1048576).toFixed(0)}/${(j.tong / 1048576).toFixed(0)} MB)` : "Đang đọc thư mục Drive…";
+        }
+      }
       const ps = await api("projects"); $("#proj").innerHTML = ps.map(p => `<option>${esc(p)}</option>`).join(""); $("#proj").value = r.name;
       dlg.close(); dirty = false; await open_(r.name); toast(`Đã tạo dự án ${esc(r.name)} (${r.clips} đoạn).${from ? "" : " Bấm ✨ Master cut ở tab Cắt để cắt khoảng lặng."}`, "ok");
     } catch (e) { $("#npMsg").textContent = e.message; $("#npGo").disabled = false; }
