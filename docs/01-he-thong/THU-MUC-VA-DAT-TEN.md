@@ -51,7 +51,7 @@ video-studio/                 phần mềm
   thu-vien-am-thanh/          hiệu ứng âm <nhóm>_<tên>_<số>.wav + hieu-ung.json; nhac/ (chờ kho nhạc)
   kho/                        chỉ mục + ảnh thu nhỏ của kho tài nguyên trên PC (riêng từng máy, không lên GitHub)
   thu-vien-mau/               mẫu edit: <loại>-<số>_<tên>/ (mau.json + MAU.md), ví dụ edit-phim-01_chuyen-nghiep
-  thu-vien-chuyen-nghiep/     10 repo GitHub tham khảo (submodule)
+  thu-vien-chuyen-nghiep/     gl-transitions (214 chuyển cảnh, MIT) chép sẵn; repo khác chỉ là kế hoạch
   engines/, app/, videos/     hệ cũ (mẫu đồ hoạ HyperFrames, form GitHub): còn chạy, ít dùng
   out/                        video dựng ra (không lên GitHub)
 ```

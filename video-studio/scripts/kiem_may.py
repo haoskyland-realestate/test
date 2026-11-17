@@ -1,6 +1,7 @@
 """Kiểm máy có đủ công cụ cho app studio chưa (Windows, Mac, Linux). Báo tiếng Việt: đạt / thiếu + cách sửa.
 Chạy trong video-studio:  python scripts/kiem_may.py              (nhanh, vài giây)
                            python scripts/kiem_may.py --dung-thu   (thêm: dựng thử video giả 6 giây, 1–3 phút, không cần footage)
+                           python scripts/kiem_may.py --tu-kiem    (chạy mọi bài tự kiểm tính năng, vài phút)
 chay-studio.bat (Windows) / chay-studio.command (Mac) tự chạy bản nhanh mỗi lần mở app."""
 import importlib.util, os, platform, re, shutil, subprocess, sys, tempfile, time
 
@@ -134,6 +135,19 @@ def dung_thu():
     shutil.rmtree(d, ignore_errors=True)
 
 
+def tu_kiem():
+    """Chạy mọi bài tự kiểm của các tính năng (test_*.py và script có --tu-kiem): chứng minh bộ khung còn nguyên tính năng."""
+    import glob
+    sc = os.path.join(ROOT, "scripts")
+    viec = [[f] for f in sorted(glob.glob(os.path.join(sc, "test_*.py")))]
+    viec += [[f, "--tu-kiem"] for f in sorted(glob.glob(os.path.join(sc, "*.py")))
+             if "--tu-kiem" in open(f, encoding="utf8").read() and not f.endswith("kiem_may.py")]
+    env = dict(os.environ, PYTHONUTF8="1")
+    for v in viec:
+        r = subprocess.run([sys.executable] + v, cwd=ROOT, capture_output=True, text=True, encoding="utf8", errors="replace", env=env, timeout=600)
+        ghi(r.returncode == 0, True, "Tự kiểm " + os.path.basename(v[0]), "" if r.returncode == 0 else (r.stdout + r.stderr)[-600:])
+
+
 if __name__ == "__main__":
     print(f"Kiểm máy: {platform.system()} {platform.release()}, {platform.machine()}\n")
     for f in (kiem_python, kiem_ffmpeg, kiem_node, kiem_thu_vien_python, kiem_gpu, kiem_o_dia, kiem_kho):
@@ -141,6 +155,9 @@ if __name__ == "__main__":
     if "--dung-thu" in sys.argv and all(ok for ok, can, *_ in ket_qua if can):
         print("Đang dựng thử (1–3 phút)…", flush=True)
         dung_thu()
+    if "--tu-kiem" in sys.argv:
+        print("Đang tự kiểm các tính năng…", flush=True)
+        tu_kiem()
     for ok, can, ten, note in ket_qua:
         dau = "ĐẠT  " if ok else ("THIẾU" if can else "chưa ")
         print(f"[{dau}] {ten}" + (f"\n         → {note}" if note else ""))

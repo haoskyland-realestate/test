@@ -156,7 +156,7 @@ def _tu_kiem():
     assert bao[1][2].startswith("khớp giọng") and 5.0 < kb[1]["start"] < 6.0, bao  # ASR viết "lãi xuất" vẫn khớp 2/3 từ… sau bỏ dấu
     assert bao[2][2] == "nối tiếp chữ trước", bao
     assert any(x.get("lines") == ["tự thêm"] for x in out["texts"]) and not any(x.get("big") == "cũ" for x in out["texts"])
-    assert sum(1 for x in out["sfx"] if x["file"] == "chu_swish-pop_01") == 4 and any(x["file"] == "ting_don_01" for x in out["sfx"])
+    assert sum(1 for x in out["sfx"] if x["file"] == "chu_swish-pop_01") == 4 and any(x["file"] == "ting_lap-lanh_01" for x in out["sfx"])  # mẫu có nhip_chu: số liệu lấp lánh thay tiếng ting
     again, _ = dat_chu(out, md)
     assert len(again["texts"]) == len(out["texts"]) and len(again["sfx"]) == len(out["sfx"])
     print("OK", [(c, t, h) for c, t, h in bao])

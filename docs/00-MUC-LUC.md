@@ -6,6 +6,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 
 | Muốn… | Mở |
 |---|---|
+| **Xem toàn bộ hệ thống một trang: mục tiêu, ghi nhớ, tính năng, skill, cài trên PC** | `01-he-thong/TINH-NANG-VA-SKILL.md` |
 | Biết việc này nên hỏi AI nào | `01-he-thong/AI-NAO-VIEC-NAO.md` |
 | Có câu lệnh chép sẵn cho từng AI | `../mau/PROMPT-MAU.md` |
 | Làm một video từ đầu đến cuối | `02-quy-trinh/QUY-TRINH-MOT-VIDEO.md` |

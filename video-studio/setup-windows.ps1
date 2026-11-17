@@ -13,7 +13,6 @@ foreach ($id in "OpenJS.NodeJS.LTS", "Gyan.FFmpeg", "Git.Git", "Python.Python.3.
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
 $ErrorActionPreference = "Continue"
 npm install
-if (Test-Path ..\.git) { git submodule update --init --depth 1 }  # bản zip không có git: bỏ qua
 # MỘT Python cố định cho cả dự án: .venv tạo từ Python 3.12 (không phụ thuộc "python"/"py" mặc định của Windows,
 # vốn có thể là 3.13/3.14 hoặc lối tắt Microsoft Store). --system-site-packages: dùng lại thư viện đã cài trong 3.12, không cài trùng.
 $PYX = ".venv\Scripts\python.exe"

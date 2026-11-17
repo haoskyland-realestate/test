@@ -3,7 +3,7 @@
 Lập 12/11/2026. Mục đích: bộ dựng Claude Edit Video dựa trên công cụ mà giới dựng phim thật sự dùng, thay vì vá riêng từng video.
 
 **Cách kiểm chứng:** mỗi repo được tải thẳng từ GitHub và đọc file LICENSE gốc (không dựa trang tổng hợp). Tất cả đều cho phép dùng thương mại.
-**Vị trí:** `video-studio/thu-vien-chuyen-nghiep/<tên>` (git submodule, cố định phiên bản). Trên PC tải về: `git submodule update --init --depth 1`.
+**Vị trí (đổi 17/11/2026):** repo nằm trọn trong bộ khung, không còn liên kết submodule. Phần đang dùng được chép vào repo: `video-studio/thu-vien-chuyen-nghiep/gl-transitions/` (214 shader + LICENSE MIT). OpenTimelineIO cài bằng pip (`setup-windows.ps1`). Các repo còn lại là **kế hoạch**: khi dùng thật mới cài bằng pip/npm theo bảng dưới, không chép mã người khác vào repo.
 
 ## Quy trình dựng chuẩn nghề (thứ tự làm của một biên tập viên)
 
