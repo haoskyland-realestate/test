@@ -18,4 +18,10 @@ if __name__ == "__main__":
         r = tao_du_an(req, lambda i, n, ten, da, tong: print(f"\r[{i}/{n}] {ten}: {da >> 20}/{tong >> 20} MB   ", end="", flush=True))
     except ValueError as ex:
         sys.exit(f"Không tạo được dự án: {ex}")
-    print(f"\nĐã tạo projects/{r['name']} ({r['clips']} đoạn video).")
+    print(f"\nĐã tạo projects/{r['name']} ({r['clips']} đoạn video). Tạo bản nhẹ 540p để phân tích và xem nhanh…")
+    from ban_nhe import lay
+    B = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "projects", r["name"], "build")
+    for f in sorted(os.listdir(os.path.join(B, "raw"))):
+        if f.lower().endswith((".mp4", ".mov", ".m4v", ".mkv", ".mts")):
+            lay(B, f)
+    print("Xong.")

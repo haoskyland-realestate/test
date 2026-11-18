@@ -49,6 +49,7 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 | Dự án | Định dạng timeline v1 (cảnh, chữ, âm, cảnh chèn, zoom, B-roll, overlay) | `scripts/timeline.py`, test `test_timeline.py` | Cloud |
 | Dựng | Cắt bỏ một đoạn (câu lặp, chỗ vấp, khoảng lặng) và tự dời mọi thứ phía sau | `scripts/cat_doan.py projects/<tên> <từ> <đến>` | Cloud (Saigon Park) |
 | Duyệt | Phân tích lời nói và chỗ cắt: nói nhanh/chậm (so với nhịp riêng), lặp từ, nói vấp, cắt giữa từ, cảnh quá ngắn/dài + đề xuất; tự gắn vào storyboard | `scripts/phan_tich_loi.py projects/<tên>` | Cloud (Saigon Park: bắt câu lặp "biệt thự đơn lập, song lập") |
+| Dựng | Bản nhẹ 540p (cạnh ngắn 540, màu đã chuyển, giữ tiếng) tạo một lần mỗi file; master cut, storyboard, bản xem, app đọc bản này; card NVIDIA tự dùng để giải nén 4K | `scripts/ban_nhe.py` (tự gọi) | Cloud (file 4K 17s: phân tích 44s → 6s, tạo bản nhẹ 38s một lần) |
 | Duyệt | Storyboard từng cảnh (giây, ảnh, lời nói, chữ, chuyển cảnh) + ảnh lưới | `scripts/storyboard.py projects/<tên>` | Cloud (Saigon Park 24 cảnh, 46s) |
 | Dựng | Dựng MP4: bản xem 540×960 `--xem` để Hào duyệt, nháp `--nhap`, bản cuối; nhớ bước đã làm | `scripts/dung.py projects/<tên>` | Cloud, Mac (dựng thử 6s) |
 | Dựng | Tự cắt im lặng, nói vấp, chọn khúc đẹp, zoom xen kẽ | `scripts/master_cut.py`, `phan_tich_hinh.py` | Cloud |

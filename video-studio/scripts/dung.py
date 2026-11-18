@@ -10,6 +10,7 @@ from mau import khung, tu_can
 from am_thanh import tron_sfx
 from lop_chu import tao as tao_lop_chu
 from kho import duong_dan as kho_path
+from ban_nhe import lay, hw
 
 XEM = "--xem" in sys.argv[2:]  # bản xem trước 540×960 (TikTok) / 960×540 (YouTube) để Hào duyệt: nhanh, nhẹ, chất lượng nháp
 DRAFT = "--nhap" in sys.argv[2:] or XEM
@@ -48,6 +49,20 @@ def run(cmd, **kw):
     print("+", " ".join(cmd)[:160]); subprocess.run(cmd, check=True, **kw)
 
 def ff(*a): run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", *a])
+
+
+def ff_vao(*a):  # đọc footage: giải nén bằng card NVIDIA nếu có, lỗi thì làm lại bằng CPU
+    i = a.index("-i")
+    if hw():
+        try:
+            return ff(*a[:i], *hw(), *a[i:])
+        except subprocess.CalledProcessError:
+            print("Card đồ hoạ không giải nén được file này, chuyển sang CPU", flush=True)
+    ff(*a)
+
+
+def nguon(f):  # bản xem 540×960 đọc bản nhẹ 540p (Hào chốt 18/11); bản nháp/bản cuối đọc 4K gốc
+    return lay(B, f) if XEM else f"{B}/raw/{f}"
 
 _t0 = [time.time()]
 def moc(ten):  # in thời gian từng bước, để biết bước nào tốn nhất
@@ -92,15 +107,16 @@ for i, s in enumerate(shots):
     nk = round((cum + s["dur"]) * FPS) - round(cum * FPS); cum += s["dur"] + (L["transitions"][i][1] if i < len(L["transitions"]) else 0)
     look = s.get("look") or style["look"]
     auto = tl.get("meta", {}).get("auto_color", True) and not look.startswith("lut:")  # tự cân màu (LUT chinh_mau đã gồm cân màu)
-    vf = (f"{khung(f'{B}/raw/' + s['file'], W, H, s.get('focus', 0), s.get('fit'))},"
-          f"{tu_can(f'{B}/raw/' + s['file'], s['in'], s['dur']) if auto else 'null'},"
+    src = nguon(s["file"])
+    vf = (f"{khung(src, W, H, s.get('focus', 0), s.get('fit'))},"
+          f"{tu_can(src, s['in'], s['dur']) if auto else 'null'},"
           f"{loc_mau(look)},fps={FPS},tpad=stop_mode=clone:stop_duration=0.2,format=yuv420p")
     lut = os.path.join(HERE, look[4:]) if look.startswith("lut:") else ""
     # nhớ cảnh đã cắt theo đúng bộ lọc (kể cả công thức tự cân màu, nội dung LUT): đổi gì thì cắt lại đúng cảnh đó
-    key = json.dumps([s["file"], s["in"], s["dur"], vf, os.path.getmtime(lut) if lut else 0, DRAFT, CRF, nk, W])
+    key = json.dumps([s["file"], os.path.relpath(src, B), s["in"], s["dur"], vf, os.path.getmtime(lut) if lut else 0, DRAFT, CRF, nk, W])
     kf = f"{B}/shot{i}.key"
     if os.path.exists(f"{B}/shot{i}.mp4") and os.path.exists(kf) and open(kf).read() == key: continue
-    ff("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", f"{B}/raw/{s['file']}", "-an", "-vf", vf, "-frames:v", str(nk),
+    ff_vao("-ss", str(s["in"]), "-t", str(s["dur"]), "-i", src, "-an", "-vf", vf, "-frames:v", str(nk),
        "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/shot{i}.mp4")
     open(kf, "w").write(key)
 
@@ -294,9 +310,10 @@ if voice:
 # Cảnh trám: cắt từng đoạn về đúng khung, cùng chỉnh màu của phong cách
 brs = tl.get("broll", [])
 for k, x in enumerate(brs):
-    ff("-ss", str(x["in"]), "-t", str(x["dur"]), "-i", f"{B}/raw/{x['file']}", "-an",
-       "-vf", f"{khung(f'{B}/raw/' + x['file'], W, H, x.get('focus', 0), x.get('fit'))},"
-              f"{tu_can(f'{B}/raw/' + x['file'], x['in'], x['dur'])},{LOOKS[style['look']][1]},fps={FPS},tpad=stop_mode=clone:stop_duration=0.2,format=yuv420p",
+    src = nguon(x["file"])
+    ff_vao("-ss", str(x["in"]), "-t", str(x["dur"]), "-i", src, "-an",
+       "-vf", f"{khung(src, W, H, x.get('focus', 0), x.get('fit'))},"
+              f"{tu_can(src, x['in'], x['dur'])},{LOOKS[style['look']][1]},fps={FPS},tpad=stop_mode=clone:stop_duration=0.2,format=yuv420p",
        "-t", str(x["dur"] + 2 / FPS), "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/br{k}.mp4")  # tpad + dư 2 khung: mốc lẻ khung không để lộ khung đen giữa hai cảnh trám
 
 # Overlay từ kho (lá sáng, bụi, khói, giấy…): cắt về khung; "screen" giữ nền đen (đen = không đổi khi hoà sáng), "alpha" giữ kênh trong suốt

@@ -62,7 +62,8 @@ def anh(pj, tl, c, out):
         return
     L = layout(tl)
     s, x = (L["starts"][i], tl["clips"][i]) if loai == "clip" else (tl["broll"][i]["start"], tl["broll"][i])
-    raw = os.path.join(pj, "build", "raw", x["file"])
+    from ban_nhe import lay
+    raw = lay(os.path.join(pj, "build"), x["file"])  # bản nhẹ 540p: cắt một khung nhanh hơn 4K HDR nhiều
     t = x.get("in", 0) + ((a + b) / 2 - s)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", raw, "-frames:v", "1",
                     "-vf", khung(raw, TW, TH, x.get("focus", 0), x.get("fit")), out], check=True)

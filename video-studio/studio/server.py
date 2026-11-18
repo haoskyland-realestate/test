@@ -326,7 +326,8 @@ class H(http.server.BaseHTTPRequestHandler):
         raw = self.raw(d, f)
         if not raw:
             return self.send(404, {"error": "Chưa có footage " + f})
-        out = os.path.join(d, "build", "proxy", f + ".mp4")
+        from ban_nhe import duong_dan, lenh
+        out = duong_dan(os.path.join(d, "build"), f)  # dùng chung bản nhẹ 540p với phân tích và bản xem (scripts/ban_nhe.py)
         p = proxies.get(out)
         if p and p.poll() == 0 and os.path.exists(out + ".tmp.mp4"):
             os.replace(out + ".tmp.mp4", out)  # tạo xong: đổi tên thì mới tính là có
@@ -335,9 +336,7 @@ class H(http.server.BaseHTTPRequestHandler):
         ready = os.path.exists(out)
         if not ready and not running and not failed:
             os.makedirs(os.path.dirname(out), exist_ok=True)
-            proxies[out] = subprocess.Popen(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", raw, "-vf", chuyen_tong(raw) + "scale=-2:540",
-                                             "-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-c:a", "aac", "-b:a", "96k",
-                                             "-movflags", "+faststart", out + ".tmp.mp4"])
+            proxies[out] = subprocess.Popen(lenh(raw, out + ".tmp.mp4"))
         if check:
             return self.send(200, {"ready": ready, "failed": failed})
         if not ready:
