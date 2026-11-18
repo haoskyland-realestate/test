@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chọn hiệu ứng theo cảnh</title>
+<style>
+:root{--bg:#f4f7fc;--card:#fff;--ink:#14213d;--mut:#5b6b8a;--line:#dbe3f0;--acc:#2563eb;--accbg:#e8f0ff;--ok:#16a34a}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1424;--card:#16203a;--ink:#eaf0ff;--mut:#9fb0d0;--line:#26345a;--acc:#6aa0ff;--accbg:#1c2c55;--ok:#4ade80}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,Segoe UI,Roboto,sans-serif;padding-bottom:150px}
+header{padding:20px 16px 8px;max-width:1100px;margin:auto}h1{margin:0 0 4px;font-size:22px}header p{margin:0;color:var(--mut)}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}.bar label{color:var(--mut)}
+select,button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
+main{max-width:1100px;margin:auto;padding:0 16px}
+.scene{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0}
+.sh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.sn{font-weight:700}.tm{color:var(--mut);font-size:13px}
+.say{margin:4px 0 10px;font-style:italic}
+.strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.opt{flex:none;width:132px;border:2px solid var(--line);border-radius:12px;padding:6px;background:var(--bg);cursor:pointer;text-align:left}
+.opt img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:8px;display:block;background:#0003}
+.opt b{display:block;font-size:12.5px;margin-top:5px;line-height:1.25}.opt small{display:block;color:var(--mut);font-size:11px;line-height:1.25;margin-top:2px}
+.opt .tag{display:inline-block;font-size:10.5px;background:var(--accbg);color:var(--acc);border-radius:99px;padding:1px 7px;margin-top:4px;font-weight:600}
+.opt.sel{border-color:var(--acc);box-shadow:0 0 0 3px var(--accbg)}
+.opt.none{display:grid;place-items:center;text-align:center;min-height:150px;color:var(--mut)}
+.row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.row button{font-size:13px}
+.chosen{color:var(--ok);font-weight:600;font-size:13px;margin-left:auto}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px}
+.dock .in{max-width:1100px;margin:auto}.dock textarea{width:100%;height:64px;font:13px/1.4 ui-monospace,Consolas,monospace;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px;resize:vertical}
+.pri{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600}
+</style></head><body>
+<header><h1>Chọn hiệu ứng cho từng cảnh</h1>
+<p>Bấm vào hình để chọn. Hình đầu tiên có nhãn "Gợi ý" là đề xuất của Claude Code. Chọn xong bấm "Sao chép kết quả" rồi dán vào Claude Code.</p>
+<div class="bar"><label for="pre">Preset</label><select id="pre"></select><button id="all">Xem tất cả hiệu ứng ở mọi cảnh</button><button id="acc">Chọn hết theo gợi ý</button></div></header>
+<main id="main"></main>
+<div class="dock"><div class="in"><textarea id="out" readonly aria-label="Kết quả chọn"></textarea><div class="row"><button class="pri" id="cp">Sao chép kết quả</button><span id="msg" class="tm"></span></div></div></div>
+<script id="data" type="application/json">/*DATA*/{"preset":"xanh_gradient","base":"thumbs","scenes":[{"id":1,"t_in":0,"t_out":5,"say":"Ví dụ lời nói của cảnh 1","suggest":["typo_fire","count_up"]},{"id":2,"t_in":5,"t_out":9,"say":"Ví dụ lời nói của cảnh 2","suggest":["amenity_grid","photo_cards"]}]}/*END*/</script>
+<script>
+var FX=[
+["chart_bars","Biểu đồ cột","Cần: 4–6 nhãn + số thật"],["map_route","Bản đồ + tuyến đường","Cần: ảnh bản đồ có đánh dấu dự án"],["amenity_grid","Lưới tiện ích","Cần: ảnh + tên từng tiện ích"],["tree_diagram","Nhánh cây","Cần: tiêu đề + 3–4 mục con"],["note_board","Bảng điều kiện","Cần: tiêu đề + 3 dòng"],["glass_list","Danh sách kính mờ","Cần: tiêu đề + 3 mục"],["logo_pop","Icon pop + luồng sáng","Cần: logo từng thương hiệu"],["growth_card","Bảng tăng trưởng","Cần: mốc đường cong, giá trị đỉnh (số thật)"],["popup_notes","Ảnh có chú thích","Cần: 1 ảnh + 2–3 chú thích"],["photo_cards","Thẻ ảnh + số đếm","Cần: ảnh + chữ phụ + số"],
+["typo_gold","Chữ vàng","Cần: cụm ≤ 5 từ"],["typo_fire","Chữ lửa","Cần: cụm ≤ 5 từ"],["typo_bronze","Chữ đồng + ghim","Cần: cụm + địa điểm"],["typo_neon_orange","Chữ neon cam","Cần: cụm ≤ 5 từ"],["typo_neon_blue","Chữ neon xanh + số","Cần: một con số/giá"],
+["count_up","Số đếm / số lớn","Cần: giá trị + đơn vị"],["warning_stamp","Cảnh báo","Cần: 1 câu ngắn"],["connect_flow","Kết nối A → B","Cần: tên A, tên B, 2–4 dòng"],["feature_card","Thẻ đỉnh nhất","Cần: tiêu đề + cụm nhấn"],["compare_cards","So sánh hai thẻ","Cần: hai nhóm thông tin"],["screenshot_card","Ảnh trang web nổi","Cần: 1 ảnh chụp màn hình"],["product_badge","Sản phẩm + huy hiệu","Cần: tên, logo, huy hiệu"],["metaphor_card","Hình ẩn dụ","Cần: câu ví von + hình"],["cinematic_break","Cảnh điện ảnh","Không cần dữ liệu"],["outro_cta","Kêu gọi hành động","Cần: câu kêu gọi + nút"],["speaker_only","Chỉ người nói","Không cần dữ liệu"]];
+var D=JSON.parse(document.getElementById('data').textContent.replace(/^\/\*DATA\*\//,'').replace(/\/\*END\*\/\s*$/,'')),sel={},open={},allMode=false,PRE=["xanh_gradient","cam_kem","neon_toi"];
+var $=function(i){return document.getElementById(i)};
+function fmt(t){t=Math.round(t);return Math.floor(t/60)+':'+('0'+t%60).slice(-2)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function opt(sc,f,isSug){var on=sel[sc.id]===f[0];return '<div class="opt'+(on?' sel':'')+'" role="button" tabindex="0" data-s="'+sc.id+'" data-c="'+f[0]+'"><img loading="lazy" alt="'+esc(f[1])+'" src="'+D.base+'/'+$('pre').value+'/'+f[0]+'.jpg"><b>'+esc(f[1])+'</b>'+(isSug?'<span class="tag">Gợi ý</span>':'')+'<small>'+esc(f[2])+'</small></div>'}
+function render(){var h='';D.scenes.forEach(function(sc,i){
+ var sug=(sc.suggest||[]).map(function(c){return FX.filter(function(f){return f[0]===c})[0]}).filter(Boolean);
+ var rest=FX.filter(function(f){return (sc.suggest||[]).indexOf(f[0])<0});
+ var show=(open[sc.id]||allMode)?sug.concat(rest):sug,s='';
+ show.forEach(function(f){s+=opt(sc,f,sug.indexOf(f)>=0)});
+ var cur=sel[sc.id]?FX.filter(function(f){return f[0]===sel[sc.id]})[0]:null;
+ h+='<section class="scene"><div class="sh"><span class="sn">Cảnh '+sc.id+'</span><span class="tm">'+fmt(sc.t_in)+' – '+fmt(sc.t_out)+'</span><span class="chosen">'+(cur?'Đã chọn: '+esc(cur[1]):'Chưa chọn (giữ gợi ý)')+'</span></div><div class="say">“'+esc(sc.say)+'”</div><div class="strip">'+s+'</div><div class="row">'
+ +(open[sc.id]||allMode?'':'<button data-more="'+sc.id+'">Xem tất cả hiệu ứng</button>')+(i>0?'<button data-same="'+sc.id+'">Giống cảnh trước (gom cụm)</button>':'')+'<button data-none="'+sc.id+'">Bỏ hiệu ứng (chỉ người nói)</button></div></section>'});
+ $('main').innerHTML=h;summary()}
+function summary(){var seq=D.scenes.map(function(sc){return {id:sc.id,c:sel[sc.id]||(sc.suggest&&sc.suggest[0])||'speaker_only'}}),g=[];
+ seq.forEach(function(x){var l=g[g.length-1];if(l&&l.c===x.c&&l.b===x.id-1){l.b=x.id}else g.push({a:x.id,b:x.id,c:x.c})});
+ $('out').value='Preset '+$('pre').value+'. Chọn hiệu ứng: '+g.map(function(x){return (x.a===x.b?'Cảnh '+x.a:'Cảnh '+x.a+'–'+x.b)+': '+x.c}).join('; ')+'.'}
+$('main').addEventListener('click',function(e){var o=e.target.closest('.opt'),b=e.target.closest('button');
+ if(o){sel[o.dataset.s]=o.dataset.c;render()}else if(b){if(b.dataset.more){open[b.dataset.more]=1}
+ else if(b.dataset.same){var id=+b.dataset.same;sel[id]=sel[id-1]||(D.scenes[id-2].suggest||[])[0]}
+ else if(b.dataset.none){sel[b.dataset.none]='speaker_only'}render()}});
+$('main').addEventListener('keydown',function(e){if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('opt')){e.preventDefault();e.target.click()}});
+PRE.forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;if(p===D.preset)o.selected=true;$('pre').appendChild(o)});
+$('pre').onchange=render;$('all').onclick=function(){allMode=!allMode;render()};
+$('acc').onclick=function(){sel={};render()};
+$('cp').onclick=function(){var t=$('out').value;function ok(){$('msg').textContent='Đã sao chép. Dán vào Claude Code.'}
+ if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,function(){$('out').select();document.execCommand('copy');ok()});else{$('out').select();document.execCommand('copy');ok()}};
+render();
+</script></body></html>

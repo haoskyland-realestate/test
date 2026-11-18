@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Storyboard: chốt phương án</title>
+<style>
+:root{--bg:#f4f7fc;--card:#fff;--ink:#14213d;--mut:#5b6b8a;--line:#dbe3f0;--acc:#2563eb;--accbg:#e8f0ff;--ok:#16a34a;--bad:#d97706}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1424;--card:#16203a;--ink:#eaf0ff;--mut:#9fb0d0;--line:#26345a;--acc:#6aa0ff;--accbg:#1c2c55;--ok:#4ade80;--bad:#fbbf24}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,Segoe UI,Roboto,sans-serif;padding-bottom:170px}
+header,main{max-width:1000px;margin:auto;padding:0 16px}header{padding-top:20px}h1{margin:0 0 4px;font-size:22px}header p{margin:0;color:var(--mut)}
+.sum{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.chip{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-size:13px}
+.grp{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:12px 0}
+.grp img{width:120px;aspect-ratio:9/16;object-fit:cover;border-radius:10px;flex:none;background:#0003}
+.bd{flex:1;min-width:0}.t1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.sn{font-weight:700}.tm{color:var(--mut);font-size:13px}
+.fx{margin-left:auto;font-size:13px;background:var(--accbg);color:var(--acc);border-radius:99px;padding:2px 10px;font-weight:600}
+.say{margin:6px 0;font-style:italic}.say div{margin:2px 0}
+.need{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.nd{font-size:12.5px;border-radius:8px;padding:2px 8px;border:1px solid var(--line)}.nd.ok{color:var(--ok)}.nd.no{color:var(--bad)}
+select,textarea,button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+textarea{width:100%;height:46px;resize:vertical;margin-top:4px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px;font-size:13px;color:var(--mut)}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px}.in{max-width:1000px;margin:auto}
+.dock textarea{height:64px;font:13px/1.4 ui-monospace,Consolas,monospace}.pri{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:600;cursor:pointer}
+@media(max-width:560px){.grp img{width:84px}}
+</style></head><body>
+<header><h1>Storyboard: chốt phương án trước khi dựng</h1>
+<p>Mỗi khối là một cảnh hoặc cụm cảnh sẽ dựng. Xem hiệu ứng, lời nói và dữ liệu còn thiếu. Muốn đổi thì chọn hiệu ứng khác hoặc ghi chú sửa, rồi bấm "Sao chép phản hồi" và dán vào Claude Code. Chưa có gì sửa thì bấm "Chốt phương án".</p>
+<div class="sum" id="sum"></div></header>
+<main id="main"></main>
+<div class="dock"><div class="in"><textarea id="out" readonly aria-label="Phản hồi"></textarea><div class="row"><button class="pri" id="lock">Chốt phương án</button><button id="cp">Sao chép phản hồi</button><span id="msg"></span></div></div></div>
+<script id="data" type="application/json">/*DATA*/{"preset":"xanh_gradient","base":"../effects/thumbs","scenes":[{"id":1,"t_in":0,"t_out":5,"say":"Ví dụ lời cảnh 1","effect":"typo_fire","name":"Chữ lửa","need":[{"k":"cụm ≤ 5 từ","ok":true}]},{"id":2,"t_in":5,"t_out":9,"say":"Ví dụ lời cảnh 2","effect":"amenity_grid","name":"Lưới tiện ích","need":[{"k":"ảnh từng tiện ích","ok":false},{"k":"tên tiện ích","ok":true}]}]}/*END*/</script>
+<script>
+var FX=[["chart_bars","Biểu đồ cột"],["map_route","Bản đồ + tuyến đường"],["amenity_grid","Lưới tiện ích"],["tree_diagram","Nhánh cây"],["note_board","Bảng điều kiện"],["glass_list","Danh sách kính mờ"],["logo_pop","Icon pop + luồng sáng"],["growth_card","Bảng tăng trưởng"],["popup_notes","Ảnh có chú thích"],["photo_cards","Thẻ ảnh + số đếm"],["typo_gold","Chữ vàng"],["typo_fire","Chữ lửa"],["typo_bronze","Chữ đồng + ghim"],["typo_neon_orange","Chữ neon cam"],["typo_neon_blue","Chữ neon xanh + số"],["count_up","Số đếm / số lớn"],["warning_stamp","Cảnh báo"],["connect_flow","Kết nối A → B"],["feature_card","Thẻ đỉnh nhất"],["compare_cards","So sánh hai thẻ"],["screenshot_card","Ảnh trang web nổi"],["product_badge","Sản phẩm + huy hiệu"],["metaphor_card","Hình ẩn dụ"],["cinematic_break","Cảnh điện ảnh"],["outro_cta","Kêu gọi hành động"],["speaker_only","Chỉ người nói"]];
+var D=JSON.parse(document.getElementById('data').textContent.replace(/^\/\*DATA\*\//,'').replace(/\/\*END\*\/\s*$/,'')),chg={},note={},G=[];
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(t){t=Math.round(t);return Math.floor(t/60)+':'+('0'+t%60).slice(-2)}
+function nm(c){var f=FX.filter(function(x){return x[0]===c})[0];return f?f[1]:c}
+function groups(){G=[];D.scenes.forEach(function(s){var c=(chg[s.id]||s.effect),l=G[G.length-1];if(l&&l.c===c&&!chg[s.id]===!chg[l.s[l.s.length-1].id]){l.s.push(s)}else G.push({c:c,s:[s]})})}
+function render(){groups();var miss=0,h='';
+ G.forEach(function(g,gi){var a=g.s[0],b=g.s[g.s.length-1],need=[],seen={};g.s.forEach(function(s){if(chg[s.id]&&chg[s.id]!==s.effect){if(!seen['*']){seen['*']=1;need.push({k:'đã đổi hiệu ứng, Claude Code sẽ hỏi lại dữ liệu cần',ok:true})}return}(s.need||[]).forEach(function(n){if(!seen[n.k]){seen[n.k]=1;need.push(n);if(!n.ok)miss++}})});
+  h+='<section class="grp"><img alt="'+esc(nm(g.c))+'" src="'+D.base+'/'+D.preset+'/'+g.c+'.jpg"><div class="bd"><div class="t1"><span class="sn">'+(a.id===b.id?'Cảnh '+a.id:'Cảnh '+a.id+'–'+b.id)+'</span><span class="tm">'+fmt(a.t_in)+' – '+fmt(b.t_out)+'</span><span class="fx">'+esc(nm(g.c))+'</span></div><div class="say">'+g.s.map(function(s){return '<div>“'+esc(s.say)+'”</div>'}).join('')+'</div>'
+  +'<div class="need">'+(need.length?need.map(function(n){return '<span class="nd '+(n.ok?'ok':'no')+'">'+(n.ok?'✓ ':'✕ thiếu: ')+esc(n.k)+'</span>'}).join(''):'<span class="nd ok">✓ không cần dữ liệu</span>')+'</div>'
+  +'<div class="row"><label>Đổi hiệu ứng: <select data-g="'+gi+'"><option value="">giữ nguyên</option>'+FX.map(function(f){return '<option value="'+f[0]+'"'+(chg[a.id]===f[0]?' selected':'')+'>'+f[1]+'</option>'}).join('')+'</select></label></div><textarea data-n="'+a.id+'" placeholder="Ghi chú sửa cho khối này (chữ, thứ tự, thời lượng, vị trí...)">'+esc(note[a.id]||'')+'</textarea></div></section>'});
+ $('main').innerHTML=h;$('sum').innerHTML='<span class="chip">'+D.scenes.length+' cảnh</span><span class="chip">'+G.length+' khối hiệu ứng</span><span class="chip">Preset: '+esc(D.preset)+'</span><span class="chip" style="color:var(--'+(miss?'bad':'ok')+')">'+(miss?miss+' dữ liệu còn thiếu (dựng khung giữ chỗ)':'Đủ dữ liệu')+'</span>';summary()}
+function summary(lock){var ch=[],nt=[];G.forEach(function(g){var a=g.s[0],b=g.s[g.s.length-1],lab=a.id===b.id?'Cảnh '+a.id:'Cảnh '+a.id+'–'+b.id;g.s.forEach(function(s){if(chg[s.id]&&chg[s.id]!==s.effect)ch.push(lab.indexOf('–')<0||s===g.s[0]?lab+': '+s.effect+' → '+chg[s.id]:null)});if(note[a.id])nt.push(lab+': '+note[a.id])});
+ ch=ch.filter(Boolean);var t=(ch.length||nt.length)?'Sửa trước khi chốt. '+(ch.length?'Đổi hiệu ứng: '+ch.join('; ')+'. ':'')+(nt.length?'Ghi chú: '+nt.join('; ')+'.':''):'';
+ $('out').value=lock&&!t?'Chốt phương án. Dựng bản xem thử.':(t||'(chưa có thay đổi)')}
+$('main').addEventListener('change',function(e){var g=e.target.dataset.g;if(g!==undefined){var s=G[g].s;s.forEach(function(x){if(e.target.value)chg[x.id]=e.target.value;else delete chg[x.id]});render()}});
+$('main').addEventListener('input',function(e){if(e.target.dataset.n){note[e.target.dataset.n]=e.target.value;summary()}});
+$('lock').onclick=function(){summary(true)};
+$('cp').onclick=function(){var t=$('out').value;function ok(){$('msg').textContent='Đã sao chép. Dán vào Claude Code.'}if(navigator.clipboard)navigator.clipboard.writeText(t).then(ok,function(){$('out').select();document.execCommand('copy');ok()});else{$('out').select();document.execCommand('copy');ok()}};
+render();
+</script></body></html>

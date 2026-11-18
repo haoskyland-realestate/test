@@ -9,14 +9,19 @@
 Chạy trong video-studio:  python3 scripts/ban_dung.py chep projects/<tên>   ·   python3 scripts/ban_dung.py ap projects/<tên>   ·   tự kiểm: --tu-kiem
 BAN-DUNG.json: {"vai": [{"vai": "hook|tieu-de|tu-khoa|so-lieu|cta", "tu": [từ đầu, từ cuối], "chu": "(tuỳ chọn) chữ hiện, phải gồm từ đã nói",
                          "sub": "(tuỳ chọn) dòng dưới chữ lớn", "sau_dau": true/false, "cua_hao": true = câu Hào tự viết (không cần là lời đã nói),
-                         "nhan": "(tuỳ chọn) nhãn nhỏ trên, cũng phải là lời đã nói", "nguon": "(số liệu) tài liệu + ngày"}]}"""
+                         "nhan": "(tuỳ chọn) nhãn nhỏ trên, cũng phải là lời đã nói", "nguon": "(số liệu) tài liệu + ngày"}],
+               vai "the" (cảnh chèn thẻ): {"vai": "the", "tu": [a, b], "kieu": "checklist|quy-dao|kinh", "title": "...", "items": ["..."], "centre": "...", "sub": "..."}
+               (mọi chữ phải là lời đã nói),
+               "canh": [{"tu": [a, b], "goi_y": ["mã AutoEdit", ...], "chon": "mã Hào chọn"}]  (agent.py: chia cảnh + hiệu ứng, xem autoedit/HIEU-UNG-MAP.json)}"""
 import json, re, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from doi_chieu import toks
 import loi_nhip
 
-VAI = ("hook", "tieu-de", "tu-khoa", "so-lieu", "cta")
+VAI = ("hook", "tieu-de", "tu-khoa", "so-lieu", "cta", "the")
+KIEU_THE = ("checklist", "quy-dao", "kinh")
+MAP_HU = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "autoedit", "HIEU-UNG-MAP.json")
 
 
 def hoa(s):
@@ -56,27 +61,56 @@ def kiem_ban(bd, w):
         elif not (isinstance(a, int) and isinstance(b, int) and 0 <= a <= b < len(w)):
             loi.append(f"mục {k}: 'tu' phải là [từ đầu, từ cuối] trong 0–{len(w) - 1}")
         else:
-            for f in (() if v.get("cua_hao") else ("chu", "nhan", "sub")):  # cua_hao: câu Hào tự viết cho màn hình (Hào cung cấp = đã xác thực)
-                la = [t for t in toks(v.get(f, "")) if t not in noi]
+            if v["vai"] == "the" and v.get("kieu") not in KIEU_THE:
+                loi.append(f"mục {k}: thẻ cần 'kieu' là {', '.join(KIEU_THE)}")
+            for f in (() if v.get("cua_hao") else ("chu", "nhan", "sub", "title", "centre", "items")):  # cua_hao: câu Hào tự viết cho màn hình (Hào cung cấp = đã xác thực)
+                la = [t for t in toks(" ".join(v[f]) if isinstance(v.get(f), list) else v.get(f, "")) if t not in noi]
                 if la:
                     loi.append(f"mục {k}: chữ «{', '.join(la)}» trong '{f}' KHÔNG có trong lời nói — không tự thêm chữ, hỏi Hào")
             if v["vai"] == "so-lieu" and not str(v.get("nguon", "")).strip():
                 loi.append(f"mục {k}: số liệu cần 'nguon' (vd. 'lời Hào nói, chưa đối chiếu bảng giá')")
-    return loi
+    return loi + kiem_canh(bd, w)[0]
+
+
+def kiem_canh(bd, w):
+    """(lỗi, báo) của danh sách cảnh: khoảng từ hợp lệ, liền nhau không chồng; mã hiệu ứng có trong danh mục; cảnh đã chọn hiệu ứng
+    có khối thì phải có vai tương ứng nằm trong cảnh (Claude đặt). Hiệu ứng chưa có khối (đợt 2) chỉ báo, cảnh đó dựng chỉ người nói."""
+    canh = bd.get("canh") or []
+    if not canh:
+        return [], []
+    mp = json.load(open(MAP_HU, encoding="utf8"))
+    loi, bao, truoc = [], [], -1
+    for k, c in enumerate(canh, 1):
+        a, b = (list(c.get("tu") or []) + [None, None])[:2]
+        if not (isinstance(a, int) and isinstance(b, int) and truoc < a <= b < len(w)):
+            loi.append(f"cảnh {k}: 'tu' phải là [từ đầu, từ cuối], tăng dần, không chồng cảnh trước, trong 0–{len(w) - 1}"); continue
+        truoc = b
+        for m in list(c.get("goi_y") or []) + ([c["chon"]] if c.get("chon") else []):
+            if m not in mp:
+                loi.append(f"cảnh {k}: mã hiệu ứng '{m}' không có trong danh mục")
+        m = c.get("chon")
+        if m in mp:
+            muon = mp[m]
+            if not muon["co"]:
+                bao.append(f"cảnh {k} ({w[a][1]:.1f}s): '{m}' chưa có trong bộ dựng (đợt 2) → dựng chỉ người nói")
+            elif muon["vai"] and not any(v.get("vai") == muon["vai"] and (muon.get("kieu") in (None, v.get("kieu")))
+                                         and v["tu"][0] <= b and v["tu"][1] >= a for v in bd.get("vai", [])):
+                loi.append(f"cảnh {k} chọn '{m}': cần vai '{muon['vai']}'{' kiểu ' + muon['kieu'] if muon.get('kieu') else ''} trong từ {a}–{b}")
+    return loi, bao
 
 
 def ap(tl, w, bd):
     tl = json.loads(json.dumps(tl))
     total = sum(c["dur"] for c in tl["clips"])
     vai = bd.get("vai", [])
-    lon = [v for v in vai if v["vai"] in ("hook", "tieu-de", "so-lieu")]   # các khoảng thay bằng chữ lớn hoặc cảnh chèn
+    lon = [v for v in vai if v["vai"] in ("hook", "tieu-de", "so-lieu", "the")]   # các khoảng thay bằng chữ lớn hoặc cảnh chèn
     trong = lambda i: any(v["tu"][0] <= i <= v["tu"][1] for v in lon)
     khoa = {i for v in vai if v["vai"] in ("tu-khoa", "cta") for i in range(v["tu"][0], v["tu"][1] + 1)}
     tl["texts"] = [x for x in tl.get("texts", []) if not (x.get("auto_loi") or x.get("ban_dung"))]
     tl["cards"] = [x for x in tl.get("cards", []) if not x.get("ban_dung")]
     # chữ theo nhịp nói cho phần còn lại; từ khoá do AI chọn (không dùng luật đoán số/tiền)
     # chữ lớn hiện lâu hơn lúc nói (tối thiểu 1,8s, thêm 0,8s) nên bỏ chữ theo nhịp nói rơi vào lúc đó, tránh chồng chữ
-    hien = [(max(0, w[v["tu"][0]][1] - 0.1), max(w[v["tu"][0]][1] - 0.1 + 1.8, w[v["tu"][1]][2] + 0.8)) for v in lon if v["vai"] != "so-lieu"]
+    hien = [(max(0, w[v["tu"][0]][1] - 0.1), max(w[v["tu"][0]][1] - 0.1 + 1.8, w[v["tu"][1]][2] + 0.8)) for v in lon if v["vai"] not in ("so-lieu", "the")]
     che = lambda x: any(a <= x[1] < b for a, b in hien)
     con = [(i, x) for i, x in enumerate(w) if not trong(i) and not che(x)]
     nhom_tu, cur = [], []
@@ -99,6 +133,10 @@ def ap(tl, w, bd):
         if v["vai"] == "so-lieu":
             tl["cards"].append({"kieu": "so-lieu", "start": round(st, 2), "dur": round(min(max(2.0, en - st + 0.6), total - st), 2), "title": v.get("nhan", ""),
                                 "value": hoa(chu), "label": v.get("nhan_duoi", ""), "nguon": v["nguon"], "ban_dung": True})
+        elif v["vai"] == "the":
+            tl["cards"].append({"kieu": v["kieu"], "start": round(st, 2), "dur": round(min(max(3.0, en - st + 0.6), total - st), 2),
+                                "title": v.get("title", ""), "items": list(v.get("items") or []), "centre": v.get("centre", ""),
+                                "sub": v.get("sub", ""), "ban_dung": True})
         else:
             tl["texts"].append({"kind": "title3d", "start": round(st, 2), "dur": round(min(max(1.8, en - st + 0.8), total - st), 2), "top": v.get("nhan", ""),
                                 "big": hoa(chu), "sub": v.get("sub", ""), "sau_dau": v.get("sau_dau", v["vai"] == "hook"), "ban_dung": True, "vai": v["vai"]})
@@ -123,6 +161,13 @@ def _tu_kiem():
     assert not any(q[0] in ("77", "Bếp") for x in loi for q in x["words"]), loi    # phần đã thành chữ lớn/thẻ không lặp lại
     assert any(x["hl"] and x["words"][x["hl"][0]][0] == "rộng" for x in loi), loi  # từ khoá do bản dựng chọn
     assert not any(q[0] == "to" for x in loi for q in x["words"]), loi  # nói lúc chữ lớn còn hiện: bỏ, không chồng chữ
+    # thẻ + cảnh: chữ trong thẻ phải là lời đã nói; cảnh chọn hiệu ứng có khối thì phải có vai tương ứng
+    the = {"vai": "the", "tu": [6, 10], "kieu": "checklist", "title": "Bếp đảo", "items": ["rộng"]}
+    assert kiem_ban({"vai": [the]}, w) == [] and any("KHÔNG có" in e for e in kiem_ban({"vai": [{**the, "items": ["sang"]}]}, w))
+    assert ap(tl, w, {"vai": [the]})["cards"][0]["kieu"] == "checklist"
+    c = {"vai": [the], "canh": [{"tu": [0, 5], "chon": "count_up"}, {"tu": [6, 10], "chon": "note_board"}]}
+    assert any("cần vai 'so-lieu'" in e for e in kiem_ban(c, w)) and not any("cảnh 2" in e for e in kiem_ban(c, w)), kiem_ban(c, w)
+    assert kiem_canh({"canh": [{"tu": [0, 5], "chon": "chart_bars"}]}, w)[1] and kiem_canh({"canh": [{"tu": [0, 5], "chon": "xyz"}]}, w)[0]
     print("OK")
 
 

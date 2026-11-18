@@ -95,6 +95,7 @@ def nhan_dang(path, cache, tu_vung=None):
     import ctranslate2
     pcm = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-i", path, "-vn", "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
                          capture_output=True, check=True).stdout
+    tin = []  # độ tin cậy từng từ (0..1) của máy nghe, cùng thứ tự với words: agent hỏi Hào các từ < 0,6
     if not pcm:
         words = []
     else:
@@ -107,8 +108,9 @@ def nhan_dang(path, cache, tu_vung=None):
                 segs, _ = WhisperModel(name, device=dev, compute_type=ct).transcribe(
                     audio, language="vi", word_timestamps=True, vad_filter=True, beam_size=5,
                     initial_prompt=("Từ ngữ trong video: " + ", ".join(tu_vung) + ".") if tu_vung else None)
-                words = [[w.word.strip(), round(w.start, 2), round(w.end, 2)] for s in segs if not BIA.search(s.text)
-                         for w in s.words if w.word.strip()]
+                ws = [w for s in segs if not BIA.search(s.text) for w in s.words if w.word.strip()]
+                words = [[w.word.strip(), round(w.start, 2), round(w.end, 2)] for w in ws]
+                tin = [round(float(w.probability), 3) for w in ws]
                 break
             except Exception as ex:
                 if k == len(tries) - 1:
@@ -116,7 +118,13 @@ def nhan_dang(path, cache, tu_vung=None):
                 print(f"Không chạy được bằng card đồ họa ({ex}); chuyển sang CPU", flush=True)
     os.makedirs(os.path.dirname(cache), exist_ok=True)
     json.dump(words, open(cache, "w", encoding="utf8"), ensure_ascii=False)
+    json.dump(tin, open(file_tin(cache), "w", encoding="utf8"))
     return words
+
+
+def file_tin(cache):
+    """Tệp độ tin cậy đi kèm tệp nhận dạng (danh sách số, cùng thứ tự từ; tệp cũ trước 18/11 không có)."""
+    return cache[:-5] + ".tin.json"
 
 
 def main(proj):
