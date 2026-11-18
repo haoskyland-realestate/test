@@ -106,7 +106,7 @@ def lap(pj):
         rows.append(f"| {k} | {a:.1f}–{b:.1f} ({b - a:.1f}s) | {nguon} | {loi.replace('|', '/')} | {chu_tren_man(tl, a, b)} | {tr.get(round(a, 2), '')} |")
     luoi(files, os.path.join(pj, "build", "storyboard.jpg"))
     from phan_tich_loi import phan_tich, bao_cao
-    phan_tich_md = bao_cao(phan_tich(tl, w)) if w else ["- Chưa có text từ ghi âm (chạy loi_nhip.py) nên chưa phân tích được lời nói."]
+    phan_tich_md = bao_cao(phan_tich(tl, w, pj)) if w else ["- Chưa có text từ ghi âm (chạy loi_nhip.py) nên chưa phân tích được lời nói."]
     from doi_chieu import kiem
     hoi = kiem(pj)[0]
     md = [f"# STORYBOARD: {os.path.basename(pj)}", "",

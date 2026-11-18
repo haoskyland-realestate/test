@@ -1,6 +1,6 @@
 # STORYBOARD: 2026-11-17_tiktok_hoc-mon_saigon-park-quy-mo
 
-> Tạo bằng `scripts/storyboard.py` từ `timeline.json`. 22 cảnh, 104.0 giây. Ảnh lưới: `build/storyboard.jpg` (số # trùng bảng).
+> Tạo bằng `scripts/storyboard.py` từ `timeline.json`. 21 cảnh, 101.5 giây. Ảnh lưới: `build/storyboard.jpg` (số # trùng bảng).
 > Hào duyệt bảng này trước; duyệt xong Claude dựng bản xem 540×960 (`dung.py --xem`), rồi mới dựng bản cuối.
 
 | # | Giây | Hình | Lời nói | Chữ trên màn hình | Chuyển cảnh vào |
@@ -10,23 +10,22 @@
 | 3 | 17.7–19.9 (2.1s) | thẻ so-lieu | 271 ha, và thấy | [thẻ so-lieu] Vinhomes Grand Park, quận 9 · 271 ha |  |
 | 4 | 19.9–24.4 (4.5s) | trám IMG_9680.MOV | nó như một quận thu nhỏ, thì Vinhomes Saigon Park có quy mô lên đến |  |  |
 | 5 | 24.4–26.9 (2.5s) | thẻ so-lieu | 1.080 ha, tức là | [thẻ so-lieu] Vinhomes Saigon Park · 1.080 ha |  |
-| 6 | 26.9–28.4 (1.6s) | trám IMG_9681.MOV | gấp 3,3 lần. Nhưng |  |  |
-| 7 | 28.4–34.2 (5.8s) | trám IMG_9659.MOV | con số ấn tượng nhất không phải là diện tích, mà chính là mật độ xây dựng toàn khu, chỉ khoảng |  | cut |
+| 6 | 26.9–28.4 (1.6s) | trám IMG_9681.MOV | gấp 3,3 lần. Nhưng | tức là · GẤP 3,3 LẦN |  |
+| 7 | 28.4–34.2 (5.8s) | trám IMG_9659.MOV | con số ấn tượng nhất không phải là diện tích, mà chính là mật độ xây dựng toàn khu, chỉ khoảng | tức là · GẤP 3,3 LẦN | cut |
 | 8 | 34.2–36.2 (2.0s) | thẻ so-lieu | 25%. Điều đó | [thẻ so-lieu] mật độ xây dựng · 25% |  |
 | 9 | 36.2–39.2 (3.0s) | trám IMG_9660.MOV | có nghĩa là gần 75% diện tích còn |  |  |
 | 10 | 39.2–43.1 (3.9s) | trám IMG_9661.MOV | lại, tương đương hơn 800 ha, được chủ đầu tư dành trọn |  |  |
 | 11 | 43.1–44.9 (1.8s) | trám IMG_9676.MOV | cho các công trình công cộng, cụm |  |  |
 | 12 | 44.9–49.9 (5.0s) | thẻ quy-dao | trường đại học quốc tế, đại đô thị, công viên sinh thái, hồ điều hòa cảnh quan, | [thẻ quy-dao] hơn 800 ha dành cho · CÔNG CỘNG · Đại học quốc tế · Công viên sinh thái · Hồ điều hòa · Vinschool |  |
 | 13 | 49.9–56.5 (6.6s) | trám IMG_9683.MOV | và hệ thống trường học liên cấp Vinschool. Theo bản vẽ quy hoạch mặt bằng mới nhất, |  |  |
-| 14 | 56.5–64.3 (7.8s) | trám IMG_9678.MOV | dự án được chia làm 2 phân khu chính, phân khu thấp tầng sinh thái ven sông với các dãy nhà liền kề, biệt thự đơn lập, | quy hoạch mặt bằng mới nhất · 2 PHÂN KHU | cut |
-| 15 | 64.3–70.0 (5.8s) | trám IMG_9677.MOV | song lập, biệt thự đơn lập, song lập, mang phong cách nghỉ dưỡng yên bình, |  |  |
-| 16 | 70.0–71.9 (1.9s) | trám IMG_9679.MOV | và phân khu cao tầng năng động, |  |  |
-| 17 | 71.9–76.5 (4.6s) | trám IMG_9649.MOV | bao quanh khu trung tâm thương mại Vincom và trục đại lộ thương mại sầm uất. Tuy |  | cut |
-| 18 | 76.5–80.5 (4.0s) | trám IMG_9650.MOV | nhiên, Hào lưu ý một số điểm rất thực tế. Với một đại |  | cut |
-| 19 | 80.5–83.4 (2.8s) | trám IMG_9682.MOV | đô thị gần 1.080 ha, |  |  |
-| 20 | 83.4–86.0 (2.6s) | trám IMG_9679.MOV | chủ đầu tư sẽ triển khai theo từng phân kỳ xây dựng. | Hào lưu ý · TỪNG PHÂN KỲ | cut |
-| 21 | 86.0–86.5 (0.5s) | trám IMG_9682.MOV |  | Hào lưu ý · TỪNG PHÂN KỲ |  |
-| 22 | 86.5–104.0 (17.4s) | canh-cuoi-cung.MOV | Với tiến độ xây dựng 3 ca 4 kíp, thì những căn nhà phố đầu tiên của dự án Vinhomes Saigon Park sẽ bàn giao cho quý khách hàng vào quý 2 hoặc quý 3 2017. Nếu quý anh chị muốn tham quan thực tế tiến độ xây dựng của dự án hoặc sa bàn của dự án, thì hãy liên hệ với em Hào, để Hào có thể dẫn anh chị đi tham quan nha. Xin chào! | Hào lưu ý · TỪNG PHÂN KỲ | cut |
+| 14 | 56.5–63.0 (6.6s) | trám IMG_9678.MOV | dự án được chia làm 2 phân khu chính, phân khu thấp tầng sinh thái ven sông với các dãy nhà liền kề, | quy hoạch mặt bằng mới nhất · 2 PHÂN KHU | cut |
+| 15 | 63.0–67.6 (4.6s) | trám IMG_9677.MOV | biệt thự đơn lập, song lập, mang phong cách nghỉ dưỡng yên bình, |  | cut |
+| 16 | 67.6–69.5 (1.9s) | trám IMG_9679.MOV | và phân khu cao tầng năng động, |  |  |
+| 17 | 69.5–74.1 (4.6s) | trám IMG_9649.MOV | bao quanh khu trung tâm thương mại Vincom và trục đại lộ thương mại sầm uất. Tuy |  | cut |
+| 18 | 74.1–78.1 (4.0s) | trám IMG_9650.MOV | nhiên, Hào lưu ý một số điểm rất thực tế. Với một đại |  | cut |
+| 19 | 78.1–81.5 (3.4s) | trám IMG_9682.MOV | đô thị gần 1.080 ha, chủ đầu tư |  |  |
+| 20 | 81.5–84.1 (2.6s) | trám IMG_9679.MOV | sẽ triển khai theo từng phân kỳ xây dựng. | Hào lưu ý · TỪNG PHÂN KỲ |  |
+| 21 | 84.1–101.5 (17.4s) | canh-cuoi-cung.MOV | Với tiến độ xây dựng 3 ca 4 kíp, thì những căn nhà phố đầu tiên của dự án Vinhomes Saigon Park sẽ bàn giao cho quý khách hàng vào quý 2 hoặc quý 3 2027. Nếu quý anh chị muốn tham quan thực tế tiến độ xây dựng của dự án hoặc sa bàn của dự án, thì hãy liên hệ với em Hào, để Hào có thể dẫn anh chị đi tham quan nha. Xin chào! | Hào lưu ý · TỪNG PHÂN KỲ ‖ bàn giao · 2027 · quý 2 hoặc quý 3 | cut |
 
 ## Phân tích lời nói và chỗ cắt (dự đoán, chưa sửa gì)
 > Nói nhanh/chậm so với nhịp riêng của Hào, lặp từ, nói vấp, chỗ cắt rơi giữa từ, cảnh quá ngắn/dài. Hào chọn mục nào cần sửa, Claude sửa rồi lập lại storyboard.
@@ -36,21 +35,9 @@
 | 0.0 | cắt cảnh | cảnh #1 dài 13.9s, nên chèn cảnh trám/zoom/chữ |  |
 | 0.0 | nói nhanh | «Vinhomes Saigon Park, với tổng diện tích 1.080 ha, thì chủ đầu tư Vinhomes dành bao nhiêu phần trăm cho tỷ lệ cây xanh và mặt nước, bao nhiêu phần trăm cho tỷ lệ xây dựng, thì hãy cùng Hào xem hết clip này.» 4.5 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
 | 10.0 | nói nhanh | «Để khám phá dự án Vinhomes Saigon Park, chủ đầu tư Vinhomes sẽ xây dựng như thế nào nha.» 5.3 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
-| 17.7 | cắt cảnh | cảnh #3: đổi hình giữa từ «rộng» | dời chỗ cắt về khoảng lặng gần nhất |
-| 19.9 | cắt cảnh | cảnh #4: đổi hình giữa từ «thấy» | dời chỗ cắt về khoảng lặng gần nhất |
-| 24.4 | cắt cảnh | cảnh #5: đổi hình giữa từ «đến» | dời chỗ cắt về khoảng lặng gần nhất |
-| 28.4 | cắt cảnh | cảnh #7: CẮT TIẾNG giữa từ «Nhưng» | dời chỗ cắt về khoảng lặng gần nhất |
-| 34.2 | cắt cảnh | cảnh #8: đổi hình giữa từ «khoảng» | dời chỗ cắt về khoảng lặng gần nhất |
-| 43.1 | cắt cảnh | cảnh #11: đổi hình giữa từ «trọn» | dời chỗ cắt về khoảng lặng gần nhất |
-| 56.5 | cắt cảnh | cảnh #14 dài 7.8s, nên chèn cảnh trám/zoom/chữ |  |
-| 63.2 | lặp từ | «biệt thự đơn lập, song lập,» nói 2 lần (63.2s và 65.6s) | cắt lần đầu: 63.22–65.64s |
-| 64.3 | cắt cảnh | cảnh #15: đổi hình giữa từ «lập,» | dời chỗ cắt về khoảng lặng gần nhất |
-| 76.5 | cắt cảnh | cảnh #18: CẮT TIẾNG giữa từ «Tuy» | dời chỗ cắt về khoảng lặng gần nhất |
-| 80.5 | cắt cảnh | cảnh #19: đổi hình giữa từ «đại» | dời chỗ cắt về khoảng lặng gần nhất |
-| 86.0 | cắt cảnh | cảnh #21 chỉ 0.5s (như chớp) | gộp/kéo dài cảnh |
-| 86.5 | cắt cảnh | cảnh #22 dài 17.4s, nên chèn cảnh trám/zoom/chữ |  |
-| 86.6 | nói nhanh | «Với tiến độ xây dựng 3 ca 4 kíp, thì những căn nhà phố đầu tiên của dự án Vinhomes Saigon Park sẽ bàn giao cho quý khách hàng vào quý 2 hoặc quý 3 2017.» 4.4 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
-| 95.2 | nói nhanh | «Nếu quý anh chị muốn tham quan thực tế tiến độ xây dựng của dự án hoặc sa bàn của dự án, thì hãy liên hệ với em Hào, để Hào có thể dẫn anh chị đi tham quan nha.» 5.2 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
+| 84.1 | cắt cảnh | cảnh #21 dài 17.4s, nên chèn cảnh trám/zoom/chữ |  |
+| 84.2 | nói nhanh | «Với tiến độ xây dựng 3 ca 4 kíp, thì những căn nhà phố đầu tiên của dự án Vinhomes Saigon Park sẽ bàn giao cho quý khách hàng vào quý 2 hoặc quý 3 2027.» 4.4 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
+| 92.7 | nói nhanh | «Nếu quý anh chị muốn tham quan thực tế tiến độ xây dựng của dự án hoặc sa bàn của dự án, thì hãy liên hệ với em Hào, để Hào có thể dẫn anh chị đi tham quan nha.» 5.2 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
 
 ## Cần Hào trả lời trước khi dựng bản cuối
 - Không có (cổng đối chiếu đạt).

@@ -58,13 +58,40 @@ def vap(ws):
     return sorted(out)
 
 
-def cat_canh(cs, ws, cat_tieng=()):
-    """Chỗ cắt rơi giữa một từ và cảnh quá ngắn (< 1s, như chớp) hoặc quá dài (> 7s, người xem dễ lướt).
-    cat_tieng: mốc cắt cả tiếng (đổi đoạn chính) — cắt giữa từ ở đây nghe bị mất chữ; còn lại chỉ đổi hình (cảnh trám, thẻ), nhẹ hơn."""
+def am_tai_cat(pj, tl):
+    """Mỗi mốc cắt tiếng (đổi đoạn chính): True nếu ngay hai bên chỗ cắt còn đang có tiếng nói (cắt mất chữ), đo trên file gốc.
+    Mốc từ của máy nhận dạng thường rộng hơn tiếng thật, nên phải đo âm lượng thật mới biết (18/11: 2 chỗ báo nhầm ở Saigon Park)."""
+    import subprocess, numpy as np
+    from timeline import layout
+
+    def doc(f, a=None, d=None):
+        cmd = ["ffmpeg", "-v", "error"] + (["-ss", f"{a:.3f}", "-t", f"{d:.3f}"] if a is not None else []) + ["-i", f, "-vn", "-ac", "1", "-ar", "8000", "-f", "s16le", "-"]
+        return np.frombuffer(subprocess.run(cmd, capture_output=True).stdout, np.int16).astype(float)
+    db = lambda x: 20 * np.log10(np.sqrt((x ** 2).mean()) / 32768 + 1e-9) if len(x) else -99
+    muc, out = {}, {}
+    for t, c0, c1 in zip(layout(tl)["starts"][1:], tl["clips"], tl["clips"][1:]):
+        hai_ben = []
+        for c, a in ((c0, c0["in"] + c0["dur"] - 0.06), (c1, c1["in"])):
+            f = os.path.join(pj, "build", "raw", c["file"])
+            if not os.path.exists(f):
+                break
+            if f not in muc:  # mức tiếng nói của file: 70% khung 50 ms to hơn mức này là lặng/nền
+                x = doc(f); muc[f] = np.percentile([db(k) for k in np.array_split(x, max(1, len(x) // 400))], 70)
+            hai_ben.append(db(doc(f, max(a, 0), 0.06)) > muc[f] - 12)
+        if len(hai_ben) == 2:
+            out[round(t, 2)] = any(hai_ben)
+    return out
+
+
+def cat_canh(cs, ws, cat_tieng=None):
+    """Chỗ cắt tiếng rơi giữa lời, và cảnh quá ngắn (< 1s, như chớp) hoặc quá dài (> 7s, người xem dễ lướt).
+    cat_tieng: {mốc cắt tiếng: có tiếng nói ngay chỗ cắt?} (am_tai_cat). Chỉ đổi hình (cảnh trám, thẻ) giữa lời thì không báo: nghe vẫn liền."""
     out = []
     for k, (a, b, *_) in enumerate(cs, 1):
-        if k > 1 and (w := next((w for w in ws if w[1] + 0.05 < a < w[2] - 0.05), None)):
-            out.append((a, f"cảnh #{k}: {'CẮT TIẾNG' if any(abs(a - t) < 0.02 for t in cat_tieng) else 'đổi hình'} giữa từ «{w[0]}»"))
+        noi = next((v for t, v in (cat_tieng or {}).items() if abs(a - t) < 0.02), None)
+        if k > 1 and noi:
+            w = next((w for w in ws if w[1] - 0.1 < a < w[2] + 0.1), None)
+            out.append((a, f"cảnh #{k}: CẮT TIẾNG giữa lời" + (f" (gần «{w[0]}»)" if w else "")))
         if b - a < 1:
             out.append((a, f"cảnh #{k} chỉ {b - a:.1f}s (như chớp)"))
         elif b - a > 7:
@@ -72,7 +99,7 @@ def cat_canh(cs, ws, cat_tieng=()):
     return out
 
 
-def phan_tich(tl, ws):
+def phan_tich(tl, ws, pj=None):
     """Danh sách ghi chú [(giây, loại, nội dung, đề xuất)] theo thời gian."""
     from storyboard import canh
     g = []
@@ -86,9 +113,8 @@ def phan_tich(tl, ws):
                   f"cắt lần đầu: {ws[i][1]:.2f}–{ws[j][1]:.2f}s"))
     for i, loai in vap(ws):
         g.append((ws[i][1], "nói vấp", f"{loai} trước «{ws[i][0]}»", "cắt tiếng đệm" if loai == "tiếng đệm" else "cắt bớt khoảng lặng"))
-    from timeline import layout
-    for t, nd in cat_canh(canh(tl), ws, layout(tl)["starts"][1:]):
-        g.append((t, "cắt cảnh", nd, "dời chỗ cắt về khoảng lặng gần nhất" if "giữa từ" in nd else "gộp/kéo dài cảnh" if "chớp" in nd else ""))
+    for t, nd in cat_canh(canh(tl), ws, am_tai_cat(pj, tl) if pj else None):
+        g.append((t, "cắt cảnh", nd, "dời chỗ cắt về khoảng lặng gần nhất" if "giữa lời" in nd else "gộp/kéo dài cảnh" if "chớp" in nd else ""))
     return sorted(g)
 
 
@@ -109,9 +135,10 @@ def _tu_kiem():
     nhanh = w("một hai ba bốn năm sáu bảy.", 0, 0.1) + w("một hai ba bốn năm sáu bảy.", 3, 0.25) + w("một hai ba bốn năm sáu bảy.", 6, 0.25)
     assert [x[3] for x in toc_do(nhanh)[0]] == ["nhanh", "", ""], toc_do(nhanh)
     tl = {"version": 1, "clips": [{"file": "a", "in": 0, "dur": 9}, {"file": "b", "in": 0, "dur": 0.5}], "transitions": [{"type": "cut"}]}
-    g = cat_canh([(0, 9, "clip", 0), (9, 9.5, "clip", 1)], w("xin chào", 8.9, 0.2), [9])
+    g = cat_canh([(0, 9, "clip", 0), (9, 9.5, "clip", 1)], w("xin chào", 8.9, 0.2), {9: True})
     assert any("CẮT TIẾNG" in x for _, x in g), g
-    assert any("giữa từ" in x for _, x in g) and any("chớp" in x for _, x in g) and any("dài" in x for _, x in g), g
+    assert not any("CẮT" in x for _, x in cat_canh([(0, 9, "clip", 0), (9, 9.5, "clip", 1)], w("xin chào", 8.9, 0.2), {9: False}))  # cắt trong khoảng lặng
+    assert any("giữa lời" in x for _, x in g) and any("chớp" in x for _, x in g) and any("dài" in x for _, x in g), g
     assert any(x[1] == "lặp từ" for x in phan_tich(tl, ws)), phan_tich(tl, ws)
     print("OK")
 
@@ -122,6 +149,6 @@ if __name__ == "__main__":
     elif len(sys.argv) == 2 and os.path.isdir(sys.argv[1]):
         from ban_dung import doc_loi
         tl, ws = doc_loi(os.path.abspath(sys.argv[1]))
-        print("\n".join(bao_cao(phan_tich(tl, ws))))
+        print("\n".join(bao_cao(phan_tich(tl, ws, os.path.abspath(sys.argv[1])))))
     else:
         sys.exit("Dùng: python3 scripts/phan_tich_loi.py projects/<tên>")
