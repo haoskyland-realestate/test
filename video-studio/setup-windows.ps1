@@ -23,7 +23,7 @@ if (-not (Test-Path $PYX)) {
 }
 & $PYX -m pip install --upgrade pip
 # pip bỏ qua gói đã có ("Requirement already satisfied"), chỉ cài gói còn thiếu
-& $PYX -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime
+& $PYX -m pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime yt-dlp
 Write-Host ""
 Write-Host "Kiểm máy và dựng thử video giả 6 giây (1–3 phút):"
 & $PYX scripts\kiem_may.py --dung-thu

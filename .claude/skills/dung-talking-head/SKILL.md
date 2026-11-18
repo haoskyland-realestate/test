@@ -7,7 +7,7 @@ description: Dựng video talking head (Hào nói trước máy) theo đúng 5 b
 
 **Không dùng app** (Hào chốt 17/11): Claude chạy thẳng các lệnh dưới đây. Trên PC Windows, mọi lệnh `python` là `.venv\Scripts\python.exe` (tạo bằng `setup-windows.ps1`), chạy trong `video-studio`; trên cloud/Mac là `python3` hoặc `.venv/bin/python`. Thiếu thư viện thì công cụ tự báo lệnh cài đúng.
 
-0. **Tạo dự án từ thư mục footage của Hào:** `python scripts/du_an_moi.py "<thư mục footage>" <ngày>_<tiktok|youtube>_<dự án>_<chủ đề>`. Rồi `python scripts/master_cut.py projects/<tên>` (cắt lặng, câu vấp, chọn khúc đẹp; báo cáo `build/master-cut.md`) và `python scripts/dung.py projects/<tên> --nhap` một lần (tạo `build/voice.wav`). Gửi Hào báo cáo master cut.
+0. **Tạo dự án từ footage Hào gửi** (nhiều nguồn một lúc: thư mục/file trên máy, link Google Drive, link tải trực tiếp, YouTube/TikTok): `python scripts/du_an_moi.py <ngày>_<tiktok|youtube>_<dự án>_<chủ đề> <nguồn 1> [nguồn 2 …]`; thêm footage sau: `python scripts/du_an_moi.py --them <tên> <nguồn …>`. Rồi `python scripts/master_cut.py projects/<tên>` (cắt lặng, câu vấp, chọn khúc đẹp; báo cáo `build/master-cut.md`) và `python scripts/dung.py projects/<tên> --nhap` một lần (tạo `build/voice.wav`). Gửi Hào báo cáo master cut.
 
 Đọc trước: `docs/04-thu-vien/GHI-NHO-NGHIEM-THU.md` (quy tắc đối chiếu, tốc độ chữ, bố cục). Công cụ: `video-studio/scripts/ban_dung.py`. Chạy trong `video-studio`.
 
