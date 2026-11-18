@@ -146,6 +146,11 @@ Các lớp âm: xem `MAU.md` của `talking-cam-01`. Mọi âm vào mẫu qua `a
 - Chữ trên nền nội thất sáng (tủ trắng, đá trắng) cần bóng và quầng tối nhẹ sau khối chữ, nếu không chữ kem/trắng chìm mất.
 - Phong cách chậm sẵn (×1,3) thì giảm `cham_chu` (1,15), tránh chậm chồng chậm làm thẻ ngắn chưa kịp hiện hết đã tắt.
 
+## Thương hiệu và tên người nói (Hào chốt 18/11/2026)
+- Mặc định không có "Hào Sky Land" trong video. Chỉ thêm (`meta.thuong_hieu`) khi Hào nói cần thương hiệu của Hào.
+- Người nói có thể là người khác (video Saigon Park: người nói xưng "Hùng"). Không tự sửa tên người nói thành "Hào"; đoán ý từ nghe sai chỉ áp cho từ ngữ nội dung, không áp cho tên người.
+- Chỗ nói vấp hay nằm trong một từ mà máy nhận dạng kéo dài bất thường (vd. "vẽ" dài 1,66s): đo âm lượng để thấy khoảng lặng giữa từ rồi cắt bằng `scripts/cat_doan.py`.
+
 ## Video Saigon Park (17/11/2026): quy trình duyệt và lỗi đã sửa tận gốc
 
 - **Hai lần duyệt trước bản cuối (Hào chốt 17/11):**

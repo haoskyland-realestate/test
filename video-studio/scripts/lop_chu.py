@@ -69,6 +69,8 @@ def tao(tl, phan=None, ti_le=1):
     W, H = size(tl)  # toạ độ thiết kế luôn là khung đầy đủ; ti_le < 1 (bản xem 540×960) thu cả lớp chữ trong #khung bằng transform
     YT = W > H
     RW, RH = round(W * ti_le), round(H * ti_le)
+    # Thương hiệu: mặc định KHÔNG có (Hào chốt 18/11: dựng cho nhiều người). Chỉ hiện khi dự án ghi meta.thuong_hieu (vd. "HÀO SKY LAND").
+    TH = html.escape(str(tl.get("meta", {}).get("thuong_hieu") or ""))
     LO = tl.get("meta", {}).get("loi", {})  # kiểu chữ theo nhịp nói của mẫu (màu từ khoá, quầng sáng, phông…)
     L = layout(tl)
     starts, total = L["starts"], L["total"]
@@ -135,7 +137,7 @@ def tao(tl, phan=None, ti_le=1):
                   f'tl.fromTo("{sel} .bar",{{scaleX:0}},{{scaleX:1,duration:{d(.5)},ease:"power3.out"}},{st0 + 0.15:.2f});',
                   f'tl.fromTo("{sel} .title",{{opacity:0,y:30}},{{opacity:1,y:0,duration:{d(.5)}}},{st0 + 0.15:.2f});']
         elif kind == "outro":
-            body = ('<div class="brand">HÀO SKY LAND</div><div class="gold"></div>' + "".join(line(l, "", ch) for l in s["lines"])
+            body = ((f'<div class="brand">{TH}</div>' if TH else "") + '<div class="gold"></div>' + "".join(line(l, "", ch) for l in s["lines"])
                     + f'<div class="note">{html.escape(s.get("note", ""))}</div>')
             a += [f'tl.fromTo("{sel} .brand",{{opacity:0,letterSpacing:"40px"}},{{opacity:1,letterSpacing:"10px",duration:{d(1.0)},ease:"expo.out"}},{st0:.2f});',
                   f'tl.fromTo("{sel} .gold",{{scaleX:0}},{{scaleX:1,duration:{d(.7)},ease:"power3.out"}},{st0 + 0.4:.2f});',
@@ -333,7 +335,7 @@ def tao(tl, phan=None, ti_le=1):
     </style></head><body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{RW}" data-height="{RH}"><div id="khung">
     {"" if phan == "sau" else f'<div class="clip scrim" data-start="0" data-duration="{total:.2f}" data-track-index="0"></div><div class="clip topscrim" data-start="0" data-duration="{total:.2f}" data-track-index="5"></div>'}
-    {"" if phan == "sau" else f'<div class="clip logo" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>HÀO SKY LAND</div><div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>'}
+    {"" if phan == "sau" else (f'<div class="clip logo" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>{TH}</div>' if TH else "") + f'<div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>'}
     {chr(10).join(blocks)}
     </div></div><script>
     // Số kiểu Việt Nam: 1.234,5
@@ -356,6 +358,7 @@ def _tu_kiem():
         dur, st = float(m.group(1)), float(m.group(2))
         w0 = tl["texts"][0]["words"][k][1]
         assert st + dur / 2 <= w0 + 0.01 and st >= w0 - 0.5, (k, st, dur)
+    assert "SKY LAND" not in h and "SKY LAND" in tao({**tl, "meta": {**tl["meta"], "thuong_hieu": "HÀO SKY LAND"}})
     print("OK")
 
 

@@ -21,6 +21,7 @@
 | Chuyển động: mọi chữ ease in-out, chậm lại (`meta.cham_chu`) | `lop_chu.em_dan()` |
 | Hai lần duyệt trước bản cuối (Hào chốt 17/11): storyboard → bản xem 540×960 → bản cuối | `scripts/storyboard.py`, `dung.py --xem` |
 | Không sao chép tài nguyên người khác; học cấu trúc, tự dựng lại | `thu-vien-mau/README.md` |
+| Mặc định không có thương hiệu "Hào Sky Land"; chỉ thêm `meta.thuong_hieu` khi Hào yêu cầu. Tên người nói theo đúng ghi âm, không tự đổi thành "Hào" (Hào chốt 18/11) | `CLAUDE.md`, `lop_chu.py` |
 | Phải hỏi Hào trước: đăng công khai, gửi tin cho khách, xoá/ghi đè dữ liệu quan trọng, đổi trang công khai, phát sinh chi phí, gộp vào `main` | `CLAUDE.md` |
 | Không đưa vào repo: thu nhập, ngày sinh, thông tin khách, khoá API, token | `CLAUDE.md` |
 
@@ -46,6 +47,7 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 |---|---|---|---|
 | Dự án | Tạo dự án từ thư mục footage (không cần app) | `scripts/du_an_moi.py` | Cloud |
 | Dự án | Định dạng timeline v1 (cảnh, chữ, âm, cảnh chèn, zoom, B-roll, overlay) | `scripts/timeline.py`, test `test_timeline.py` | Cloud |
+| Dựng | Cắt bỏ một đoạn (câu lặp, chỗ vấp, khoảng lặng) và tự dời mọi thứ phía sau | `scripts/cat_doan.py projects/<tên> <từ> <đến>` | Cloud (Saigon Park) |
 | Duyệt | Phân tích lời nói và chỗ cắt: nói nhanh/chậm (so với nhịp riêng), lặp từ, nói vấp, cắt giữa từ, cảnh quá ngắn/dài + đề xuất; tự gắn vào storyboard | `scripts/phan_tich_loi.py projects/<tên>` | Cloud (Saigon Park: bắt câu lặp "biệt thự đơn lập, song lập") |
 | Duyệt | Storyboard từng cảnh (giây, ảnh, lời nói, chữ, chuyển cảnh) + ảnh lưới | `scripts/storyboard.py projects/<tên>` | Cloud (Saigon Park 24 cảnh, 46s) |
 | Dựng | Dựng MP4: bản xem 540×960 `--xem` để Hào duyệt, nháp `--nhap`, bản cuối; nhớ bước đã làm | `scripts/dung.py projects/<tên>` | Cloud, Mac (dựng thử 6s) |

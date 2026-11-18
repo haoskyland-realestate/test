@@ -97,6 +97,11 @@ Hào giao việc thẳng cho Claude Code (trên PC qua Anti, hoặc cloud); Clau
 ## Kế hoạch đang theo
 `docs/03-ke-hoach/KE-HOACH-APP.md`: định dạng timeline → thư viện hiệu ứng → app timeline (PWA PC + điện thoại) → máy chủ cục bộ Windows → âm thanh.
 
+## Dựng cho nhiều người, thương hiệu khi được yêu cầu (Hào chốt 18/11/2026)
+- **Mặc định KHÔNG có chữ/logo "Hào Sky Land"** trong video: hệ thống dùng để edit cho nhiều người. Chỉ khi Hào nói kiểu "edit cần thương hiệu của tôi" mới thêm `meta.thuong_hieu: "HÀO SKY LAND"` vào timeline (lớp chữ tự hiện logo góc trên và thương hiệu ở khối kết).
+- **Người nói trong video có thể không phải Hào.** Tên người nói lấy đúng theo ghi âm, KHÔNG tự sửa thành "Hào" (lỗi 17/11: tự sửa "Hùng" → "Hào" trong `meta.sua_tu`, Hào phải yêu cầu đổi lại). Chữ nhãn/kêu gọi theo đúng tên đã nói.
+- Cắt câu lặp/chỗ vấp/khoảng lặng: `python3 scripts/cat_doan.py projects/<tên> <từ giây> <đến giây>` (chọn mốc trong khoảng lặng, đo bằng âm lượng; tự dời chữ, thẻ, cảnh trám, text ghi âm, BAN-DUNG.json).
+
 ## Quy tắc làm việc
 - Phiên bản nhỏ nhất chạy được trước, mở rộng sau. Không thêm công cụ mới khi chưa dùng hết công cụ hiện có.
 - Chưa chạy thử thì ghi "chưa thử", không nói đã xong.
