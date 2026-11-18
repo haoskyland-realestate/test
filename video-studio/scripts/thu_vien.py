@@ -3,7 +3,7 @@ Lỗi Hào gặp 17/11 trên PC: app chạy bằng một bản Python khác bả
 Dùng:  from thu_vien import can;  can("cv2", "numpy")      ·   tự kiểm: python scripts/thu_vien.py --tu-kiem"""
 import importlib.util, sys
 
-GOI = {"numpy": "numpy", "cv2": '"opencv-python-headless<5"', "faster_whisper": "faster-whisper",
+GOI = {"numpy": "numpy", "yt_dlp": "yt-dlp", "cv2": '"opencv-python-headless<5"', "faster_whisper": "faster-whisper",
        "opentimelineio": "opentimelineio otio-fcp-adapter", "onnxruntime": "onnxruntime"}
 
 

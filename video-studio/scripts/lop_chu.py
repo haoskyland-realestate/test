@@ -1,7 +1,7 @@
 """Lớp chữ động (nền trong suốt): một trang HTML + GSAP dựng từ timeline.json. Dùng chung cho
 bộ dựng (dung.py → HyperFrames quay thành video) và khung xem trước của app studio (trang chạy thẳng trong khung,
 tua bằng window.dat(giây)), nên xem trước giống bản xuất: cùng chữ, cùng phong cách, cùng chuyển động."""
-import html, re
+import html, re, sys
 
 import tag_chu
 
@@ -57,7 +57,7 @@ def bo_cuc_loi(ws, hl, xd, W, H, LO, top):
     return int(co), round(em, 2), top
 
 
-def tao(tl, phan=None):
+def tao(tl, phan=None, ti_le=1):
     """HTML lớp chữ của cả video (khung W×H theo nền tảng). Cần gsap.min.js nằm cùng địa chỉ.
     phan: None = tất cả; "sau" = chỉ chữ sau đầu, nằm DƯỚI người; "truoc" = phần còn lại (lớp tối nền, phụ đề, thẻ, chữ thường, logo, thanh tiến độ), nằm TRÊN người
     (lớp tối nền phải ở trên người: để dưới thì người không bị tối trong lúc chữ sau đầu hiện, bàn đá/người loang sáng và nhảy sáng khi chữ vào/ra)."""
@@ -66,8 +66,11 @@ def tao(tl, phan=None):
         tl = {**tl, "texts": [x for x in tl.get("texts", []) if sd(x) == (phan == "sau")]}
         if phan == "sau":
             tl["subtitles"], tl["cards"] = [], []
-    W, H = size(tl)
+    W, H = size(tl)  # toạ độ thiết kế luôn là khung đầy đủ; ti_le < 1 (bản xem 540×960) thu cả lớp chữ trong #khung bằng transform
     YT = W > H
+    RW, RH = round(W * ti_le), round(H * ti_le)
+    # Thương hiệu: mặc định KHÔNG có (Hào chốt 18/11: dựng cho nhiều người). Chỉ hiện khi dự án ghi meta.thuong_hieu (vd. "HÀO SKY LAND").
+    TH = html.escape(str(tl.get("meta", {}).get("thuong_hieu") or ""))
     LO = tl.get("meta", {}).get("loi", {})  # kiểu chữ theo nhịp nói của mẫu (màu từ khoá, quầng sáng, phông…)
     L = layout(tl)
     starts, total = L["starts"], L["total"]
@@ -76,6 +79,10 @@ def tao(tl, phan=None):
 
     def d(x):  # thời lượng chuyển động theo nhịp của phong cách
         return round(x * SP, 3)
+    K = float(tl.get("meta", {}).get("cham_chu", 1.5))  # hệ số chậm em_dan sẽ nhân thêm vào mọi thời lượng
+
+    def som(t, x):  # chữ theo nhịp nói: bắt đầu sớm để giữa chuyển động (ease in-out) rơi đúng lúc vừa nói, không trễ sau lời (Hào 18/11)
+        return round(max(0, t - 0.6 * d(x) * K), 2)
 
 
     def anim_in(name, sel, t):
@@ -111,13 +118,13 @@ def tao(tl, phan=None):
                 extra = (('<i class="ul"></i>' if LO.get("gach_chan") else "") + (f'<b class="bd">{html.escape(LO["huy_hieu"])}</b>' if LO.get("huy_hieu") else "")) if k in hl else ""
                 body += f'<span class="lw{" lk" if k in hl else ""}"{f" style=font-size:{em}em" if k in hl else ""} id="b{i}w{k}">{html.escape(w)}{extra}</span> '
                 if k in hl:
-                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{max(0, w0 - 0.1):.2f});')
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.22)},ease:"expo.out"}},{som(w0, .22):.2f});')
                     if LO.get("gach_chan"):
                         a.append(f'tl.fromTo("#b{i}w{k} .ul",{{scaleX:0}},{{scaleX:1,duration:{d(.4)},ease:"power3.out"}},{w0 + 0.12:.2f});')
                     if LO.get("huy_hieu"):
                         a.append(f'tl.fromTo("#b{i}w{k} .bd",{{scale:0,rotate:-90}},{{scale:1,rotate:0,duration:{d(.45)},ease:"back.out(3)"}},{w0 + 0.18:.2f});')
                 else:
-                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.16)},ease:"power2.out"}},{max(0, w0 - 0.1):.2f});')
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.12)},ease:"power2.out"}},{som(w0, .12):.2f});')
             a.append(f'tl.to("{sel}",{{opacity:0,y:-12,duration:{d(.25)},ease:"power2.in"}},{max(st0, st0 + du - 0.4):.2f});')
             s = {**s, "top_px": top, "_co": co}
         elif kind == "hook":
@@ -130,7 +137,7 @@ def tao(tl, phan=None):
                   f'tl.fromTo("{sel} .bar",{{scaleX:0}},{{scaleX:1,duration:{d(.5)},ease:"power3.out"}},{st0 + 0.15:.2f});',
                   f'tl.fromTo("{sel} .title",{{opacity:0,y:30}},{{opacity:1,y:0,duration:{d(.5)}}},{st0 + 0.15:.2f});']
         elif kind == "outro":
-            body = ('<div class="brand">HÀO SKY LAND</div><div class="gold"></div>' + "".join(line(l, "", ch) for l in s["lines"])
+            body = ((f'<div class="brand">{TH}</div>' if TH else "") + '<div class="gold"></div>' + "".join(line(l, "", ch) for l in s["lines"])
                     + f'<div class="note">{html.escape(s.get("note", ""))}</div>')
             a += [f'tl.fromTo("{sel} .brand",{{opacity:0,letterSpacing:"40px"}},{{opacity:1,letterSpacing:"10px",duration:{d(1.0)},ease:"expo.out"}},{st0:.2f});',
                   f'tl.fromTo("{sel} .gold",{{scaleX:0}},{{scaleX:1,duration:{d(.7)},ease:"power3.out"}},{st0 + 0.4:.2f});',
@@ -242,13 +249,14 @@ def tao(tl, phan=None):
     lo_font = f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?{LO["fonts"]}&display=swap">' if LO.get("fonts") else ""
     tag_font = f'<link rel="stylesheet" href="https://fonts.googleapis.com/css2?{tag_chu.FONTS}&display=swap">' if tags else ""
     return (f"""<!doctype html><html lang="vi"><head><meta charset="UTF-8">
-    <meta name="viewport" content="width={W}, height={H}"><script src="gsap.min.js"></script>
+    <meta name="viewport" content="width={RW}, height={RH}"><script src="gsap.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{style["fonts"]}&display=swap">{tag_font}{lo_font}<style>
     :root{{--scrim:{style["scrim"]};--accent:{style["accent"]};--hl:{style["hl"]};--text:{style["text"]};
      --display:"{style["display"]}",sans-serif;--body:"{style["body"]}",sans-serif;--dw:{style["display_weight"]}}}
     *{{margin:0;padding:0;box-sizing:border-box}}
-    html,body{{width:{W}px;height:{H}px;overflow:hidden;background:transparent;font-family:var(--body);color:var(--text)}}
-    #root{{position:relative;width:100%;height:100%}}
+    html,body{{width:{RW}px;height:{RH}px;overflow:hidden;background:transparent;font-family:var(--body);color:var(--text)}}
+    #root{{position:relative;width:{RW}px;height:{RH}px;overflow:hidden}}
+    #khung{{position:absolute;left:0;top:0;width:{W}px;height:{H}px;transform:scale({ti_le});transform-origin:0 0}}
     .scrim{{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(to top,rgba(var(--scrim),.88),rgba(var(--scrim),.55) 45%,rgba(var(--scrim),0))}}
     .topscrim{{position:absolute;left:0;right:0;top:0;height:14%;background:linear-gradient(to bottom,rgba(var(--scrim),.55),rgba(var(--scrim),0))}}
     .logo{{position:absolute;top:70px;left:64px;font-weight:800;font-size:30px;letter-spacing:6px}}
@@ -325,11 +333,11 @@ def tao(tl, phan=None):
     .blk.loi .lk{{font-style:italic;font-weight:800;font-size:{LO.get("co_khoa", 1.5)}em;color:{LO.get("khoa", "#ff2b2b")};{"font-family:" + LO["font_khoa"] + ";" if LO.get("font_khoa") else ""}{"text-transform:uppercase;" if LO.get("hoa") else ""}text-shadow:{LO.get("glow", "0 0 10px #ff1a1a,0 0 26px #ff0000,0 0 60px rgba(255,0,0,.6)")}}}
     {".blk.tag{left:0;right:0;top:0;bottom:0;width:auto;zoom:" + ("0.62" if YT else "1") + "}.blk.tag>div>div{filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}" + tag_chu.css(tags) if tags else ""}
     </style></head><body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{W}" data-height="{H}">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{RW}" data-height="{RH}"><div id="khung">
     {"" if phan == "sau" else f'<div class="clip scrim" data-start="0" data-duration="{total:.2f}" data-track-index="0"></div><div class="clip topscrim" data-start="0" data-duration="{total:.2f}" data-track-index="5"></div>'}
-    {"" if phan == "sau" else f'<div class="clip logo" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>HÀO SKY LAND</div><div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>'}
+    {"" if phan == "sau" else (f'<div class="clip logo" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>{TH}</div>' if TH else "") + f'<div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>'}
     {chr(10).join(blocks)}
-    </div><script>
+    </div></div><script>
     // Số kiểu Việt Nam: 1.234,5
     function fmt(sel,v,dec){{document.querySelector(sel).textContent=v.toLocaleString("vi-VN",{{minimumFractionDigits:dec,maximumFractionDigits:dec}});}}
     const tl=gsap.timeline({{paused:true}});
@@ -339,3 +347,20 @@ def tao(tl, phan=None):
     // Xem trước trong app (ngoài HyperFrames): tua tới giây t, ẩn/hiện từng lớp theo data-start/data-duration như HyperFrames
     window.dat=function(t){{tl.seek(t);document.querySelectorAll(".clip").forEach(e=>{{const s=+e.dataset.start,d=+e.dataset.duration;e.style.visibility=t>=s&&t<s+d?"visible":"hidden";}});}};
     </script></body></html>""")
+
+
+def _tu_kiem():
+    tl = {"version": 1, "meta": {"style": "sang-trong", "cham_chu": 1.15}, "clips": [{"file": "a.mp4", "in": 0, "dur": 5}], "transitions": [],
+          "texts": [{"kind": "loi", "start": 1.8, "dur": 1.5, "words": [["giá", 2.0, 2.3], ["77", 2.3, 2.7]], "hl": [1]}]}
+    h = tao(tl)
+    for k in (0, 1):  # giữa chuyển động hiện chữ (sau khi em_dan làm chậm) phải rơi trước hoặc đúng lúc nói, không trễ
+        m = re.search(rf'tl\.fromTo\("#b0w{k}",\{{[^}}]*\}},\{{[^}}]*duration:([\d.]+)[^}}]*\}},([\d.]+)\)', h)
+        dur, st = float(m.group(1)), float(m.group(2))
+        w0 = tl["texts"][0]["words"][k][1]
+        assert st + dur / 2 <= w0 + 0.01 and st >= w0 - 0.5, (k, st, dur)
+    assert "SKY LAND" not in h and "SKY LAND" in tao({**tl, "meta": {**tl["meta"], "thuong_hieu": "HÀO SKY LAND"}})
+    print("OK")
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["--tu-kiem"]:
+    _tu_kiem()

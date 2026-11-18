@@ -30,6 +30,14 @@
    "nguon": "Hào cung cấp (lời nói trong video), 17/11/2026"
   },
   {
+   "vai": "tieu-de",
+   "tu": [
+    99,
+    101
+   ],
+   "nhan": "tức là"
+  },
+  {
    "vai": "so-lieu",
    "tu": [
     124,
@@ -77,37 +85,47 @@
   {
    "vai": "tu-khoa",
    "tu": [
-    233,
-    234
+    227,
+    228
    ]
   },
   {
    "vai": "tu-khoa",
    "tu": [
-    244,
-    244
+    238,
+    238
    ]
   },
   {
    "vai": "tieu-de",
    "tu": [
-    279,
-    281
+    273,
+    275
    ],
-   "nhan": "Hào lưu ý"
+   "nhan": "Hùng lưu ý"
   },
   {
    "vai": "tu-khoa",
    "tu": [
-    289,
-    292
+    283,
+    286
    ]
+  },
+  {
+   "vai": "tieu-de",
+   "tu": [
+    308,
+    313
+   ],
+   "nhan": "bàn giao",
+   "chu": "2027",
+   "sub": "quý 2 hoặc quý 3"
   },
   {
    "vai": "cta",
    "tu": [
-    344,
-    348
+    338,
+    342
    ]
   }
  ]

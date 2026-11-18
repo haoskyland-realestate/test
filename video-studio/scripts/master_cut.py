@@ -13,6 +13,7 @@ if __name__ == "__main__":  # kiểm thư viện TRƯỚC khi nạp phần phân
     can("numpy", "cv2", "faster_whisper")
 from timeline import check, layout
 import phan_tich_hinh as pth
+from ban_nhe import lay  # phân tích hình trên bản nhẹ 540p: giải nén nhẹ hơn 4K HDR rất nhiều
 
 FILLERS = {"ờ", "ơ", "à", "ừ", "ừm", "ừa", "hmm", "um", "uh", "ầy"}
 CUT_GAP = 0.30          # im lặng dài hơn thì cắt
@@ -214,7 +215,7 @@ def main(proj, only_report=False):
         if not os.path.exists(raw):
             sys.exit(f"Chưa có footage {c['file']} (mở dự án trong app hoặc dựng nháp một lần để tải)")
         print(f"Phân tích đoạn {i + 1}: {c['file']}", flush=True)
-        fs = pth.phan_tich(raw, os.path.join(B, "analysis", c["file"] + ".json"))
+        fs = pth.phan_tich(lay(B, c["file"]), os.path.join(B, "analysis", c["file"] + ".json"))
         db = nang_luong(raw, os.path.join(B, "analysis", c["file"] + ".db.json"))
         thr = nguong(db)
         tv = tl.get("meta", {}).get("tu_vung")
@@ -295,7 +296,7 @@ def main(proj, only_report=False):
     for k, x in enumerate(new.get("broll", [])):
         raw = os.path.join(B, "raw", x["file"])
         if os.path.exists(raw):
-            fs = pth.phan_tich(raw, os.path.join(B, "analysis", x["file"] + ".json"))
+            fs = pth.phan_tich(lay(B, x["file"]), os.path.join(B, "analysis", x["file"] + ".json"))
             best, bsc, csc = cua_so_dep(fs, x["in"], x["dur"], False)
             if bsc - csc >= 5 and abs(best - x["in"]) > 0.3:
                 rep.append(f"- Cảnh trám {k + 1} ({x['file']}): dời {x['in']:.1f}s → {best:.1f}s (điểm {csc:.0f} → {bsc:.0f})")

@@ -69,8 +69,7 @@ def thoi_luong(path):
         return 0
 
 
-def tao_du_an(req):
-    """Dự án mới: từ thư mục footage (mỗi video thành một đoạn, cắt thẳng) hoặc nhân bản một dự án (đổi khung)."""
+def kiem_ten(req):
     name, platform = str(req.get("name", "")).strip(), req.get("platform", "tiktok")
     if not SAFE.match(name):
         raise ValueError("Tên dự án chỉ gồm chữ, số, gạch ngang (-) hoặc gạch dưới (_), không dấu cách")
@@ -79,6 +78,44 @@ def tao_du_an(req):
     d = os.path.join(PROJ, name)
     if os.path.exists(d):
         raise ValueError(f"Đã có dự án '{name}', chọn tên khác")
+    return name, platform, d
+
+
+TAI = {}  # tiến độ tải nguồn theo tên dự án (app hỏi lại mỗi 2 giây)
+
+
+def thu_muc_tai(name):
+    """Nơi gom footage của dự án trước khi đưa vào build/raw: file Hào tải lên + file tải từ link."""
+    return os.path.join(ROOT, "tai-ve", name)
+
+
+def gom_nguon(name, req, bao=lambda **k: None):
+    """Gom mọi nguồn vào tai-ve/<tên>/: link (Drive, trực tiếp, YouTube/TikTok) trong req["nguon"] (và req["drive"] kiểu cũ),
+    đường dẫn trên máy trong req["tep"] (lệnh du_an_moi). File Hào tải lên qua /api/tai-len đã nằm sẵn ở đó."""
+    from tai_drive import tai_nguon
+    dich = thu_muc_tai(name)
+    os.makedirs(dich, exist_ok=True)
+    urls = [str(u) for u in (req.get("nguon") or [])] + ([str(req["drive"])] if req.get("drive") else [])
+    for k, u in enumerate(urls, 1):
+        tai_nguon(u, dich, lambda **x: bao(nguon=k, so_nguon=len(urls), **x))
+    for p in req.get("tep") or []:
+        p = os.path.abspath(p)
+        fs = [os.path.join(p, f) for f in (lambda i: i["videos"] + i["audio"])(duyet(p))] if os.path.isdir(p) else [p]
+        for f in fs:
+            lien_ket(f, os.path.join(dich, os.path.basename(f)))
+    return dich
+
+
+def co_nguon(req):
+    return any(req.get(k) for k in ("nguon", "drive", "tep", "da_tai_len"))
+
+
+def tao_du_an(req, bao=lambda **k: None):
+    """Dự án mới: từ nhiều nguồn (file tải lên, link Drive/trực tiếp/YouTube, thư mục/file trên máy) gom vào video-studio/tai-ve/<tên>/,
+    hoặc từ một thư mục footage, hoặc nhân bản một dự án (đổi khung). Mỗi video thành một đoạn, cắt thẳng."""
+    name, platform, d = kiem_ten(req)
+    if co_nguon(req):
+        req = {**req, "folder": gom_nguon(name, req, bao)}
     raw = os.path.join(d, "build", "raw")
     if req.get("from"):
         src = os.path.join(PROJ, str(req["from"]))
@@ -119,6 +156,49 @@ def tao_du_an(req):
     return {"ok": True, "name": name, "clips": len(tl["clips"])}
 
 
+def them_nguon(name, req, bao=lambda **k: None):
+    """Thêm footage vào dự án đã có: gom nguồn như dự án mới, video chưa có trong build/raw thành đoạn mới ở cuối (cắt thẳng).
+    Không đụng chữ/thẻ đã đặt; bản cũ lưu timeline.json.bak."""
+    d = os.path.join(PROJ, name)
+    T = os.path.join(d, "timeline.json")
+    if not SAFE.match(name) or not os.path.exists(T):
+        raise ValueError("Không có dự án này")
+    dich = gom_nguon(name, req, bao)
+    raw = os.path.join(d, "build", "raw")
+    os.makedirs(raw, exist_ok=True)
+    tl = json.load(open(T, encoding="utf8"))
+    moi = []
+    for f in duyet(dich)["videos"] + duyet(dich)["audio"]:
+        if not os.path.exists(os.path.join(raw, f)):
+            lien_ket(os.path.join(dich, f), os.path.join(raw, f))
+            if VIDEO_EXT.search(f) and (dur := thoi_luong(os.path.join(raw, f))) > 0.2:
+                moi.append({"file": f, "in": 0, "dur": dur})
+    if not moi:
+        raise ValueError("Không có video mới (các file này đã có trong dự án)")
+    tl["transitions"] = tl.get("transitions", []) + [{"type": "cut"}] * len(moi)
+    tl["clips"] = tl["clips"] + moi
+    if errs := check(tl):
+        raise ValueError("; ".join(errs))
+    shutil.copy(T, T + ".bak")
+    with open(T, "w", encoding="utf8") as fh:
+        json.dump(tl, fh, ensure_ascii=False, indent=1)
+    return {"ok": True, "name": name, "clips": len(moi), "them": True}
+
+
+def chay_nen(name, viec):
+    """Tải nguồn có thể mất nhiều phút: chạy nền, app hỏi tiến độ qua /api/newjob?name=."""
+    if TAI.get(name, {}).get("buoc") == "tai":
+        raise ValueError("Dự án này đang tải, chờ xong")
+    TAI[name] = {"buoc": "tai", "i": 0, "n": 0, "ten": "", "da": 0, "tong": 0}
+
+    def chay():
+        try:
+            TAI[name] = {"buoc": "xong", **viec(lambda **k: TAI.update({name: {"buoc": "tai", **k}}))}
+        except Exception as ex:  # lỗi mạng/ổ đĩa/link: báo lại cho app; file tải dở nằm ở tai-ve/ (làm lại sẽ bỏ qua file đủ)
+            TAI[name] = {"buoc": "loi", "error": str(ex)}
+    __import__("threading").Thread(target=chay, daemon=True).start()
+
+
 class H(http.server.BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
@@ -151,7 +231,10 @@ class H(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         parts, ok = self.route()
         if not parts:
-            return self.send(200, open(os.path.join(ROOT, "studio/index.html"), "rb").read(), "text/html; charset=utf-8")
+            trang = open(os.path.join(ROOT, "studio/index.html"), "rb").read()
+            if self.server.server_address[0] == "127.0.0.1":  # chỉ máy này mở được: gắn sẵn mã khoá để mở bằng link localhost không cần ?t= (khung xem trước). Chế độ --lan thì không.
+                trang = trang.replace(b'get("t") || ""', b'get("t") || "' + TOKEN.encode() + b'"', 1)
+            return self.send(200, trang, "text/html; charset=utf-8")
         if parts == ["gsap.min.js"]:  # thư viện chuyển động cho lớp chữ xem trước (công khai, không chứa dữ liệu)
             return self.send(200, open(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), "rb").read(), "text/javascript; charset=utf-8",
                              {"Cache-Control": "max-age=86400"})
@@ -163,6 +246,15 @@ class H(http.server.BaseHTTPRequestHandler):
             return self.send(200, effects_json())
         if parts[1:] == ["gl"]:
             return self.send(200, effects.GL_LIB, extra={"Cache-Control": "max-age=3600"})
+        if parts[1:] == ["newjob"]:  # tiến độ tạo dự án từ Google Drive
+            name = (urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("name") or [""])[0]
+            return self.send(200, TAI.get(name) or {"buoc": "khong-co"})
+        if parts[1:] == ["xem-link"]:  # xem trước link (Drive, trực tiếp, YouTube/TikTok) trước khi thêm vào giỏ nguồn
+            try:
+                from tai_drive import xem
+                return self.send(200, xem((urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("url") or [""])[0]))
+            except Exception as ex:  # link lỗi/không tới được: báo nguyên nhân cho app
+                return self.send(400, {"error": f"Không đọc được link: {ex}"})
         if parts[1:] == ["browse"]:
             try:
                 return self.send(200, duyet((urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("path") or [""])[0]))
@@ -302,7 +394,8 @@ class H(http.server.BaseHTTPRequestHandler):
         raw = self.raw(d, f)
         if not raw:
             return self.send(404, {"error": "Chưa có footage " + f})
-        out = os.path.join(d, "build", "proxy", f + ".mp4")
+        from ban_nhe import duong_dan, lenh
+        out = duong_dan(os.path.join(d, "build"), f)  # dùng chung bản nhẹ 540p với phân tích và bản xem (scripts/ban_nhe.py)
         p = proxies.get(out)
         if p and p.poll() == 0 and os.path.exists(out + ".tmp.mp4"):
             os.replace(out + ".tmp.mp4", out)  # tạo xong: đổi tên thì mới tính là có
@@ -311,9 +404,7 @@ class H(http.server.BaseHTTPRequestHandler):
         ready = os.path.exists(out)
         if not ready and not running and not failed:
             os.makedirs(os.path.dirname(out), exist_ok=True)
-            proxies[out] = subprocess.Popen(["ffmpeg", "-nostdin", "-v", "error", "-y", "-i", raw, "-vf", chuyen_tong(raw) + "scale=-2:540",
-                                             "-c:v", "libx264", "-preset", "veryfast", "-crf", "30", "-c:a", "aac", "-b:a", "96k",
-                                             "-movflags", "+faststart", out + ".tmp.mp4"])
+            proxies[out] = subprocess.Popen(lenh(raw, out + ".tmp.mp4"))
         if check:
             return self.send(200, {"ready": ready, "failed": failed})
         if not ready:
@@ -350,6 +441,25 @@ class H(http.server.BaseHTTPRequestHandler):
             data = fh.read(b - a + 1)
         self.send(206 if m else 200, data, ctype, {"Accept-Ranges": "bytes", "Content-Range": f"bytes {a}-{b}/{size}"} if m else {"Accept-Ranges": "bytes"})
 
+    def tai_len(self, name, f):
+        """Nhận một file video/nhạc vào tai-ve/<tên dự án>/: ghi theo khối 1 MB (file 4K vài GB không chiếm RAM), ghi tạm rồi đổi tên."""
+        from tai_drive import ten_an_toan
+        n = int(self.headers.get("Content-Length") or 0)
+        if not SAFE.match(name) or ten_an_toan(f) != f or not (VIDEO_EXT.search(f) or re.search(AUDIO_EXT, f, re.I)) or n <= 0:
+            return self.send(400, {"error": f"Không nhận file {f}: cần tên dự án hợp lệ và file video (.mp4 .mov .m4v .mkv .mts) hoặc nhạc"})
+        dich = thu_muc_tai(name)
+        os.makedirs(dich, exist_ok=True)
+        p = os.path.join(dich, f)
+        con = n
+        with open(p + ".tai", "wb") as fh:
+            while con > 0 and (blk := self.rfile.read(min(con, 1 << 20))):
+                fh.write(blk); con -= len(blk)
+        if con:
+            os.remove(p + ".tai")
+            return self.send(400, {"error": f"Tải lên thiếu {f} (mất kết nối?), thử lại"})
+        os.replace(p + ".tai", p)
+        return self.send(200, {"ok": True, "file": f, "size": n})
+
     def body(self):
         n = int(self.headers.get("Content-Length") or 0)
         if n > 2_000_000:
@@ -360,6 +470,8 @@ class H(http.server.BaseHTTPRequestHandler):
         parts, ok = self.route()
         if not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa"})
+        if len(parts) == 4 and parts[:2] == ["api", "tai-len"]:  # Hào gửi video thẳng lên (kéo thả/chọn file, cả từ điện thoại)
+            return self.tai_len(parts[2], parts[3])
         if len(parts) != 3 or parts[:2] != ["api", "p"] or not (d := self.project(parts[2])):
             return self.send(404, {"error": "Không có dự án này"})
         try:
@@ -430,7 +542,21 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.send(400, {"error": str(ex)})
         if parts == ["api", "new"]:
             try:
-                return self.send(200, tao_du_an(self.body() or {}))
+                req = self.body() or {}
+                req.pop("tep", None)  # đường dẫn trên máy chỉ dành cho lệnh du_an_moi, không nhận từ trình duyệt
+                if not (req.get("drive") or req.get("nguon")):
+                    return self.send(200, tao_du_an(req))
+                name = kiem_ten(req)[0]
+                chay_nen(name, lambda bao: tao_du_an(req, bao))
+                return self.send(200, {"job": name})
+            except (ValueError, OSError) as ex:
+                return self.send(400, {"error": str(ex)})
+        if len(parts) == 4 and parts[:2] == ["api", "p"] and parts[3] == "them-nguon" and self.project(parts[2]):  # thêm footage vào dự án đang mở
+            try:
+                req = self.body() or {}
+                req.pop("tep", None)
+                chay_nen(parts[2], lambda bao: them_nguon(parts[2], req, bao))
+                return self.send(200, {"job": parts[2]})
             except (ValueError, OSError) as ex:
                 return self.send(400, {"error": str(ex)})
         if len(parts) != 4 or parts[3] not in ("render", "subtitles", "mastercut", "nle", "kichban", "gopy") or not (d := self.project(parts[2])):
@@ -516,7 +642,7 @@ if __name__ == "__main__":
     port = int(os.environ.get("STUDIO_PORT", "8765"))
     srv = http.server.ThreadingHTTPServer(("0.0.0.0" if lan else "127.0.0.1", port), H)
     print(f"Python: {sys.executable} (bản {sys.version.split()[0]})")
-    print(f"App timeline: http://127.0.0.1:{port}/?t={TOKEN}")
+    print(f"App timeline: http://127.0.0.1:{port}/?t={TOKEN}" + ("" if lan else f"  (trên chính máy này mở http://localhost:{port} cũng được)"))
     if lan:
         print(f"Điện thoại cùng wifi: http://{lan_ip()}:{port}/?t={TOKEN}")
     srv.serve_forever()

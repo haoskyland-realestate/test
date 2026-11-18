@@ -112,12 +112,16 @@
     #stage { height:56vh; max-height:none; flex:none; } #tlwrap { max-height:none; }
   }
   dialog a { color: var(--lime); }
+.npDrop{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:12px;padding:26px 14px;border:2px dashed var(--line);border-radius:14px;cursor:pointer;text-align:center}
+.npDrop.on,.npDrop:hover{border-color:var(--lime);background:rgba(233,248,107,.06)} .npDrop b{font-size:16px} .npDrop span{font-size:12px;opacity:.65}
+.npGio{margin-top:10px;max-height:220px;overflow:auto} .npItem{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;padding:6px 8px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;font-size:13px} .npItem b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.npBar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:8px} .npBar i{display:block;height:100%;width:0;background:var(--lime,#d7f25a);transition:width .4s}
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <div id="title"><span class="dot"></span><select id="proj" aria-label="Dự án"></select><button class="ghost" id="newP" title="Dự án mới / nhân bản sang khung khác">＋</button><div id="stat" class="dim"></div></div>
+    <div id="title"><span class="dot"></span><select id="proj" aria-label="Dự án"></select><button class="ghost" id="newP" title="Dự án mới / nhân bản sang khung khác">＋</button><button class="ghost" id="addSrc" title="Thêm footage vào dự án đang mở (file, Drive, link, YouTube)">＋ Footage</button><div id="stat" class="dim"></div></div>
     <div class="grp" aria-label="Bố cục">
       <button id="lyL" title="Ẩn/hiện khung xem">◧</button><button id="lyR" title="Ẩn/hiện khung chỉnh">◨</button>
       <button id="lyT" title="Ẩn/hiện timeline">⬓</button><button id="lyF" title="Toàn màn hình">⛶</button>
@@ -818,34 +822,89 @@ document.addEventListener("click", async e => {
   const dc = e.target.closest("[data-mdoc]");
   if (dc) { const r = await api(`mau/${encodeURIComponent(dc.dataset.mdoc)}`).catch(e => ({md: e.message})); dlgShow(`<button data-open-mau="1">← Thư viện mẫu</button><div class="mdoc">${mdHtml(r.md)}</div>`, true); }
 });
-// Dự án mới: chọn thư mục footage trên máy chạy studio (duyệt được cả từ điện thoại), hoặc nhân bản dự án sang khung khác
-async function newProject(from = null, platform = "tiktok") {
-  let cur = null;
-  dlgShow(`<h3>${from ? "Nhân bản dự án " + esc(from) : "Dự án mới"}</h3>
-    <label>Tên dự án (không dấu cách, vd: hoc-mon-dong-tien)</label><input id="npName" value="${from ? esc(from) + "-" + platform : ""}" style="width:100%">
-    <label style="display:block;margin-top:10px">Khung</label><select id="npPf"><option value="tiktok">TikTok dọc 9:16</option><option value="youtube"${platform === "youtube" ? " selected" : ""}>YouTube ngang 16:9</option></select>
-    ${from ? "" : `<label style="display:block;margin-top:10px">Thư mục footage trên máy chạy studio</label><div id="npBr" class="dim">Đang mở…</div>`}
-    <div class="row"><button class="lime" id="npGo">Tạo</button></div><p class="dim" id="npMsg"></p>`);
-  const br = async path => {
-    try { cur = await api("browse?path=" + encodeURIComponent(path || "")); } catch (e) { return $("#npMsg").textContent = e.message; }
-    const go = p => `data-go="${esc(p)}"`;
-    $("#npBr").innerHTML = `<div style="margin:4px 0"><b>${esc(cur.path)}</b></div><div style="max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:6px">`
-      + cur.roots.map(r => `<div class="it" ${go(r)}>💽 ${esc(r)}</div>`).join("")
-      + (cur.parent ? `<div class="it" ${go(cur.parent)}>⬆ Lên trên</div>` : "")
-      + cur.dirs.map(d => `<div class="it" ${go(cur.path + (cur.path.endsWith("/") || cur.path.endsWith("\\") ? "" : (cur.path.includes("\\") ? "\\" : "/")) + d)}>📁 ${esc(d)}</div>`).join("")
-      + `</div><div style="margin-top:6px">${cur.videos.length} video${cur.audio.length ? `, ${cur.audio.length} file nhạc` : ""} trong thư mục này${cur.videos.length ? ": " + esc(cur.videos.slice(0, 6).join(", ")) + (cur.videos.length > 6 ? "…" : "") : ""}</div>`;
-    $("#npBr").querySelectorAll("[data-go]").forEach(el => el.onclick = () => br(el.dataset.go));
+// Dự án mới / Thêm footage (Hào chốt 18/11): giỏ nhiều nguồn — kéo thả hoặc chọn video (cả từ điện thoại), dán link Drive / link tải trực tiếp / YouTube, TikTok.
+// Bấm Tạo: gửi từng file lên (thanh %), rồi máy chủ tải các link chạy nền (/api/newjob), xong mở dự án. Nhân bản dự án (from) giữ như cũ.
+const LOAI = {drive: "☁️ Drive", youtube: "▶️ YouTube/TikTok", link: "🔗 Link"};
+const loaiLink = u => /(^|\.)(drive|docs)\.google\.com/.test(new URL(u).hostname) ? "drive" : /(^|\.)(youtube\.com|youtu\.be|tiktok\.com)$/.test(new URL(u).hostname) ? "youtube" : "link";
+const mb = n => n >= 1073741824 ? (n / 1073741824).toFixed(1) + " GB" : Math.max(1, Math.round(n / 1048576)) + " MB";
+function guiFile(name, file, onPct) {  // XMLHttpRequest để có % khi gửi lên (fetch không báo)
+  return new Promise((ok, no) => {
+    const x = new XMLHttpRequest();
+    x.open("PUT", `/api/tai-len/${encodeURIComponent(name)}/${encodeURIComponent(file.name)}`); x.setRequestHeader("X-Token", T);
+    x.upload.onprogress = e => e.lengthComputable && onPct(e.loaded / e.total);
+    x.onload = () => x.status === 200 ? ok() : no(new Error((() => { try { return JSON.parse(x.responseText).error; } catch { return "Lỗi gửi " + file.name; } })()));
+    x.onerror = () => no(new Error("Mất kết nối khi gửi " + file.name)); x.send(file);
+  });
+}
+async function newProject(from = null, platform = "tiktok", them = false) {
+  const gio = [];  // {kieu: "file", file} | {kieu: "link", url, loai, mo_ta}
+  const d = new Date(), goi_y = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}_tiktok_`;
+  dlgShow(`<h3>${from ? "Nhân bản dự án " + esc(from) : them ? "Thêm footage vào " + esc(name) : "Dự án mới"}</h3>
+    ${them ? "" : `<label>Tên dự án (không dấu cách)</label><input id="npName" value="${from ? esc(from) + "-" + platform : goi_y}" style="width:100%">
+    <label style="display:block;margin-top:10px">Khung</label><select id="npPf"><option value="tiktok">TikTok dọc 9:16</option><option value="youtube"${platform === "youtube" ? " selected" : ""}>YouTube ngang 16:9</option></select>`}
+    ${from ? "" : `<label class="npDrop" id="npDrop"><input type="file" id="npFile" multiple accept="video/*,audio/*" hidden>
+        <b>Kéo video vào đây</b><span>hoặc bấm để chọn từ máy / điện thoại (nhiều file một lúc)</span></label>
+      <div class="row" style="flex-wrap:nowrap;margin-top:8px"><input id="npLink" placeholder="Dán link: Google Drive, link tải .mp4/.mov, YouTube, TikTok" style="flex:1"><button id="npAdd">＋ Thêm link</button></div>
+      <div id="npGio" class="npGio"></div>`}
+    <div class="npBar" hidden><i></i></div>
+    <div class="row"><button class="lime" id="npGo">${them ? "Thêm vào dự án" : "Tạo"}</button></div><p class="dim" id="npMsg"></p>`);
+  const ve = () => {
+    const nv = gio.length;
+    $("#npGio").innerHTML = nv ? gio.map((g, i) => `<div class="npItem"><span>${g.kieu === "file" ? "🎞️ Máy" : LOAI[g.loai]}</span><b>${esc(g.kieu === "file" ? g.file.name : g.mo_ta || g.url)}</b>`
+      + `<span class="dim">${g.kieu === "file" ? mb(g.file.size) : esc(g.ghi_chu || "")}</span><button class="ghost" data-xoa="${i}" title="Bỏ nguồn này">✕</button></div>`).join("")
+      + `<div class="dim" style="margin-top:4px">${nv} nguồn</div>` : `<div class="dim">Chưa có nguồn nào. Kéo video vào ô trên hoặc dán link.</div>`;
+    $("#npGio").querySelectorAll("[data-xoa]").forEach(el => el.onclick = () => { gio.splice(+el.dataset.xoa, 1); ve(); });
   };
-  if (!from) br("");
+  const themFile = fs => { for (const f of fs) if (/\.(mp4|mov|m4v|mkv|mts|mp3|wav|m4a|aac|flac|ogg)$/i.test(f.name)) gio.push({kieu: "file", file: f}); else toast(`Bỏ qua ${esc(f.name)}: không phải video/nhạc`, "err"); ve(); };
+  const themLink = async () => {
+    const url = $("#npLink").value.trim(); if (!url) return;
+    let loai; try { loai = loaiLink(url); } catch { return $("#npMsg").textContent = "Link phải bắt đầu bằng http:// hoặc https://"; }
+    const g = {kieu: "link", url, loai, mo_ta: "Đang đọc link…"}; gio.push(g); $("#npLink").value = ""; ve();
+    try { const r = await api("xem-link?url=" + encodeURIComponent(url)); g.mo_ta = r.files.length > 1 ? `${r.files.length} file: ${r.files.slice(0, 4).join(", ")}${r.files.length > 4 ? "…" : ""}` : r.files[0]; g.ghi_chu = r.ghi_chu || ""; }
+    catch (e) { g.mo_ta = url; g.ghi_chu = "⚠ " + e.message; }
+    ve();
+  };
+  if (!from) {
+    const drop = $("#npDrop");
+    $("#npFile").onchange = e => { themFile(e.target.files); e.target.value = ""; };
+    ["dragenter", "dragover"].forEach(k => drop.addEventListener(k, e => { e.preventDefault(); drop.classList.add("on"); }));
+    ["dragleave", "drop"].forEach(k => drop.addEventListener(k, e => { e.preventDefault(); drop.classList.remove("on"); }));
+    drop.addEventListener("drop", e => themFile(e.dataTransfer.files));
+    $("#npAdd").onclick = themLink; $("#npLink").onkeydown = e => e.key === "Enter" && themLink(); $("#npLink").onpaste = () => setTimeout(themLink, 50);
+    ve();
+  }
   $("#npGo").onclick = async () => {
-    if (dirty && !(from ? await save() : confirm("Dự án đang mở có thay đổi chưa lưu. Bỏ qua?"))) return;
-    const body = {name: $("#npName").value.trim(), platform: $("#npPf").value};
-    if (from) body.from = from; else body.folder = cur && cur.path;
-    $("#npGo").disabled = true; $("#npMsg").textContent = from ? "Đang nhân bản…" : "Đang đưa footage vào dự án (cùng ổ đĩa thì tức thì; khác ổ phải chép, có thể mất vài phút)…";
+    if (!them && dirty && !(from ? await save() : confirm("Dự án đang mở có thay đổi chưa lưu. Bỏ qua?"))) return;
+    if (them && dirty && !(await save())) return;
+    const ten = them ? name : $("#npName").value.trim();
+    if (!from && !gio.length) return $("#npMsg").textContent = "Thêm ít nhất một video hoặc một link.";
+    $("#npGo").disabled = true;
+    const bar = p => { $(".npBar").hidden = false; $(".npBar i").style.width = (100 * p) + "%"; };
     try {
-      const r = await api("new", {method: "POST", body: JSON.stringify(body)});
+      const files = gio.filter(g => g.kieu === "file"), links = gio.filter(g => g.kieu === "link").map(g => g.url);
+      if (files.length && !/^[\w-]+$/.test(ten)) throw new Error("Tên dự án chỉ gồm chữ, số, gạch ngang (-) hoặc gạch dưới (_), không dấu cách");
+      for (const [k, g] of files.entries()) {
+        $("#npMsg").textContent = `Đang gửi ${k + 1}/${files.length}: ${g.file.name} (${mb(g.file.size)})`;
+        await guiFile(ten, g.file, p => { bar((k + p) / files.length); $("#npMsg").textContent = `Đang gửi ${k + 1}/${files.length}: ${g.file.name} ${Math.round(100 * p)}%`; });
+      }
+      const body = them ? {nguon: links, da_tai_len: files.length > 0} : {name: ten, platform: $("#npPf").value, ...(from ? {from} : {nguon: links, da_tai_len: files.length > 0})};
+      $("#npMsg").textContent = from ? "Đang nhân bản…" : links.length ? "Đang tải các link…" : "Đang đưa footage vào dự án…";
+      let r = await api(them ? `${P()}/them-nguon` : "new", {method: "POST", body: JSON.stringify(body)});
+      if (r.job) {  // tải link chạy nền: hỏi tiến độ mỗi 2 giây
+        for (;;) {
+          await new Promise(ok => setTimeout(ok, 2000));
+          const j = await api("newjob?name=" + encodeURIComponent(r.job));
+          if (j.buoc === "loi") throw new Error(j.error);
+          if (j.buoc === "xong") { r = j; break; }
+          const pc = j.tong ? j.da / j.tong : 0;
+          bar(j.n ? ((j.i - 1) + pc) / j.n : 0);
+          $("#npMsg").textContent = j.n ? `Link ${j.nguon || 1}/${j.so_nguon || 1}, file ${j.i}/${j.n}: ${j.ten} (${Math.round(100 * pc)}%, ${mb(j.da)}${j.tong ? "/" + mb(j.tong) : ""})` : "Đang đọc link…";
+        }
+      }
+      dlg.close();
+      if (them) { await open_(name); return toast(`Đã thêm ${r.clips} đoạn vào cuối dự án.`, "ok"); }
       const ps = await api("projects"); $("#proj").innerHTML = ps.map(p => `<option>${esc(p)}</option>`).join(""); $("#proj").value = r.name;
-      dlg.close(); dirty = false; await open_(r.name); toast(`Đã tạo dự án ${esc(r.name)} (${r.clips} đoạn).${from ? "" : " Bấm ✨ Master cut ở tab Cắt để cắt khoảng lặng."}`, "ok");
+      dirty = false; await open_(r.name); toast(`Đã tạo dự án ${esc(r.name)} (${r.clips} đoạn).${from ? "" : " Bấm ✨ Master cut ở tab Cắt để cắt khoảng lặng."}`, "ok");
     } catch (e) { $("#npMsg").textContent = e.message; $("#npGo").disabled = false; }
   };
 }
@@ -929,6 +988,7 @@ async function open_(n) {
     $("#proj").innerHTML = ps.map(p => `<option>${esc(p)}</option>`).join("");
     $("#proj").onchange = e => open_(e.target.value);
     $("#newP").onclick = () => newProject();
+    $("#addSrc").onclick = () => name ? newProject(null, "tiktok", true) : toast("Mở một dự án trước", "err");
     if (ps.length) await open_(ps[0]); else $("#stat").innerHTML = `<span class="err">Chưa có dự án nào trong projects/.</span>`;
     requestAnimationFrame(loop);
   } catch (e) { $("#stat").innerHTML = `<span class="err">${esc(e.message)}</span>`; }
