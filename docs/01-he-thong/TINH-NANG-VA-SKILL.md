@@ -46,6 +46,7 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 |---|---|---|---|
 | Dự án | Tạo dự án từ thư mục footage (không cần app) | `scripts/du_an_moi.py` | Cloud |
 | Dự án | Định dạng timeline v1 (cảnh, chữ, âm, cảnh chèn, zoom, B-roll, overlay) | `scripts/timeline.py`, test `test_timeline.py` | Cloud |
+| Duyệt | Phân tích lời nói và chỗ cắt: nói nhanh/chậm (so với nhịp riêng), lặp từ, nói vấp, cắt giữa từ, cảnh quá ngắn/dài + đề xuất; tự gắn vào storyboard | `scripts/phan_tich_loi.py projects/<tên>` | Cloud (Saigon Park: bắt câu lặp "biệt thự đơn lập, song lập") |
 | Duyệt | Storyboard từng cảnh (giây, ảnh, lời nói, chữ, chuyển cảnh) + ảnh lưới | `scripts/storyboard.py projects/<tên>` | Cloud (Saigon Park 24 cảnh, 46s) |
 | Dựng | Dựng MP4: bản xem 540×960 `--xem` để Hào duyệt, nháp `--nhap`, bản cuối; nhớ bước đã làm | `scripts/dung.py projects/<tên>` | Cloud, Mac (dựng thử 6s) |
 | Dựng | Tự cắt im lặng, nói vấp, chọn khúc đẹp, zoom xen kẽ | `scripts/master_cut.py`, `phan_tich_hinh.py` | Cloud |

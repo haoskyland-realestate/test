@@ -28,5 +28,29 @@
 | 21 | 86.0–86.5 (0.5s) | trám IMG_9682.MOV |  | Hào lưu ý · TỪNG PHÂN KỲ |  |
 | 22 | 86.5–104.0 (17.4s) | canh-cuoi-cung.MOV | Với tiến độ xây dựng 3 ca 4 kíp, thì những căn nhà phố đầu tiên của dự án Vinhomes Saigon Park sẽ bàn giao cho quý khách hàng vào quý 2 hoặc quý 3 2017. Nếu quý anh chị muốn tham quan thực tế tiến độ xây dựng của dự án hoặc sa bàn của dự án, thì hãy liên hệ với em Hào, để Hào có thể dẫn anh chị đi tham quan nha. Xin chào! | Hào lưu ý · TỪNG PHÂN KỲ | cut |
 
+## Phân tích lời nói và chỗ cắt (dự đoán, chưa sửa gì)
+> Nói nhanh/chậm so với nhịp riêng của Hào, lặp từ, nói vấp, chỗ cắt rơi giữa từ, cảnh quá ngắn/dài. Hào chọn mục nào cần sửa, Claude sửa rồi lập lại storyboard.
+
+| Giây | Loại | Chi tiết | Đề xuất |
+|---|---|---|---|
+| 0.0 | cắt cảnh | cảnh #1 dài 13.9s, nên chèn cảnh trám/zoom/chữ |  |
+| 0.0 | nói nhanh | «Vinhomes Saigon Park, với tổng diện tích 1.080 ha, thì chủ đầu tư Vinhomes dành bao nhiêu phần trăm cho tỷ lệ cây xanh và mặt nước, bao nhiêu phần trăm cho tỷ lệ xây dựng, thì hãy cùng Hào xem hết clip này.» 4.5 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
+| 10.0 | nói nhanh | «Để khám phá dự án Vinhomes Saigon Park, chủ đầu tư Vinhomes sẽ xây dựng như thế nào nha.» 5.3 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
+| 17.7 | cắt cảnh | cảnh #3: đổi hình giữa từ «rộng» | dời chỗ cắt về khoảng lặng gần nhất |
+| 19.9 | cắt cảnh | cảnh #4: đổi hình giữa từ «thấy» | dời chỗ cắt về khoảng lặng gần nhất |
+| 24.4 | cắt cảnh | cảnh #5: đổi hình giữa từ «đến» | dời chỗ cắt về khoảng lặng gần nhất |
+| 28.4 | cắt cảnh | cảnh #7: CẮT TIẾNG giữa từ «Nhưng» | dời chỗ cắt về khoảng lặng gần nhất |
+| 34.2 | cắt cảnh | cảnh #8: đổi hình giữa từ «khoảng» | dời chỗ cắt về khoảng lặng gần nhất |
+| 43.1 | cắt cảnh | cảnh #11: đổi hình giữa từ «trọn» | dời chỗ cắt về khoảng lặng gần nhất |
+| 56.5 | cắt cảnh | cảnh #14 dài 7.8s, nên chèn cảnh trám/zoom/chữ |  |
+| 63.2 | lặp từ | «biệt thự đơn lập, song lập,» nói 2 lần (63.2s và 65.6s) | cắt lần đầu: 63.22–65.64s |
+| 64.3 | cắt cảnh | cảnh #15: đổi hình giữa từ «lập,» | dời chỗ cắt về khoảng lặng gần nhất |
+| 76.5 | cắt cảnh | cảnh #18: CẮT TIẾNG giữa từ «Tuy» | dời chỗ cắt về khoảng lặng gần nhất |
+| 80.5 | cắt cảnh | cảnh #19: đổi hình giữa từ «đại» | dời chỗ cắt về khoảng lặng gần nhất |
+| 86.0 | cắt cảnh | cảnh #21 chỉ 0.5s (như chớp) | gộp/kéo dài cảnh |
+| 86.5 | cắt cảnh | cảnh #22 dài 17.4s, nên chèn cảnh trám/zoom/chữ |  |
+| 86.6 | nói nhanh | «Với tiến độ xây dựng 3 ca 4 kíp, thì những căn nhà phố đầu tiên của dự án Vinhomes Saigon Park sẽ bàn giao cho quý khách hàng vào quý 2 hoặc quý 3 2017.» 4.4 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
+| 95.2 | nói nhanh | «Nếu quý anh chị muốn tham quan thực tế tiến độ xây dựng của dự án hoặc sa bàn của dự án, thì hãy liên hệ với em Hào, để Hào có thể dẫn anh chị đi tham quan nha.» 5.2 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
+
 ## Cần Hào trả lời trước khi dựng bản cuối
 - Không có (cổng đối chiếu đạt).

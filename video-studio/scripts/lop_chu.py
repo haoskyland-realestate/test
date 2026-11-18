@@ -1,7 +1,7 @@
 """Lớp chữ động (nền trong suốt): một trang HTML + GSAP dựng từ timeline.json. Dùng chung cho
 bộ dựng (dung.py → HyperFrames quay thành video) và khung xem trước của app studio (trang chạy thẳng trong khung,
 tua bằng window.dat(giây)), nên xem trước giống bản xuất: cùng chữ, cùng phong cách, cùng chuyển động."""
-import html, re
+import html, re, sys
 
 import tag_chu
 
@@ -77,6 +77,10 @@ def tao(tl, phan=None, ti_le=1):
 
     def d(x):  # thời lượng chuyển động theo nhịp của phong cách
         return round(x * SP, 3)
+    K = float(tl.get("meta", {}).get("cham_chu", 1.5))  # hệ số chậm em_dan sẽ nhân thêm vào mọi thời lượng
+
+    def som(t, x):  # chữ theo nhịp nói: bắt đầu sớm để giữa chuyển động (ease in-out) rơi đúng lúc vừa nói, không trễ sau lời (Hào 18/11)
+        return round(max(0, t - 0.6 * d(x) * K), 2)
 
 
     def anim_in(name, sel, t):
@@ -112,13 +116,13 @@ def tao(tl, phan=None, ti_le=1):
                 extra = (('<i class="ul"></i>' if LO.get("gach_chan") else "") + (f'<b class="bd">{html.escape(LO["huy_hieu"])}</b>' if LO.get("huy_hieu") else "")) if k in hl else ""
                 body += f'<span class="lw{" lk" if k in hl else ""}"{f" style=font-size:{em}em" if k in hl else ""} id="b{i}w{k}">{html.escape(w)}{extra}</span> '
                 if k in hl:
-                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.32)},ease:"expo.out"}},{max(0, w0 - 0.1):.2f});')
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,scale:1.9,filter:"blur(10px)"}},{{opacity:1,scale:1,filter:"blur(0px)",duration:{d(.22)},ease:"expo.out"}},{som(w0, .22):.2f});')
                     if LO.get("gach_chan"):
                         a.append(f'tl.fromTo("#b{i}w{k} .ul",{{scaleX:0}},{{scaleX:1,duration:{d(.4)},ease:"power3.out"}},{w0 + 0.12:.2f});')
                     if LO.get("huy_hieu"):
                         a.append(f'tl.fromTo("#b{i}w{k} .bd",{{scale:0,rotate:-90}},{{scale:1,rotate:0,duration:{d(.45)},ease:"back.out(3)"}},{w0 + 0.18:.2f});')
                 else:
-                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.16)},ease:"power2.out"}},{max(0, w0 - 0.1):.2f});')
+                    a.append(f'tl.fromTo("#b{i}w{k}",{{opacity:0,y:14}},{{opacity:1,y:0,duration:{d(.12)},ease:"power2.out"}},{som(w0, .12):.2f});')
             a.append(f'tl.to("{sel}",{{opacity:0,y:-12,duration:{d(.25)},ease:"power2.in"}},{max(st0, st0 + du - 0.4):.2f});')
             s = {**s, "top_px": top, "_co": co}
         elif kind == "hook":
@@ -341,3 +345,19 @@ def tao(tl, phan=None, ti_le=1):
     // Xem trước trong app (ngoài HyperFrames): tua tới giây t, ẩn/hiện từng lớp theo data-start/data-duration như HyperFrames
     window.dat=function(t){{tl.seek(t);document.querySelectorAll(".clip").forEach(e=>{{const s=+e.dataset.start,d=+e.dataset.duration;e.style.visibility=t>=s&&t<s+d?"visible":"hidden";}});}};
     </script></body></html>""")
+
+
+def _tu_kiem():
+    tl = {"version": 1, "meta": {"style": "sang-trong", "cham_chu": 1.15}, "clips": [{"file": "a.mp4", "in": 0, "dur": 5}], "transitions": [],
+          "texts": [{"kind": "loi", "start": 1.8, "dur": 1.5, "words": [["giá", 2.0, 2.3], ["77", 2.3, 2.7]], "hl": [1]}]}
+    h = tao(tl)
+    for k in (0, 1):  # giữa chuyển động hiện chữ (sau khi em_dan làm chậm) phải rơi trước hoặc đúng lúc nói, không trễ
+        m = re.search(rf'tl\.fromTo\("#b0w{k}",\{{[^}}]*\}},\{{[^}}]*duration:([\d.]+)[^}}]*\}},([\d.]+)\)', h)
+        dur, st = float(m.group(1)), float(m.group(2))
+        w0 = tl["texts"][0]["words"][k][1]
+        assert st + dur / 2 <= w0 + 0.01 and st >= w0 - 0.5, (k, st, dur)
+    print("OK")
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["--tu-kiem"]:
+    _tu_kiem()

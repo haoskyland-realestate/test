@@ -105,12 +105,17 @@ def lap(pj):
         loi = " ".join(x[0] for x in w if a <= x[1] < b)
         rows.append(f"| {k} | {a:.1f}–{b:.1f} ({b - a:.1f}s) | {nguon} | {loi.replace('|', '/')} | {chu_tren_man(tl, a, b)} | {tr.get(round(a, 2), '')} |")
     luoi(files, os.path.join(pj, "build", "storyboard.jpg"))
+    from phan_tich_loi import phan_tich, bao_cao
+    phan_tich_md = bao_cao(phan_tich(tl, w)) if w else ["- Chưa có text từ ghi âm (chạy loi_nhip.py) nên chưa phân tích được lời nói."]
     from doi_chieu import kiem
     hoi = kiem(pj)[0]
     md = [f"# STORYBOARD: {os.path.basename(pj)}", "",
           f"> Tạo bằng `scripts/storyboard.py` từ `timeline.json`. {len(cs)} cảnh, {L['total']:.1f} giây. Ảnh lưới: `build/storyboard.jpg` (số # trùng bảng).",
           "> Hào duyệt bảng này trước; duyệt xong Claude dựng bản xem 540×960 (`dung.py --xem`), rồi mới dựng bản cuối.", "",
           "| # | Giây | Hình | Lời nói | Chữ trên màn hình | Chuyển cảnh vào |", "|---|---|---|---|---|---|", *rows, "",
+          "## Phân tích lời nói và chỗ cắt (dự đoán, chưa sửa gì)",
+          "> Nói nhanh/chậm so với nhịp riêng của Hào, lặp từ, nói vấp, chỗ cắt rơi giữa từ, cảnh quá ngắn/dài. Hào chọn mục nào cần sửa, Claude sửa rồi lập lại storyboard.", "",
+          *phan_tich_md, "",
           "## Cần Hào trả lời trước khi dựng bản cuối", *([f"- {h}" for h in hoi] or ["- Không có (cổng đối chiếu đạt)."]), ""]
     open(os.path.join(pj, "STORYBOARD.md"), "w", encoding="utf8").write("\n".join(md))
     return len(cs)
