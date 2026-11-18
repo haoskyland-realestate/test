@@ -127,6 +127,176 @@
     338,
     342
    ]
+  },
+  {
+   "vai": "the",
+   "tu": [
+    153,
+    178
+   ],
+   "kieu": "quy-dao",
+   "title": "hơn 800 ha dành cho",
+   "centre": "công cộng",
+   "items": [
+    "Đại học quốc tế",
+    "Công viên sinh thái",
+    "Hồ điều hòa",
+    "Vinschool"
+   ]
+  }
+ ],
+ "canh": [
+  {
+   "tu": [
+    0,
+    35
+   ],
+   "goi_y": [
+    "typo_gold",
+    "count_up"
+   ]
+  },
+  {
+   "tu": [
+    36,
+    62
+   ],
+   "goi_y": [
+    "speaker_only",
+    "typo_gold"
+   ]
+  },
+  {
+   "tu": [
+    63,
+    85
+   ],
+   "goi_y": [
+    "count_up",
+    "map_route"
+   ]
+  },
+  {
+   "tu": [
+    86,
+    101
+   ],
+   "goi_y": [
+    "count_up",
+    "compare_cards",
+    "typo_gold"
+   ]
+  },
+  {
+   "tu": [
+    102,
+    124
+   ],
+   "goi_y": [
+    "count_up",
+    "growth_card"
+   ]
+  },
+  {
+   "tu": [
+    125,
+    140
+   ],
+   "goi_y": [
+    "speaker_only",
+    "chart_bars"
+   ]
+  },
+  {
+   "tu": [
+    141,
+    152
+   ],
+   "goi_y": [
+    "speaker_only",
+    "typo_gold"
+   ]
+  },
+  {
+   "tu": [
+    153,
+    178
+   ],
+   "goi_y": [
+    "tree_diagram",
+    "amenity_grid",
+    "note_board"
+   ]
+  },
+  {
+   "tu": [
+    179,
+    196
+   ],
+   "goi_y": [
+    "typo_gold",
+    "speaker_only"
+   ]
+  },
+  {
+   "tu": [
+    197,
+    223
+   ],
+   "goi_y": [
+    "speaker_only",
+    "amenity_grid"
+   ]
+  },
+  {
+   "tu": [
+    224,
+    246
+   ],
+   "goi_y": [
+    "speaker_only",
+    "photo_cards"
+   ]
+  },
+  {
+   "tu": [
+    247,
+    265
+   ],
+   "goi_y": [
+    "speaker_only",
+    "warning_stamp"
+   ]
+  },
+  {
+   "tu": [
+    266,
+    286
+   ],
+   "goi_y": [
+    "typo_gold",
+    "note_board"
+   ]
+  },
+  {
+   "tu": [
+    287,
+    313
+   ],
+   "goi_y": [
+    "typo_gold",
+    "count_up"
+   ]
+  },
+  {
+   "tu": [
+    314,
+    355
+   ],
+   "goi_y": [
+    "outro_cta",
+    "speaker_only"
+   ]
   }
  ]
 }

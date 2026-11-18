@@ -295,17 +295,8 @@ elif audio.get("music"):  # file nhạc của Hào (build/raw/<file>): lặp n�
 else:
     ff("-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-t", f"{total:.2f}", f"{B}/music.wav")
 if voice:
-    vparts = []
-    for i, c in enumerate(shots):
-        raw = f"{B}/raw/{c['file']}"
-        has_a = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries", "stream=index", "-of", "csv=p=0", raw],
-                               capture_output=True, text=True).stdout.strip()
-        src = ["-ss", str(c["in"]), "-t", str(c["dur"]), "-i", raw, "-vn"] if has_a else ["-f", "lavfi", "-t", str(c["dur"]), "-i", "anullsrc=r=44100:cl=stereo"]
-        ff(*src, "-ac", "2", "-ar", "44100", "-t", str(c["dur"]), f"{B}/v{i}.wav"); vparts.append(f"{B}/v{i}.wav")
-        if i < n - 1 and L["transitions"][i][1] > 0:
-            ff("-f", "lavfi", "-t", str(L["transitions"][i][1]), "-i", "anullsrc=r=44100:cl=stereo", f"{B}/vs{i}.wav"); vparts.append(f"{B}/vs{i}.wav")
-    open(f"{B}/vlist.txt", "w", encoding="utf8").write("".join(f"file '{p}'\n" for p in vparts))
-    ff("-f", "concat", "-safe", "0", "-i", f"{B}/vlist.txt", "-c", "copy", f"{B}/voice.wav")
+    import giong
+    giong.tao(B, tl, ff)
 
 # Cảnh trám: cắt từng đoạn về đúng khung, cùng chỉnh màu của phong cách
 brs = tl.get("broll", [])
@@ -398,7 +389,14 @@ if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-
 fc.append(f"{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0[a0]" if len(mix) > 1 else "[m]anull[a0]")
 # Chuẩn âm lượng EBU R128 cho mạng xã hội (−14 LUFS, đỉnh −1,5 dB), cùng thuật toán ffmpeg-normalize dùng
 fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")
-ff(*ins, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
+vra = "[v]"
+if XEM:  # bản xem: vạch vùng an toàn TikTok (AutoEdit mục 4: trên 15%, dưới 25%, hai bên 10%) để Hào thấy chữ có lấn không; bản cuối sạch
+    t_, b_, l_ = int(H * .15), int(H * .75), int(W * .10)
+    fc.append(f"[v]drawbox=x=0:y=0:w=iw:h={t_}:color=red@0.22:t=fill,drawbox=x=0:y={b_}:w=iw:h=ih-{b_}:color=red@0.22:t=fill,"
+              f"drawbox=x=0:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,drawbox=x=iw-{l_}:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,"
+              f"drawbox=x={l_}:y={t_}:w=iw-{2 * l_}:h={b_ - t_}:color=lime@0.8:t=2[vg]")
+    vra = "[vg]"
+ff(*ins, "-filter_complex", ";".join(fc), "-map", vra, "-map", "[a]",
    "-c:v", "libx264", "-crf", "28" if DRAFT else "19", "-preset", "veryfast" if DRAFT else "medium",
    "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{OUTNAME}.mp4"))
 moc("ghép cuối")

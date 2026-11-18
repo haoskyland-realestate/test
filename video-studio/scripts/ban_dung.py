@@ -93,7 +93,7 @@ def kiem_canh(bd, w):
             muon = mp[m]
             if not muon["co"]:
                 bao.append(f"cảnh {k} ({w[a][1]:.1f}s): '{m}' chưa có trong bộ dựng (đợt 2) → dựng chỉ người nói")
-            elif muon["vai"] and not any(v.get("vai") == muon["vai"] and (muon.get("kieu") in (None, v.get("kieu")))
+            elif muon["vai"] and not any((v.get("vai") == muon["vai"] or (muon["vai"], v.get("vai")) == ("tieu-de", "hook")) and (muon.get("kieu") in (None, v.get("kieu")))
                                          and v["tu"][0] <= b and v["tu"][1] >= a for v in bd.get("vai", [])):
                 loi.append(f"cảnh {k} chọn '{m}': cần vai '{muon['vai']}'{' kiểu ' + muon['kieu'] if muon.get('kieu') else ''} trong từ {a}–{b}")
     return loi, bao
