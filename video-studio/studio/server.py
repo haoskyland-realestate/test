@@ -231,7 +231,10 @@ class H(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         parts, ok = self.route()
         if not parts:
-            return self.send(200, open(os.path.join(ROOT, "studio/index.html"), "rb").read(), "text/html; charset=utf-8")
+            trang = open(os.path.join(ROOT, "studio/index.html"), "rb").read()
+            if self.server.server_address[0] == "127.0.0.1":  # chỉ máy này mở được: gắn sẵn mã khoá để mở bằng link localhost không cần ?t= (khung xem trước). Chế độ --lan thì không.
+                trang = trang.replace(b'get("t") || ""', b'get("t") || "' + TOKEN.encode() + b'"', 1)
+            return self.send(200, trang, "text/html; charset=utf-8")
         if parts == ["gsap.min.js"]:  # thư viện chuyển động cho lớp chữ xem trước (công khai, không chứa dữ liệu)
             return self.send(200, open(os.path.join(ROOT, "node_modules/gsap/dist/gsap.min.js"), "rb").read(), "text/javascript; charset=utf-8",
                              {"Cache-Control": "max-age=86400"})
@@ -639,7 +642,7 @@ if __name__ == "__main__":
     port = int(os.environ.get("STUDIO_PORT", "8765"))
     srv = http.server.ThreadingHTTPServer(("0.0.0.0" if lan else "127.0.0.1", port), H)
     print(f"Python: {sys.executable} (bản {sys.version.split()[0]})")
-    print(f"App timeline: http://127.0.0.1:{port}/?t={TOKEN}")
+    print(f"App timeline: http://127.0.0.1:{port}/?t={TOKEN}" + ("" if lan else f"  (trên chính máy này mở http://localhost:{port} cũng được)"))
     if lan:
         print(f"Điện thoại cùng wifi: http://{lan_ip()}:{port}/?t={TOKEN}")
     srv.serve_forever()
