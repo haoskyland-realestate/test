@@ -15,9 +15,9 @@
 | 8 | 34.2–36.2 (2.0s) | thẻ so-lieu | 25%. Điều đó | [thẻ so-lieu] mật độ xây dựng · 25% |  |
 | 9 | 36.2–39.2 (3.0s) | trám IMG_9660.MOV | có nghĩa là gần 75% diện tích còn |  |  |
 | 10 | 39.2–43.1 (3.9s) | trám IMG_9661.MOV | lại, tương đương hơn 800 ha, được chủ đầu tư dành trọn |  |  |
-| 11 | 43.1–44.9 (1.8s) | trám IMG_9676.MOV | cho các công trình công cộng, cụm |  |  |
-| 12 | 44.9–49.9 (5.0s) | thẻ quy-dao | trường đại học quốc tế, đại đô thị, công viên sinh thái, hồ điều hòa cảnh quan, | [thẻ quy-dao] hơn 800 ha dành cho · CÔNG CỘNG · Đại học quốc tế · Công viên sinh thái · Hồ điều hòa · Vinschool |  |
-| 13 | 49.9–55.8 (5.9s) | trám IMG_9683.MOV | và hệ thống trường học liên cấp Vinschool. Theo bản vẽ quy hoạch mặt bằng mới nhất, |  |  |
+| 11 | 43.1–44.8 (1.7s) | trám IMG_9676.MOV | cho các công trình công cộng, |  |  |
+| 12 | 44.8–52.9 (8.1s) | thẻ quy-dao | cụm trường đại học quốc tế, đại đô thị, công viên sinh thái, hồ điều hòa cảnh quan, và hệ thống trường học liên cấp Vinschool. Theo | [thẻ quy-dao] hơn 800 ha dành cho · công cộng · Đại học quốc tế · Công viên sinh thái · Hồ điều hòa · Vinschool | cut |
+| 13 | 52.9–55.8 (2.9s) | trám IMG_9683.MOV | bản vẽ quy hoạch mặt bằng mới nhất, |  |  |
 | 14 | 55.8–62.3 (6.6s) | trám IMG_9678.MOV | dự án được chia làm 2 phân khu chính, phân khu thấp tầng sinh thái ven sông với các dãy nhà liền kề, | quy hoạch mặt bằng mới nhất · 2 PHÂN KHU | cut |
 | 15 | 62.3–66.9 (4.5s) | trám IMG_9677.MOV | biệt thự đơn lập, song lập, mang phong cách nghỉ dưỡng yên bình, |  | cut |
 | 16 | 66.9–68.8 (1.9s) | trám IMG_9679.MOV | và phân khu cao tầng năng động, |  |  |
@@ -35,6 +35,7 @@
 | 0.0 | cắt cảnh | cảnh #1 dài 13.9s, nên chèn cảnh trám/zoom/chữ |  |
 | 0.0 | nói nhanh | «Vinhomes Saigon Park, với tổng diện tích 1.080 ha, thì chủ đầu tư Vinhomes dành bao nhiêu phần trăm cho tỷ lệ cây xanh và mặt nước, bao nhiêu phần trăm cho tỷ lệ xây dựng, thì hãy cùng Hùng xem hết clip này.» 4.5 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
 | 10.0 | nói nhanh | «Để khám phá dự án Vinhomes Saigon Park, chủ đầu tư Vinhomes sẽ xây dựng như thế nào nha.» 5.3 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
+| 44.8 | cắt cảnh | cảnh #12 dài 8.1s, nên chèn cảnh trám/zoom/chữ |  |
 | 83.4 | cắt cảnh | cảnh #21 dài 17.4s, nên chèn cảnh trám/zoom/chữ |  |
 | 83.5 | nói nhanh | «Với tiến độ xây dựng 3 ca 4 kíp, thì những căn nhà phố đầu tiên của dự án Vinhomes Saigon Park sẽ bàn giao cho quý khách hàng vào quý 2 hoặc quý 3 2027.» 4.4 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |
 | 92.0 | nói nhanh | «Nếu quý anh chị muốn tham quan thực tế tiến độ xây dựng của dự án hoặc sa bàn của dự án, thì hãy liên hệ với em Hùng, để Hùng có thể dẫn anh chị đi tham quan nha.» 5.2 âm tiết/giây (bình thường 3.3) | chữ hiện thưa lại, giữ lâu hơn |

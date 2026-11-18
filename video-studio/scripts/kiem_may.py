@@ -77,6 +77,7 @@ def kiem_thu_vien_python():
         ("opentimelineio", "OpenTimelineIO (xuất Premiere/DaVinci)", False, "pip install opentimelineio otio-fcp-adapter"),
         ("onnxruntime", "onnxruntime (chữ nằm sau đầu)", False, "pip install onnxruntime"),
         ("yt_dlp", "yt-dlp (thêm footage từ link YouTube/TikTok)", False, "pip install yt-dlp"),
+        ("playwright", "playwright (agent kiểm vùng an toàn TikTok)", False, "pip install playwright"),
     ):
         sua = sua.replace("pip install", f'"{sys.executable}" -m pip install')  # cài vào ĐÚNG Python đang chạy app
         ok = importlib.util.find_spec(mod) is not None

@@ -1,0 +1,11 @@
+{
+ "qua": [
+  1,
+  2
+ ],
+ "preset": "xanh_gradient",
+ "mau": "talking-luxury-01",
+ "cat": true,
+ "giong": "3bc87550db8076c348ca6df67dbd2a8bffbca4d6",
+ "cho": "CỔNG 3: Hào xem STORYBOARD.md + build/storyboard.jpg (ảnh thật từng cảnh) và projects/2026-11-17_tiktok_hoc-mon_saigon-park-quy-mo/build/storyboard-chot.html (hiệu ứng từng cảnh).\n\"Chốt phương án\" → agent.py 2026-11-17_tiktok_hoc-mon_saigon-park-quy-mo --qua 3. Sửa gì thì nói Claude sửa rồi chạy lại."
+}
