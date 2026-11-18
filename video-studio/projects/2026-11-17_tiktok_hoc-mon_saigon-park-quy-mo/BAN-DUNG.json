@@ -154,8 +154,7 @@
    "goi_y": [
     "typo_gold",
     "count_up"
-   ],
-   "chon": "typo_gold"
+   ]
   },
   {
    "tu": [
@@ -165,8 +164,7 @@
    "goi_y": [
     "speaker_only",
     "typo_gold"
-   ],
-   "chon": "speaker_only"
+   ]
   },
   {
    "tu": [
@@ -176,8 +174,7 @@
    "goi_y": [
     "count_up",
     "map_route"
-   ],
-   "chon": "count_up"
+   ]
   },
   {
    "tu": [
@@ -188,8 +185,7 @@
     "count_up",
     "compare_cards",
     "typo_gold"
-   ],
-   "chon": "count_up"
+   ]
   },
   {
    "tu": [
@@ -199,8 +195,7 @@
    "goi_y": [
     "count_up",
     "growth_card"
-   ],
-   "chon": "count_up"
+   ]
   },
   {
    "tu": [
@@ -210,8 +205,7 @@
    "goi_y": [
     "speaker_only",
     "chart_bars"
-   ],
-   "chon": "speaker_only"
+   ]
   },
   {
    "tu": [
@@ -221,8 +215,7 @@
    "goi_y": [
     "speaker_only",
     "typo_gold"
-   ],
-   "chon": "speaker_only"
+   ]
   },
   {
    "tu": [
@@ -233,8 +226,7 @@
     "tree_diagram",
     "amenity_grid",
     "note_board"
-   ],
-   "chon": "tree_diagram"
+   ]
   },
   {
    "tu": [
@@ -244,8 +236,7 @@
    "goi_y": [
     "typo_gold",
     "speaker_only"
-   ],
-   "chon": "typo_gold"
+   ]
   },
   {
    "tu": [
@@ -255,8 +246,7 @@
    "goi_y": [
     "speaker_only",
     "amenity_grid"
-   ],
-   "chon": "speaker_only"
+   ]
   },
   {
    "tu": [
@@ -266,8 +256,7 @@
    "goi_y": [
     "speaker_only",
     "photo_cards"
-   ],
-   "chon": "speaker_only"
+   ]
   },
   {
    "tu": [
@@ -277,8 +266,7 @@
    "goi_y": [
     "speaker_only",
     "warning_stamp"
-   ],
-   "chon": "speaker_only"
+   ]
   },
   {
    "tu": [
@@ -288,8 +276,7 @@
    "goi_y": [
     "typo_gold",
     "note_board"
-   ],
-   "chon": "typo_gold"
+   ]
   },
   {
    "tu": [
@@ -299,8 +286,7 @@
    "goi_y": [
     "typo_gold",
     "count_up"
-   ],
-   "chon": "typo_gold"
+   ]
   },
   {
    "tu": [
@@ -310,8 +296,7 @@
    "goi_y": [
     "outro_cta",
     "speaker_only"
-   ],
-   "chon": "outro_cta"
+   ]
   }
  ]
 }

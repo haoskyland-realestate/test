@@ -392,9 +392,9 @@ fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")
 vra = "[v]"
 if XEM:  # bản xem: vạch vùng an toàn TikTok (AutoEdit mục 4: trên 15%, dưới 25%, hai bên 10%) để Hào thấy chữ có lấn không; bản cuối sạch
     t_, b_, l_ = int(H * .15), int(H * .75), int(W * .10)
-    fc.append(f"[v]drawbox=x=0:y=0:w=iw:h={t_}:color=red@0.22:t=fill,drawbox=x=0:y={b_}:w=iw:h=ih-{b_}:color=red@0.22:t=fill,"
+    fc.append(f"[v]format=rgb24,drawbox=x=0:y=0:w=iw:h={t_}:color=red@0.22:t=fill,drawbox=x=0:y={b_}:w=iw:h=ih-{b_}:color=red@0.22:t=fill,"
               f"drawbox=x=0:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,drawbox=x=iw-{l_}:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,"
-              f"drawbox=x={l_}:y={t_}:w=iw-{2 * l_}:h={b_ - t_}:color=lime@0.8:t=2[vg]")
+              f"drawbox=x={l_}:y={t_}:w=iw-{2 * l_}:h={b_ - t_}:color=lime@0.8:t=2,format=yuv420p[vg]")
     vra = "[vg]"
 ff(*ins, "-filter_complex", ";".join(fc), "-map", vra, "-map", "[a]",
    "-c:v", "libx264", "-crf", "28" if DRAFT else "19", "-preset", "veryfast" if DRAFT else "medium",
