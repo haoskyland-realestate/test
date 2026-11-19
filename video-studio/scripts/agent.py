@@ -22,7 +22,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(ROOT, "studio"))
 AE = os.path.join(ROOT, "autoedit")
 PRESET = {"A": "xanh_gradient", "B": "cam_kem", "C": "neon_toi"}
-NGUONG_TIN = 0.6  # từ máy nghe có độ tin cậy dưới mức này thì hỏi Hào
+from cau_hinh import lay
 CHO_HAO, CHO_CLAUDE = 10, 20
 PY = sys.executable
 
@@ -60,7 +60,7 @@ def cau_hoi_loi(pj, tl, ws, tin):
     dong, gom = [], {}  # mỗi từ hỏi một lần: lần đầu + số lần xuất hiện
     for i, w in enumerate(ws):
         ly = []
-        if i < len(tin) and tin[i] < NGUONG_TIN:
+        if i < len(tin) and tin[i] < lay("giong.nguong_tin", tl):
             ly.append(f"máy nghe không chắc ({tin[i]:.0%})")
         if re.search(r"\d", w[0]):
             ly.append("con số")
@@ -130,8 +130,8 @@ def chay_agent(ten, nguon, opt):
     SP = os.path.join(pj, "AGENT.json")
     moi = not os.path.exists(SP)
     st = doc(SP, {"qua": []})
-    st["preset"] = PRESET.get(opt.get("preset", ""), st.get("preset") or PRESET["A"])
-    st["mau"] = opt.get("mau") or st.get("mau") or "talking-luxury-01"
+    st["preset"] = PRESET.get(opt.get("preset", ""), st.get("preset") or PRESET[lay("agent.preset")])
+    st["mau"] = opt.get("mau") or st.get("mau") or lay("agent.mau")
     if opt.get("qua"):
         st["qua"] = sorted(set(st["qua"]) | {opt["qua"]})
     B = os.path.join(pj, "build")

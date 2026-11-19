@@ -8,7 +8,16 @@ import json, os, re, subprocess, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from timeline import check, layout
 
-MAX_WORDS, MAX_SEC, PAUSE = 7, 2.8, 0.45  # một dòng phụ đề: tối đa 7 từ / 2,8 giây; ngừng nói 0,45s thì xuống dòng
+from cau_hinh import lay
+
+
+def nap(tl=None):
+    """Một dòng phụ đề: tối đa từ / giây; ngừng nói thì xuống dòng (bảng master, nhóm phude)."""
+    global MAX_WORDS, MAX_SEC, PAUSE
+    MAX_WORDS, MAX_SEC, PAUSE = lay("phude.tu_toi_da", tl), lay("phude.giay_toi_da", tl), lay("phude.nghi", tl)
+
+
+nap()
 
 
 UNITS = {"tỷ", "tỉ", "triệu", "nghìn", "ngàn", "trăm", "m2", "m²", "mét", "km", "năm", "tháng", "ngày", "phút", "giờ",
@@ -100,13 +109,13 @@ def nhan_dang(path, cache, tu_vung=None):
         words = []
     else:
         audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768
-        name = os.environ.get("WHISPER_MODEL", "large-v3-turbo")
+        name = os.environ.get("WHISPER_MODEL") or lay("giong.mo_hinh")
         # PC có card NVIDIA thì thử chạy bằng card; thiếu thư viện CUDA thì tự về CPU
         tries = ([("cuda", "float16")] if ctranslate2.get_cuda_device_count() > 0 else []) + [("cpu", "int8")]
         for k, (dev, ct) in enumerate(tries):
             try:
                 segs, _ = WhisperModel(name, device=dev, compute_type=ct).transcribe(
-                    audio, language="vi", word_timestamps=True, vad_filter=True, beam_size=5,
+                    audio, language="vi", word_timestamps=True, vad_filter=lay("giong.vad"), beam_size=lay("giong.beam"),
                     initial_prompt=("Từ ngữ trong video: " + ", ".join(tu_vung) + ".") if tu_vung else None)
                 ws = [w for s in segs if not BIA.search(s.text) for w in s.words if w.word.strip()]
                 words = [[w.word.strip(), round(w.start, 2), round(w.end, 2)] for w in ws]
@@ -132,6 +141,7 @@ def main(proj):
     can("numpy", "faster_whisper")
     p = os.path.join(proj, "timeline.json")
     tl = json.load(open(p, encoding="utf8"))
+    nap(tl)
     if (errs := check(tl)):
         sys.exit("timeline.json chưa hợp lệ:\n- " + "\n- ".join(errs))
     L = layout(tl)

@@ -120,7 +120,7 @@ def ap(tl, w, bd):
         cur.append((i, x))
     nhom_tu += [cur] if cur else []
     for doan in nhom_tu:
-        for g in loi_nhip.nhom([x for _, x in doan]):
+        for g in loi_nhip.nhom([x for _, x in doan], tl=tl):
             gi = [i for i, x in doan if [x[0], x[1], x[2]] in g["words"]]
             g["hl"] = [k for k, i in enumerate(gi) if i in khoa]
             g["bam_nguoi"] = True
