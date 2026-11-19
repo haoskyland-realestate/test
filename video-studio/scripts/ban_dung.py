@@ -18,6 +18,7 @@ import json, re, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from doi_chieu import toks
 import loi_nhip
+from cau_hinh import lay
 
 VAI = ("hook", "tieu-de", "tu-khoa", "so-lieu", "cta", "the")
 KIEU_THE = ("checklist", "quy-dao", "kinh")
@@ -110,7 +111,8 @@ def ap(tl, w, bd):
     tl["cards"] = [x for x in tl.get("cards", []) if not x.get("ban_dung")]
     # chữ theo nhịp nói cho phần còn lại; từ khoá do AI chọn (không dùng luật đoán số/tiền)
     # chữ lớn hiện lâu hơn lúc nói (tối thiểu 1,8s, thêm 0,8s) nên bỏ chữ theo nhịp nói rơi vào lúc đó, tránh chồng chữ
-    hien = [(max(0, w[v["tu"][0]][1] - 0.1), max(w[v["tu"][0]][1] - 0.1 + 1.8, w[v["tu"][1]][2] + 0.8)) for v in lon if v["vai"] not in ("so-lieu", "the")]
+    LON_MIN, LON_THEM = lay("the.chu_lon_min", tl), lay("the.chu_lon_them", tl)
+    hien = [(max(0, w[v["tu"][0]][1] - 0.1), max(w[v["tu"][0]][1] - 0.1 + LON_MIN, w[v["tu"][1]][2] + LON_THEM)) for v in lon if v["vai"] not in ("so-lieu", "the")]
     che = lambda x: any(a <= x[1] < b for a, b in hien)
     con = [(i, x) for i, x in enumerate(w) if not trong(i) and not che(x)]
     nhom_tu, cur = [], []
@@ -131,14 +133,14 @@ def ap(tl, w, bd):
         st, en = max(0, w[a][1] - 0.1), w[b][2]
         chu = v.get("chu") or " ".join(x[0] for x in w[a:b + 1]).strip(".,!?")
         if v["vai"] == "so-lieu":
-            tl["cards"].append({"kieu": "so-lieu", "start": round(st, 2), "dur": round(min(max(2.0, en - st + 0.6), total - st), 2), "title": v.get("nhan", ""),
+            tl["cards"].append({"kieu": "so-lieu", "start": round(st, 2), "dur": round(min(max(lay("the.so_lieu_min", tl), en - st + lay("the.so_lieu_them", tl)), total - st), 2), "title": v.get("nhan", ""),
                                 "value": hoa(chu), "label": v.get("nhan_duoi", ""), "nguon": v["nguon"], "ban_dung": True})
         elif v["vai"] == "the":
-            tl["cards"].append({"kieu": v["kieu"], "start": round(st, 2), "dur": round(min(max(3.0, en - st + 0.6), total - st), 2),
+            tl["cards"].append({"kieu": v["kieu"], "start": round(st, 2), "dur": round(min(max(lay("the.the_min", tl), en - st + lay("the.the_them", tl)), total - st), 2),
                                 "title": v.get("title", ""), "items": list(v.get("items") or []), "centre": v.get("centre", ""),
                                 "sub": v.get("sub", ""), "ban_dung": True})
         else:
-            tl["texts"].append({"kind": "title3d", "start": round(st, 2), "dur": round(min(max(1.8, en - st + 0.8), total - st), 2), "top": v.get("nhan", ""),
+            tl["texts"].append({"kind": "title3d", "start": round(st, 2), "dur": round(min(max(LON_MIN, en - st + LON_THEM), total - st), 2), "top": v.get("nhan", ""),
                                 "big": hoa(chu), "sub": v.get("sub", ""), "sau_dau": v.get("sau_dau", v["vai"] == "hook"), "ban_dung": True, "vai": v["vai"]})
     tl["texts"].sort(key=lambda x: x["start"])
     return tl

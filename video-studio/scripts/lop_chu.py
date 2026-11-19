@@ -7,6 +7,7 @@ import tag_chu
 
 from timeline import layout, size
 from effects import STYLES
+from cau_hinh import lay
 
 
 def words(text, chars=False):
@@ -40,20 +41,20 @@ def em_dan(js, k=1.5):
     return js
 
 
-def bo_cuc_loi(ws, hl, xd, W, H, LO, top):
+def bo_cuc_loi(ws, hl, xd, W, H, LO, top, tl=None):
     """Bố cục chữ theo nhịp nói như người dựng chuyên nghiệp: chữ to nhất có thể mà vẫn nằm gọn chiều ngang (trong vùng an toàn hai bên 10%), từ khoá to hơn chữ thường,
     cụm không rớt vào vùng giao diện TikTok (dưới 75% chiều cao, chuẩn AutoEdit) và không lên sát đỉnh. Trả (cỡ chữ thường px, cỡ từ khoá em, top px)."""
-    avail = W * 0.8 - 16  # trong vùng an toàn hai bên 10% (AutoEdit), chừa 8px mỗi bên
+    avail = W * (1 - 2 * lay("vung.ben", tl)) - 16  # trong vùng an toàn hai bên 10% (AutoEdit), chừa 8px mỗi bên
     nor = " ".join(w for k, (w, _, _) in enumerate(ws) if k not in hl)
     key = " ".join(w for k, (w, _, _) in enumerate(ws) if k in hl)
-    co = LO.get("co", 62)
+    co = LO.get("co", lay("loi.co", tl))
     dong = max(1, len(nor) / (2 if not xd and len(nor) > 28 else 1)) if nor else 1   # chữ thường tối đa 2 dòng khi không tách dòng từ khoá
     co = max(40, min(co, avail / (max(dong, 1) * 0.55)))
-    em = LO.get("co_khoa", 1.9)
+    em = LO.get("co_khoa", lay("loi.co_khoa", tl))
     if key:
         em = max(1.2, min(em, avail / (len(key) * 0.6 * co)))
     cao = (co * 1.3 * (2 if not xd and len(nor) > 28 else 1) if nor else 0) + (co * em * 1.15 if key else 0)
-    top = int(min(max(top, 0.30 * H), 0.75 * H - cao))  # mép dưới ≤ 75%: vùng an toàn TikTok theo AutoEdit (kiem_vung.py kiểm)
+    top = int(min(max(top, lay("loi.vung_tren", tl) * H), lay("vung.duoi", tl) * H - cao))  # mép dưới ≤ 75%: vùng an toàn TikTok theo AutoEdit (kiem_vung.py kiểm)
     return int(co), round(em, 2), top
 
 
@@ -79,10 +80,13 @@ def tao(tl, phan=None, ti_le=1):
 
     def d(x):  # thời lượng chuyển động theo nhịp của phong cách
         return round(x * SP, 3)
-    K = float(tl.get("meta", {}).get("cham_chu", 1.5))  # hệ số chậm em_dan sẽ nhân thêm vào mọi thời lượng
+    K = float(tl.get("meta", {}).get("cham_chu", lay("loi.cham_chu", tl)))  # hệ số chậm em_dan sẽ nhân thêm vào mọi thời lượng
+
+    SOM = lay("loi.som", tl)
+    BEN = round(lay("vung.ben", tl) * 100, 4)  # lề an toàn hai bên (%) cho khối chữ theo nhịp nói
 
     def som(t, x):  # chữ theo nhịp nói: bắt đầu sớm để giữa chuyển động (ease in-out) rơi đúng lúc vừa nói, không trễ sau lời (Hào 18/11)
-        return round(max(0, t - 0.6 * d(x) * K), 2)
+        return round(max(0, t - SOM * d(x) * K), 2)
 
 
     def anim_in(name, sel, t):
@@ -111,7 +115,7 @@ def tao(tl, phan=None, ti_le=1):
             ws, hl = s["words"], set(s.get("hl", []))
             body, a = "", []
             xd = LO.get("xuong_dong")  # cụm từ khoá nằm riêng một dòng bên dưới chữ thường (kiểu talking head cam)
-            co, em, top = bo_cuc_loi(ws, hl, xd, W, H, LO, int(s["top_px"]) if s.get("top_px") is not None else int(float(s.get("y", 0.56)) * H))
+            co, em, top = bo_cuc_loi(ws, hl, xd, W, H, LO, int(s["top_px"]) if s.get("top_px") is not None else int(float(s.get("y", 0.56)) * H), tl)
             for k, (w, w0, w1) in enumerate(ws):
                 if xd and k and ((k in hl) != (k - 1 in hl)):
                     body += "<br>"
@@ -325,7 +329,7 @@ def tao(tl, phan=None, ti_le=1):
     {style.get("css", "")}
     {LO.get("css", "")}
     {YT_CSS if YT else ""}
-    .blk.loi{{left:calc(10% + 8px);right:calc(10% + 8px);top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
+    .blk.loi{{left:calc({BEN:g}% + 8px);right:calc({BEN:g}% + 8px);top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
       text-shadow:0 2px 14px rgba(0,0,0,.75)}}
     .blk.loi .lw{{display:inline-block;margin:0 .14em;position:relative}}
     .blk.loi .ul{{position:absolute;left:0;right:0;bottom:-.06em;height:.07em;background:{LO.get("khoa", "#ff2b2b")};transform-origin:left;box-shadow:0 0 14px {LO.get("khoa", "#ff2b2b")}}}
