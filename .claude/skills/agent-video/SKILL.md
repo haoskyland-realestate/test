@@ -12,6 +12,9 @@ python scripts/agent.py <tên> <nguồn…> [--preset A|B|C] [--mau talking-luxu
 ```
 Tên theo `<ngày>_<tiktok|youtube>_<dự án>_<chủ đề>`. Nguồn: thư mục, file, link Drive/trực tiếp/YouTube/TikTok. Chạy lại cùng lệnh là làm tiếp. `--trang-thai` xem đang ở đâu. Mã thoát: 0 xong · 10 chờ Hào · 20 chờ Claude.
 
+## Hào nói "chỉnh X thành Y" (nhịp cắt, cỡ chữ, độ to, zoom…)
+Sửa qua **bảng master**, không sửa code: tìm id trong `video-studio/cau-hinh/master.json` (hoặc `docs/04-thu-vien/BANG-MASTER.md`). Riêng video này → ghi `meta.cau_hinh` {id: giá trị} trong `timeline.json`; mọi video → đổi `mac_dinh` trong master.json (giữ `goc`). Hỏi Hào nếu không rõ chung hay riêng. Chạy `python scripts/cau_hinh.py --tu-kiem`, rồi `python scripts/bang_master.py --md` nếu đổi bảng chung. Hào dán "Bảng master — …" từ trang → áp đúng như vậy.
+
 ## Việc của Claude ở từng điểm dừng
 1. **CỔNG 1 (mã 10, `CAN-HOI.md`)**: từ máy nghe không chắc (độ tin cậy < 60%), tên riêng, con số, đoạn nghi lặp/vấp/cắt tiếng. Gửi Hào bảng, KHÔNG tự đoán. Hào trả lời → ghi `meta.sua_tu` (từ nghe sai), `meta.da_duyet` (số/tên đã xác nhận), cắt bằng `scripts/cat_doan.py` (mốc trong khoảng lặng) → `agent.py <tên> --qua 1`. Không sửa tên người nói thành "Hào".
 2. **CHỜ CLAUDE (mã 20) — chia cảnh + vai**: đọc `build/LOI-NOI.md`, viết `BAN-DUNG.json` (định dạng ở đầu `scripts/ban_dung.py`):

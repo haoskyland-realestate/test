@@ -46,6 +46,7 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 | Nhóm | Tính năng | Lệnh / file | Đã thử |
 |---|---|---|---|
 | Dự án | Tạo dự án / thêm footage từ nhiều nguồn: kéo thả hoặc chọn video (cả điện thoại), link Google Drive (thư mục hoặc file), link tải trực tiếp, YouTube/TikTok; giỏ nguồn trong app (＋ và ＋ Footage) hoặc lệnh | `scripts/du_an_moi.py`, `scripts/tai_drive.py` | Cloud (tải lên, Drive, link trực tiếp); YouTube/TikTok chưa thử (mạng cloud chặn) |
+| Dự án | **Bảng master**: 69 thông số của cả quy trình (cắt, nhận dạng giọng, phụ đề, chữ, thẻ, zoom, âm, hình, vùng an toàn, kiểm, agent) trong một file; chỉnh trên trang (app ⚙ Bảng master: lưu chung hoặc riêng dự án; bản xem artifact: sao chép thay đổi); ghi đè dự án ở `meta.cau_hinh` thắng bảng chung | `video-studio/cau-hinh/master.json`, `scripts/cau_hinh.py`, `scripts/bang_master.py`, `docs/04-thu-vien/BANG-MASTER.md` | Cloud (đưa vào không đổi kết quả: so mã băm trên Saigon Park; trang thử bằng Chromium) |
 | Dự án | Định dạng timeline v1 (cảnh, chữ, âm, cảnh chèn, zoom, B-roll, overlay) | `scripts/timeline.py`, test `test_timeline.py` | Cloud |
 | Dựng | Cắt bỏ một đoạn (câu lặp, chỗ vấp, khoảng lặng) và tự dời mọi thứ phía sau | `scripts/cat_doan.py projects/<tên> <từ> <đến>` | Cloud (Saigon Park) |
 | Duyệt | Phân tích lời nói và chỗ cắt: nói nhanh/chậm (so với nhịp riêng), lặp từ, nói vấp, cắt giữa từ, cảnh quá ngắn/dài + đề xuất; tự gắn vào storyboard | `scripts/phan_tich_loi.py projects/<tên>` | Cloud (Saigon Park: bắt câu lặp "biệt thự đơn lập, song lập") |

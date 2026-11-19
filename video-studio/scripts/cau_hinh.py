@@ -59,7 +59,7 @@ def lay(id, tl=None):
 
 def _tu_kiem():
     b = bang()
-    assert lay("cat.lang_cat") == 0.30 and lay("cat.lang_cat", {"meta": {"cau_hinh": {"cat.lang_cat": 0.6}}}) == 0.6
+    assert lay("cat.lang_cat") == b["cat.lang_cat"]["mac_dinh"] and lay("cat.lang_cat", {"meta": {"cau_hinh": {"cat.lang_cat": 0.6}}}) == 0.6
     assert kiem({"cat.lang_cat": 9}) and kiem({"cat.lan_cat": 0.4}) and kiem({"agent.preset": "D"}) and kiem({"giong.vad": 1})
     assert kiem({"cat.lang_cat": 0.4, "agent.preset": "B", "cat.tieng_dem": ["ờ"]}) == []
     try:

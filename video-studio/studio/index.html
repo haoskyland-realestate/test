@@ -127,7 +127,7 @@
       <button id="lyT" title="Ẩn/hiện timeline">⬓</button><button id="lyF" title="Toàn màn hình">⛶</button>
     </div>
     <button class="ghost" id="undo" title="Hoàn tác (Ctrl+Z)">↶</button><button class="ghost" id="redo" title="Làm lại (Ctrl+Shift+Z)">↷</button>
-    <button id="btnMau" class="lime">✦ Thư viện mẫu</button><button id="btnKho">📦 Kho</button><button id="btnLib">▦ Thư viện</button><button class="ghost" id="btnHist">Lịch sử</button><button class="ghost" id="btnAI">Nhờ AI sửa</button>
+    <button id="btnMau" class="lime">✦ Thư viện mẫu</button><button id="btnKho">📦 Kho</button><button id="btnMaster" title="Mọi thông số dựng: cắt, chữ, âm, hình… chỉnh chung hoặc riêng dự án này">⚙ Bảng master</button><button id="btnLib">▦ Thư viện</button><button class="ghost" id="btnHist">Lịch sử</button><button class="ghost" id="btnAI">Nhờ AI sửa</button>
     <button class="ghost" id="save">Lưu</button><button id="draft">Dựng nháp</button><button class="lime" id="export">Xuất video</button><button class="ghost" id="nle" title="Xuất timeline để dựng tiếp trên Premiere Pro hoặc DaVinci Resolve">Premiere/DaVinci</button>
   </header>
   <nav id="tabs" aria-label="Nhóm chỉnh sửa"></nav>
@@ -749,6 +749,7 @@ async function quetKho(goc) {
 document.addEventListener("click", e => {
   const q = s => e.target.closest(s);
   if (q("#btnKho")) return moKho();
+  if (q("#btnMaster")) return window.open(`/bang-master?t=${encodeURIComponent(T)}${name ? "&p=" + encodeURIComponent(name) : ""}`, "_blank");  // lưu xong, dựng lại mới thấy tác dụng
   let el;
   if ((el = q("[data-kloai]"))) { khoLoai = el.dataset.kloai; khoTrang = 0; return moKho(); }
   if (q("[data-ktim]")) { khoQ = $("#kq").value; khoTrang = 0; return moKho(); }
