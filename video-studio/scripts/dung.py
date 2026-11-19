@@ -20,8 +20,10 @@ HERE = os.path.abspath(sys.argv[1])
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 NAME = os.path.basename(HERE)
 OUTNAME = NAME + (".xem" if XEM else ".nhap" if DRAFT else "")
-CRF, PRESET = ("28", "ultrafast") if DRAFT else ("18", "fast")
 tl = json.load(open(os.path.join(HERE, "timeline.json"), encoding="utf8"))
+import cau_hinh  # bảng master (cau-hinh/master.json); không import lay: trùng tên với ban_nhe.lay
+CH = lambda k: cau_hinh.lay(k, tl)
+CRF, PRESET = (str(CH("hinh.crf_nhap")), "ultrafast") if DRAFT else (str(CH("hinh.crf_cuoi")), "fast")
 errs = check(tl)
 if errs:
     sys.exit("timeline.json chưa hợp lệ:\n- " + "\n- ".join(errs))
@@ -36,7 +38,7 @@ if _hoi:
 W, H = W0, H0 = size(tl)  # W0×H0: toạ độ thiết kế (chữ, vị trí); W×H: khung xuất
 if XEM:
     W, H = W // 2, H // 2
-FPS = 30
+FPS = CH("hinh.fps")
 YT = W > H  # khung ngang YouTube
 shots = tl["clips"]
 L = layout(tl)
@@ -106,7 +108,7 @@ for i, s in enumerate(shots):
     # số khung theo mốc cộng dồn: làm tròn từng cảnh không cộng dồn thành hình trễ hơn tiếng (lệch 0,4s sau 12 cảnh)
     nk = round((cum + s["dur"]) * FPS) - round(cum * FPS); cum += s["dur"] + (L["transitions"][i][1] if i < len(L["transitions"]) else 0)
     look = s.get("look") or style["look"]
-    auto = tl.get("meta", {}).get("auto_color", True) and not look.startswith("lut:")  # tự cân màu (LUT chinh_mau đã gồm cân màu)
+    auto = tl.get("meta", {}).get("auto_color", CH("hinh.tu_can_mau")) and not look.startswith("lut:")  # tự cân màu (LUT chinh_mau đã gồm cân màu)
     src = nguon(s["file"])
     vf = (f"{khung(src, W, H, s.get('focus', 0), s.get('fit'))},"
           f"{tu_can(src, s['in'], s['dur']) if auto else 'null'},"
@@ -285,7 +287,7 @@ moc("lớp chữ")
 # 6. Âm thanh: giọng gốc của cảnh (nếu bật) + nhạc tổng hợp + tiếng vút ở tâm mỗi chuyển cảnh
 audio = tl.get("audio", {})
 voice = audio.get("voice", False)
-mvol = audio.get("music_volume", 1.0) * (0.35 if voice else 1.0)  # có giọng thì nhạc nhỏ xuống (thêm ducking khi đang nói)
+mvol = audio.get("music_volume", 1.0) * (CH("am.nhac_co_giong") if voice else 1.0)  # có giọng thì nhạc nhỏ xuống (thêm ducking khi đang nói)
 if audio.get("music", "synth") == "synth":
     wh = [str(t0 + d / 2) for t0, d, ty in L["transitions"] if ty != "cut"] if audio.get("whoosh", True) else []
     run([sys.executable, os.path.join(ROOT, "scripts/music.py"), f"{total:.2f}", f"{B}/music.wav", *wh])
@@ -379,25 +381,26 @@ if voice:
     ins += ["-i", f"{B}/voice.wav"]
     # nhạc tự nhỏ xuống khi có giọng (ducking, như dựng chuyên nghiệp): giọng làm khoá nén cho nhạc
     # audio.lam_sach_giong: giọng rõ, sạch, có chiều sâu: bỏ ù dưới 80 Hz, khử ồn nền nhẹ, nén nhẹ cho đều, nâng vùng rõ chữ 3–4 kHz
-    gl = "highpass=f=80,afftdn=nf=-25,acompressor=threshold=-21dB:ratio=2.5:attack=8:release=120:makeup=2,equalizer=f=3500:t=q:w=1.2:g=2," if audio.get("lam_sach_giong") else ""
+    gl = (f"highpass=f={CH('am.sach_cat_tram')},afftdn=nf={CH('am.sach_khu_on')},acompressor=threshold=-21dB:ratio={CH('am.sach_nen')}:attack=8:release=120:makeup=2,"
+          f"equalizer=f={CH('am.sach_nang_hz')}:t=q:w=1.2:g={CH('am.sach_nang_db')},") if audio.get("lam_sach_giong") else ""
     fc.append(f"[{nv}:a]{gl}asplit=2[vo][vk]")
-    fc.append("[m][vk]sidechaincompress=threshold=0.02:ratio=8:attack=15:release=400:makeup=1[md]")
+    fc.append(f"[m][vk]sidechaincompress=threshold={CH('am.duck_nguong')}:ratio={CH('am.duck_ti_le')}:attack={CH('am.duck_vao')}:release={CH('am.duck_nha')}:makeup=1[md]")
     mix[0] = "[md]"; mix.insert(0, "[vo]")
 if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-vien-am-thanh/) trộn sẵn thành một file
     ins += ["-i", f"{B}/sfx.wav"]
     fc.append(f"[{nv + bool(voice)}:a]anull[sx]"); mix.append("[sx]")
 fc.append(f"{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0[a0]" if len(mix) > 1 else "[m]anull[a0]")
 # Chuẩn âm lượng EBU R128 cho mạng xã hội (−14 LUFS, đỉnh −1,5 dB), cùng thuật toán ffmpeg-normalize dùng
-fc.append("[a0]loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000[a]")
+fc.append(f"[a0]loudnorm=I={CH('am.lufs')}:TP={CH('am.dinh')}:LRA={CH('am.lra')},aresample=48000[a]")
 vra = "[v]"
 if XEM:  # bản xem: vạch vùng an toàn TikTok (AutoEdit mục 4: trên 15%, dưới 25%, hai bên 10%) để Hào thấy chữ có lấn không; bản cuối sạch
-    t_, b_, l_ = int(H * .15), int(H * .75), int(W * .10)
+    t_, b_, l_ = int(H * CH("vung.tren")), int(H * CH("vung.duoi")), int(W * CH("vung.ben"))
     fc.append(f"[v]format=rgb24,drawbox=x=0:y=0:w=iw:h={t_}:color=red@0.22:t=fill,drawbox=x=0:y={b_}:w=iw:h=ih-{b_}:color=red@0.22:t=fill,"
               f"drawbox=x=0:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,drawbox=x=iw-{l_}:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,"
               f"drawbox=x={l_}:y={t_}:w=iw-{2 * l_}:h={b_ - t_}:color=lime@0.8:t=2,format=yuv420p[vg]")
     vra = "[vg]"
 ff(*ins, "-filter_complex", ";".join(fc), "-map", vra, "-map", "[a]",
-   "-c:v", "libx264", "-crf", "28" if DRAFT else "19", "-preset", "veryfast" if DRAFT else "medium",
+   "-c:v", "libx264", "-crf", str(CH("hinh.crf_nhap") if DRAFT else CH("hinh.crf_ghep")), "-preset", "veryfast" if DRAFT else "medium",
    "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{OUTNAME}.mp4"))
 moc("ghép cuối")
 print(f"Xong: out/{OUTNAME}.mp4 ({total:.1f}s, {n} cảnh)")

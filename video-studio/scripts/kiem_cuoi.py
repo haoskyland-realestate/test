@@ -27,6 +27,7 @@ def chop_toi(sang, fps=30):
 
 def kiem(f, tl):
     from timeline import size, layout
+    from cau_hinh import lay
     loi = []
     W, H = size(tl)
     vd, w, h = dai(f, "v")
@@ -34,9 +35,9 @@ def kiem(f, tl):
     tong = layout(tl)["total"]
     if (w, h) not in ((W, H), (W // 2, H // 2)):
         loi.append(f"khổ {w}×{h}, cần {W}×{H} (hoặc bản xem {W // 2}×{H // 2})")
-    if abs(vd - tong) > 0.15:
+    if abs(vd - tong) > lay("kiem.do_dai", tl):
         loi.append(f"độ dài hình {vd:.2f}s khác timeline {tong:.2f}s")
-    if abs(vd - ad) > 0.1:
+    if abs(vd - ad) > lay("kiem.hinh_tieng", tl):
         loi.append(f"hình {vd:.2f}s và tiếng {ad:.2f}s lệch nhau")
     raw = subprocess.run(["ffmpeg", "-v", "error", "-i", f, "-vf", "scale=32:57,format=gray", "-f", "rawvideo", "-"], capture_output=True).stdout
     n = 32 * 57
@@ -45,8 +46,8 @@ def kiem(f, tl):
         loi.append("chớp khung tối ở giây " + ", ".join(map(str, c[:10])))
     e = subprocess.run(["ffmpeg", "-nostats", "-i", f, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
     m = re.findall(r"I:\s+(-?[\d.]+) LUFS", e)
-    if m and abs(float(m[-1]) + 14) > 1:
-        loi.append(f"âm lượng {m[-1]} LUFS, chuẩn −14 ±1")
+    if m and abs(float(m[-1]) - lay("am.lufs", tl)) > lay("kiem.lufs_lech", tl):
+        loi.append(f"âm lượng {m[-1]} LUFS, chuẩn {lay('am.lufs', tl)} ±{lay('kiem.lufs_lech', tl)}")
     return loi, {"khổ": f"{w}×{h}", "độ dài": round(vd, 2), "LUFS": float(m[-1]) if m else None}
 
 

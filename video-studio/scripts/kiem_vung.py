@@ -8,7 +8,13 @@ import glob, json, os, re, shutil, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.join(HERE, "..")
 sys.path.insert(0, HERE)
-GIOI_HAN = {"t": .15, "b": .75, "l": .10, "r": .90}
+from cau_hinh import lay
+
+
+def gioi_han(tl):
+    """Khung an toàn (tỉ lệ khung) từ bảng master nhóm vung."""
+    ben = lay("vung.ben", tl)
+    return {"t": lay("vung.tren", tl), "b": lay("vung.duoi", tl), "l": ben, "r": round(1 - ben, 6)}
 
 
 def js_do():
@@ -56,7 +62,7 @@ def kiem(pj, tl=None):
         for t in moc(tl):
             pg.evaluate(f"window.dat({t})")
             pg.wait_for_timeout(60)
-            out += [(t, x) for x in pg.evaluate(js, ["#root", GIOI_HAN])]
+            out += [(t, x) for x in pg.evaluate(js, ["#root", gioi_han(tl)])]
         b.close()
     return out
 

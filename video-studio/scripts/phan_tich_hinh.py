@@ -4,7 +4,8 @@ import json, os, subprocess, sys
 import numpy as np
 from mau import chuyen_tong
 
-FPS_A, W_A = 5, 320  # phân tích 5 khung/giây ở khung rộng 320px là đủ, nhanh
+from cau_hinh import lay
+FPS_A, W_A = lay("hinh.phan_tich_fps"), 320  # phân tích 5 khung/giây ở khung rộng 320px là đủ, nhanh
 _face = None
 
 

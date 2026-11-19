@@ -72,9 +72,9 @@ def _tu_kiem():
     dung = set()
     for f in os.listdir(HERE):
         if f.endswith(".py") and f != "cau_hinh.py":
-            dung |= set(re.findall(r'lay\("([a-z_]+\.[a-z_]+)"', open(os.path.join(HERE, f), encoding="utf8").read()))
+            dung |= set(re.findall(r'(?:lay|CH|cau_hinh)\(["\']([a-z_]+\.[a-z_]+)["\']', open(os.path.join(HERE, f), encoding="utf8").read()))
     s = open(os.path.join(HERE, "..", "studio", "server.py"), encoding="utf8").read()
-    dung |= set(re.findall(r'lay\("([a-z_]+\.[a-z_]+)"', s))
+    dung |= set(re.findall(r'(?:lay|CH|cau_hinh)\(["\']([a-z_]+\.[a-z_]+)["\']', s))
     assert not (dung - set(b)), f"code dùng thông số chưa có trong bảng: {sorted(dung - set(b))}"
     assert not (set(b) - dung), f"thông số trong bảng chưa được code dùng: {sorted(set(b) - dung)}"
     print("OK")
