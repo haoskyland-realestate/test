@@ -21,7 +21,7 @@ def buoc_chay(ten, lenh, log_dir, cho_phep=(0,)):
     f = os.path.join(log_dir, f"{len(os.listdir(log_dir)) + 1:02d}-{ten.split()[0]}.log")
     open(f, "w", encoding="utf8").write(out)
     return {"ten": ten, "dat": p.returncode in cho_phep, "ma": p.returncode, "giay": round(time.time() - t0, 1),
-            "cuoi": "\n".join(out.strip().splitlines()[-30:]), "log": os.path.relpath(f, ROOT)}
+            "cuoi": "\n".join(out.strip().splitlines()[-30:]), "log": f}  # đường dẫn đầy đủ: relpath lỗi khi khác ổ đĩa (Windows C: và D:)
 
 
 def bao_cao(kq, may, ten_da):

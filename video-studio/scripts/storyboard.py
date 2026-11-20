@@ -139,6 +139,6 @@ if __name__ == "__main__":
         _tu_kiem()
     elif len(sys.argv) == 2 and os.path.isdir(sys.argv[1]):
         pj = os.path.abspath(sys.argv[1])
-        print(f"Xong: {lap(pj)} cảnh → {os.path.relpath(os.path.join(pj, 'STORYBOARD.md'))} + build/storyboard.jpg")
+        print(f"Xong: {lap(pj)} cảnh → {os.path.join(pj, 'STORYBOARD.md')} + build/storyboard.jpg")
     else:
         sys.exit("Dùng: python3 scripts/storyboard.py projects/<tên>")
