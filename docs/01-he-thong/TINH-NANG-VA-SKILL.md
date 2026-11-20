@@ -86,6 +86,7 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 | `chinh-mau` | "chỉnh màu", "da bị cam", "lấy màu video mẫu" |
 | `hoc-mau` | gửi video mẫu: "học style này", "làm mẫu giống video này" |
 | `bao-cao-nghiem-thu` | "kiểm tra", "nghiệm thu", "báo cáo" video |
+| `talking-head-ui` | "talking head ui", "lớp chữ cho CapCut", "chữ nền trong suốt": dựng lớp chữ động (phụ đề từng cụm, khối chữ nhấn, chữ sau người) bằng HyperFrames từ `edit-plan.json`, độc lập với `dung.py` |
 
 **Kho skill thiết kế** (`video-studio/thu-vien-skill/`, công thức dựng lại, không phải mã):
 - am-thanh-theo-nhip
