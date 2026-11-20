@@ -1,0 +1,3 @@
+# Danh sách kênh TikTok cần theo dõi: mỗi dòng một link, # là ghi chú.
+# Giữ khoảng 5-10 kênh. Thêm hoặc xoá dòng tuỳ ý.
+https://www.tiktok.com/@lamphatlong
