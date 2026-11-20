@@ -45,7 +45,8 @@ def chu_hien(tl):
 def loi_noi(pj, bang=None):
     """Tập từ đã nói trong mọi ghi âm của dự án (text nhận dạng giọng đã lưu, đã áp meta.sua_tu), None nếu chưa nhận dạng."""
     from phu_de import sua_tu
-    fs = glob.glob(os.path.join(pj, "build", "transcripts", "*.json"))
+    # bỏ tệp độ tin cậy *.tin.json (danh sách số, có từ 18/11) nằm cùng thư mục: đọc nhầm làm dựng lỗi "float is not iterable" (PC Hào 20/11)
+    fs = [f for f in glob.glob(os.path.join(pj, "build", "transcripts", "*.json")) if not f.endswith(".tin.json")]
     if not fs:
         return None
     ws = set()
@@ -129,6 +130,7 @@ def _tu_kiem():
     with tempfile.TemporaryDirectory() as t:
         os.makedirs(f"{t}/build/transcripts")
         json.dump([["khoảng", 0, 1], ["77", 1, 2], ["tỷ", 2, 3]], open(f"{t}/build/transcripts/a.json", "w", encoding="utf8"))
+        json.dump([0.9, 0.8, 0.95], open(f"{t}/build/transcripts/a.tin.json", "w", encoding="utf8"))  # tệp độ tin cậy đi kèm
         tl = {"version": 1, "meta": {}, "audio": {}, "clips": [{"file": "a.mp4", "in": 0, "dur": 5}],
               "texts": [{"kind": "title3d", "start": 0, "dur": 2, "big": "77 TỶ", "sub": "diện tích 240m2"}], "cards": []}
         json.dump(tl, open(f"{t}/timeline.json", "w"))
