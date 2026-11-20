@@ -5,7 +5,7 @@ import functools, os, shutil, subprocess, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mau import chuyen_tong
-from cau_hinh import lay as cau_hinh
+from cau_hinh import lay as cau_hinh, goc
 
 CO = "scale='if(gt(iw,ih),-2,540)':'if(gt(iw,ih),540,-2)'"  # cạnh ngắn 540: dọc 540×960, ngang 960×540
 
@@ -20,7 +20,9 @@ def hw():
 
 
 def duong_dan(B, f):
-    return os.path.join(B, "nhe", f + ".mp4")
+    """Đổi chất lượng bản nhẹ (hinh.nhe_crf) thì đổi tên file: bản cũ không bị dùng nhầm, tự tạo lại. Để gốc thì tên như cũ."""
+    crf = cau_hinh("hinh.nhe_crf")
+    return os.path.join(B, "nhe", f + ("" if crf == goc("hinh.nhe_crf") else f".crf{crf}") + ".mp4")
 
 
 def lenh(raw, out, dung_card=True):

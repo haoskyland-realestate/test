@@ -4,7 +4,7 @@
 Dùng: python3 -I cut_silence.py input.mp4 assets/main.mp4 [--db -35] [--min 0.45] [--pad 0.12]
 In ra JSON danh sách đoạn giữ lại (thời gian gốc) để đối chiếu.
 """
-import argparse, json, re, subprocess
+import argparse, json, re, subprocess, sys
 
 ap = argparse.ArgumentParser()
 ap.add_argument("src"); ap.add_argument("out")
@@ -14,6 +14,9 @@ ap.add_argument("--pad", type=float, default=0.12, help="giữ lại mỗi bên 
 a = ap.parse_args()
 
 dur = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", a.src]))
+co_tieng = subprocess.check_output(["ffprobe", "-v", "error", "-select_streams", "a", "-show_entries", "stream=index", "-of", "csv=p=0", a.src]).strip()
+if not co_tieng:
+    sys.exit(f"{a.src} không có tiếng: không cắt lặng được (chỉ dùng làm b-roll)")
 log = subprocess.run(["ffmpeg", "-hide_banner", "-i", a.src, "-af", f"silencedetect=n={a.db}dB:d={a.min}", "-f", "null", "-"],
                      capture_output=True, text=True).stderr
 starts = [float(x) for x in re.findall(r"silence_start: ([\d.]+)", log)]
@@ -28,6 +31,8 @@ for s, e in sil:
     t = e2
 if t < dur: keep.append((t, dur))
 keep = [(round(s, 3), round(e, 3)) for s, e in keep if e - s > 0.08]
+if not keep or sum(e - s for s, e in sil) >= dur - 0.1:  # chỉ còn mép chừa của khoảng lặng: không có lời
+    sys.exit(f"{a.src}: cả video là khoảng lặng (ngưỡng {a.db} dB). Kiểm tra mic hoặc hạ --db, ví dụ --db -45")
 
 parts = "".join(f"[0:v]trim={s}:{e},setpts=PTS-STARTPTS[v{i}];[0:a]atrim={s}:{e},asetpts=PTS-STARTPTS[a{i}];" for i, (s, e) in enumerate(keep))
 parts += "".join(f"[v{i}][a{i}]" for i in range(len(keep))) + f"concat=n={len(keep)}:v=1:a=1[v][a]"

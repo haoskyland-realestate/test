@@ -33,7 +33,7 @@ def hoa(s):
 def doc_loi(pj):
     from phu_de import file_dem
     tl = json.load(open(os.path.join(pj, "timeline.json"), encoding="utf8"))
-    f = file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung"))
+    f = file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung"), tl)
     if not os.path.exists(f):
         sys.exit("Chưa có text từ ghi âm: chạy loi_nhip.py hoặc phu_de.py trước (cần build/voice.wav).")
     from phu_de import sua_tu  # từ nghe sai đã sửa theo ngữ cảnh (meta.sua_tu), áp mỗi lần đọc

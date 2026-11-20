@@ -441,14 +441,26 @@ class H(http.server.BaseHTTPRequestHandler):
             return self.send(404, {"error": "Chưa có video"})
         size = os.path.getsize(path)
         m = re.match(r"bytes=(\d*)-(\d*)", self.headers.get("Range", ""))
+        m = m if m and (m[1] or m[2]) else None
         a, b = 0, size - 1
-        if m and (m[1] or m[2]):
-            a = int(m[1]) if m[1] else size - int(m[2])
+        if m:
+            a = int(m[1]) if m[1] else max(0, size - int(m[2]))  # "bytes=-N" lớn hơn file: lấy cả file, không tua về số âm
             b = min(int(m[2]), size - 1) if (m[1] and m[2]) else size - 1
-        with open(path, "rb") as fh:
+            if a > b:
+                return self.send(416, b"", "text/plain", {"Content-Range": f"bytes */{size}"})
+        self.send_response(206 if m else 200)
+        for k, v in {"Content-Type": ctype, "Content-Length": str(b - a + 1), "Accept-Ranges": "bytes", "Cache-Control": "no-store",
+                     **({"Content-Range": f"bytes {a}-{b}/{size}"} if m else {})}.items():
+            self.send_header(k, v)
+        self.end_headers()
+        with open(path, "rb") as fh:  # gửi từng khối 1 MB: video vài GB không chiếm RAM
             fh.seek(a)
-            data = fh.read(b - a + 1)
-        self.send(206 if m else 200, data, ctype, {"Accept-Ranges": "bytes", "Content-Range": f"bytes {a}-{b}/{size}"} if m else {"Accept-Ranges": "bytes"})
+            con = b - a + 1
+            try:
+                while con > 0 and (blk := fh.read(min(con, 1 << 20))):
+                    self.wfile.write(blk); con -= len(blk)
+            except (BrokenPipeError, ConnectionResetError):  # trình duyệt huỷ khi tua: bình thường
+                pass
 
     def tai_len(self, name, f):
         """Nhận một file video/nhạc vào tai-ve/<tên dự án>/: ghi theo khối 1 MB (file 4K vài GB không chiếm RAM), ghi tạm rồi đổi tên."""
@@ -480,7 +492,7 @@ class H(http.server.BaseHTTPRequestHandler):
         import cau_hinh
         try:
             moi = self.body()
-            errs = cau_hinh.kiem(moi) if isinstance(moi, dict) else ["Dữ liệu phải là {id: giá trị}"]
+            errs = cau_hinh.kiem(moi, chung=len(parts) == 2) if isinstance(moi, dict) else ["Dữ liệu phải là {id: giá trị}"]
         except Exception as ex:
             errs = [f"Dữ liệu không đọc được: {ex}"]
         if errs:
@@ -529,6 +541,10 @@ class H(http.server.BaseHTTPRequestHandler):
         if errs:
             return self.send(400, {"errors": errs})
         p = os.path.join(d, "timeline.json")
+        # app gửi cả timeline từ bản đang mở; ghi đè bảng master riêng dự án được lưu ở trang ⚙ (tab khác) thì giữ lại, không xoá nhầm
+        cu = (json.load(open(p, encoding="utf8")).get("meta") or {}).get("cau_hinh")
+        if cu and "cau_hinh" not in (tl.get("meta") or {}):
+            tl.setdefault("meta", {})["cau_hinh"] = cu
         shutil.copy(p, p + ".bak")  # giữ bản trước để khôi phục nếu lưu nhầm
         hd = os.path.join(d, "history"); os.makedirs(hd, exist_ok=True)
         shutil.copy(p, os.path.join(hd, time.strftime("%Y%m%d-%H%M%S") + ".json"))

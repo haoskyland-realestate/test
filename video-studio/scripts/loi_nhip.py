@@ -79,7 +79,7 @@ if __name__ == "__main__":
         va = os.path.join(pj, "build", "voice.wav")
         if not os.path.exists(va):
             sys.exit("Chưa có build/voice.wav: dựng nháp một lần (dung.py --nhap) rồi chạy lại.")
-        words = nhan_dang(va, file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung")), tl.get("meta", {}).get("tu_vung"))
+        words = nhan_dang(va, file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung"), tl), tl.get("meta", {}).get("tu_vung"), tl)
         from phu_de import sua_tu
         words = sua_tu(words, tl.get("meta", {}).get("sua_tu"))
         out, n = dat(tl, words, "--giu-phu-de" in sys.argv, "--ngang-nguc" in sys.argv)

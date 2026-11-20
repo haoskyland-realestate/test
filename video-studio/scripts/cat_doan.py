@@ -77,7 +77,7 @@ if __name__ == "__main__":
             sys.exit("Cần 0 ≤ từ giây < đến giây")
         T, BD = os.path.join(pj, "timeline.json"), os.path.join(pj, "BAN-DUNG.json")
         tl = json.load(open(T, encoding="utf8"))
-        TR = file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung"))
+        TR = file_dem(os.path.join(pj, "build"), "voice.wav", tl.get("meta", {}).get("tu_vung"), tl)
         ws = json.load(open(TR, encoding="utf8")) if os.path.exists(TR) else []
         bd = json.load(open(BD, encoding="utf8")) if os.path.exists(BD) else None
         tl2, ws2, bd2 = cat(tl, ws, bd, a, b)
