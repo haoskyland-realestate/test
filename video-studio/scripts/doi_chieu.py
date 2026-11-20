@@ -110,6 +110,8 @@ def kiem(pj):
             ghi.append(f"kịch bản dòng {stt}: lời nói khác kịch bản ({len(thieu)} từ không thấy trong ghi âm: {', '.join(thieu[:6])}…) — theo ghi âm")
     if noi:
         for stt, loi_doc, chu in doc_kich_ban(os.path.abspath(pj)):
+            if chu.startswith("("):  # dòng gợi ý của mẫu KICH-BAN.md, vd "(vd: chỉ từ / *[...] TỶ* / …m2)": không phải chữ thật
+                continue
             for n in so_trong(chu):
                 if n not in noi and n not in duyet:
                     hoi.append(f"kịch bản dòng {stt}: số «{n}» ở cột chữ trên màn hình không có trong ghi âm/nguồn đã duyệt")
@@ -139,6 +141,9 @@ def _tu_kiem():
         tl["meta"]["da_duyet"] = ["240m2 theo bảng giá chủ đầu tư 11/2026"]
         json.dump(tl, open(f"{t}/timeline.json", "w"))
         assert kiem(t)[0] == [], kiem(t)                                                         # Hào đã duyệt riêng
+        open(f"{t}/KICH-BAN.md", "w", encoding="utf8").write(  # dòng gợi ý y như mẫu mau/du-an-video/KICH-BAN.md: không được chặn bản cuối
+            "| 1 | 0–3 | (hook) | (vd: chỉ từ / *[...] TỶ* / cho căn hộ [...]m2) | |\n")
+        assert kiem(t)[0] == [], kiem(t)
         tl["texts"][0]["sub"] = "giá [...]"
         json.dump(tl, open(f"{t}/timeline.json", "w"))
         assert any("[...]" in h for h in kiem(t)[0])
