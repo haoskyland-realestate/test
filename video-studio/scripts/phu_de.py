@@ -88,14 +88,23 @@ def sua_tu(words, bang):
     return words
 
 
-def file_dem(proj_build, file, tu_vung=None):
-    """Tệp lưu đệm nhận dạng; có từ vựng dự án thì tên kèm mã từ vựng (đổi từ vựng là nhận dạng lại)."""
+def cai_dat(tl=None):
+    """(mô hình, beam, lọc lặng) theo bảng master, ghi đè dự án thắng."""
+    return os.environ.get("WHISPER_MODEL") or lay("giong.mo_hinh", tl), lay("giong.beam", tl), lay("giong.vad", tl)
+
+
+def file_dem(proj_build, file, tu_vung=None, tl=None):
+    """Tệp lưu đệm nhận dạng; có từ vựng dự án hoặc cài đặt nhận dạng khác gốc thì tên kèm mã (đổi là nhận dạng lại;
+    để nguyên gốc thì tên như cũ, không phải nhận dạng lại các dự án đã làm)."""
     import hashlib
-    h = "." + hashlib.sha1("|".join(tu_vung).encode()).hexdigest()[:8] if tu_vung else ""
+    from cau_hinh import goc
+    cd = cai_dat(tl)
+    khoa = "|".join(tu_vung or []) + ("" if cd == (goc("giong.mo_hinh"), goc("giong.beam"), goc("giong.vad")) else "#" + repr(cd))
+    h = "." + hashlib.sha1(khoa.encode()).hexdigest()[:8] if khoa else ""
     return os.path.join(proj_build, "transcripts", file + h + ".json")
 
 
-def nhan_dang(path, cache, tu_vung=None):
+def nhan_dang(path, cache, tu_vung=None, tl=None):
     """tu_vung: tên riêng, thuật ngữ của dự án (meta.tu_vung trong timeline): nhận dạng đúng ngay, đỡ sửa phụ đề sau."""
     if os.path.exists(cache):
         return json.load(open(cache, encoding="utf8"))
@@ -109,13 +118,13 @@ def nhan_dang(path, cache, tu_vung=None):
         words = []
     else:
         audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768
-        name = os.environ.get("WHISPER_MODEL") or lay("giong.mo_hinh")
+        name, beam, vad = cai_dat(tl)
         # PC có card NVIDIA thì thử chạy bằng card; thiếu thư viện CUDA thì tự về CPU
         tries = ([("cuda", "float16")] if ctranslate2.get_cuda_device_count() > 0 else []) + [("cpu", "int8")]
         for k, (dev, ct) in enumerate(tries):
             try:
                 segs, _ = WhisperModel(name, device=dev, compute_type=ct).transcribe(
-                    audio, language="vi", word_timestamps=True, vad_filter=lay("giong.vad"), beam_size=lay("giong.beam"),
+                    audio, language="vi", word_timestamps=True, vad_filter=vad, beam_size=beam,
                     initial_prompt=("Từ ngữ trong video: " + ", ".join(tu_vung) + ".") if tu_vung else None)
                 ws = [w for s in segs if not BIA.search(s.text) for w in s.words if w.word.strip()]
                 words = [[w.word.strip(), round(w.start, 2), round(w.end, 2)] for w in ws]
@@ -156,7 +165,7 @@ def main(proj):
             sys.exit(f"Chưa có footage {c['file']} trong build/raw và cảnh không có 'id' Drive để tải")
         print(f"Nhận dạng đoạn {i + 1}: {c['file']}", flush=True)
         tv = tl.get("meta", {}).get("tu_vung")
-        words = sua_tu(nhan_dang(raw, file_dem(os.path.join(proj, "build"), c["file"], tv), tv), tl.get("meta", {}).get("sua_tu"))
+        words = sua_tu(nhan_dang(raw, file_dem(os.path.join(proj, "build"), c["file"], tv, tl), tv, tl), tl.get("meta", {}).get("sua_tu"))
         a, b = c["in"], c["in"] + c["dur"]
         # từ nằm trong đoạn cắt (theo điểm giữa của từ), đổi sang giờ trên video thành phẩm
         inside = [(w, L["starts"][i] + max(s, a) - a, L["starts"][i] + min(e, b) - a) for w, s, e in words if a <= (s + e) / 2 < b]

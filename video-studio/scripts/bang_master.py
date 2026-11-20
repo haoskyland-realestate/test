@@ -18,6 +18,7 @@ def du_lieu():
     for g in d["nhom"]:
         for t in g["thong_so"]:
             t.setdefault("goc", t["mac_dinh"])  # giá trị gốc khi lập bảng (19/11): nút "về gốc"
+            t["nguyen"] = cau_hinh.la_nguyen(t)  # JS không phân biệt 4 và 4.0: máy chủ báo sẵn ô nào cần số nguyên
     return d
 
 
@@ -85,26 +86,28 @@ function datLai() {
   nap = JSON.parse(JSON.stringify(gt)); ve();
 }
 function loi(t, v) {
-  if (t.kieu === "so") { if (typeof v !== "number" || isNaN(v)) return "cần số"; if (v < t.min || v > t.max) return `ngoài khoảng ${t.min}–${t.max}`; }
+  if (t.kieu === "so") { if (typeof v !== "number" || isNaN(v)) return "cần số"; if (t.nguyen && !Number.isInteger(v)) return "cần số nguyên"; if (v < t.min || v > t.max) return `ngoài khoảng ${t.min}–${t.max}`; }
   if (t.kieu === "ds" && !v.length) return "cần ít nhất một mục";
   if (t.kieu === "chuoi" && !String(v).trim()) return "cần chữ";
   return "";
 }
+const e = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const khoa = t => pham === "du-an" && t.chi_chung;  // thông số chỉ chỉnh ở bảng chung (bản nhẹ, phân tích hình, agent)
 const hien = v => Array.isArray(v) ? v.join(", ") : typeof v === "boolean" ? (v ? "bật" : "tắt") : String(v);
 function o(t) {
-  const v = gt[t.id], id = "c-" + t.id.replace(".", "-");
-  if (t.kieu === "so") return `<div class="h"><input type="range" id="${id}-r" min="${t.min}" max="${t.max}" step="${t.buoc}" value="${v}" aria-label="${t.ten}">
-    <input type="number" id="${id}" min="${t.min}" max="${t.max}" step="${t.buoc}" value="${v}" aria-label="${t.ten}"><span class="dv">${t.don_vi || ""}</span></div>`;
-  if (t.kieu === "bat") return `<label class="sw"><input type="checkbox" id="${id}" ${v ? "checked" : ""}> <span>${v ? "Bật" : "Tắt"}</span></label>`;
-  if (t.kieu === "chon") return `<select id="${id}" aria-label="${t.ten}">${t.lua_chon.map(x => `<option ${x === v ? "selected" : ""}>${x}</option>`).join("")}</select>`;
-  return `<input type="text" id="${id}" value="${hien(v)}" aria-label="${t.ten}">`;
+  const v = gt[t.id], id = "c-" + t.id.replace(".", "-"), dis = khoa(t) ? " disabled" : "";
+  if (t.kieu === "so") return `<div class="h"><input type="range" id="${id}-r" min="${t.min}" max="${t.max}" step="${t.buoc}" value="${v}" aria-label="${e(t.ten)}"${dis}>
+    <input type="number" id="${id}" min="${t.min}" max="${t.max}" step="${t.buoc}" value="${v}" aria-label="${e(t.ten)}"${dis}><span class="dv">${t.don_vi || ""}</span></div>`;
+  if (t.kieu === "bat") return `<label class="sw"><input type="checkbox" id="${id}" ${v ? "checked" : ""}${dis}> <span>${v ? "Bật" : "Tắt"}</span></label>`;
+  if (t.kieu === "chon") return `<select id="${id}" aria-label="${e(t.ten)}"${dis}>${t.lua_chon.map(x => `<option ${x === v ? "selected" : ""}>${e(x)}</option>`).join("")}</select>`;
+  return `<input type="text" id="${id}" value="${e(hien(v))}" aria-label="${e(t.ten)}"${dis}>`;
 }
 function dong(t) {
-  const doi = !bang(gt[t.id], chuan(t.id)), e = loi(t, gt[t.id]);
+  const doi = !bang(gt[t.id], chuan(t.id)), sai = loi(t, gt[t.id]);
   const nhan = pham === "chung" ? `gốc ${hien(t.goc)}` : `bảng chung ${hien(t.mac_dinh)}`;
-  return `<div class="row${doi ? " doi" : ""}" data-id="${t.id}"><div><span class="ten">${t.ten}</span><span class="id">${t.id}</span>
-    <div class="mt">${t.mo_ta}</div><div class="meta"><span>${nhan}</span>${t.kieu === "so" ? `<span>khoảng ${t.min}–${t.max} ${t.don_vi || ""}</span>` : ""}<span>dùng ở ${t.dung_o}</span></div></div>
-    <div class="ctl">${o(t)}${doi ? `<div class="tag">Khác ${pham === "chung" ? "gốc" : "bảng chung"} <button class="lk" data-ve="${t.id}">về ${pham === "chung" ? "gốc" : "bảng chung"}</button></div>` : ""}${e ? `<div class="err">${e}</div>` : ""}</div></div>`;
+  return `<div class="row${doi ? " doi" : ""}" data-id="${t.id}"><div><span class="ten">${e(t.ten)}</span><span class="id">${t.id}</span>
+    <div class="mt">${e(t.mo_ta)}</div><div class="meta">${khoa(t) ? "<span>chỉ chỉnh ở bảng chung</span>" : ""}<span>${e(nhan)}</span>${t.kieu === "so" ? `<span>khoảng ${t.min}–${t.max} ${t.don_vi || ""}</span>` : ""}<span>dùng ở ${t.dung_o}</span></div></div>
+    <div class="ctl">${o(t)}${doi ? `<div class="tag">Khác ${pham === "chung" ? "gốc" : "bảng chung"} <button class="lk" data-ve="${t.id}">về ${pham === "chung" ? "gốc" : "bảng chung"}</button></div>` : ""}${sai ? `<div class="err">${sai}</div>` : ""}</div></div>`;
 }
 function ve() {
   const k = tim.trim().toLowerCase();

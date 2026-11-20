@@ -15,12 +15,25 @@ def bang():
     return {t["id"]: dict(t, nhom=g["id"]) for g in d["nhom"] for t in g["thong_so"]}
 
 
+def la_nguyen(t):
+    """Thông số số nguyên (bước và mức thấp nhất là số nguyên): số lẻ làm range()/cắt danh sách lỗi."""
+    return t["kieu"] == "so" and isinstance(t["buoc"], int) and isinstance(t["min"], int)
+
+
+def goc(id):
+    """Giá trị gốc khi lập bảng (trước mọi lần Hào đổi bảng chung)."""
+    t = bang()[id]
+    return t.get("goc", t["mac_dinh"])
+
+
 def loi_gia_tri(t, v):
     """Lỗi của một giá trị theo thông số t, rỗng nếu hợp lệ."""
     k = t["kieu"]
     if k == "so":
         if isinstance(v, bool) or not isinstance(v, (int, float)):
             return f"{t['id']}: cần số"
+        if la_nguyen(t) and not isinstance(v, int):
+            return f"{t['id']}: cần số nguyên"
         if not t["min"] <= v <= t["max"]:
             return f"{t['id']}: {v} ngoài khoảng {t['min']}–{t['max']} {t.get('don_vi', '')}".rstrip()
     elif k == "bat" and not isinstance(v, bool):
@@ -34,15 +47,16 @@ def loi_gia_tri(t, v):
     return ""
 
 
-def kiem(ghi_de):
-    """Lỗi của bộ ghi đè {id: giá trị}."""
+def kiem(ghi_de, chung=False):
+    """Lỗi của bộ ghi đè {id: giá trị}. chung=True: đổi bảng chung (được đổi cả thông số chỉ chỉnh ở bảng chung)."""
     if ghi_de in (None, {}):
         return []
     if not isinstance(ghi_de, dict):
         return ["meta.cau_hinh phải là {id: giá trị}"]
     b = bang()
-    return [f"{k}: không có trong bảng master (gõ nhầm?)" if k not in b else loi_gia_tri(b[k], v) for k, v in ghi_de.items()
-            if k not in b or loi_gia_tri(b[k], v)]
+    return [f"{k}: không có trong bảng master (gõ nhầm?)" if k not in b
+            else f"{k}: chỉ chỉnh ở bảng chung, không ghi đè riêng dự án được" if b[k].get("chi_chung") and not chung else loi_gia_tri(b[k], v)
+            for k, v in ghi_de.items() if k not in b or (b[k].get("chi_chung") and not chung) or loi_gia_tri(b[k], v)]
 
 
 def lay(id, tl=None):
@@ -50,7 +64,7 @@ def lay(id, tl=None):
     if id not in b:
         raise KeyError(f"Thông số '{id}' không có trong cau-hinh/master.json")
     gd = ((tl or {}).get("meta") or {}).get("cau_hinh") or {}
-    if id in gd:
+    if id in gd and not b[id].get("chi_chung"):
         if (e := loi_gia_tri(b[id], gd[id])):
             raise ValueError("Ghi đè bảng master sai: " + e)
         return gd[id]
@@ -61,7 +75,9 @@ def _tu_kiem():
     b = bang()
     assert lay("cat.lang_cat") == b["cat.lang_cat"]["mac_dinh"] and lay("cat.lang_cat", {"meta": {"cau_hinh": {"cat.lang_cat": 0.6}}}) == 0.6
     assert kiem({"cat.lang_cat": 9}) and kiem({"cat.lan_cat": 0.4}) and kiem({"agent.preset": "D"}) and kiem({"giong.vad": 1})
-    assert kiem({"cat.lang_cat": 0.4, "agent.preset": "B", "cat.tieng_dem": ["ờ"]}) == []
+    assert kiem({"cat.lang_cat": 0.4, "cat.tieng_dem": ["ờ"]}) == []
+    assert kiem({"phan_tich.lap_cach": 2.5}) and kiem({"hinh.fps": 30.0}) and not kiem({"phan_tich.lap_cach": 3})  # số nguyên
+    assert kiem({"agent.preset": "B"}) and kiem({"hinh.nhe_crf": 20}) and not kiem({"hinh.nhe_crf": 20}, chung=True)  # chỉ bảng chung
     try:
         lay("khong.co"); raise AssertionError
     except KeyError:

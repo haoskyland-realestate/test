@@ -150,7 +150,7 @@ def chay_agent(ten, nguon, opt):
     import giong, phu_de
     tl = doc(T)
     tv = tl.get("meta", {}).get("tu_vung")
-    cache = phu_de.file_dem(B, "voice.wav", tv)
+    cache = phu_de.file_dem(B, "voice.wav", tv, tl)
     if moi and os.path.exists(cache) and os.path.exists(os.path.join(B, "voice.wav")):  # dự án cũ: giữ text đã nhận dạng (BAN-DUNG.json đánh số theo nó)
         st["giong"] = hashlib.sha1(open(os.path.join(B, "voice.wav"), "rb").read()).hexdigest()
     v = giong.tao(B, tl, lambda *a: subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", *a], check=True))
@@ -160,7 +160,7 @@ def chay_agent(ten, nguon, opt):
             if os.path.exists(f):
                 os.remove(f)
         st["giong"] = h
-    phu_de.nhan_dang(v, cache, tv)
+    phu_de.nhan_dang(v, cache, tv, tl)
     from ban_dung import chep, doc_loi, kiem_ban, kiem_canh
     chep(pj)
     tl, ws = doc_loi(pj)

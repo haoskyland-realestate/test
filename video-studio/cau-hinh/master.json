@@ -771,6 +771,7 @@
     },
     {
      "id": "hinh.nhe_crf",
+     "chi_chung": true,
      "ten": "Chất lượng bản nhẹ 540p (CRF)",
      "mo_ta": "Bản nhẹ dùng để phân tích và bản xem.",
      "kieu": "so",
@@ -783,6 +784,7 @@
     },
     {
      "id": "hinh.phan_tich_fps",
+     "chi_chung": true,
      "ten": "Phân tích: khung/giây",
      "mo_ta": "Chấm điểm hình bao nhiêu khung mỗi giây.",
      "kieu": "so",
@@ -896,6 +898,7 @@
    "thong_so": [
     {
      "id": "agent.preset",
+     "chi_chung": true,
      "ten": "Preset AutoEdit mặc định",
      "mo_ta": "A xanh gradient · B cam kem · C neon tối (hiện quyết định ảnh mẫu trang chọn hiệu ứng).",
      "kieu": "chon",
@@ -909,6 +912,7 @@
     },
     {
      "id": "agent.mau",
+     "chi_chung": true,
      "ten": "Mẫu edit mặc định",
      "mo_ta": "Thư mục trong thu-vien-mau/ (id mẫu).",
      "kieu": "chuoi",
