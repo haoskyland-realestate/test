@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from timeline import check, layout, size
 from effects import STYLES, LOOKS, TRANSITIONS, zoom_bieu_thuc
 from mau import khung, tu_can
-from am_thanh import tron_sfx
+from am_thanh import tron_sfx, chuan_am
 from lop_chu import tao as tao_lop_chu
 from kho import duong_dan as kho_path
 from ban_nhe import lay, hw
@@ -403,4 +403,6 @@ ff(*ins, "-filter_complex", ";".join(fc), "-map", vra, "-map", "[a]",
    "-c:v", "libx264", "-crf", str(CH("hinh.crf_nhap") if DRAFT else CH("hinh.crf_ghep")), "-preset", "veryfast" if DRAFT else "medium",
    "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-t", f"{total:.2f}", os.path.join(ROOT, f"out/{OUTNAME}.mp4"))
 moc("ghép cuối")
+truoc = chuan_am(os.path.join(ROOT, f"out/{OUTNAME}.mp4"), CH("am.lufs"), CH("am.dinh"), CH("am.lra"))
+moc(f"chuẩn âm lượng lượt 2 (đo {truoc:.1f} LUFS)")
 print(f"Xong: out/{OUTNAME}.mp4 ({total:.1f}s, {n} cảnh)")

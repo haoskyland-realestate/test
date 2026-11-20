@@ -246,6 +246,6 @@ if __name__ == "__main__":
         print("Đã ghi", a[1])
     elif a == ["--md"]:
         open(MD, "w", encoding="utf8").write(md() + "\n")
-        print("Đã ghi", os.path.relpath(MD))
+        print("Đã ghi", os.path.abspath(MD))
     else:
         sys.exit(__doc__)

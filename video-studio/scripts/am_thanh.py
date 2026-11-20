@@ -40,6 +40,25 @@ def tron_sfx(items, total, out):
     return True
 
 
+def chuan_am(f, I=-14, TP=-1.5, LRA=11, lech=0.5):
+    """Lượt 2 của chuẩn âm lượng EBU R128 (hai lượt, như ffmpeg-normalize): đo file đã dựng, lệch quá `lech` LU thì chỉnh tuyến tính
+    phần tiếng, giữ nguyên hình (-c:v copy, vài giây). Một lượt loudnorm trong bước ghép đặt thiếu với video dài có nhạc tự nhỏ khi nói
+    (thử 18 file 4K 20/11: −16,1 thay vì −14). Trả độ to đo được trước khi chỉnh."""
+    def do(af):
+        e = subprocess.run(["ffmpeg", "-nostdin", "-hide_banner", "-i", f, "-vn", "-af", af, "-f", "null", "-"],
+                           capture_output=True, text=True, encoding="utf8", errors="replace").stderr
+        return json.loads(e[e.rindex("{"):e.rindex("}") + 1])
+    m = do(f"loudnorm=I={I}:TP={TP}:LRA={LRA}:print_format=json")
+    if abs(float(m["input_i"]) - I) > lech:
+        tmp = f + ".tmp.mp4"
+        subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", f, "-c:v", "copy", "-af",
+                        f"loudnorm=I={I}:TP={TP}:LRA={LRA}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
+                        f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,aresample=48000",
+                        "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", tmp], check=True)
+        os.replace(tmp, f)
+    return float(m["input_i"])
+
+
 def catalog_md():
     out = ["# Thư viện hiệu ứng âm", "", "Tự sinh: `python3 scripts/am_thanh.py --md > ../docs/04-thu-vien/THU-VIEN-AM-THANH.md` (trong `video-studio`).",
            "File: `video-studio/thu-vien-am-thanh/hieu-ung/<tên>.wav`. Dùng tên ở cột đầu cho hàng `sfx` của `timeline.json`, hoặc chọn trong app (tab Hiệu ứng âm).",
@@ -53,18 +72,23 @@ def catalog_md():
 
 if __name__ == "__main__" and sys.argv[1:] == ["--md"]:
     print(catalog_md())
-elif __name__ == "__main__":  # tự kiểm: đặt 3 âm, đo lúc âm lượng vọt lên phải khớp mốc
+elif __name__ == "__main__":  # tự kiểm (--tu-kiem): đặt 3 âm, đo lúc âm lượng vọt lên phải khớp mốc; chuẩn âm lượng lượt 2
     import tempfile, wave
     import numpy as np
     with tempfile.TemporaryDirectory() as d:
         out = os.path.join(d, "t.wav")
         tron_sfx([{"start": 0.5, "file": "chu_pop_01"}, {"start": 1.75, "file": "impact_tram_01", "vol": 0.5},
                   {"start": -0.1, "file": "chu_swish-pop_01"}, {"start": 9, "file": "chu_pop_01"}], 3.0, out)
-        w = wave.open(out)
-        x = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").reshape(-1, 2)[:, 0] / 32767
+        with wave.open(out) as w:  # đóng file: Windows không xoá được thư mục tạm khi file còn mở
+            x = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").reshape(-1, 2)[:, 0] / 32767
         assert abs(len(x) / 44100 - 3.0) < 0.01, len(x)
         e = np.convolve(np.abs(x), np.ones(220) / 220, "same")
         on = [i / 44100 for i in range(1, len(e)) if e[i] > 0.02 and e[i - 1] <= 0.02]
         assert any(abs(t - 0.5) < 0.02 for t in on) and any(abs(t - 1.75) < 0.02 for t in on), on
         assert e[:int(0.02 * 44100)].max() > 0.02  # âm bắt đầu trước giây 0 vẫn nghe phần còn lại
+        v = os.path.join(d, "nho.mp4")  # video tiếng quá nhỏ (≈ −30 LUFS): lượt 2 phải đưa về −14 ±1, hình giữ nguyên
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "lavfi", "-i", "color=s=64x64:d=4", "-f", "lavfi", "-i", "sine=f=440:d=4",
+                        "-af", "volume=-27dB", "-c:v", "libx264", "-c:a", "aac", "-shortest", v], check=True)
+        assert chuan_am(v) < -25
+        assert abs(chuan_am(v) + 14) <= 1, "lượt 2 chưa đưa về −14 LUFS"
     print("OK", len(SFX), "hiệu ứng trong kho")

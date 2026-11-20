@@ -45,7 +45,8 @@ def chu_hien(tl):
 def loi_noi(pj, bang=None):
     """Tập từ đã nói trong mọi ghi âm của dự án (text nhận dạng giọng đã lưu, đã áp meta.sua_tu), None nếu chưa nhận dạng."""
     from phu_de import sua_tu
-    fs = glob.glob(os.path.join(pj, "build", "transcripts", "*.json"))
+    # bỏ tệp độ tin cậy *.tin.json (danh sách số, có từ 18/11) nằm cùng thư mục: đọc nhầm làm dựng lỗi "float is not iterable" (PC Hào 20/11)
+    fs = [f for f in glob.glob(os.path.join(pj, "build", "transcripts", "*.json")) if not f.endswith(".tin.json")]
     if not fs:
         return None
     ws = set()
@@ -109,6 +110,8 @@ def kiem(pj):
             ghi.append(f"kịch bản dòng {stt}: lời nói khác kịch bản ({len(thieu)} từ không thấy trong ghi âm: {', '.join(thieu[:6])}…) — theo ghi âm")
     if noi:
         for stt, loi_doc, chu in doc_kich_ban(os.path.abspath(pj)):
+            if chu.startswith("("):  # dòng gợi ý của mẫu KICH-BAN.md, vd "(vd: chỉ từ / *[...] TỶ* / …m2)": không phải chữ thật
+                continue
             for n in so_trong(chu):
                 if n not in noi and n not in duyet:
                     hoi.append(f"kịch bản dòng {stt}: số «{n}» ở cột chữ trên màn hình không có trong ghi âm/nguồn đã duyệt")
@@ -129,6 +132,7 @@ def _tu_kiem():
     with tempfile.TemporaryDirectory() as t:
         os.makedirs(f"{t}/build/transcripts")
         json.dump([["khoảng", 0, 1], ["77", 1, 2], ["tỷ", 2, 3]], open(f"{t}/build/transcripts/a.json", "w", encoding="utf8"))
+        json.dump([0.9, 0.8, 0.95], open(f"{t}/build/transcripts/a.tin.json", "w", encoding="utf8"))  # tệp độ tin cậy đi kèm
         tl = {"version": 1, "meta": {}, "audio": {}, "clips": [{"file": "a.mp4", "in": 0, "dur": 5}],
               "texts": [{"kind": "title3d", "start": 0, "dur": 2, "big": "77 TỶ", "sub": "diện tích 240m2"}], "cards": []}
         json.dump(tl, open(f"{t}/timeline.json", "w"))
@@ -137,6 +141,9 @@ def _tu_kiem():
         tl["meta"]["da_duyet"] = ["240m2 theo bảng giá chủ đầu tư 11/2026"]
         json.dump(tl, open(f"{t}/timeline.json", "w"))
         assert kiem(t)[0] == [], kiem(t)                                                         # Hào đã duyệt riêng
+        open(f"{t}/KICH-BAN.md", "w", encoding="utf8").write(  # dòng gợi ý y như mẫu mau/du-an-video/KICH-BAN.md: không được chặn bản cuối
+            "| 1 | 0–3 | (hook) | (vd: chỉ từ / *[...] TỶ* / cho căn hộ [...]m2) | |\n")
+        assert kiem(t)[0] == [], kiem(t)
         tl["texts"][0]["sub"] = "giá [...]"
         json.dump(tl, open(f"{t}/timeline.json", "w"))
         assert any("[...]" in h for h in kiem(t)[0])
