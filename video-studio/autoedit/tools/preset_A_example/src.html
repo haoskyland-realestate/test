@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, height=1920">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"font_script";src:url("assets/fonts/showtilla.otf")}
+@font-face{font-family:"font_bold";src:url("assets/fonts/BTDanta-Bold.otf")}
+@font-face{font-family:"font_xbold";src:url("assets/fonts/BTDanta-ExtraBold.otf")}
+@font-face{font-family:"font_text";src:url("assets/fonts/BTDanta-Medium.otf")}
+:root{
+  --navy:#0b1f4d; --blue:#2b73ff; --cyan:#46d6ff; --sky:#5cc8ff;
+  --accg:linear-gradient(135deg,#46d6ff,#2b5fff);
+  --pill:linear-gradient(135deg,#14306b,#091a45);
+  --txtg:linear-gradient(90deg,#46d6ff,#2b73ff 55%,#1a3fd0);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;background:#cbe7ff;overflow:hidden}
+#root{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;font-family:"font_text";color:var(--navy)}
+#bg{position:absolute;inset:0;z-index:1;
+  background:
+   radial-gradient(800px 700px at 0% 0%,rgba(255,255,255,.95),transparent 70%),
+   radial-gradient(800px 800px at 100% 35%,rgba(70,214,255,.45),transparent 70%),
+   linear-gradient(180deg,#e9f7ff 0%,#cbe7ff 45%,#8ec4ff 100%)}
+
+/* speaker frame (preset A): khung 950x950 sát đáy, đầu nhô lên khỏi mép trên */
+#fr{position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:5;overflow:hidden;
+  clip-path:inset(980px 75px 0px 75px round 44px 44px 0 0)}
+#frb{position:absolute;left:65px;top:970px;width:950px;height:950px;z-index:6;border-radius:54px 54px 0 0;
+  border:10px solid #fff;border-bottom:0;box-shadow:0 0 46px rgba(43,115,255,.75);pointer-events:none}
+#vid{position:absolute;left:65px;top:532px;width:950px;height:1689px;object-fit:cover;transform-origin:0 0}
+#cut{position:absolute;left:65px;top:532px;width:950px;height:1689px;z-index:7;object-fit:cover;
+  clip-path:inset(0 0 1211px 0)}   /* chỉ giữ 478px trên cùng: phần đầu nhô khỏi khung */
+
+.scene{position:absolute;left:0;top:0;width:1080px;height:1920px;z-index:3}
+.card{position:absolute;border-radius:43px;background:#fff;box-shadow:0 14px 40px rgba(43,115,255,.28);opacity:0}
+.dark{background:linear-gradient(135deg,#17387a,#0a1b48);color:#fff}
+.pill{position:absolute;height:72px;border-radius:36px;background:var(--pill);display:flex;align-items:center;padding-right:34px;opacity:0;box-shadow:0 8px 22px rgba(9,26,69,.35)}
+.pill span{font-family:"font_bold";font-size:32px;color:#fff;margin-left:16px;letter-spacing:1px;white-space:nowrap}
+.ico{width:80px;height:80px;margin:-4px 0 -4px -8px;border-radius:50%;background:var(--accg);border:5px solid #fff;
+  box-shadow:0 0 0 4px #14306b;display:flex;align-items:center;justify-content:center;flex:none}
+.ico svg{width:42px;height:42px}
+.box{width:76px;height:76px;border-radius:20px;background:var(--accg);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 6px 16px rgba(43,95,255,.4)}
+.box svg{width:44px;height:44px}
+.tick{position:absolute;width:48px;height:48px;border-radius:50%;border:3.5px solid #b9cdf0}
+.tick i{position:absolute;inset:-3.5px;border-radius:50%;background:var(--accg);opacity:0}
+.tick svg{position:absolute;inset:-3.5px;width:48px;height:48px;opacity:0}
+.dot{position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;border:6px solid #2b73ff;box-shadow:0 0 0 6px rgba(70,214,255,.4);opacity:0;z-index:4}
+
+/* s1 connect_flow */
+#fa{left:85px;top:262px;width:470px;height:130px;display:flex;align-items:center;padding-left:26px;gap:22px}
+#fa .t{font-family:"font_bold";font-size:40px;white-space:nowrap}
+#fa .s{font-size:26px;color:#5b6f9a;margin-top:2px;white-space:nowrap}
+#fb{left:65px;top:500px;width:860px;height:420px}
+#fbt{position:absolute;left:40px;top:34px;font-family:"font_bold";font-size:44px;white-space:nowrap}
+.frow{position:absolute;left:36px;width:788px;height:108px;border-radius:26px;background:#f1f7ff;border:3px solid #cfe0fb;display:flex;align-items:center;opacity:0}
+.frow .t{font-family:"font_bold";font-size:38px;margin-left:30px;white-space:nowrap}
+.frow .s{font-size:24px;margin-left:20px;color:#5b6f9a;white-space:nowrap}
+.frow .tick{right:26px;top:24px}
+/* s2 amenity_grid */
+#gpill{left:65px;top:258px}
+.cell{position:absolute;width:410px;opacity:0}
+.cell .fr2{height:190px;border-radius:28px;padding:8px;background:var(--accg);box-shadow:0 10px 26px rgba(43,95,255,.35)}
+.cell .in{width:100%;height:100%;border-radius:21px;background:linear-gradient(135deg,#f4f9ff,#d9ebff);overflow:hidden}
+.cell .in img{width:100%;height:100%;object-fit:contain;display:block}
+.cell .chip2{margin:12px auto 0;width:max-content;height:58px;border-radius:29px;display:flex;align-items:center;background:var(--pill);padding-right:24px}
+.cell .chip2 .ico{width:66px;height:66px;margin:-4px 0 -4px -8px}
+.cell .chip2 .ico svg{width:34px;height:34px}
+.cell .chip2 span{font-family:"font_bold";font-size:28px;color:#fff;margin-left:14px;white-space:nowrap}
+/* s3 note_board */
+#s3c{left:65px;top:392px;width:860px;height:500px}
+#s3p{left:90px;top:300px}
+.row{position:absolute;left:36px;width:788px;height:120px;border-radius:28px;background:#f1f7ff;border:3px solid #cfe0fb;opacity:0;display:flex;align-items:center}
+.row .box{margin-left:26px}
+.row .lbl{font-family:"font_bold";font-size:44px;margin-left:26px;white-space:nowrap}
+.row .tick{right:28px;top:34px}
+/* s4 tree_diagram */
+#tpar{left:65px;top:258px;width:470px;height:100px;display:flex;align-items:center;padding-left:26px;gap:20px}
+#tpar .t{font-family:"font_bold";font-size:40px;white-space:nowrap}
+.tc{left:250px;width:675px;display:flex;align-items:center}
+.tc .box{margin-left:24px}
+.tc .t{font-family:"font_bold";font-size:38px;margin-left:24px;white-space:nowrap}
+.tc{height:108px}
+.tc .th{margin-left:auto;margin-right:16px;width:130px;height:84px;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#f4f9ff,#d9ebff);border:3px solid #cfe0fb;flex:none}
+.tc .th img{width:100%;height:100%;object-fit:contain;display:block}
+/* s5 screenshot_card */
+#scard{position:absolute;left:109px;top:258px;width:862px;height:534px;border-radius:36px;background:#fff;
+  box-shadow:0 22px 56px rgba(20,60,160,.4);opacity:0;display:grid;grid-template-columns:400px 400px;grid-template-rows:236px 236px;gap:18px;padding:22px}
+#scard .g{border-radius:22px;background:linear-gradient(135deg,#f4f9ff,#d9ebff);overflow:hidden;border:3px solid #cfe0fb;opacity:0}
+#scard .g img{width:100%;height:100%;object-fit:contain;display:block}
+#s5btn{position:absolute;left:230px;top:808px;width:620px;height:96px;border-radius:48px;background:var(--accg);
+  box-shadow:0 12px 30px rgba(43,95,255,.55),inset 0 3px 0 rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;opacity:0}
+#s5btn span{font-family:"font_xbold";font-size:46px;color:#fff;white-space:nowrap}
+/* captions: nằm TRONG khung người nói, trên ranh vùng an toàn dưới (y<1440) */
+.cap{position:absolute;left:0;right:0;bottom:392px;z-index:10;display:flex;justify-content:center}
+.cap div{font-family:"font_xbold";font-size:40px;line-height:1.2;text-align:center;color:#fff;
+  background:rgba(8,26,71,.78);border-radius:20px;padding:8px 30px;opacity:0;white-space:nowrap}
+.cap b{font-family:"font_xbold";font-weight:400;color:#5cc8ff}
+/* GUIDES */
+#guides{position:absolute;inset:0;z-index:50;pointer-events:none}
+#guides .z{position:absolute;background:repeating-linear-gradient(135deg,rgba(255,40,60,.40) 0 14px,rgba(255,40,60,.16) 14px 28px);border:2px solid rgba(255,40,60,.9);
+  color:#fff;font:700 26px/1.2 sans-serif;display:flex;align-items:center;justify-content:center;text-align:center;text-shadow:0 1px 4px #000}
+#guides .ok{position:absolute;left:108px;top:288px;width:864px;height:1152px;border:4px dashed #19c37d;border-radius:12px}
+#guides .ok b{position:absolute;left:10px;top:6px;font:700 24px sans-serif;color:#0b7a4b;background:rgba(255,255,255,.85);padding:2px 10px;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="17.4" data-width="1080" data-height="1920">
+  <div id="bg"></div>
+
+  <div id="fr"><video id="vid" class="clip" data-start="0" data-duration="17.4" data-has-audio="true" data-volume="3" src="assets/cut.mp4" playsinline></video></div>
+  <div id="frb"></div>
+  <video id="cut" class="clip" data-start="0" data-duration="17.4" muted playsinline src="assets/person.webm"></video>
+
+  <!-- s1: connect_flow, 0-4.1 -->
+  <div id="s1" class="scene clip" data-start="0" data-duration="4.1">
+    <svg id="fsvg" style="position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible;z-index:4" viewBox="0 0 1080 1920">
+      <defs><linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46d6ff"/><stop offset="1" stop-color="#2b5fff"/></linearGradient></defs>
+      <path id="fpath" d="M320 392 C320 450 540 440 540 500" pathLength="100" fill="none" stroke="url(#fg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100"/>
+      <path id="fdash" d="M320 392 C320 450 540 440 540 500" pathLength="100" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-dasharray="3 4" opacity="0"/>
+    </svg>
+    <div id="fa" class="card"><div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></div><div><div class="t">BỘ SKILL</div><div class="s">anh chia sẻ</div></div></div>
+    <div id="fdotA" class="dot" style="left:307px;top:379px"></div>
+    <div id="fdotB" class="dot" style="left:527px;top:487px"></div>
+    <div id="fb" class="card">
+      <div id="fbt">CỘNG ĐỒNG</div>
+      <div class="frow" id="fr1" style="top:130px"><span class="t">MIỄN PHÍ</span><span class="s">chia sẻ</span><div class="tick"><i></i>CHK</div></div>
+      <div class="frow" id="fr2" style="top:262px"><span class="t">CHO ANH EM</span><span class="s">trong cộng đồng</span><div class="tick"><i></i>CHK</div></div>
+    </div>
+  </div>
+
+  <!-- s2: amenity_grid (khung giữ chỗ), 4.1-7.3 -->
+  <div id="s2" class="scene clip" data-start="4.1" data-duration="3.2">
+    <div id="gpill" class="pill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M3 11l9-7 9 7v9H3z"/></svg></div><span>CÁC HIỆU ỨNG</span></div>
+    <div class="cell" id="cell1" style="left:65px;top:335px"><div class="fr2"><div class="in"><img src="assets/g1.png" alt=""></div></div><div class="chip2"><div class="ico"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="5"/></svg></div><span>HIỆU ỨNG CHỮ</span></div></div>
+    <div class="cell" id="cell2" style="left:515px;top:360px"><div class="fr2"><div class="in"><img src="assets/g2.png" alt=""></div></div><div class="chip2"><div class="ico"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="5"/></svg></div><span>ĐIỀU KIỆN</span></div></div>
+    <div class="cell" id="cell3" style="left:65px;top:615px"><div class="fr2"><div class="in"><img src="assets/g3.png" alt=""></div></div><div class="chip2"><div class="ico"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="5"/></svg></div><span>SỐ LIỆU</span></div></div>
+    <div class="cell" id="cell4" style="left:515px;top:640px"><div class="fr2"><div class="in"><img src="assets/g4.png" alt=""></div></div><div class="chip2"><div class="ico"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="5"/></svg></div><span>BẢN ĐỒ</span></div></div>
+  </div>
+
+  <!-- s3: note_board, 7.3-10.9 -->
+  <div id="s3" class="scene clip" data-start="7.3" data-duration="3.6">
+    <div id="s3p" class="pill"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="3.5" cy="6" r="1.2" fill="#fff"/><circle cx="3.5" cy="12" r="1.2" fill="#fff"/><circle cx="3.5" cy="18" r="1.2" fill="#fff"/></svg></div><span>CÁC HIỆU ỨNG VỀ</span></div>
+    <div id="s3c" class="card">
+      <div class="row" id="r1" style="top:56px"><div class="box"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4.5v15l12-7.5z"/></svg></div><div class="lbl">MOTION</div><div class="tick"><i></i>CHK</div></div>
+      <div class="row" id="r2" style="top:190px"><div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"><path d="M12 22s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z" fill="#fff"/><circle cx="12" cy="10" r="2.6" fill="#2b5fff" stroke="none"/></svg></div><div class="lbl">BẢN ĐỒ</div><div class="tick"><i></i>CHK</div></div>
+      <div class="row" id="r3" style="top:324px"><div class="box"><svg viewBox="0 0 24 24" fill="#fff"><text x="12" y="18" text-anchor="middle" font-size="16" font-weight="700" font-family="font_bold">Aa</text></svg></div><div class="lbl">HIỆU ỨNG CHỮ</div><div class="tick"><i></i>CHK</div></div>
+    </div>
+  </div>
+
+  <!-- s4: tree_diagram, 10.9-13.1 -->
+  <div id="s4" class="scene clip" data-start="10.9" data-duration="2.2">
+    <svg id="tsvg" style="position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:visible;z-index:2" viewBox="0 0 1080 1920">
+      <defs><linearGradient id="tg" gradientUnits="userSpaceOnUse" x1="0" y1="358" x2="0" y2="820"><stop offset="0" stop-color="#46d6ff"/><stop offset="1" stop-color="#2b5fff"/></linearGradient></defs>
+      <path id="tstem" d="M115 358 L115 820" fill="none" stroke="url(#tg)" stroke-width="8" stroke-linecap="round" stroke-dasharray="462" stroke-dashoffset="462"/>
+      <path id="tb1" d="M115 454 L250 454" fill="none" stroke="#2b73ff" stroke-width="8" stroke-linecap="round" stroke-dasharray="140" stroke-dashoffset="140"/>
+      <path id="tb2" d="M115 576 L250 576" fill="none" stroke="#2b73ff" stroke-width="8" stroke-linecap="round" stroke-dasharray="140" stroke-dashoffset="140"/>
+      <path id="tb3" d="M115 698 L250 698" fill="none" stroke="#2b73ff" stroke-width="8" stroke-linecap="round" stroke-dasharray="140" stroke-dashoffset="140"/>
+      <path id="tb4" d="M115 820 L250 820" fill="none" stroke="#2b73ff" stroke-width="8" stroke-linecap="round" stroke-dasharray="140" stroke-dashoffset="140"/>
+    </svg>
+    <div id="tpar" class="card dark"><div class="ico"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8-6.3 3.8 1.7-7L2 9.2l7.1-.6z"/></svg></div><div class="t">HIỆU ỨNG</div></div>
+    <div id="tdot0" class="dot" style="left:102px;top:345px"></div>
+    <div id="tdot1" class="dot" style="left:237px;top:441px"></div>
+    <div id="tdot2" class="dot" style="left:237px;top:563px"></div>
+    <div id="tdot3" class="dot" style="left:237px;top:685px"></div>
+    <div id="tdot4" class="dot" style="left:237px;top:807px"></div>
+    <div id="tcard1" class="card tc" style="top:400px"><div class="box"><svg viewBox="0 0 24 24" fill="#fff"><path d="M7 4.5v15l12-7.5z"/></svg></div><span class="t">HIỆU ỨNG CHỮ</span><div class="th"><img src="assets/g1.png" alt=""></div></div>
+    <div id="tcard2" class="card tc" style="top:522px"><div class="box"><svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="12" r="6"/></svg></div><span class="t">ĐIỀU KIỆN</span><div class="th"><img src="assets/g2.png" alt=""></div></div>
+    <div id="tcard3" class="card tc" style="top:644px"><div class="box"><svg viewBox="0 0 24 24" fill="#fff"><rect x="5" y="5" width="14" height="14" rx="3"/></svg></div><span class="t">SỐ LIỆU</span><div class="th"><img src="assets/g3.png" alt=""></div></div>
+    <div id="tcard4" class="card tc" style="top:766px"><div class="box"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 3l9 16H3z"/></svg></div><span class="t">BẢN ĐỒ</span><div class="th"><img src="assets/g4.png" alt=""></div></div>
+  </div>
+
+  <!-- s5: screenshot_card (ảnh giữ chỗ) + nút, 13.1-17.4 -->
+  <div id="s5" class="scene clip" data-start="13.1" data-duration="4.3">
+    <div id="scard"><div class="g"><img src="assets/g1.png" alt=""></div><div class="g"><img src="assets/g2.png" alt=""></div><div class="g"><img src="assets/g3.png" alt=""></div><div class="g"><img src="assets/g4.png" alt=""></div></div>
+    <div id="s5btn"><span>DÙNG THỬ NGAY</span></div>
+  </div>
+
+  <!--AUDIO-->
+
+  <!--GUIDES-->
+
+  <script>
+  const tl = gsap.timeline({ paused: true });
+  const IN = "power3.out";
+  const pop=(id,t,from)=>tl.fromTo(id,from||{opacity:0,y:40},{opacity:1,y:0,duration:.4,ease:IN},t);
+  const out=(ids,t)=>tl.to(ids,{opacity:0,duration:.3,ease:"power2.in"},t);
+  const dotIn=(id,t)=>tl.fromTo(id,{opacity:0,scale:.3},{opacity:1,scale:1,duration:.25,ease:"back.out(2)"},t);
+
+
+  // speaker: khung 950 <-> toàn khung (cảnh chỉ người nói 4.1-7.3 và 10.9-13.1)
+  const FR_IN="inset(980px 75px 0px 75px round 44px 44px 0px 0px)", FR_FULL="inset(0px 0px 0px 0px round 0px 0px 0px 0px)";
+  const expand=t=>{ tl.to("#fr",{clipPath:FR_FULL,duration:.4,ease:"power3.inOut"},t);
+                    tl.to("#vid",{x:-65,y:-532,scale:1.1368,duration:.4,ease:"power3.inOut"},t);
+                    tl.to(["#frb","#cut"],{opacity:0,duration:.25},t); };
+  const collapse=t=>{ tl.to("#fr",{clipPath:FR_IN,duration:.4,ease:"power3.inOut"},t);
+                      tl.to("#vid",{x:0,y:0,scale:1,duration:.4,ease:"power3.inOut"},t);
+                      tl.to(["#frb","#cut"],{opacity:1,duration:.25},t+.15); };
+  
+
+  // s1 connect_flow
+  pop("#fa",0.1);
+  dotIn("#fdotA",0.5);
+  tl.to("#fpath",{strokeDashoffset:0,duration:1.0,ease:"power2.out"},0.8);
+  pop("#fb",1.1);
+  dotIn("#fdotB",1.8);
+  tl.set("#fdash",{opacity:1},2.0);
+  tl.to("#fpath",{opacity:.3,duration:.3},2.0);
+  tl.fromTo("#fdash",{strokeDashoffset:0},{strokeDashoffset:-120,duration:1.8,ease:"none"},2.0);
+  tl.fromTo("#fr1",{opacity:0,y:18},{opacity:1,y:0,duration:.35,ease:IN},2.3);
+  tl.fromTo("#fr2",{opacity:0,y:18},{opacity:1,y:0,duration:.35,ease:IN},2.95);
+  [["#fr1",2.7],["#fr2",3.35]].forEach(([r,t])=>{ tl.to(r+" .tick i",{opacity:1,duration:.2},t); tl.to(r+" .tick svg",{opacity:1,duration:.2},t); });
+  out(["#fa","#fb","#fdotA","#fdotB","#fdash","#fpath"],3.75);
+
+  // s2 amenity_grid
+  pop("#gpill",4.2,{opacity:0,y:18});
+  [["#cell1",4.5],["#cell2",4.95],["#cell3",5.4],["#cell4",5.85]].forEach(([id,t])=>tl.fromTo(id,{opacity:0,y:36,scale:.9},{opacity:1,y:0,scale:1,duration:.4,ease:"back.out(1.4)"},t));
+  out(["#gpill","#cell1","#cell2","#cell3","#cell4"],6.95);
+
+  // s3 note_board
+  pop("#s3p",7.3,{opacity:0,y:18});
+  pop("#s3c",7.4,{opacity:0,y:50});
+  tl.fromTo(["#r1","#r2","#r3"],{opacity:0,x:40},{opacity:.45,x:0,duration:.35,stagger:.12,ease:IN},7.6);
+  const light=(r,t)=>{
+    tl.to(r,{opacity:1,borderColor:"#2b73ff",boxShadow:"0 0 0 3px rgba(70,214,255,.45)",duration:.25},t);
+    tl.to(r+" .tick i",{opacity:1,duration:.2},t+.1);
+    tl.to(r+" .tick svg",{opacity:1,duration:.2},t+.1);
+  };
+  light("#r1",7.7); light("#r2",8.8); light("#r3",9.76);
+  out(["#s3p","#s3c"],10.6);
+
+  // s4 tree_diagram
+  pop("#tpar",10.95);
+  dotIn("#tdot0",11.2);
+  tl.to("#tstem",{strokeDashoffset:0,duration:1.0,ease:"none"},11.3);
+  [[1,11.3+.21],[2,11.3+.47],[3,11.3+.74],[4,11.3+1.0]].forEach(([n,t])=>{
+    tl.to("#tb"+n,{strokeDashoffset:0,duration:.18,ease:"power2.out"},t);
+    dotIn("#tdot"+n,t+.16);
+    tl.fromTo("#tcard"+n,{opacity:0,x:70},{opacity:1,x:0,duration:.3,ease:IN},t+.18);
+  });
+  out(["#tpar","#tstem","#tb1","#tb2","#tb3","#tb4","#tdot0","#tdot1","#tdot2","#tdot3","#tdot4","#tcard1","#tcard2","#tcard3","#tcard4"],12.8);
+
+  // s5 collage 4 hình
+  tl.fromTo("#scard",{opacity:0,y:60},{opacity:1,y:0,duration:.45,ease:IN},13.15);
+  tl.fromTo("#scard .g",{opacity:0,scale:.92},{opacity:1,scale:1,duration:.35,stagger:.2,ease:"back.out(1.4)"},13.4);
+  tl.fromTo("#s5btn",{opacity:0,y:50,scale:.92},{opacity:1,y:0,scale:1,duration:.45,ease:"back.out(1.6)"},14.9);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = tl;
+  </script>
+</div>
+</body>
+</html>

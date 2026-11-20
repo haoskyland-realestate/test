@@ -1,0 +1,921 @@
+{
+ "_ghi_chu": "Bảng master: một nguồn cho mọi thông số dựng. Sửa qua trang Bảng master (app ⚙ hoặc artifact) hoặc nhờ Claude. Ghi đè riêng dự án: timeline.meta.cau_hinh {id: giá trị}. Mặc định 19/11/2026 = đúng con số code đang dùng.",
+ "nhom": [
+  {
+   "id": "cat",
+   "ten": "Cắt & nhịp nghỉ",
+   "mo_ta": "Master cut tự cắt khoảng lặng, tiếng đệm, lần nói vấp. Nhịp nghỉ quyết định video nghe dồn dập hay thong thả.",
+   "thong_so": [
+    {
+     "id": "cat.lang_cat",
+     "ten": "Lặng dài hơn thì cắt",
+     "mo_ta": "Khoảng lặng giữa hai từ dài hơn mức này (và đo âm lượng thấy im thật) thì cắt bỏ. Tăng: giữ nhiều chỗ nghỉ, nghe chậm, tự nhiên. Giảm: dồn dập kiểu TikTok nhưng dễ mất hơi thở. Người dựng chuyên nghiệp thường 0,25–0,4s.",
+     "kieu": "so",
+     "mac_dinh": 0.3,
+     "min": 0.1,
+     "max": 1.5,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.chua_truoc",
+     "ten": "Chừa trước khi nói",
+     "mo_ta": "Giữ lại một chút trước tiếng đầu tiên của mỗi mẩu để không mất phụ âm đầu. Dưới 0,05s dễ nghe cụt chữ.",
+     "kieu": "so",
+     "mac_dinh": 0.08,
+     "min": 0.0,
+     "max": 0.4,
+     "buoc": 0.01,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.chua_sau",
+     "ten": "Chừa sau lời (giữa câu)",
+     "mo_ta": "Giữ lại sau tiếng cuối của mẩu khi câu chưa hết. Quá ngắn nghe hụt hơi, quá dài nghe lề mề.",
+     "kieu": "so",
+     "mac_dinh": 0.14,
+     "min": 0.0,
+     "max": 0.6,
+     "buoc": 0.01,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.chua_cuoi_cau",
+     "ten": "Chừa sau cuối câu",
+     "mo_ta": "Nhịp nghỉ sau dấu chấm/hỏi. Đây là chỗ người xem 'thở'; 0,3–0,45s là chuẩn cho talking head.",
+     "kieu": "so",
+     "mac_dinh": 0.3,
+     "min": 0.0,
+     "max": 1.0,
+     "buoc": 0.01,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.manh_ngan",
+     "ten": "Mẩu ngắn hơn thì bỏ",
+     "mo_ta": "Mẩu còn lại ngắn hơn mức này (và không có chữ) thì bỏ, tránh hình chớp nháy.",
+     "kieu": "so",
+     "mac_dinh": 0.35,
+     "min": 0.1,
+     "max": 1.5,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.tieng_dem",
+     "ten": "Tiếng đệm tự cắt",
+     "mo_ta": "Từ đứng riêng được coi là tiếng đệm và cắt bỏ khi master cut.",
+     "kieu": "ds",
+     "mac_dinh": [
+      "ờ",
+      "ơ",
+      "à",
+      "ừ",
+      "ừm",
+      "ừa",
+      "hmm",
+      "um",
+      "uh",
+      "ầy"
+     ],
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.nen_cong_db",
+     "ten": "Ngưỡng tiếng nói: trên nền ồn",
+     "mo_ta": "Ngưỡng coi là có tiếng = mức nền ồn + số dB này. Phòng ồn thì tăng để không coi tiếng ồn là lời nói.",
+     "kieu": "so",
+     "mac_dinh": 10,
+     "min": 3,
+     "max": 25,
+     "buoc": 1,
+     "don_vi": "dB",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.to_tru_db",
+     "ten": "Ngưỡng tiếng nói: dưới mức to",
+     "mo_ta": "Ngưỡng không cao quá mức to (90%) trừ số dB này. Giọng nhỏ, đều thì tăng.",
+     "kieu": "so",
+     "mac_dinh": 6,
+     "min": 2,
+     "max": 20,
+     "buoc": 1,
+     "don_vi": "dB",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.tu_keo_dai",
+     "ten": "Từ kéo dài bất thường",
+     "mo_ta": "Máy nghe hay kéo dài từ đứng sau chỗ ngập ngừng; từ dài hơn mức này thì đo lại điểm bắt đầu bằng âm lượng.",
+     "kieu": "so",
+     "mac_dinh": 0.6,
+     "min": 0.3,
+     "max": 2.0,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.lap_cach_giay",
+     "ten": "Lần nói lại: tìm trong",
+     "mo_ta": "Tìm lần nói vấp (cụm ≥ 3 từ nói lại) trong khoảng này trước lần nói sau.",
+     "kieu": "so",
+     "mac_dinh": 15,
+     "min": 3,
+     "max": 60,
+     "buoc": 1,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "cat.lap_lang_toi_thieu",
+     "ten": "Lần nói lại: phải có ngập ngừng",
+     "mo_ta": "Chỉ coi là nói lại (bỏ lần đầu) khi trước lần sau có ngập ngừng ít nhất chừng này; nói liền mạch là cố ý.",
+     "kieu": "so",
+     "mac_dinh": 0.4,
+     "min": 0.1,
+     "max": 2.0,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    }
+   ]
+  },
+  {
+   "id": "phan_tich",
+   "ten": "Phân tích lời nói",
+   "mo_ta": "Bảng phân tích trong storyboard và câu hỏi Cổng 1 của agent: chỉ báo/đề xuất, không tự cắt.",
+   "thong_so": [
+    {
+     "id": "phan_tich.ngap_ngung",
+     "ten": "Ngập ngừng giữa câu",
+     "mo_ta": "Lặng giữa câu (từ trước không có dấu câu) dài hơn mức này thì báo 'nói vấp'.",
+     "kieu": "so",
+     "mac_dinh": 0.6,
+     "min": 0.2,
+     "max": 2.0,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "phan_tich_loi.py"
+    },
+    {
+     "id": "phan_tich.het_cau",
+     "ten": "Lặng coi như hết câu",
+     "mo_ta": "Lặng dài hơn mức này thì coi như sang câu mới (để đo tốc độ nói từng câu).",
+     "kieu": "so",
+     "mac_dinh": 0.7,
+     "min": 0.3,
+     "max": 3.0,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "phan_tich_loi.py"
+    },
+    {
+     "id": "phan_tich.tieng_dem",
+     "ten": "Tiếng đệm cần báo",
+     "mo_ta": "Từ đứng riêng được báo là tiếng đệm trong bảng phân tích.",
+     "kieu": "ds",
+     "mac_dinh": [
+      "ờ",
+      "ừ",
+      "ừm",
+      "ơ",
+      "à",
+      "hmm",
+      "ừa",
+      "ờm",
+      "ê"
+     ],
+     "dung_o": "phan_tich_loi.py"
+    },
+    {
+     "id": "phan_tich.lap_cach",
+     "ten": "Câu lặp: cho cách tối đa",
+     "mo_ta": "Cụm ≥ 3 từ nói lại, cho phép chen giữa tối đa chừng này từ (cụm ngắn hơn phải liền nhau).",
+     "kieu": "so",
+     "mac_dinh": 2,
+     "min": 0,
+     "max": 6,
+     "buoc": 1,
+     "don_vi": "từ",
+     "dung_o": "phan_tich_loi.py"
+    },
+    {
+     "id": "phan_tich.nhanh",
+     "ten": "Nói nhanh khi gấp",
+     "mo_ta": "Câu nói nhanh hơn nhịp riêng của người nói chừng này lần thì báo 'nói nhanh'.",
+     "kieu": "so",
+     "mac_dinh": 1.3,
+     "min": 1.05,
+     "max": 2.0,
+     "buoc": 0.05,
+     "don_vi": "lần",
+     "dung_o": "phan_tich_loi.py"
+    },
+    {
+     "id": "phan_tich.cham",
+     "ten": "Nói chậm khi dưới",
+     "mo_ta": "Câu chậm hơn nhịp riêng xuống dưới chừng này lần thì báo 'nói chậm'.",
+     "kieu": "so",
+     "mac_dinh": 0.7,
+     "min": 0.3,
+     "max": 0.95,
+     "buoc": 0.05,
+     "don_vi": "lần",
+     "dung_o": "phan_tich_loi.py"
+    },
+    {
+     "id": "phan_tich.canh_ngan",
+     "ten": "Cảnh ngắn hơn thì báo",
+     "mo_ta": "Cảnh nhìn thấy ngắn hơn mức này bị báo 'như chớp'.",
+     "kieu": "so",
+     "mac_dinh": 1.0,
+     "min": 0.2,
+     "max": 3.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "phan_tich_loi.py"
+    },
+    {
+     "id": "phan_tich.canh_dai",
+     "ten": "Cảnh dài hơn thì báo",
+     "mo_ta": "Cảnh dài hơn mức này bị báo 'nên chèn cảnh trám/zoom/chữ' (người xem dễ lướt).",
+     "kieu": "so",
+     "mac_dinh": 7,
+     "min": 3,
+     "max": 30,
+     "buoc": 0.5,
+     "don_vi": "giây",
+     "dung_o": "phan_tich_loi.py"
+    }
+   ]
+  },
+  {
+   "id": "zoom",
+   "ten": "Zoom",
+   "mo_ta": "Phóng nhẹ xen kẽ ở chỗ cắt nhảy và mẩu nói dài để hình không đứng yên.",
+   "thong_so": [
+    {
+     "id": "zoom.phong",
+     "ten": "Mức phóng xen kẽ",
+     "mo_ta": "Cỡ khung khi phóng (1,05 = 105%). Hào chốt tối đa 104–106%; lớn hơn dễ vỡ hình 1080 và lộ giật.",
+     "kieu": "so",
+     "mac_dinh": 1.05,
+     "min": 1.0,
+     "max": 1.15,
+     "buoc": 0.01,
+     "don_vi": "lần",
+     "dung_o": "master_cut.py"
+    },
+    {
+     "id": "zoom.nhip",
+     "ten": "Đổi cỡ khung mỗi",
+     "mo_ta": "Mẩu nói dài thì đổi cỡ khung khoảng mỗi chừng này giây, ở chỗ ngắt giữa hai từ.",
+     "kieu": "so",
+     "mac_dinh": 4.0,
+     "min": 2.0,
+     "max": 10.0,
+     "buoc": 0.5,
+     "don_vi": "giây",
+     "dung_o": "master_cut.py"
+    }
+   ]
+  },
+  {
+   "id": "giong",
+   "ten": "Nhận dạng giọng",
+   "mo_ta": "Máy nghe (Whisper) viết lời từ giọng nói, có mốc từng từ.",
+   "thong_so": [
+    {
+     "id": "giong.mo_hinh",
+     "ten": "Mô hình",
+     "mo_ta": "large-v3-turbo: chính xác, nhanh vừa (PC có card thì nhanh). small/medium: nhanh hơn nhưng nghe sai nhiều tên riêng. Biến môi trường WHISPER_MODEL nếu đặt thì thắng.",
+     "kieu": "chon",
+     "mac_dinh": "large-v3-turbo",
+     "lua_chon": [
+      "large-v3-turbo",
+      "large-v3",
+      "medium",
+      "small"
+     ],
+     "dung_o": "phu_de.py"
+    },
+    {
+     "id": "giong.beam",
+     "ten": "Độ kỹ khi nghe (beam)",
+     "mo_ta": "Số hướng thử khi đoán chữ. Cao hơn: kỹ hơn, chậm hơn.",
+     "kieu": "so",
+     "mac_dinh": 5,
+     "min": 1,
+     "max": 10,
+     "buoc": 1,
+     "don_vi": "",
+     "dung_o": "phu_de.py"
+    },
+    {
+     "id": "giong.vad",
+     "ten": "Bỏ qua đoạn không tiếng",
+     "mo_ta": "Lọc khoảng lặng trước khi nghe, giảm câu bịa ở đoạn im.",
+     "kieu": "bat",
+     "mac_dinh": true,
+     "dung_o": "phu_de.py"
+    },
+    {
+     "id": "giong.nguong_tin",
+     "ten": "Hỏi Hào khi độ tin cậy dưới",
+     "mo_ta": "Từ máy nghe với độ tin cậy dưới mức này thì agent hỏi Hào ở Cổng 1.",
+     "kieu": "so",
+     "mac_dinh": 0.6,
+     "min": 0.3,
+     "max": 0.95,
+     "buoc": 0.05,
+     "don_vi": "",
+     "dung_o": "agent.py"
+    }
+   ]
+  },
+  {
+   "id": "phude",
+   "ten": "Phụ đề",
+   "mo_ta": "Phụ đề dòng (kiểu cũ) tự sinh từ giọng.",
+   "thong_so": [
+    {
+     "id": "phude.tu_toi_da",
+     "ten": "Tối đa từ mỗi dòng",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 7,
+     "min": 3,
+     "max": 14,
+     "buoc": 1,
+     "don_vi": "từ",
+     "dung_o": "phu_de.py"
+    },
+    {
+     "id": "phude.giay_toi_da",
+     "ten": "Tối đa giây mỗi dòng",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 2.8,
+     "min": 1.0,
+     "max": 6.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "phu_de.py"
+    },
+    {
+     "id": "phude.nghi",
+     "ten": "Ngừng nói thì xuống dòng",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 0.45,
+     "min": 0.15,
+     "max": 1.5,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "phu_de.py"
+    }
+   ]
+  },
+  {
+   "id": "loi",
+   "ten": "Chữ theo nhịp nói",
+   "mo_ta": "Từng từ hiện đúng lúc nói, gom thành cụm ngang ngực người nói. Mẫu edit có thể ghi đè cỡ/màu.",
+   "thong_so": [
+    {
+     "id": "loi.nghi_cum",
+     "ten": "Nghỉ thì sang cụm mới",
+     "mo_ta": "Nghỉ giữa hai từ dài hơn mức này thì bắt đầu cụm chữ mới.",
+     "kieu": "so",
+     "mac_dinh": 0.4,
+     "min": 0.15,
+     "max": 1.5,
+     "buoc": 0.05,
+     "don_vi": "giây",
+     "dung_o": "loi_nhip.py"
+    },
+    {
+     "id": "loi.tu_toi_da",
+     "ten": "Tối đa từ mỗi cụm",
+     "mo_ta": "Cụm dài hơn khó đọc trên điện thoại; 3–5 là chuẩn.",
+     "kieu": "so",
+     "mac_dinh": 5,
+     "min": 2,
+     "max": 8,
+     "buoc": 1,
+     "don_vi": "từ",
+     "dung_o": "loi_nhip.py"
+    },
+    {
+     "id": "loi.co",
+     "ten": "Cỡ chữ (mặc định)",
+     "mo_ta": "Cỡ chữ thường trên khung 1080; tự thu nhỏ cho vừa vùng an toàn. Mẫu edit có thể đặt riêng.",
+     "kieu": "so",
+     "mac_dinh": 62,
+     "min": 36,
+     "max": 96,
+     "buoc": 1,
+     "don_vi": "px",
+     "dung_o": "lop_chu.py"
+    },
+    {
+     "id": "loi.co_khoa",
+     "ten": "Từ khoá to hơn",
+     "mo_ta": "Từ khoá to gấp chừng này lần chữ thường (tự thu cho vừa).",
+     "kieu": "so",
+     "mac_dinh": 1.9,
+     "min": 1.0,
+     "max": 3.0,
+     "buoc": 0.1,
+     "don_vi": "lần",
+     "dung_o": "lop_chu.py"
+    },
+    {
+     "id": "loi.som",
+     "ten": "Hiện sớm",
+     "mo_ta": "Chữ bắt đầu chuyển động sớm chừng này phần thời lượng chuyển động, để rõ đúng lúc vừa nói (Hào: chữ hiện chậm).",
+     "kieu": "so",
+     "mac_dinh": 0.6,
+     "min": 0.0,
+     "max": 1.0,
+     "buoc": 0.05,
+     "don_vi": "",
+     "dung_o": "lop_chu.py"
+    },
+    {
+     "id": "loi.cham_chu",
+     "ten": "Độ chậm chuyển động chữ",
+     "mo_ta": "Nhân thời lượng mọi chuyển động chữ/thẻ (ease in-out). Mẫu edit có thể đặt riêng (meta.cham_chu).",
+     "kieu": "so",
+     "mac_dinh": 1.5,
+     "min": 0.6,
+     "max": 2.5,
+     "buoc": 0.05,
+     "don_vi": "lần",
+     "dung_o": "lop_chu.py"
+    },
+    {
+     "id": "loi.vung_tren",
+     "ten": "Chữ không cao hơn",
+     "mo_ta": "Mép trên cụm chữ không cao hơn chừng này chiều cao khung.",
+     "kieu": "so",
+     "mac_dinh": 0.3,
+     "min": 0.15,
+     "max": 0.6,
+     "buoc": 0.01,
+     "don_vi": "",
+     "dung_o": "lop_chu.py"
+    }
+   ]
+  },
+  {
+   "id": "the",
+   "ten": "Chữ lớn & thẻ",
+   "mo_ta": "Thời lượng chữ lớn (hook, tiêu đề) và cảnh chèn thẻ do bản dựng đặt.",
+   "thong_so": [
+    {
+     "id": "the.chu_lon_min",
+     "ten": "Chữ lớn hiện tối thiểu",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 1.8,
+     "min": 0.8,
+     "max": 5.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "ban_dung.py"
+    },
+    {
+     "id": "the.chu_lon_them",
+     "ten": "Chữ lớn còn lại sau lời",
+     "mo_ta": "Giữ thêm sau khi nói xong cụm chữ lớn, để kịp đọc.",
+     "kieu": "so",
+     "mac_dinh": 0.8,
+     "min": 0.0,
+     "max": 3.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "ban_dung.py"
+    },
+    {
+     "id": "the.so_lieu_min",
+     "ten": "Thẻ số liệu tối thiểu",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 2.0,
+     "min": 1.0,
+     "max": 6.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "ban_dung.py"
+    },
+    {
+     "id": "the.so_lieu_them",
+     "ten": "Thẻ số liệu còn lại sau lời",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 0.6,
+     "min": 0.0,
+     "max": 3.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "ban_dung.py"
+    },
+    {
+     "id": "the.the_min",
+     "ten": "Thẻ danh sách/sơ đồ tối thiểu",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 3.0,
+     "min": 1.5,
+     "max": 8.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "ban_dung.py"
+    },
+    {
+     "id": "the.the_them",
+     "ten": "Thẻ danh sách/sơ đồ còn lại sau lời",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 0.6,
+     "min": 0.0,
+     "max": 3.0,
+     "buoc": 0.1,
+     "don_vi": "giây",
+     "dung_o": "ban_dung.py"
+    }
+   ]
+  },
+  {
+   "id": "am",
+   "ten": "Âm thanh",
+   "mo_ta": "Độ to chuẩn mạng xã hội, nhạc nền tự nhỏ khi nói, làm sạch giọng.",
+   "thong_so": [
+    {
+     "id": "am.lufs",
+     "ten": "Độ to chuẩn (LUFS)",
+     "mo_ta": "TikTok/YouTube/Instagram chuẩn −14. Thấp hơn (−16) mềm hơn; cao hơn dễ bị nền tảng hạ xuống.",
+     "kieu": "so",
+     "mac_dinh": -14,
+     "min": -23,
+     "max": -9,
+     "buoc": 0.5,
+     "don_vi": "LUFS",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.dinh",
+     "ten": "Đỉnh tối đa",
+     "mo_ta": "Không cho đỉnh vượt mức này để không vỡ tiếng trên điện thoại.",
+     "kieu": "so",
+     "mac_dinh": -1.5,
+     "min": -6,
+     "max": -0.5,
+     "buoc": 0.1,
+     "don_vi": "dBTP",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.lra",
+     "ten": "Độ chênh to/nhỏ (LRA)",
+     "mo_ta": "Nhỏ: giọng đều đều; lớn: giữ biểu cảm.",
+     "kieu": "so",
+     "mac_dinh": 11,
+     "min": 5,
+     "max": 20,
+     "buoc": 1,
+     "don_vi": "LU",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.nhac_co_giong",
+     "ten": "Nhạc nền khi có giọng",
+     "mo_ta": "Âm lượng nhạc nền (so với gốc) khi video có giọng nói, trước khi tự nhỏ thêm lúc đang nói.",
+     "kieu": "so",
+     "mac_dinh": 0.35,
+     "min": 0.05,
+     "max": 1.0,
+     "buoc": 0.05,
+     "don_vi": "lần",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.duck_nguong",
+     "ten": "Nhạc tự nhỏ: ngưỡng giọng",
+     "mo_ta": "Giọng to hơn mức này thì nhạc bắt đầu nhỏ xuống.",
+     "kieu": "so",
+     "mac_dinh": 0.02,
+     "min": 0.005,
+     "max": 0.2,
+     "buoc": 0.005,
+     "don_vi": "",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.duck_ti_le",
+     "ten": "Nhạc tự nhỏ: mức nén",
+     "mo_ta": "Càng cao nhạc càng nhỏ khi nói.",
+     "kieu": "so",
+     "mac_dinh": 8,
+     "min": 1,
+     "max": 20,
+     "buoc": 1,
+     "don_vi": ":1",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.duck_vao",
+     "ten": "Nhạc tự nhỏ: tốc độ vào",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 15,
+     "min": 1,
+     "max": 200,
+     "buoc": 1,
+     "don_vi": "ms",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.duck_nha",
+     "ten": "Nhạc tự nhỏ: tốc độ trả lại",
+     "mo_ta": "Ngắn: nhạc bật lại nhanh giữa các câu (dễ 'phập phồng'); dài: êm hơn.",
+     "kieu": "so",
+     "mac_dinh": 400,
+     "min": 50,
+     "max": 2000,
+     "buoc": 10,
+     "don_vi": "ms",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.sach_cat_tram",
+     "ten": "Làm sạch giọng: cắt ù dưới",
+     "mo_ta": "Bỏ tiếng ù, gió dưới tần số này.",
+     "kieu": "so",
+     "mac_dinh": 80,
+     "min": 40,
+     "max": 200,
+     "buoc": 5,
+     "don_vi": "Hz",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.sach_khu_on",
+     "ten": "Làm sạch giọng: mức khử ồn",
+     "mo_ta": "Mức nền ồn cần khử (càng gần 0 khử càng mạnh, dễ méo giọng).",
+     "kieu": "so",
+     "mac_dinh": -25,
+     "min": -50,
+     "max": -10,
+     "buoc": 1,
+     "don_vi": "dB",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.sach_nen",
+     "ten": "Làm sạch giọng: nén",
+     "mo_ta": "Nén cho giọng đều.",
+     "kieu": "so",
+     "mac_dinh": 2.5,
+     "min": 1,
+     "max": 8,
+     "buoc": 0.1,
+     "don_vi": ":1",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.sach_nang_hz",
+     "ten": "Làm sạch giọng: vùng rõ chữ",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 3500,
+     "min": 1500,
+     "max": 6000,
+     "buoc": 100,
+     "don_vi": "Hz",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "am.sach_nang_db",
+     "ten": "Làm sạch giọng: nâng vùng rõ chữ",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 2,
+     "min": 0,
+     "max": 6,
+     "buoc": 0.5,
+     "don_vi": "dB",
+     "dung_o": "dung.py"
+    }
+   ]
+  },
+  {
+   "id": "hinh",
+   "ten": "Hình & xuất",
+   "mo_ta": "Chất lượng và tốc độ dựng.",
+   "thong_so": [
+    {
+     "id": "hinh.fps",
+     "ten": "Khung/giây",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 30,
+     "min": 24,
+     "max": 60,
+     "buoc": 1,
+     "don_vi": "",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "hinh.crf_cuoi",
+     "ten": "Chất lượng cắt cảnh bản cuối (CRF)",
+     "mo_ta": "Càng nhỏ càng nét, file càng to. 16–20 là mức xuất bản.",
+     "kieu": "so",
+     "mac_dinh": 18,
+     "min": 12,
+     "max": 28,
+     "buoc": 1,
+     "don_vi": "",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "hinh.crf_nhap",
+     "ten": "Chất lượng bản nháp/xem (CRF)",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 28,
+     "min": 20,
+     "max": 36,
+     "buoc": 1,
+     "don_vi": "",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "hinh.crf_ghep",
+     "ten": "Chất lượng ghép cuối (CRF)",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 19,
+     "min": 12,
+     "max": 28,
+     "buoc": 1,
+     "don_vi": "",
+     "dung_o": "dung.py"
+    },
+    {
+     "id": "hinh.nhe_crf",
+     "ten": "Chất lượng bản nhẹ 540p (CRF)",
+     "mo_ta": "Bản nhẹ dùng để phân tích và bản xem.",
+     "kieu": "so",
+     "mac_dinh": 23,
+     "min": 18,
+     "max": 32,
+     "buoc": 1,
+     "don_vi": "",
+     "dung_o": "ban_nhe.py"
+    },
+    {
+     "id": "hinh.phan_tich_fps",
+     "ten": "Phân tích: khung/giây",
+     "mo_ta": "Chấm điểm hình bao nhiêu khung mỗi giây.",
+     "kieu": "so",
+     "mac_dinh": 5,
+     "min": 1,
+     "max": 15,
+     "buoc": 1,
+     "don_vi": "",
+     "dung_o": "phan_tich_hinh.py"
+    },
+    {
+     "id": "hinh.tu_can_mau",
+     "ten": "Tự cân màu từng cảnh",
+     "mo_ta": "Tắt nếu muốn giữ màu gốc (cảnh dùng LUT chỉnh màu luôn bỏ qua tự cân).",
+     "kieu": "bat",
+     "mac_dinh": true,
+     "dung_o": "dung.py"
+    }
+   ]
+  },
+  {
+   "id": "vung",
+   "ten": "Vùng an toàn",
+   "mo_ta": "Giao diện TikTok/Reels/Shorts che các mép; chữ, thẻ phải nằm trong (chuẩn AutoEdit).",
+   "thong_so": [
+    {
+     "id": "vung.tren",
+     "ten": "Chừa trên",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 0.15,
+     "min": 0.05,
+     "max": 0.3,
+     "buoc": 0.01,
+     "don_vi": "chiều cao",
+     "dung_o": "kiem_vung.py"
+    },
+    {
+     "id": "vung.duoi",
+     "ten": "Mép dưới chữ không thấp hơn",
+     "mo_ta": "0,75 = chừa 25% dưới cho chú thích và nút của TikTok.",
+     "kieu": "so",
+     "mac_dinh": 0.75,
+     "min": 0.6,
+     "max": 0.9,
+     "buoc": 0.01,
+     "don_vi": "chiều cao",
+     "dung_o": "kiem_vung.py"
+    },
+    {
+     "id": "vung.ben",
+     "ten": "Chừa hai bên",
+     "mo_ta": "Nút thả tim/bình luận nằm ở mép phải.",
+     "kieu": "so",
+     "mac_dinh": 0.1,
+     "min": 0.03,
+     "max": 0.2,
+     "buoc": 0.01,
+     "don_vi": "chiều ngang",
+     "dung_o": "kiem_vung.py"
+    }
+   ]
+  },
+  {
+   "id": "kiem",
+   "ten": "Kiểm bản cuối",
+   "mo_ta": "Ngưỡng để kiem_cuoi.py báo lỗi trước khi giao video.",
+   "thong_so": [
+    {
+     "id": "kiem.lufs_lech",
+     "ten": "Lệch độ to cho phép",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 1.0,
+     "min": 0.3,
+     "max": 3.0,
+     "buoc": 0.1,
+     "don_vi": "LU",
+     "dung_o": "kiem_cuoi.py"
+    },
+    {
+     "id": "kiem.hinh_tieng",
+     "ten": "Lệch hình–tiếng cho phép",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 0.1,
+     "min": 0.02,
+     "max": 0.5,
+     "buoc": 0.01,
+     "don_vi": "giây",
+     "dung_o": "kiem_cuoi.py"
+    },
+    {
+     "id": "kiem.do_dai",
+     "ten": "Lệch độ dài cho phép",
+     "mo_ta": "",
+     "kieu": "so",
+     "mac_dinh": 0.15,
+     "min": 0.03,
+     "max": 1.0,
+     "buoc": 0.01,
+     "don_vi": "giây",
+     "dung_o": "kiem_cuoi.py"
+    }
+   ]
+  },
+  {
+   "id": "agent",
+   "ten": "Agent",
+   "mo_ta": "Lựa chọn mặc định khi chạy agent.py.",
+   "thong_so": [
+    {
+     "id": "agent.preset",
+     "ten": "Preset AutoEdit mặc định",
+     "mo_ta": "A xanh gradient · B cam kem · C neon tối (hiện quyết định ảnh mẫu trang chọn hiệu ứng).",
+     "kieu": "chon",
+     "mac_dinh": "A",
+     "lua_chon": [
+      "A",
+      "B",
+      "C"
+     ],
+     "dung_o": "agent.py"
+    },
+    {
+     "id": "agent.mau",
+     "ten": "Mẫu edit mặc định",
+     "mo_ta": "Thư mục trong thu-vien-mau/ (id mẫu).",
+     "kieu": "chuoi",
+     "mac_dinh": "talking-luxury-01",
+     "dung_o": "agent.py"
+    }
+   ]
+  }
+ ]
+}

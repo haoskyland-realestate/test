@@ -1132,7 +1132,7 @@
   {
    "kind": "loi",
    "start": 43.65,
-   "dur": 1.7,
+   "dur": 1.42,
    "words": [
     [
      "trình",
@@ -1148,191 +1148,9 @@
      "cộng,",
      44.3,
      44.62
-    ],
-    [
-     "cụm",
-     44.86,
-     45.18
-    ],
-    [
-     "trường",
-     45.18,
-     45.4
     ]
    ],
    "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 45.35,
-   "dur": 1.3,
-   "words": [
-    [
-     "đại",
-     45.4,
-     45.6
-    ],
-    [
-     "học",
-     45.6,
-     45.78
-    ],
-    [
-     "quốc",
-     45.78,
-     46.02
-    ],
-    [
-     "tế,",
-     46.02,
-     46.28
-    ],
-    [
-     "đại",
-     46.52,
-     46.7
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 46.65,
-   "dur": 1.12,
-   "words": [
-    [
-     "đô",
-     46.7,
-     46.88
-    ],
-    [
-     "thị,",
-     46.88,
-     47.1
-    ],
-    [
-     "công",
-     47.26,
-     47.36
-    ],
-    [
-     "viên",
-     47.36,
-     47.56
-    ],
-    [
-     "sinh",
-     47.56,
-     47.82
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 47.77,
-   "dur": 1.54,
-   "words": [
-    [
-     "thái,",
-     47.82,
-     48.04
-    ],
-    [
-     "hồ",
-     48.26,
-     48.54
-    ],
-    [
-     "điều",
-     48.54,
-     48.81
-    ],
-    [
-     "hòa",
-     48.81,
-     49.09
-    ],
-    [
-     "cảnh",
-     49.09,
-     49.36
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 49.31,
-   "dur": 1.6,
-   "words": [
-    [
-     "quan,",
-     49.36,
-     49.64
-    ],
-    [
-     "và",
-     49.94,
-     50.3
-    ],
-    [
-     "hệ",
-     50.3,
-     50.5
-    ],
-    [
-     "thống",
-     50.5,
-     50.72
-    ],
-    [
-     "trường",
-     50.72,
-     50.96
-    ]
-   ],
-   "hl": [],
-   "auto_loi": true,
-   "bam_nguoi": true
-  },
-  {
-   "kind": "loi",
-   "start": 50.91,
-   "dur": 1.32,
-   "words": [
-    [
-     "học",
-     50.96,
-     51.14
-    ],
-    [
-     "liên",
-     51.14,
-     51.48
-    ],
-    [
-     "cấp",
-     51.48,
-     51.88
-    ],
-    [
-     "Vinschool.",
-     51.88,
-     52.28
-    ]
-   ],
-   "hl": [
-    3
-   ],
    "auto_loi": true,
    "bam_nguoi": true
   },
@@ -2561,16 +2379,17 @@
   },
   {
    "kieu": "quy-dao",
-   "start": 44.9,
-   "dur": 5.0,
+   "start": 44.76,
+   "dur": 8.12,
    "title": "hơn 800 ha dành cho",
-   "centre": "CÔNG CỘNG",
    "items": [
     "Đại học quốc tế",
     "Công viên sinh thái",
     "Hồ điều hòa",
     "Vinschool"
    ],
+   "centre": "công cộng",
+   "sub": "",
    "ban_dung": true
   }
  ],
@@ -2999,7 +2818,7 @@
    "hp": 250
   },
   {
-   "start": 44.68,
+   "start": 44.54,
    "dur": 0.71,
    "file": "hsl_vut-the_01",
    "vol": 0.216,
@@ -3007,14 +2826,14 @@
    "hp": 150
   },
   {
-   "start": 45.5,
+   "start": 45.36,
    "dur": 0.81,
    "file": "hsl_ui_01",
    "vol": 0.154,
    "auto": true
   },
   {
-   "start": 45.8,
+   "start": 45.66,
    "dur": 0.81,
    "file": "hsl_ui_01",
    "vol": 0.154,
@@ -3022,7 +2841,7 @@
    "pitch": 0.95
   },
   {
-   "start": 46.1,
+   "start": 45.96,
    "dur": 0.81,
    "file": "hsl_ui_01",
    "vol": 0.154,
@@ -3030,41 +2849,19 @@
    "pitch": 1.06
   },
   {
-   "start": 46.4,
+   "start": 46.26,
    "dur": 0.81,
    "file": "hsl_ui_01",
    "vol": 0.154,
    "auto": true
   },
   {
-   "start": 49.66,
+   "start": 52.64,
    "dur": 0.17,
    "file": "hsl_vut-ra_01",
    "vol": 0.144,
    "auto": true,
    "hp": 200
-  },
-  {
-   "start": 51.38,
-   "dur": 0.86,
-   "file": "hsl_vut-nhanh_01",
-   "vol": 0.144,
-   "auto": true,
-   "hp": 250
-  },
-  {
-   "start": 51.44,
-   "dur": 1.8,
-   "file": "hsl_vut-cham_01",
-   "vol": 0.154,
-   "auto": true
-  },
-  {
-   "start": 51.68,
-   "dur": 0.88,
-   "file": "hsl_chuong-nhanh_01",
-   "vol": 0.086,
-   "auto": true
   },
   {
    "start": 56.53,
@@ -3103,6 +2900,7 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
+   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3134,7 +2932,6 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
-   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3157,7 +2954,6 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
-   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3203,7 +2999,6 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
-   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3259,6 +3054,7 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
+   "pitch": 1.05,
    "hp": 250
   },
   {
@@ -3281,7 +3077,6 @@
    "file": "hsl_vut-nhanh_01",
    "vol": 0.144,
    "auto": true,
-   "pitch": 1.05,
    "hp": 250
   }
  ],

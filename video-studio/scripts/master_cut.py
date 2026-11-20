@@ -13,15 +13,23 @@ if __name__ == "__main__":  # kiểm thư viện TRƯỚC khi nạp phần phân
     can("numpy", "cv2", "faster_whisper")
 from timeline import check, layout
 import phan_tich_hinh as pth
-from ban_nhe import lay  # phân tích hình trên bản nhẹ 540p: giải nén nhẹ hơn 4K HDR rất nhiều
+from ban_nhe import lay as nhe  # phân tích hình trên bản nhẹ 540p: giải nén nhẹ hơn 4K HDR rất nhiều
 
-FILLERS = {"ờ", "ơ", "à", "ừ", "ừm", "ừa", "hmm", "um", "uh", "ầy"}
-CUT_GAP = 0.30          # im lặng dài hơn thì cắt
-PAD_IN, PAD_OUT = 0.08, 0.14   # chừa trước khi nói / sau khi dứt lời (giữa câu)
-PAD_END = 0.30          # chừa sau cuối câu (dấu chấm, hỏi…) cho có nhịp nghỉ
-MIN_PIECE = 0.35        # mẩu ngắn hơn thì bỏ (trừ khi có chữ)
-PUNCH = 1.05            # phóng xen kẽ ở các chỗ cắt nhảy (Hào: tối đa 104–106%; dung.py đẩy vào êm)
-BEAT = 4.0              # mẩu nói dài: đổi cỡ khung khoảng mỗi 4 giây, ở chỗ ngắt giữa hai từ
+from cau_hinh import lay
+
+
+def nap(tl=None):
+    """Thông số từ bảng master (cau-hinh/master.json; dự án ghi đè qua meta.cau_hinh). Giải thích từng thông số: xem bảng."""
+    global FILLERS, CUT_GAP, PAD_IN, PAD_OUT, PAD_END, MIN_PIECE, PUNCH, BEAT, NEN_DB, TO_DB, KEO_DAI, LAP_GIAY, LAP_LANG
+    FILLERS = set(lay("cat.tieng_dem", tl))
+    CUT_GAP, PAD_IN, PAD_OUT = lay("cat.lang_cat", tl), lay("cat.chua_truoc", tl), lay("cat.chua_sau", tl)
+    PAD_END, MIN_PIECE = lay("cat.chua_cuoi_cau", tl), lay("cat.manh_ngan", tl)
+    PUNCH, BEAT = lay("zoom.phong", tl), lay("zoom.nhip", tl)
+    NEN_DB, TO_DB, KEO_DAI = lay("cat.nen_cong_db", tl), lay("cat.to_tru_db", tl), lay("cat.tu_keo_dai", tl)
+    LAP_GIAY, LAP_LANG = lay("cat.lap_cach_giay", tl), lay("cat.lap_lang_toi_thieu", tl)
+
+
+nap()
 
 norm = lambda w: re.sub(r"[^\w]", "", w.lower())
 
@@ -47,7 +55,7 @@ def nguong(db):
     if not db:
         return -40.0
     d = sorted(db)
-    return min(d[len(d) // 5] + 10, d[len(d) * 9 // 10] - 6)
+    return min(d[len(d) // 5] + NEN_DB, d[len(d) * 9 // 10] - TO_DB)
 
 
 def im(db, thr, a, b):
@@ -60,7 +68,7 @@ def lam_on_tu(words, db, thr):
     """Từ kéo dài (>0,6s) thường nuốt cả khoảng ngập ngừng phía trước: dời điểm bắt đầu tới lúc tiếng thật sự to lên."""
     out = []
     for w, s, e in words:
-        if e - s > 0.6 and db:
+        if e - s > KEO_DAI and db:
             on = next((k / 50 for k in range(int(s * 50), int(e * 50)) if k < len(db) and db[k] >= thr), None)
             s = max(s, on - 0.05) if on is not None else e - 0.45
         out.append([w, s, e])
@@ -81,7 +89,7 @@ def bo_noi_lai(words):
         n = [norm(w[0]) for w in words]
         for j in range(3, len(words) - 2):
             for i in range(j - 3, -1, -1):  # lần nói trước GẦN NHẤT: cụm chung chung ("đây là không") lặp xa không phải nói lại
-                if words[j][1] - words[i][1] > 15:
+                if words[j][1] - words[i][1] > LAP_GIAY:
                     break
                 if n[i:i + 3] != n[j:j + 3]:
                     continue
@@ -92,7 +100,7 @@ def bo_noi_lai(words):
                 if any(re.search(r"[.?!]$", w[0]) for w in words[i0:j0 - 1]):  # có câu đã nói trọn bên trong: không phải lần nói hỏng
                     continue
                 pause = words[j0][1] - words[j0 - 1][2] + max(0, (words[j0][2] - words[j0][1]) - 0.6)
-                if pause < 0.4:  # nói liền mạch ("căn tứ lập, 4 căn tứ lập") không phải nói lại
+                if pause < LAP_LANG:  # nói liền mạch ("căn tứ lập, 4 căn tứ lập") không phải nói lại
                     continue
                 dropped.append((words[i0][1], words[j0 - 1][2], " ".join(w[0] for w in words[i0:j0])))
                 words = words[:i0] + words[j0:]
@@ -205,6 +213,7 @@ def main(proj, only_report=False):
     tl = json.load(open(p, encoding="utf8"))
     if (errs := check(tl)):
         sys.exit("timeline.json chưa hợp lệ:\n- " + "\n- ".join(errs))
+    nap(tl)
     import phu_de
     B = os.path.join(proj, "build")
     rep = [f"# Báo cáo master cut: {os.path.basename(proj)}", ""]
@@ -215,7 +224,7 @@ def main(proj, only_report=False):
         if not os.path.exists(raw):
             sys.exit(f"Chưa có footage {c['file']} (mở dự án trong app hoặc dựng nháp một lần để tải)")
         print(f"Phân tích đoạn {i + 1}: {c['file']}", flush=True)
-        fs = pth.phan_tich(lay(B, c["file"]), os.path.join(B, "analysis", c["file"] + ".json"))
+        fs = pth.phan_tich(nhe(B, c["file"]), os.path.join(B, "analysis", c["file"] + ".json"))
         db = nang_luong(raw, os.path.join(B, "analysis", c["file"] + ".db.json"))
         thr = nguong(db)
         tv = tl.get("meta", {}).get("tu_vung")
@@ -296,7 +305,7 @@ def main(proj, only_report=False):
     for k, x in enumerate(new.get("broll", [])):
         raw = os.path.join(B, "raw", x["file"])
         if os.path.exists(raw):
-            fs = pth.phan_tich(lay(B, x["file"]), os.path.join(B, "analysis", x["file"] + ".json"))
+            fs = pth.phan_tich(nhe(B, x["file"]), os.path.join(B, "analysis", x["file"] + ".json"))
             best, bsc, csc = cua_so_dep(fs, x["in"], x["dur"], False)
             if bsc - csc >= 5 and abs(best - x["in"]) > 0.3:
                 rep.append(f"- Cảnh trám {k + 1} ({x['file']}): dời {x['in']:.1f}s → {best:.1f}s (điểm {csc:.0f} → {bsc:.0f})")

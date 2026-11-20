@@ -3,6 +3,8 @@ name: dung-talking-head
 description: Dựng video talking head (Hào nói trước máy) theo đúng 5 bước Hào chốt: text từ giọng nói → AI xác định hook, tiêu đề, từ khoá, số liệu → khung hình → chuyển động và âm → ghép. Dùng khi Hào nói "dựng talking head", "làm video nói trước máy", "chữ theo lời nói".
 ---
 
+> **Từ 18/11 dùng skill `agent-video`** (`scripts/agent.py`: một lệnh, 4 cổng). File này giữ làm tài liệu các bước bên trong.
+
 # Dựng talking head: mỗi bước có đầu ra để Hào xem; 2 lần duyệt (storyboard, bản xem 540×960) trước bản cuối
 
 **Không dùng app** (Hào chốt 17/11): Claude chạy thẳng các lệnh dưới đây. Trên PC Windows, mọi lệnh `python` là `.venv\Scripts\python.exe` (tạo bằng `setup-windows.ps1`), chạy trong `video-studio`; trên cloud/Mac là `python3` hoặc `.venv/bin/python`. Thiếu thư viện thì công cụ tự báo lệnh cài đúng.

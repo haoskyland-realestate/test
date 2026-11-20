@@ -20,7 +20,7 @@ npm install
 echo "== Thư viện Python (vào .venv) =="
 "$(brew --prefix python@3.12)/bin/python3.12" -m venv .venv
 .venv/bin/pip install --upgrade pip
-.venv/bin/pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime yt-dlp
+.venv/bin/pip install numpy faster-whisper "opencv-python-headless<5" opentimelineio otio-fcp-adapter onnxruntime yt-dlp playwright
 echo "== Kiểm máy + dựng thử 6 giây (1–3 phút) =="
 .venv/bin/python scripts/kiem_may.py --dung-thu
 echo
