@@ -79,8 +79,8 @@ elif __name__ == "__main__":  # tự kiểm (--tu-kiem): đặt 3 âm, đo lúc 
         out = os.path.join(d, "t.wav")
         tron_sfx([{"start": 0.5, "file": "chu_pop_01"}, {"start": 1.75, "file": "impact_tram_01", "vol": 0.5},
                   {"start": -0.1, "file": "chu_swish-pop_01"}, {"start": 9, "file": "chu_pop_01"}], 3.0, out)
-        w = wave.open(out)
-        x = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").reshape(-1, 2)[:, 0] / 32767
+        with wave.open(out) as w:  # đóng file: Windows không xoá được thư mục tạm khi file còn mở
+            x = np.frombuffer(w.readframes(w.getnframes()), dtype="<i2").reshape(-1, 2)[:, 0] / 32767
         assert abs(len(x) / 44100 - 3.0) < 0.01, len(x)
         e = np.convolve(np.abs(x), np.ones(220) / 220, "same")
         on = [i / 44100 for i in range(1, len(e)) if e[i] > 0.02 and e[i - 1] <= 0.02]
