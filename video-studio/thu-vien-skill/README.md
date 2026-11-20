@@ -1,7 +1,7 @@
 # Kho skill thiết kế (phong cách video mẫu Open Residency)
 
 Mỗi thư mục là một bản **thiết kế skill** theo đúng khuôn `SKILL.md` của Claude Code. Chưa nằm trong `.claude/skills/` để không làm dài danh sách skill mỗi phiên.
-**Bật một skill:** chép thư mục đó vào `.claude/skills/` (đã chắc nó chạy được thì mới chép). Skill đang chạy thật: `.claude/skills/` (hoc-mau, chinh-mau, dung-video, lap-storyboard, bao-cao-nghiem-thu).
+**Bật một skill:** chép thư mục đó vào `.claude/skills/` (đã chắc nó chạy được thì mới chép). Skill đang chạy thật: `.claude/skills/` (hoc-mau, chinh-mau, dung-video, lap-storyboard, bao-cao-nghiem-thu, dung-talking-head, talking-head-ui).
 
 | Skill | Trạng thái | Việc |
 |---|---|---|

@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "preset": "doc-calm",
+    "duration": 6.4
+  },
+  "source": {
+    "video": "assets/main.mp4",
+    "cutout": null
+  },
+  "captions": [
+    {
+      "text": "mỗi tháng",
+      "start": 0.3,
+      "end": 0.9
+    },
+    {
+      "text": "dòng tiền",
+      "start": 0.9,
+      "end": 1.5
+    },
+    {
+      "text": "còn lại",
+      "start": 1.5,
+      "end": 2.1
+    }
+  ],
+  "emphasis": [
+    {
+      "id": "d1",
+      "start": 2.2,
+      "end": 4.95,
+      "anchor": "upper-right",
+      "lines": [
+        {
+          "text": "Em nghĩ",
+          "role": "doc-thin",
+          "at": 2.2
+        },
+        {
+          "text": "chị cần",
+          "role": "doc-bold",
+          "at": 2.6
+        },
+        {
+          "text": "nhìn dòng tiền",
+          "role": "doc-bold",
+          "at": 3.0
+        },
+        {
+          "text": "trước đã...",
+          "role": "doc-thin",
+          "at": 3.5
+        }
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "at": 5.0,
+      "type": "dip-black",
+      "duration": 1.2
+    }
+  ]
+}

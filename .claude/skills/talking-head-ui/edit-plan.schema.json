@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "talking-head-ui/edit-plan@1",
+  "title": "Kế hoạch dựng một video talking head",
+  "description": "File Claude viết cho từng video. Mọi thời gian tính bằng giây, theo thời gian của video đã cắt lặng (main.mp4). scripts/build.mjs đọc file này + style.json để sinh dự án HyperFrames.",
+  "type": "object",
+  "required": ["meta", "source", "captions"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["preset", "duration"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "preset": { "enum": ["pop-accent", "doc-calm"] },
+        "duration": { "type": "number", "description": "Độ dài video ra, bằng độ dài main.mp4 (ffprobe)." },
+        "accent": { "type": "string", "description": "Ghi đè màu nhấn của preset, ví dụ màu thương hiệu." },
+        "language": { "type": "string", "default": "vi" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["video"],
+      "additionalProperties": false,
+      "properties": {
+        "video": { "type": ["string", "null"], "description": "assets/main.mp4: bản đã cắt lặng, keyframe mỗi giây. null = chế độ overlay chỉ có lớp chữ, nền trong suốt." },
+        "cutout": { "type": ["string", "null"], "description": "assets/cutout.webm: người đã tách nền, cùng thời lượng main.mp4. Bắt buộc nếu có khối behindSubject." },
+        "volume": { "type": "number", "default": 1 }
+      }
+    },
+    "camera": {
+      "type": "array",
+      "description": "Khung hình người nói theo thời gian. Mỗi mục giữ từ 'at' đến mục sau. Không có mục nào = scale 1.",
+      "items": {
+        "type": "object",
+        "required": ["at", "scale"],
+        "additionalProperties": false,
+        "properties": {
+          "at": { "type": "number" },
+          "scale": { "type": "number", "minimum": 1, "maximum": 1.6 },
+          "x": { "type": "number", "default": 0, "description": "px, dương = dịch hình sang phải" },
+          "y": { "type": "number", "default": 0, "description": "px, dương = dịch hình xuống" },
+          "transition": { "enum": ["cut", "flash-white", "dip-cut"], "default": "cut" }
+        }
+      }
+    },
+    "broll": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["start", "end", "src"],
+        "additionalProperties": false,
+        "properties": {
+          "start": { "type": "number" },
+          "end": { "type": "number" },
+          "src": { "type": "string", "description": "assets/broll/xx.mp4 hoặc .jpg/.png" },
+          "mediaStart": { "type": "number", "default": 0 },
+          "move": { "enum": ["none", "push-in", "pull-out", "drift-left", "drift-right"], "default": "none" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "description": "Hiệu ứng toàn khung đứng riêng (chớp trắng, màn đen). Chớp trắng của camera đã tự sinh, không cần lặp ở đây.",
+      "items": {
+        "type": "object",
+        "required": ["at", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "at": { "type": "number" },
+          "type": { "enum": ["flash-white", "dip-black", "dip-cut"] },
+          "duration": { "type": "number" }
+        }
+      }
+    },
+    "captions": {
+      "type": "array",
+      "description": "Phụ đề cụm ngắn, một cụm trên màn hình mỗi lúc. Lấy từ transcript, không bịa chữ.",
+      "items": {
+        "type": "object",
+        "required": ["text", "start", "end"],
+        "additionalProperties": false,
+        "properties": {
+          "text": { "type": "string" },
+          "start": { "type": "number" },
+          "end": { "type": "number" },
+          "accent": { "type": "boolean", "default": false, "description": "Tô màu nhấn cho cụm này (dùng tiết kiệm)." }
+        }
+      }
+    },
+    "emphasis": {
+      "type": "array",
+      "description": "Khối chữ nhấn nhiều dòng, xếp chồng, trộn vai trò chữ. Mỗi dòng hiện đúng lúc nó được nói.",
+      "items": {
+        "type": "object",
+        "required": ["id", "start", "end", "anchor", "lines"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "start": { "type": "number" },
+          "end": { "type": "number" },
+          "anchor": { "enum": ["upper-right", "upper-left", "head-band", "chest", "mid-left", "mid-right"] },
+          "offset": { "type": "object", "properties": { "x": { "type": "number" }, "y": { "type": "number" } }, "additionalProperties": false },
+          "behindSubject": { "type": "boolean", "default": false },
+          "enter": { "enum": ["smear", "drift", "pop", "cut"] },
+          "exit": { "enum": ["smear-out", "blur-out", "cut"] },
+          "lines": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "required": ["text", "role"],
+              "additionalProperties": false,
+              "properties": {
+                "text": { "type": "string" },
+                "role": { "enum": ["light", "heavy", "hero", "script", "giant", "doc-thin", "doc-bold"] },
+                "at": { "type": "number", "description": "Giây dòng này xuất hiện; mặc định = start của khối." },
+                "size": { "type": "number", "description": "Ghi đè cỡ chữ px." },
+                "align": { "enum": ["left", "center", "right"] },
+                "indent": { "type": "number", "description": "px lệch ngang của riêng dòng này" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "music": {
+          "type": ["object", "null"],
+          "properties": { "src": { "type": "string" }, "volume": { "type": "number", "default": 0.12 }, "fadeOut": { "type": "number", "default": 1.5 } },
+          "additionalProperties": false
+        },
+        "sfx": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["src", "at"],
+            "properties": { "src": { "type": "string" }, "at": { "type": "number" }, "volume": { "type": "number", "default": 0.6 } },
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  }
+}
