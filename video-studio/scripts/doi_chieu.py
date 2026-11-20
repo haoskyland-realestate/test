@@ -8,7 +8,8 @@ shortcut: số được so theo chuỗi chữ số (77, 1m2, 2.4); tên riêng v
 import glob, json, os, re, sys, unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-CHO = re.compile(r"\[\s*\.{2,}\s*\]|\[\s*…\s*\]")
+# chỗ trống chưa có dữ liệu thật: [...] và nhãn giữ chỗ kiểu AutoEdit (ĐIỀN, SỐ MẪU, ẢNH CẦN CHÈN, NHÃN n) — bản cuối không được còn
+CHO = re.compile(r"\[\s*\.{2,}\s*\]|\[\s*…\s*\]|ĐIỀN|SỐ MẪU|ẢNH CẦN CHÈN|NHÃN \d", re.I)
 
 
 def chuan(s):
@@ -139,6 +140,9 @@ def _tu_kiem():
         tl["texts"][0]["sub"] = "giá [...]"
         json.dump(tl, open(f"{t}/timeline.json", "w"))
         assert any("[...]" in h for h in kiem(t)[0])
+        tl["texts"][0]["sub"] = "SỐ MẪU"
+        json.dump(tl, open(f"{t}/timeline.json", "w"))
+        assert any("chỗ trống" in h for h in kiem(t)[0])   # nhãn giữ chỗ AutoEdit cũng chặn bản cuối
         open(f"{t}/NGUON-SO-LIEU.md", "w", encoding="utf8").write("| # | dữ kiện | nguồn | ngày | Hào xác nhận | ghi chú |\n|---|---|---|---|---|---|\n| 1 | 77 tỷ | bảng giá | 11/2026 | rồi | |\n")
         assert "77" in nguon_duyet(t)
         os.remove(f"{t}/build/transcripts/a.json")

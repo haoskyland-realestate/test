@@ -8,7 +8,7 @@ import json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 TIEN = {"tỷ", "triệu", "nghìn", "ngàn", "%", "phần", "trăm"}
-NGHI = 0.4  # nghỉ dài hơn 0,4 giây thì sang cụm mới
+from cau_hinh import lay
 
 
 def la_khoa(w, tu_khoa):
@@ -16,8 +16,10 @@ def la_khoa(w, tu_khoa):
     return bool(re.search(r"\d", t) or t in TIEN or t in tu_khoa)
 
 
-def nhom(words, tu_khoa=(), toi_da=5, nghi=NGHI):
-    """words: [[từ, bắt đầu, kết thúc]] → danh sách khối chữ kiểu 'loi'."""
+def nhom(words, tu_khoa=(), toi_da=None, nghi=None, tl=None):
+    """words: [[từ, bắt đầu, kết thúc]] → danh sách khối chữ kiểu 'loi'. Tối đa từ/cụm và nghỉ sang cụm mới: bảng master (nhóm loi)."""
+    toi_da = toi_da or lay("loi.tu_toi_da", tl)
+    nghi = lay("loi.nghi_cum", tl) if nghi is None else nghi
     tk = {re.sub(r"[^\wÀ-ỹ%]", "", t.lower()) for t in tu_khoa}
     cum, out = [], []
 
@@ -41,7 +43,7 @@ def dat(tl, words, giu_phu_de=False, ngang_nguc=False):
     tl = json.loads(json.dumps(tl))
     total = sum(c["dur"] for c in tl["clips"])
     tl["texts"] = [x for x in tl.get("texts", []) if not x.get("auto_loi")]
-    moi = nhom(words, tl.get("meta", {}).get("tu_khoa", []))
+    moi = nhom(words, tl.get("meta", {}).get("tu_khoa", []), tl=tl)
     for x in moi:
         x["start"] = round(min(x["start"], total - 0.1), 2)
         x["dur"] = round(max(0.1, min(x["dur"], total - x["start"])), 2)

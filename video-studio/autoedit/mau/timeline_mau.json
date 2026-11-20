@@ -1,0 +1,407 @@
+{
+  "preset": "xanh_gradient",
+  "_ghi_chu": "BẢN CHỐT v2: phong cách xanh gradient, người nói tách nền, đầu nhô khỏi khung (xem mục PHONG CÁCH CHỐT trong CLAUDE.md). Mốc giây tính trên video SAU KHI CẮT. Chỗ ĐIỀN là dữ liệu người dùng phải cung cấp; chưa có thì dựng khung giữ chỗ có nhãn. Định dạng theo mục 10 của CLAUDE.md (scene.effect + scene.data).",
+  "source": "input/IMG_0812.MOV",
+  "source_note": "Quay dọc 4K, cờ xoay -90, 24 fps. Đọc đúng chiều rồi thu về 1080x1920, 30 fps.",
+  "output": {
+    "name": "IMG_0812_B_v2",
+    "size": [
+      1080,
+      1920
+    ],
+    "fps": 30,
+    "language": "vi"
+  },
+  "fonts": {
+    "font_script": "assets/fonts/OAI SHOWTILLA.OTF",
+    "font_bold": "assets/fonts/BTDanta-Bold.otf",
+    "font_bold_xl": "assets/fonts/BTDanta-ExtraBold.otf",
+    "font_text": "assets/fonts/BTDanta-Medium.otf",
+    "check": "dựng khung thử chuỗi dấu tiếng Việt cho từng phông trước khi dựng; nới khung chữ gradient để không mất dấu"
+  },
+  "cuts_original_seconds": [
+    [
+      8.24,
+      8.58
+    ],
+    [
+      9.34,
+      9.66
+    ],
+    [
+      13.29,
+      13.62
+    ],
+    [
+      15.18,
+      15.5
+    ],
+    [
+      24.9,
+      25.14
+    ],
+    [
+      29.36,
+      29.59
+    ],
+    [
+      33.62,
+      33.89
+    ],
+    [
+      39.0,
+      43.11
+    ]
+  ],
+  "duration_after_cut": 39.1,
+  "transcript": {
+    "status": "đã sửa theo người dùng; đoạn 26–32 (sau cắt) chưa xác nhận lời, tắt phụ đề",
+    "text": "Mình làm sale bất động sản, đừng có mua skill nếu trong cái skill đó không có như thế này. Đầu tiên là giới thiệu tiện ích. Cái thứ 2 là làm về các dạng như biểu đồ. Thứ 3 là bản đồ. Thứ 4 là pop-up hiển thị những chú thích. Và thứ 5 là dạng typography chữ. Nếu không có thì đừng có mua. Mà nếu mua mà không có thì cũng giống như xây chuồng trâu mà không có trâu. [...] nếu muốn có thì xem ở dưới phần bình luận. [đoạn 39–43 gốc: bỏ] Không tốn một đồng nè."
+  },
+  "speaker_framing": {
+    "mode": "cutout_head_pop",
+    "frame_cqw": {
+      "left": 6,
+      "top": 101,
+      "width": 88,
+      "height": 76.8,
+      "radius": 5,
+      "border": "trắng .9 cqw, glow xanh"
+    },
+    "layer_cqw": {
+      "left": 6,
+      "top": 89.8,
+      "width": 88,
+      "height": 88
+    },
+    "crop": "vuông 1080×1080 từ video đã xoay, bắt đầu cách đỉnh đầu ~30 px",
+    "head_pop_cqw": 9,
+    "matting": "rembg u2net_human_seg, giữ vùng lớn nhất, làm mịn alpha theo thời gian",
+    "captions": "trong khung, sát đáy, tối đa 2 dòng",
+    "rule": "mỗi loại cảnh chụp thử 1 khung để duyệt: đủ đỉnh tóc và cằm, viền tóc sạch"
+  },
+  "scenes": [
+    {
+      "id": "s1_canh_bao",
+      "t_in": 0.0,
+      "t_out": 6.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "đừng mua skill nếu không có như thế này",
+      "effect": "typo_fire",
+      "data": {
+        "panel": "top",
+        "lines": [
+          {
+            "text": "ĐỪNG MUA SKILL",
+            "font": "bold",
+            "size_cqw": 8.2
+          },
+          {
+            "text": "nếu thiếu",
+            "font": "script",
+            "size_cqw": 22
+          },
+          {
+            "text": "THỨ NÀY",
+            "font": "bold",
+            "size_cqw": 10,
+            "prefix_count_up": {
+              "from": 0,
+              "to": 5,
+              "size_cqw": 28,
+              "duration": 1.3,
+              "start": 1.8
+            }
+          }
+        ],
+        "icon": "warning_triangle",
+        "card": "thẻ trắng viền nét đứt: ĐỪNG MUA SKILL / nếu thiếu / số 5 đếm 0→5 + THỨ NÀY / 5 nhãn (Tiện ích, Biểu đồ, Bản đồ, Pop-up, Typography)"
+      }
+    },
+    {
+      "id": "s2_tien_ich",
+      "t_in": 6.0,
+      "t_out": 8.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "đầu tiên là giới thiệu tiện ích",
+      "effect": "amenity_grid",
+      "data": {
+        "kicker": "Giới thiệu",
+        "title": "TIỆN ÍCH",
+        "stagger": 0.3,
+        "items": [
+          {
+            "label": "Hồ bơi",
+            "img": "ĐIỀN assets/images/ho_boi"
+          },
+          {
+            "label": "Gym",
+            "img": "ĐIỀN assets/images/gym"
+          },
+          {
+            "label": "Sky Park",
+            "img": "ĐIỀN assets/images/sky_park"
+          },
+          {
+            "label": "Khu BBQ",
+            "img": "ĐIỀN assets/images/bbq"
+          }
+        ],
+        "if_no_image": "hỏi người dùng; không dùng ảnh giả trong bản cuối",
+        "card": "thẻ tiêu đề xanh đậm + cây liên kết 4 dòng có ô biểu tượng"
+      }
+    },
+    {
+      "id": "s3_bieu_do",
+      "t_in": 8.0,
+      "t_out": 12.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "thứ hai là biểu đồ",
+      "effect": "chart_bars",
+      "data": {
+        "kicker": "Số liệu dự án",
+        "title": "BIỂU ĐỒ",
+        "unit": "ĐIỀN",
+        "data": [
+          {
+            "label": "ĐIỀN",
+            "value": "ĐIỀN"
+          },
+          {
+            "label": "ĐIỀN",
+            "value": "ĐIỀN"
+          },
+          {
+            "label": "ĐIỀN",
+            "value": "ĐIỀN"
+          },
+          {
+            "label": "ĐIỀN",
+            "value": "ĐIỀN"
+          },
+          {
+            "label": "ĐIỀN",
+            "value": "ĐIỀN"
+          }
+        ],
+        "highlight": 4,
+        "tag": "ĐIỀN",
+        "stagger": 0.25
+      }
+    },
+    {
+      "id": "s4_ban_do",
+      "t_in": 12.0,
+      "t_out": 14.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "thứ ba là bản đồ",
+      "effect": "map_route",
+      "data": {
+        "variant": "short_2s",
+        "kicker": "Vị trí",
+        "title": "BẢN ĐỒ",
+        "image": "ĐIỀN assets/images/ban_do",
+        "project": {
+          "name": "ĐIỀN",
+          "polygon": "ĐIỀN"
+        }
+      }
+    },
+    {
+      "id": "s5_popup",
+      "t_in": 14.0,
+      "t_out": 18.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "thứ tư là pop-up chú thích",
+      "effect": "popup_notes",
+      "data": {
+        "kicker": "Chỉ cần nhìn là hiểu",
+        "title": "CHÚ THÍCH",
+        "image": "ĐIỀN assets/images/popup",
+        "notes": [
+          {
+            "t": 14.6,
+            "px": 24,
+            "py": 32,
+            "bx": 46,
+            "by": 6,
+            "text": "ĐIỀN",
+            "sub": "ĐIỀN"
+          },
+          {
+            "t": 15.8,
+            "px": 68,
+            "py": 62,
+            "bx": 12,
+            "by": 84,
+            "text": "ĐIỀN",
+            "sub": "ĐIỀN"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s6_typography",
+      "t_in": 18.0,
+      "t_out": 22.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "và thứ năm là typography chữ",
+      "effect": "typo_gold",
+      "data": {
+        "panel": "top",
+        "lines": [
+          {
+            "text": "giới thiệu",
+            "font": "script",
+            "size_cqw": 25
+          },
+          {
+            "text": "TYPOGRAPHY",
+            "font": "bold",
+            "size_cqw": 10.6
+          },
+          {
+            "text": "chữ",
+            "font": "script",
+            "size_cqw": 24,
+            "align": "right"
+          }
+        ],
+        "card": "thẻ trắng nét đứt + hàng 6 ô Aa mẫu hiệu ứng"
+      }
+    },
+    {
+      "id": "s7_nhac_lai",
+      "t_in": 22.0,
+      "t_out": 24.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "nếu không có thì đừng có mua",
+      "card_style": "thẻ xanh đậm",
+      "effect": "typo_fire",
+      "data": {
+        "panel": "top",
+        "lines": [
+          {
+            "text": "nếu không có thì",
+            "font": "text",
+            "size_cqw": 7
+          },
+          {
+            "text": "ĐỪNG MUA",
+            "font": "bold",
+            "size_cqw": 12.4
+          }
+        ]
+      }
+    },
+    {
+      "id": "s8_an_du",
+      "t_in": 24.0,
+      "t_out": 32.0,
+      "layout": "top_card_bottom_speaker",
+      "captions": "off",
+      "effect": "metaphor_card",
+      "data": {
+        "panel": "top",
+        "illustration": "chuồng trâu trống, bóng con trâu nét đứt bên trong (SVG nét đơn màu kem)",
+        "lines": [
+          {
+            "text": "mua mà không có thì giống như",
+            "font": "text",
+            "size_cqw": 3.8
+          },
+          {
+            "text": "XÂY CHUỒNG TRÂU",
+            "font": "bold",
+            "size_cqw": 6.6,
+            "gradient": "bronze"
+          },
+          {
+            "text": "mà không có trâu",
+            "font": "script",
+            "size_cqw": 20
+          }
+        ]
+      }
+    },
+    {
+      "id": "s9_keu_goi",
+      "t_in": 32.0,
+      "t_out": 37.0,
+      "layout": "top_card_bottom_speaker",
+      "caption": "muốn có thì xem ở dưới bình luận",
+      "effect": "typo_gold",
+      "data": {
+        "panel": "top",
+        "lines": [
+          {
+            "text": "MUỐN CÓ",
+            "font": "bold",
+            "size_cqw": 12.6
+          },
+          {
+            "text": "xem bình luận",
+            "font": "script",
+            "size_cqw": 22
+          }
+        ],
+        "arrow_down": true,
+        "card": "thẻ trắng nét đứt + nút tròn mũi tên xuống"
+      }
+    },
+    {
+      "id": "s10_chot",
+      "t_in": 37.0,
+      "t_out": 39.1,
+      "layout": "top_card_bottom_speaker",
+      "caption": "không tốn một đồng nè",
+      "card_style": "nền xanh đậm, số 0Đ lớn, nút XEM BÌNH LUẬN",
+      "effect": "outro_cta",
+      "data": {
+        "value": {
+          "digit": "0",
+          "size_cqw": 50,
+          "symbol": "Đ",
+          "symbol_size_cqw": 24
+        },
+        "cta": {
+          "type": "outro_cta",
+          "text": "XEM BÌNH LUẬN",
+          "size_cqw": 5
+        },
+        "background": "cam_dat",
+        "note": "chừa lề phải để chữ nghiêng không bị cắt"
+      }
+    }
+  ],
+  "captions": {
+    "style": "trong khung người nói, sát đáy, nền navy mờ, tối đa 2 dòng",
+    "font": "font_text",
+    "off_ranges_after_cut": [
+      [
+        24.0,
+        32.0
+      ]
+    ]
+  },
+  "audio": {
+    "music": "ĐIỀN từ assets/nhac",
+    "sfx": "ĐIỀN từ assets/sound_effect",
+    "duck_music_under_voice": true
+  },
+  "assets_can_dien": [
+    "ảnh tiện ích (hồ bơi, gym, sky park, BBQ)",
+    "số liệu biểu đồ 5 mốc + nhãn",
+    "ảnh bản đồ dự án + ranh dự án",
+    "ảnh popup + 2 chú thích",
+    "nhạc nền",
+    "hiệu ứng âm thanh"
+  ],
+  "style": {
+    "name": "xanh_gradient",
+    "background": "gradient #e9f7ff → #cbe7ff → #8ec4ff; cảnh cuối #123a8f → #081a47",
+    "accent": "#46d6ff → #2b5fff",
+    "navy": "#0b1f4d",
+    "script_color": "#1f5eff"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "meta": { "title": "Test pop-accent", "preset": "pop-accent", "duration": 14.3 },
+  "source": { "video": "assets/main.mp4", "cutout": "assets/cutout.webm" },
+  "camera": [
+    { "at": 0, "scale": 1 },
+    { "at": 5.0, "scale": 1.22, "y": 40, "transition": "flash-white" },
+    { "at": 8.8, "scale": 1 }
+  ],
+  "captions": [
+    { "text": "em muốn", "start": 1.9, "end": 2.4 },
+    { "text": "khác biệt", "start": 2.4, "end": 3.0 },
+    { "text": "so với", "start": 3.0, "end": 3.5 },
+    { "text": "thị trường.", "start": 3.5, "end": 4.6 },
+    { "text": "em tự", "start": 4.8, "end": 5.4 },
+    { "text": "làm nội dung", "start": 5.4, "end": 6.3 },
+    { "text": "cho", "start": 6.3, "end": 6.7 },
+    { "text": "từng căn hộ.", "start": 6.7, "end": 7.8 },
+    { "text": "và", "start": 8.0, "end": 8.6 },
+    { "text": "dòng tiền", "start": 11.5, "end": 12.2, "accent": true },
+    { "text": "thực tế.", "start": 12.2, "end": 12.9 }
+  ],
+  "emphasis": [
+    { "id": "e1", "start": 0.1, "end": 1.85, "anchor": "upper-right",
+      "lines": [
+        { "text": "Em", "role": "light", "at": 0.1 },
+        { "text": "bắt đầu", "role": "hero", "at": 0.25, "size": 120 },
+        { "text": "làm nội dung", "role": "heavy", "at": 0.5 },
+        { "text": "vì...", "role": "light", "at": 0.8 }
+      ] },
+    { "id": "e2", "start": 8.8, "end": 11.4, "anchor": "head-band", "behindSubject": true,
+      "lines": [ { "text": "Duy nhất", "role": "giant", "at": 8.8 } ] },
+    { "id": "e3", "start": 13.0, "end": 14.3, "anchor": "chest",
+      "lines": [
+        { "text": "tất cả là", "role": "light", "at": 13.0 },
+        { "text": "vì khách", "role": "heavy", "at": 13.15 },
+        { "text": "của em", "role": "script", "at": 13.35 }
+      ] }
+  ],
+  "broll": [],
+  "transitions": []
+}

@@ -1,0 +1,453 @@
+{
+  "$id": "talking-head-ui/style@1",
+  "description": "Ngôn ngữ thiết kế cho video talking head dọc 9:16, đo từ 3 video mẫu (2 bản 'pop' nhấn hồng magenta, 1 bản 'doc' phim tài liệu trắng nghiêng). Mọi số đo ở khung 1080x1920, 30 fps.",
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "safeZone": {
+    "note": "Vùng chữ an toàn cho TikTok/Reels/Shorts. Không đặt chữ trên 168 px đầu, dưới 1330 px, hay sát rail phải.",
+    "top": 168,
+    "bottom": 1330,
+    "left": 60,
+    "right": 120
+  },
+  "fonts": {
+    "note": "Cả 3 họ đều có bộ tiếng Việt, cài qua npm @fontsource. 'inter' thay Helvetica Neue của bản doc; 'montserrat' thay sans hình học của bản pop; 'playfair' là serif nghiêng đậm cho từ nhấn.",
+    "sans-geo": {
+      "family": "Montserrat",
+      "package": "@fontsource/montserrat",
+      "faces": [
+        "300-normal",
+        "600-normal",
+        "700-normal",
+        "800-normal",
+        "900-normal"
+      ]
+    },
+    "sans-neo": {
+      "family": "Inter",
+      "package": "@fontsource/inter",
+      "faces": [
+        "200-italic",
+        "300-normal",
+        "300-italic",
+        "800-italic",
+        "900-italic"
+      ]
+    },
+    "serif-disp": {
+      "family": "Playfair Display",
+      "package": "@fontsource/playfair-display",
+      "faces": [
+        "900-italic",
+        "800-italic"
+      ]
+    }
+  },
+  "roles": {
+    "note": "Vai trò chữ trong một khối nhấn (emphasis stack). size = px cỡ chữ mặc định; widthFactor = bề rộng trung bình 1 ký tự theo em, để builder co chữ cho vừa maxWidth.",
+    "caption": {
+      "font": "sans-geo",
+      "weight": 700,
+      "style": "normal",
+      "size": 72,
+      "widthFactor": 0.62,
+      "tracking": -0.01,
+      "case": "none"
+    },
+    "light": {
+      "font": "sans-geo",
+      "weight": 300,
+      "style": "normal",
+      "size": 58,
+      "widthFactor": 0.55,
+      "tracking": -0.02,
+      "case": "none"
+    },
+    "heavy": {
+      "font": "sans-geo",
+      "weight": 800,
+      "style": "normal",
+      "size": 92,
+      "widthFactor": 0.6,
+      "tracking": -0.03,
+      "case": "none"
+    },
+    "hero": {
+      "font": "sans-geo",
+      "weight": 900,
+      "style": "normal",
+      "size": 168,
+      "widthFactor": 0.64,
+      "tracking": -0.04,
+      "case": "none",
+      "accent": true
+    },
+    "script": {
+      "font": "serif-disp",
+      "weight": 900,
+      "style": "italic",
+      "size": 110,
+      "widthFactor": 0.52,
+      "tracking": -0.02,
+      "case": "none",
+      "accent": true,
+      "rotate": -3
+    },
+    "giant": {
+      "font": "serif-disp",
+      "weight": 900,
+      "style": "italic",
+      "size": 240,
+      "widthFactor": 0.62,
+      "tracking": -0.03,
+      "case": "upper",
+      "accent": true
+    },
+    "doc-thin": {
+      "font": "sans-neo",
+      "weight": 200,
+      "style": "italic",
+      "size": 104,
+      "widthFactor": 0.5,
+      "tracking": -0.03,
+      "case": "none"
+    },
+    "doc-bold": {
+      "font": "sans-neo",
+      "weight": 900,
+      "style": "italic",
+      "size": 104,
+      "widthFactor": 0.58,
+      "tracking": -0.04,
+      "case": "none"
+    },
+    "doc-caption": {
+      "font": "sans-neo",
+      "weight": 300,
+      "style": "normal",
+      "size": 70,
+      "widthFactor": 0.52,
+      "tracking": -0.01,
+      "case": "none"
+    }
+  },
+  "presets": {
+    "pop-accent": {
+      "label": "Pop nhấn màu (video mẫu podcast + bất động sản)",
+      "mood": "năng lượng, mạng xã hội, chữ lớn, có màu nhấn phát sáng",
+      "colors": {
+        "text": "#FFFFFF",
+        "accent": "#FF14F0",
+        "accentGradient": [
+          "#FF7AF6",
+          "#FF14F0",
+          "#D400CF"
+        ],
+        "accentGlow": "rgba(255, 20, 240, 0.35)",
+        "captionShadow": "0 2px 4px rgba(0,0,0,0.45), 0 0 22px rgba(0,0,0,0.35)",
+        "flash": "#FFFFFF",
+        "dip": "#000000"
+      },
+      "caption": {
+        "role": "caption",
+        "y": 1000,
+        "chunkSyllables": [
+          1,
+          3
+        ],
+        "minHold": 0.28,
+        "enter": "pop",
+        "showDuringBroll": false,
+        "hideWhileEmphasis": true
+      },
+      "emphasis": {
+        "everySeconds": [
+          3,
+          6
+        ],
+        "hold": [
+          1.5,
+          3.2
+        ],
+        "lineGapEm": -0.1,
+        "enter": "smear",
+        "exit": "smear-out",
+        "buildSyncedToSpeech": true,
+        "maxWidth": 860
+      },
+      "camera": {
+        "punchScale": [
+          1.18,
+          1.32
+        ],
+        "punchEverySeconds": [
+          8,
+          20
+        ],
+        "punchTransition": "flash-white"
+      },
+      "broll": {
+        "montageCut": [
+          0.13,
+          0.2
+        ],
+        "montageLength": [
+          1.2,
+          2.0
+        ],
+        "afterMontage": "dip-black",
+        "dipHold": [
+          0.8,
+          1.3
+        ],
+        "storyCut": [
+          0.4,
+          1.4
+        ]
+      },
+      "grade": {
+        "adjust": {
+          "contrast": 0.08,
+          "vibrance": 0.12,
+          "temperature": 0.04
+        }
+      }
+    },
+    "doc-calm": {
+      "label": "Phim tài liệu êm (video mẫu documentary)",
+      "mood": "chậm, sâu, tin cậy, chữ trắng mảnh nghiêng, chữ nằm sau người",
+      "colors": {
+        "text": "#FFFFFF",
+        "textOpacity": 0.9,
+        "accent": "#FFFFFF",
+        "accentGradient": null,
+        "accentGlow": "rgba(0,0,0,0.0)",
+        "captionShadow": "0 2px 4px rgba(0,0,0,0.35), 0 0 22px rgba(0,0,0,0.3)",
+        "flash": "#FFFFFF",
+        "dip": "#000000"
+      },
+      "caption": {
+        "role": "doc-caption",
+        "y": 1075,
+        "chunkSyllables": [
+          1,
+          3
+        ],
+        "minHold": 0.3,
+        "enter": "cut",
+        "showDuringBroll": true,
+        "hideWhileEmphasis": false
+      },
+      "emphasis": {
+        "everySeconds": [
+          6,
+          12
+        ],
+        "hold": [
+          2.5,
+          4.5
+        ],
+        "lineGapEm": -0.02,
+        "enter": "drift",
+        "exit": "blur-out",
+        "buildSyncedToSpeech": true,
+        "maxWidth": 600,
+        "defaultBehindSubject": true
+      },
+      "camera": {
+        "punchScale": [
+          1.0,
+          1.0
+        ],
+        "punchEverySeconds": null,
+        "punchTransition": "cut"
+      },
+      "broll": {
+        "montageCut": null,
+        "storyCut": [
+          1.3,
+          4.5
+        ],
+        "afterMontage": null
+      },
+      "grade": {
+        "adjust": {
+          "contrast": -0.06,
+          "temperature": 0.08,
+          "vibrance": -0.08
+        },
+        "details": {
+          "vignette": 0.12
+        }
+      }
+    }
+  },
+  "anchors": {
+    "note": "Hộp đặt khối nhấn. x,y = góc trên trái, w = bề rộng tối đa; align = căn chữ. Chọn hộp không đè mặt người nói (xem ảnh chụp khung trước khi chọn).",
+    "upper-right": {
+      "x": 440,
+      "y": 340,
+      "w": 500,
+      "align": "left"
+    },
+    "upper-left": {
+      "x": 70,
+      "y": 340,
+      "w": 500,
+      "align": "right"
+    },
+    "head-band": {
+      "x": 70,
+      "y": 340,
+      "w": 880,
+      "align": "center"
+    },
+    "chest": {
+      "x": 90,
+      "y": 900,
+      "w": 900,
+      "align": "center"
+    },
+    "mid-left": {
+      "x": 40,
+      "y": 980,
+      "w": 620,
+      "align": "left"
+    },
+    "mid-right": {
+      "x": 340,
+      "y": 980,
+      "w": 600,
+      "align": "right"
+    }
+  },
+  "animations": {
+    "note": "Mọi thời lượng tính bằng giây. Mọi chuyển động dùng ease in-out (GSAP *.inOut) để thấy rõ đà vào và ra.",
+    "pop": {
+      "from": {
+        "opacity": 0,
+        "scale": 0.85
+      },
+      "to": {
+        "opacity": 1,
+        "scale": 1
+      },
+      "duration": 0.2,
+      "ease": "power2.inOut",
+      "note": "Thời gian hiện thực tế = min(duration, max(0.1, 1/4 thời lượng cụm)) để cụm ngắn không mờ quá lâu."
+    },
+    "cut": {
+      "from": {
+        "opacity": 0
+      },
+      "to": {
+        "opacity": 1
+      },
+      "duration": 0.001,
+      "ease": "none"
+    },
+    "smear": {
+      "from": {
+        "opacity": 0,
+        "x": -70,
+        "scaleX": 1.35,
+        "blur": 16
+      },
+      "to": {
+        "opacity": 1,
+        "x": 0,
+        "scaleX": 1,
+        "blur": 0
+      },
+      "duration": 0.5,
+      "ease": "power3.inOut",
+      "streak": {
+        "peakAt": 0.16,
+        "peakScaleX": 1.1,
+        "peakOpacity": 0.75,
+        "duration": 0.45,
+        "blur": 10,
+        "heightEm": 0.3,
+        "onlyAccent": true
+      }
+    },
+    "smear-out": {
+      "to": {
+        "opacity": 0,
+        "x": 90,
+        "scaleX": 1.3,
+        "blur": 14
+      },
+      "duration": 0.34,
+      "ease": "power2.inOut",
+      "stagger": 0.06
+    },
+    "drift": {
+      "from": {
+        "opacity": 0,
+        "y": 26,
+        "blur": 10
+      },
+      "to": {
+        "opacity": 0.92,
+        "y": 0,
+        "blur": 0
+      },
+      "duration": 0.75,
+      "ease": "power2.inOut"
+    },
+    "blur-out": {
+      "to": {
+        "opacity": 0,
+        "blur": 9
+      },
+      "duration": 0.55,
+      "ease": "sine.inOut",
+      "stagger": 0.06
+    },
+    "accent-settle": {
+      "note": "Từ vai trò script/hero xoay nhẹ và nở rất chậm trong lúc giữ, như video mẫu.",
+      "scaleTo": 1.04,
+      "ease": "sine.inOut"
+    }
+  },
+  "transitions": {
+    "cut": {
+      "duration": 0
+    },
+    "flash-white": {
+      "duration": 0.45,
+      "fromOpacity": 0.85,
+      "ease": "power2.inOut",
+      "use": "cắt cận (punch-in) hoặc mở cụm b-roll"
+    },
+    "dip-black": {
+      "duration": 1.0,
+      "fadeIn": 0.2,
+      "fadeOut": 0.25,
+      "use": "khoảng lặng kịch tính sau cụm montage nhanh"
+    },
+    "dip-cut": {
+      "duration": 0.15,
+      "darken": 0.4,
+      "use": "cắt thường nhưng muốn có chủ ý"
+    }
+  },
+  "pacing": {
+    "note": "Nhịp đo từ video mẫu.",
+    "captionChunk": "Video mẫu tiếng Anh hiện 1 từ/lần (0.25–0.45 s). Tiếng Việt: 1–3 âm tiết theo cụm nghĩa ('bất động sản', 'dòng tiền'), mỗi cụm 0.3–0.7 s, cắt cứng sang cụm sau.",
+    "talkingHeadShot": "Một khung hình người nói giữ 14–25 s; chuyển động đến từ chữ, không zoom trôi.",
+    "punchIn": "Cắt cận 1.2–1.3x kèm chớp trắng 0.25 s ở câu chốt hoặc đổi ý.",
+    "brollPop": "Montage 5–6 khung hình/cảnh (0.17–0.2 s) trong 1.5–2 s, đen 1–1.3 s, rồi b-roll kể chuyện 0.4–1.4 s/cảnh. Ẩn phụ đề khi b-roll.",
+    "brollDoc": "B-roll điện ảnh 1.3–4.5 s/cảnh, phụ đề vẫn chạy.",
+    "emphasisDensity": "Pop: 1 khối nhấn mỗi 3–6 s. Doc: 1 khối mỗi 6–12 s."
+  },
+  "effects": {
+    "glowBlur": 12,
+    "note": "Quầng sáng chữ màu nhấn: mờ, nhạt (alpha ≤0.35) để đọc như ánh sáng chứ không như viền. Trình xem video trên điện thoại bỏ qua độ trong suốt nên mọi vùng quầng sẽ hiện thành mảng màu: duyệt bằng bản preview MP4, còn file .mov/.webm dùng để chồng trong phần mềm dựng.",
+    "shadowNote": "Chữ trắng luôn có bóng 2 lớp (bóng sát + bóng toả) để đọc được trên nền sáng (cửa kính, tường trắng)."
+  }
+}

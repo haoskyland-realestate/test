@@ -240,10 +240,19 @@ class H(http.server.BaseHTTPRequestHandler):
                              {"Cache-Control": "max-age=86400"})
         if parts == ["gl_runtime.js"]:  # mã chạy chuyển cảnh WebGL (công khai, không chứa dữ liệu)
             return self.send(200, open(os.path.join(ROOT, "scripts/gl_runtime.js"), "rb").read(), "text/javascript; charset=utf-8")
+        if parts == ["bang-master"]:  # trang Bảng master (không chứa bí mật; đọc/lưu qua /api/cau-hinh cần mã khoá)
+            import bang_master
+            return self.send(200, bang_master.tao(True).encode(), "text/html; charset=utf-8")
         if parts[0] != "api" or not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa. Mở đúng link máy chủ in ra."})
         if parts[1:] == ["effects"]:
             return self.send(200, effects_json())
+        if parts[1:] == ["cau-hinh"]:  # bảng master + ghi đè riêng dự án (?p=<tên>)
+            import bang_master
+            p = (urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query).get("p") or [""])[0]
+            d = self.project(p) if p else None
+            gd = (json.load(open(os.path.join(d, "timeline.json"), encoding="utf8")).get("meta") or {}).get("cau_hinh", {}) if d else {}
+            return self.send(200, {"nhom": bang_master.du_lieu()["nhom"], "ghi_de": gd})
         if parts[1:] == ["gl"]:
             return self.send(200, effects.GL_LIB, extra={"Cache-Control": "max-age=3600"})
         if parts[1:] == ["newjob"]:  # tiến độ tạo dự án từ Google Drive
@@ -466,10 +475,48 @@ class H(http.server.BaseHTTPRequestHandler):
             raise ValueError("Dữ liệu quá lớn")
         return json.loads(self.rfile.read(n) or b"null")
 
+    def luu_cau_hinh(self, parts):
+        """Lưu Bảng master: chung (đổi mac_dinh trong cau-hinh/master.json) hoặc riêng dự án (thay cả meta.cau_hinh). Có .bak."""
+        import cau_hinh
+        try:
+            moi = self.body()
+            errs = cau_hinh.kiem(moi) if isinstance(moi, dict) else ["Dữ liệu phải là {id: giá trị}"]
+        except Exception as ex:
+            errs = [f"Dữ liệu không đọc được: {ex}"]
+        if errs:
+            return self.send(400, {"errors": errs})
+        if len(parts) == 2:
+            d = json.load(open(cau_hinh.FILE, encoding="utf8"))
+            for g in d["nhom"]:
+                for t in g["thong_so"]:
+                    if t["id"] in moi:
+                        t.setdefault("goc", t["mac_dinh"]); t["mac_dinh"] = moi[t["id"]]
+            p, du_lieu = cau_hinh.FILE, d
+        else:
+            if not (dd := self.project(parts[2])):
+                return self.send(404, {"error": "Không có dự án này"})
+            p = os.path.join(dd, "timeline.json")
+            du_lieu = json.load(open(p, encoding="utf8"))
+            meta = du_lieu.setdefault("meta", {})
+            meta.pop("cau_hinh", None)
+            if moi:
+                meta["cau_hinh"] = moi
+            if (e := check(du_lieu)):
+                return self.send(400, {"errors": e})
+        shutil.copy(p, p + ".bak")
+        tmp = p + ".tmp"
+        with open(tmp, "w", encoding="utf8") as fh:
+            json.dump(du_lieu, fh, ensure_ascii=False, indent=1)
+        os.replace(tmp, p)
+        cau_hinh.bang.cache_clear()
+        self.send(200, {"ok": True})
+
     def do_PUT(self):
         parts, ok = self.route()
         if not ok:
             return self.send(403, {"error": "Sai hoặc thiếu mã khóa"})
+        if parts == ["api", "cau-hinh"] or (len(parts) == 4 and parts[:2] == ["api", "p"] and parts[3] == "cau-hinh"):
+            return self.luu_cau_hinh(parts)
         if len(parts) == 4 and parts[:2] == ["api", "tai-len"]:  # Hào gửi video thẳng lên (kéo thả/chọn file, cả từ điện thoại)
             return self.tai_len(parts[2], parts[3])
         if len(parts) != 3 or parts[:2] != ["api", "p"] or not (d := self.project(parts[2])):

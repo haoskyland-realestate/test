@@ -7,6 +7,7 @@ import tag_chu
 
 from timeline import layout, size
 from effects import STYLES
+from cau_hinh import lay
 
 
 def words(text, chars=False):
@@ -40,20 +41,20 @@ def em_dan(js, k=1.5):
     return js
 
 
-def bo_cuc_loi(ws, hl, xd, W, H, LO, top):
-    """Bố cục chữ theo nhịp nói như người dựng chuyên nghiệp: chữ to nhất có thể mà vẫn nằm gọn chiều ngang (lề 70px), từ khoá to hơn chữ thường,
-    cụm không rớt vào vùng giao diện TikTok (dưới 78% chiều cao) và không lên sát đỉnh. Trả (cỡ chữ thường px, cỡ từ khoá em, top px)."""
-    avail = W - 140
+def bo_cuc_loi(ws, hl, xd, W, H, LO, top, tl=None):
+    """Bố cục chữ theo nhịp nói như người dựng chuyên nghiệp: chữ to nhất có thể mà vẫn nằm gọn chiều ngang (trong vùng an toàn hai bên 10%), từ khoá to hơn chữ thường,
+    cụm không rớt vào vùng giao diện TikTok (dưới 75% chiều cao, chuẩn AutoEdit) và không lên sát đỉnh. Trả (cỡ chữ thường px, cỡ từ khoá em, top px)."""
+    avail = W * (1 - 2 * lay("vung.ben", tl)) - 16  # trong vùng an toàn hai bên 10% (AutoEdit), chừa 8px mỗi bên
     nor = " ".join(w for k, (w, _, _) in enumerate(ws) if k not in hl)
     key = " ".join(w for k, (w, _, _) in enumerate(ws) if k in hl)
-    co = LO.get("co", 62)
+    co = LO.get("co", lay("loi.co", tl))
     dong = max(1, len(nor) / (2 if not xd and len(nor) > 28 else 1)) if nor else 1   # chữ thường tối đa 2 dòng khi không tách dòng từ khoá
     co = max(40, min(co, avail / (max(dong, 1) * 0.55)))
-    em = LO.get("co_khoa", 1.9)
+    em = LO.get("co_khoa", lay("loi.co_khoa", tl))
     if key:
         em = max(1.2, min(em, avail / (len(key) * 0.6 * co)))
     cao = (co * 1.3 * (2 if not xd and len(nor) > 28 else 1) if nor else 0) + (co * em * 1.15 if key else 0)
-    top = int(min(max(top, 0.30 * H), 0.78 * H - cao))
+    top = int(min(max(top, lay("loi.vung_tren", tl) * H), lay("vung.duoi", tl) * H - cao))  # mép dưới ≤ 75%: vùng an toàn TikTok theo AutoEdit (kiem_vung.py kiểm)
     return int(co), round(em, 2), top
 
 
@@ -79,10 +80,13 @@ def tao(tl, phan=None, ti_le=1):
 
     def d(x):  # thời lượng chuyển động theo nhịp của phong cách
         return round(x * SP, 3)
-    K = float(tl.get("meta", {}).get("cham_chu", 1.5))  # hệ số chậm em_dan sẽ nhân thêm vào mọi thời lượng
+    K = float(tl.get("meta", {}).get("cham_chu", lay("loi.cham_chu", tl)))  # hệ số chậm em_dan sẽ nhân thêm vào mọi thời lượng
+
+    SOM = lay("loi.som", tl)
+    BEN = round(lay("vung.ben", tl) * 100, 4)  # lề an toàn hai bên (%) cho khối chữ theo nhịp nói
 
     def som(t, x):  # chữ theo nhịp nói: bắt đầu sớm để giữa chuyển động (ease in-out) rơi đúng lúc vừa nói, không trễ sau lời (Hào 18/11)
-        return round(max(0, t - 0.6 * d(x) * K), 2)
+        return round(max(0, t - SOM * d(x) * K), 2)
 
 
     def anim_in(name, sel, t):
@@ -111,7 +115,7 @@ def tao(tl, phan=None, ti_le=1):
             ws, hl = s["words"], set(s.get("hl", []))
             body, a = "", []
             xd = LO.get("xuong_dong")  # cụm từ khoá nằm riêng một dòng bên dưới chữ thường (kiểu talking head cam)
-            co, em, top = bo_cuc_loi(ws, hl, xd, W, H, LO, int(s["top_px"]) if s.get("top_px") is not None else int(float(s.get("y", 0.56)) * H))
+            co, em, top = bo_cuc_loi(ws, hl, xd, W, H, LO, int(s["top_px"]) if s.get("top_px") is not None else int(float(s.get("y", 0.56)) * H), tl)
             for k, (w, w0, w1) in enumerate(ws):
                 if xd and k and ((k in hl) != (k - 1 in hl)):
                     body += "<br>"
@@ -217,7 +221,7 @@ def tao(tl, phan=None, ti_le=1):
                  f'tl.fromTo("#k{j} .cs,#k{j} .xl,#k{j} .xn",{{opacity:0,y:30}},{{opacity:1,y:0,duration:{d(.4)},ease:"power3.out",stagger:{d(.18)}}},{st + 0.3:.2f});']
         elif kieu == "quy-dao":  # tâm + 3–6 ý xoay quanh (vd. Gladia ở giữa; bếp đảo, bàn giao, sân vườn…)
             its = x.get("items", []); m = len(its)
-            pos = "".join(f'<div class="qo" style="left:{50 + 36 * __import__("math").cos(6.2832 * q / m - 1.5708):.1f}%;top:{50 + 36 * __import__("math").sin(6.2832 * q / m - 1.5708):.1f}%">{html.escape(t)}</div>' for q, t in enumerate(its))
+            pos = "".join(f'<div class="qo" style="left:{50 + 30 * __import__("math").cos(6.2832 * q / m - 1.5708):.1f}%;top:{50 + 36 * __import__("math").sin(6.2832 * q / m - 1.5708):.1f}%">{html.escape(t)}</div>' for q, t in enumerate(its))
             body = (f'<div class="cs">{html.escape(x["title"])}</div><div class="qd"><i class="r1"></i><i class="r2"></i><div class="qc">{html.escape(x.get("centre", ""))}</div>{pos}</div>')
             a = [f'tl.fromTo("#k{j} .qc",{{scale:.4,opacity:0}},{{scale:1,opacity:1,duration:{d(.5)},ease:"back.out(2)"}},{st + 0.1:.2f});',
                  f'tl.fromTo("#k{j} .r1,#k{j} .r2",{{scale:.3,opacity:0}},{{scale:1,opacity:1,duration:{d(.7)},ease:"expo.out",stagger:{d(.15)}}},{st + 0.15:.2f});',
@@ -318,14 +322,14 @@ def tao(tl, phan=None, ti_le=1):
     .qd .r1{{width:620px;height:620px}} .qd .r2{{width:900px;height:900px;border-color:{AC}33}}
     .qc{{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:360px;height:360px;border-radius:50%;background:#1b1b1b;border:6px solid {AC};
       box-shadow:0 0 60px {AC}88;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:60px;padding:20px;line-height:1.1}}
-    .qo{{position:absolute;transform:translate(-50%,-50%);padding:20px 34px;border-radius:44px;background:rgba(255,255,255,.12);border:3px solid {AC}aa;font-size:54px;font-weight:700;max-width:330px;width:max-content;text-align:center;line-height:1.15}}
+    .qo{{position:absolute;transform:translate(-50%,-50%);padding:20px 34px;border-radius:44px;background:rgba(255,255,255,.12);border:3px solid {AC}aa;font-size:48px;font-weight:700;max-width:260px;width:max-content;text-align:center;line-height:1.15}}
     .ci.tk b{{background:{AC}}}
     .kg{{padding:70px 60px;border-radius:48px;background:rgba(255,255,255,.09);border:2px solid rgba(255,255,255,.22);backdrop-filter:blur(12px);text-align:center}}
     .kt{{font-family:var(--display);font-size:84px;font-weight:900;line-height:1.1}} .ks{{font-size:42px;margin-top:26px;color:rgba(255,255,255,.7)}}
     {style.get("css", "")}
     {LO.get("css", "")}
     {YT_CSS if YT else ""}
-    .blk.loi{{left:70px;right:70px;top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
+    .blk.loi{{left:calc({BEN:g}% + 8px);right:calc({BEN:g}% + 8px);top:1000px;bottom:auto;width:auto;text-align:center;font-family:{LO.get("font", "Montserrat,sans-serif")};font-weight:600;font-size:{LO.get("co", 50)}px;line-height:1.3;color:{LO.get("mau_chu", "#fff")};
       text-shadow:0 2px 14px rgba(0,0,0,.75)}}
     .blk.loi .lw{{display:inline-block;margin:0 .14em;position:relative}}
     .blk.loi .ul{{position:absolute;left:0;right:0;bottom:-.06em;height:.07em;background:{LO.get("khoa", "#ff2b2b")};transform-origin:left;box-shadow:0 0 14px {LO.get("khoa", "#ff2b2b")}}}
@@ -335,7 +339,7 @@ def tao(tl, phan=None, ti_le=1):
     </style></head><body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="{total:.2f}" data-width="{RW}" data-height="{RH}"><div id="khung">
     {"" if phan == "sau" else f'<div class="clip scrim" data-start="0" data-duration="{total:.2f}" data-track-index="0"></div><div class="clip topscrim" data-start="0" data-duration="{total:.2f}" data-track-index="5"></div>'}
-    {"" if phan == "sau" else (f'<div class="clip logo" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>{TH}</div>' if TH else "") + f'<div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>'}
+    {"" if phan == "sau" else (f'<div class="clip logo" data-safe="ignore" data-start="0" data-duration="{starts[-1]:.2f}" data-track-index="3"><i></i>{TH}</div>' if TH else "") + f'<div class="clip prog" id="prog" data-start="0" data-duration="{total:.2f}" data-track-index="4"></div>'}
     {chr(10).join(blocks)}
     </div></div><script>
     // Số kiểu Việt Nam: 1.234,5

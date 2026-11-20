@@ -25,6 +25,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Công thức video giữ người xem: hook, nhịp, khung 60 giây, chọn mẫu theo nội dung | `04-thu-vien/CONG-THUC-VIRAL.md` |
 | Dùng kho tài nguyên 30 GB trên Drive (overlay, âm, LUT…) trong app, cách xếp thư mục | `04-thu-vien/KHO-TAI-NGUYEN.md` |
 | Biết tài nguyên nằm đâu trên Drive, đặt tên, máy tự chọn tài nguyên theo nghĩa | `04-thu-vien/THU-VIEN-LUU-TRU.md` |
+| Xem/chỉnh mọi thông số dựng (nhịp cắt, chữ, âm, hình, vùng an toàn…), chung hay riêng dự án | `04-thu-vien/BANG-MASTER.md` |
 | Xem lỗi Hào đã nghiệm thu và cách dựng đúng (màu da, chữ sau đầu, zoom): **đọc trước khi dựng** | `04-thu-vien/GHI-NHO-NGHIEM-THU.md` |
 | Chỉnh màu như đạo diễn hình ảnh: đo, đồng nhất cảnh, lấy màu video mẫu, giữ da | `04-thu-vien/CHINH-MAU.md` (skill `chinh-mau`) |
 | Làm video giải thích bằng tranh minh hoạ (bộ đạo cụ Flow + hệ thống tự chuyển động), câu lệnh Flow thử phong cách | `04-thu-vien/MINH-HOA.md` |
@@ -66,6 +67,7 @@ docs/
     CHINH-MAU.md                   đạo diễn màu: luật, số chuẩn, phong cách, lệnh ★
     GHI-NHO-NGHIEM-THU.md          lỗi đã nghiệm thu + cách dựng đúng, ảnh demo ★
     THU-VIEN-LUU-TRU.md            cây thư mục kho trên Drive, tầng, lấy theo nghĩa ★
+    BANG-MASTER.md                 bảng master 69 thông số dựng (sinh từ cau-hinh/master.json) ★
     KHO-TAI-NGUYEN.md              kho tài nguyên edit trên Drive: chuẩn bị, app dùng được gì ★
     GIONG-NOI-AI.md                tìm hiểu Voice Studio (giọng AI tiếng Việt) ★
     THU-VIEN-AM-THANH.md           21 hiệu ứng âm, tự sinh từ hieu-ung.json ★

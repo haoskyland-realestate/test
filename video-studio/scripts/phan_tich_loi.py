@@ -7,9 +7,18 @@ import json, os, re, statistics, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-DEM = {"ờ", "ừ", "ừm", "ơ", "à", "hmm", "ừa", "ờm", "ê"}  # tiếng đệm khi đứng riêng
-NGAT = 0.6   # lặng giữa câu (từ trước không có dấu câu) dài hơn thế là ngập ngừng
-CAU = 0.7    # lặng dài hơn thế coi như hết câu
+from cau_hinh import lay
+
+
+def nap(tl=None):
+    """Ngưỡng từ bảng master (cau-hinh/master.json, nhóm phan_tich)."""
+    global DEM, NGAT, CAU, LAP_CACH, NHANH, CHAM, CANH_NGAN, CANH_DAI
+    DEM, NGAT, CAU = set(lay("phan_tich.tieng_dem", tl)), lay("phan_tich.ngap_ngung", tl), lay("phan_tich.het_cau", tl)
+    LAP_CACH, NHANH, CHAM = lay("phan_tich.lap_cach", tl), lay("phan_tich.nhanh", tl), lay("phan_tich.cham", tl)
+    CANH_NGAN, CANH_DAI = lay("phan_tich.canh_ngan", tl), lay("phan_tich.canh_dai", tl)
+
+
+nap()
 
 
 def chuan(w):
@@ -32,12 +41,13 @@ def toc_do(ws):
     if not cs:
         return [], 0
     tv = statistics.median(v for *_, v in cs)
-    return [(a, b, v, "nhanh" if v > 1.3 * tv else "chậm" if v < 0.7 * tv else "") for a, b, v in cs], tv
+    return [(a, b, v, "nhanh" if v > NHANH * tv else "chậm" if v < CHAM * tv else "") for a, b, v in cs], tv
 
 
-def lap(ws, max_n=8, cach=2):
+def lap(ws, max_n=8, cach=None):
     """Lặp từ/cụm từ: cùng cụm n từ (n lớn nhất trước) nói lại ngay sau đó; cụm ≥ 3 từ cho phép cách ≤ `cach` từ, cụm ngắn phải liền nhau
     (để "2 phân khu chính, phân khu thấp tầng" không bị coi là lặp). Trả [(i, j, n)]: cụm đầu ở i, lần nói lại ở j."""
+    cach = LAP_CACH if cach is None else cach
     c = [chuan(w[0]) for w in ws]
     out, da = [], set()
     for n in range(max_n, 0, -1):
@@ -92,15 +102,16 @@ def cat_canh(cs, ws, cat_tieng=None):
         if k > 1 and noi:
             w = next((w for w in ws if w[1] - 0.1 < a < w[2] + 0.1), None)
             out.append((a, f"cảnh #{k}: CẮT TIẾNG giữa lời" + (f" (gần «{w[0]}»)" if w else "")))
-        if b - a < 1:
+        if b - a < CANH_NGAN:
             out.append((a, f"cảnh #{k} chỉ {b - a:.1f}s (như chớp)"))
-        elif b - a > 7:
+        elif b - a > CANH_DAI:
             out.append((a, f"cảnh #{k} dài {b - a:.1f}s, nên chèn cảnh trám/zoom/chữ"))
     return out
 
 
 def phan_tich(tl, ws, pj=None):
     """Danh sách ghi chú [(giây, loại, nội dung, đề xuất)] theo thời gian."""
+    nap(tl)
     from storyboard import canh
     g = []
     td, tv = toc_do(ws)

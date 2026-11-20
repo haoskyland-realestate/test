@@ -46,10 +46,13 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 | Nhóm | Tính năng | Lệnh / file | Đã thử |
 |---|---|---|---|
 | Dự án | Tạo dự án / thêm footage từ nhiều nguồn: kéo thả hoặc chọn video (cả điện thoại), link Google Drive (thư mục hoặc file), link tải trực tiếp, YouTube/TikTok; giỏ nguồn trong app (＋ và ＋ Footage) hoặc lệnh | `scripts/du_an_moi.py`, `scripts/tai_drive.py` | Cloud (tải lên, Drive, link trực tiếp); YouTube/TikTok chưa thử (mạng cloud chặn) |
+| Dự án | **Bảng master**: 69 thông số của cả quy trình (cắt, nhận dạng giọng, phụ đề, chữ, thẻ, zoom, âm, hình, vùng an toàn, kiểm, agent) trong một file; chỉnh trên trang (app ⚙ Bảng master: lưu chung hoặc riêng dự án; bản xem artifact: sao chép thay đổi); ghi đè dự án ở `meta.cau_hinh` thắng bảng chung | `video-studio/cau-hinh/master.json`, `scripts/cau_hinh.py`, `scripts/bang_master.py`, `docs/04-thu-vien/BANG-MASTER.md` | Cloud (đưa vào không đổi kết quả: so mã băm trên Saigon Park; trang thử bằng Chromium) |
 | Dự án | Định dạng timeline v1 (cảnh, chữ, âm, cảnh chèn, zoom, B-roll, overlay) | `scripts/timeline.py`, test `test_timeline.py` | Cloud |
 | Dựng | Cắt bỏ một đoạn (câu lặp, chỗ vấp, khoảng lặng) và tự dời mọi thứ phía sau | `scripts/cat_doan.py projects/<tên> <từ> <đến>` | Cloud (Saigon Park) |
 | Duyệt | Phân tích lời nói và chỗ cắt: nói nhanh/chậm (so với nhịp riêng), lặp từ, nói vấp, cắt giữa từ, cảnh quá ngắn/dài + đề xuất; tự gắn vào storyboard | `scripts/phan_tich_loi.py projects/<tên>` | Cloud (Saigon Park: bắt câu lặp "biệt thự đơn lập, song lập") |
 | Dựng | Bản nhẹ 540p (cạnh ngắn 540, màu đã chuyển, giữ tiếng) tạo một lần mỗi file; master cut, storyboard, bản xem, app đọc bản này; card NVIDIA tự dùng để giải nén 4K | `scripts/ban_nhe.py` (tự gọi) | Cloud (file 4K 17s: phân tích 44s → 6s, tạo bản nhẹ 38s một lần) |
+| Agent | Một lệnh làm cả video: nguồn → master cut → nhận dạng → **cổng 1** (từ không chắc, tên, số, lặp/vấp) → Claude chia cảnh + vai → **cổng 2** trang chọn hiệu ứng AutoEdit → **cổng 3** storyboard → **cổng 4** bản xem 540×960 có vạch vùng an toàn → bản cuối + kiểm tự động | `scripts/agent.py`, gói `video-studio/autoedit/` | Cloud: Saigon Park tới cổng 4 |
+| Kiểm | Vùng an toàn TikTok trên lớp chữ thật (đo của AutoEdit `safe_check`) · kiểm bản dựng (khổ, độ dài, hình khớp tiếng, chớp tối, −14 LUFS) | `scripts/kiem_vung.py`, `scripts/kiem_cuoi.py` | Cloud |
 | Duyệt | Storyboard từng cảnh (giây, ảnh, lời nói, chữ, chuyển cảnh) + ảnh lưới | `scripts/storyboard.py projects/<tên>` | Cloud (Saigon Park 24 cảnh, 46s) |
 | Dựng | Dựng MP4: bản xem 540×960 `--xem` để Hào duyệt, nháp `--nhap`, bản cuối; nhớ bước đã làm | `scripts/dung.py projects/<tên>` | Cloud, Mac (dựng thử 6s) |
 | Dựng | Tự cắt im lặng, nói vấp, chọn khúc đẹp, zoom xen kẽ | `scripts/master_cut.py`, `phan_tich_hinh.py` | Cloud |
@@ -80,12 +83,14 @@ Trên PC thay `python3` bằng `.venv\Scripts\python.exe`.
 
 | Skill | Dùng khi Hào nói |
 |---|---|
+| **`agent-video`** (chính từ 18/11) | "edit video này", gửi footage/link, "chốt phương án", "duyệt bản xem": chạy `scripts/agent.py` |
 | `dung-talking-head` | "dựng talking head", "video nói trước máy", "chữ theo lời nói" |
 | `lap-storyboard` | "lên storyboard", "chọn cảnh", gửi thư mục footage + kịch bản |
 | `dung-video` | "dựng", "render", "xuất video" |
 | `chinh-mau` | "chỉnh màu", "da bị cam", "lấy màu video mẫu" |
 | `hoc-mau` | gửi video mẫu: "học style này", "làm mẫu giống video này" |
 | `bao-cao-nghiem-thu` | "kiểm tra", "nghiệm thu", "báo cáo" video |
+| `talking-head-ui` | "talking head ui", "lớp chữ cho CapCut", "chữ nền trong suốt": dựng lớp chữ động (phụ đề từng cụm, khối chữ nhấn, chữ sau người) bằng HyperFrames từ `edit-plan.json`, độc lập với `dung.py` |
 
 **Kho skill thiết kế** (`video-studio/thu-vien-skill/`, công thức dựng lại, không phải mã):
 - am-thanh-theo-nhip

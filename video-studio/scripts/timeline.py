@@ -56,6 +56,8 @@ def check(tl):
     meta = tl.get("meta", {})
     if meta.get("platform", "tiktok") not in PLATFORMS:
         e.append("'platform' phải là 'tiktok' (dọc 9:16) hoặc 'youtube' (ngang 16:9)")
+    from cau_hinh import kiem as kiem_cau_hinh  # ghi đè bảng master riêng dự án: id phải có trong bảng, giá trị trong khoảng
+    e += ["bảng master (meta.cau_hinh): " + x for x in kiem_cau_hinh(meta.get("cau_hinh"))]
     tv = meta.get("tu_vung", [])
     if not (isinstance(tv, list) and all(isinstance(x, str) for x in tv)):
         e.append("meta.tu_vung phải là danh sách chữ (tên riêng, thuật ngữ cho nhận dạng giọng), ví dụ [\"Gladia\", \"chủ đầu tư\"]")

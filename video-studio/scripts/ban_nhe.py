@@ -5,6 +5,7 @@ import functools, os, shutil, subprocess, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mau import chuyen_tong
+from cau_hinh import lay as cau_hinh
 
 CO = "scale='if(gt(iw,ih),-2,540)':'if(gt(iw,ih),540,-2)'"  # cạnh ngắn 540: dọc 540×960, ngang 960×540
 
@@ -24,7 +25,7 @@ def duong_dan(B, f):
 
 def lenh(raw, out, dung_card=True):
     return ["ffmpeg", "-nostdin", "-v", "error", "-y", *(hw() if dung_card else []), "-i", raw, "-vf", chuyen_tong(raw) + CO,
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", out]
+            "-c:v", "libx264", "-preset", "veryfast", "-crf", str(cau_hinh("hinh.nhe_crf")), "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", out]
 
 
 def tao(raw, out):
