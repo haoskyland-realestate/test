@@ -23,7 +23,8 @@ gui() {
 
 case "$loai" in
   chat_id)
-    api getUpdates | python3 -c '
+    resp=$(api getUpdates) || exit 1
+    printf %s "$resp" | python3 -c '
 import json, sys
 ids = {u["message"]["chat"]["id"] for u in json.load(sys.stdin)["result"] if "message" in u}
 print("chat id:", *ids) if ids else print("Chưa thấy tin nào: nhắn bot một câu rồi chạy lại")' ;;
