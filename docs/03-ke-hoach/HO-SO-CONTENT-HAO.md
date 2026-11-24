@@ -38,3 +38,6 @@ Nguồn: Hào cung cấp, 24/11/2026. Hào đổi ý thì sửa file này, agent
 ## Chưa quyết (hỏi Hào)
 - Website `howskyland.com`: Hào có sở hữu tên miền chưa (có thể là `haoskyland.com`)? Muốn website làm gì (giới thiệu, đăng bài, nhận tin nhắn)? Agent chưa làm website khi chưa trả lời.
 - Danh sách 5–10 kênh BĐS/tài chính để học phong cách, Hào sẽ gửi.
+
+## Kỹ năng viết
+Agent dùng skill `viet-content-hao` (`.claude/skills/viet-content-hao/`) khi soạn kịch bản và bản tin. Nguồn các skill nước ngoài: `.claude/skills/viet-content-hao/NGUON.md`.
