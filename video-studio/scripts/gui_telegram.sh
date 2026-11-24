@@ -7,8 +7,15 @@ loai="${1:-thu}"
 cd "$(dirname "$0")/.."
 hom_nay=$(TZ=Asia/Ho_Chi_Minh date +%F)
 tmp=$(mktemp)
+# Dán secret hay dính dấu cách hoặc xuống dòng ở cuối: bỏ hết khoảng trắng.
+TELEGRAM_BOT_TOKEN=$(printf %s "${TELEGRAM_BOT_TOKEN:-}" | tr -d '[:space:]')
+TELEGRAM_CHAT_ID=$(printf %s "${TELEGRAM_CHAT_ID:-}" | tr -d '[:space:]')
 
-api() { curl -sS --fail-with-body -m 30 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}"; }
+api() {
+  [ -n "$TELEGRAM_BOT_TOKEN" ] || { echo "Chưa có secret TELEGRAM_BOT_TOKEN" >&2; exit 1; }
+  curl -sS --fail-with-body -m 30 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}" \
+    || { echo "Telegram từ chối. Thường do token sai, hoặc đã bị /revoke. Tạo lại secret TELEGRAM_BOT_TOKEN bằng mã mới nhất." >&2; exit 1; }
+}
 gui() {
   if [ "${DRY_RUN:-}" = 1 ]; then cat "$tmp"; return; fi
   api sendMessage --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" --data-urlencode "text@$tmp" -o /dev/null
