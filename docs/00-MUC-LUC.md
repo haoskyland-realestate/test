@@ -36,6 +36,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | Dùng tag chữ có sẵn (10 kiểu: số lớn, bước, thanh tên, gạch chân…), điền chữ của mình | `04-thu-vien/THU-VIEN-TAG.md` |
 | Giọng nói AI (Voice Studio): so sánh CIT Voice Studio và VoiceStudio, giấy phép, cách tích hợp | `04-thu-vien/GIONG-NOI-AI.md` |
 | Xem 10 repo chuyên nghiệp và cái nào đã dùng | `04-thu-vien/THU-VIEN-CHUYEN-NGHIEP.md` |
+| Soạn kịch bản xây kênh từ 0 (10 video, 4 tuần) | `03-ke-hoach/SERI-KICH-BAN-XAY-KENH.md` |
 | Xem kế hoạch, đang ở bước nào | `03-ke-hoach/KE-HOACH-APP.md`, bảng Trạng thái trong `../CLAUDE.md` |
 | Hiểu cách làm cũ (không làm theo) | `99-luu-tru/README.md` |
 
@@ -58,6 +59,7 @@ docs/
   03-ke-hoach/
     KE-HOACH-APP.md                kế hoạch app (đang theo)
     KE-HOACH.md                    kế hoạch tổng ban đầu (một phần đã cũ, xem mục 0 trong file)
+    SERI-KICH-BAN-XAY-KENH.md      seri 10 kịch bản xây kênh từ 0 (bản nháp, 24/11/2026)
   04-thu-vien/
     THU-VIEN-HIEU-UNG.md           tự sinh từ effects.py (222 chuyển cảnh, 9 filter…)
     THU-VIEN-MAU.md                đặc tả mẫu
