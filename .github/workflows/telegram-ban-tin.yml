@@ -1,0 +1,37 @@
+name: Telegram bản tin
+
+# GitHub chỉ chạy lịch (schedule) và hiện nút chạy tay từ nhánh mặc định, nên file này phải nằm trên main.
+# Cron tính theo giờ UTC: 00:00 UTC = 7:00 sáng Việt Nam, 15:00 UTC = 22:00 tối Việt Nam. GitHub có thể trễ vài phút.
+on:
+  schedule:
+    - cron: "0 0 * * *"
+    - cron: "0 15 * * *"
+  workflow_dispatch:
+    inputs:
+      loai:
+        description: "thu = tin thử | chat_id = in chat id | sang | toi"
+        default: "thu"
+
+permissions:
+  contents: read
+
+jobs:
+  gui:
+    runs-on: ubuntu-latest
+    steps:
+      # Bản tin do trợ lý ghi lên nhánh này mỗi ngày.
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/awesome-noether-0ega8l
+      - name: Gửi
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          LOAI_TAY: ${{ github.event.inputs.loai }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            if [ "$(date -u +%H)" -lt 6 ]; then loai=sang; else loai=toi; fi
+          else
+            loai="$LOAI_TAY"
+          fi
+          bash video-studio/scripts/gui_telegram.sh "$loai"

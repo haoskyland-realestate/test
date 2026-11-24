@@ -1,0 +1,13 @@
+# Danh sách kênh cần theo dõi: mỗi dòng một link, # là ghi chú. Hào gửi 24/11/2026.
+# YouTube dùng link kết thúc bằng /videos để lấy được số lượt xem.
+https://www.tiktok.com/@quangvinhrealestate
+https://www.tiktok.com/@lamphatlong
+https://www.tiktok.com/@batdongsanthat68
+https://www.tiktok.com/@mythichbannhavin
+https://www.tiktok.com/@namrealty
+https://www.tiktok.com/@dinhlongbds
+https://www.youtube.com/@thienbaobds/videos
+https://www.youtube.com/@antruongrealestate/videos
+https://www.youtube.com/@coachduynguyen/videos
+# Kênh 10 (Khoai Lang Thang): không phải BĐS, là PHONG CÁCH CHÍNH Hào muốn hướng tới (thân thiện, chân thành). Phân tích riêng, xem nghien-cuu/.
+https://www.youtube.com/@khoailangthang/videos
