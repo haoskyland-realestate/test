@@ -13,12 +13,18 @@ TELEGRAM_CHAT_ID=$(printf %s "${TELEGRAM_CHAT_ID:-}" | tr -d '[:space:]')
 
 api() {
   [ -n "$TELEGRAM_BOT_TOKEN" ] || { echo "Chưa có secret TELEGRAM_BOT_TOKEN" >&2; exit 1; }
-  curl -sS --fail-with-body -m 25 --retry 1 --retry-delay 15 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}" \
-    || { echo "Gọi Telegram thất bại. Mã lỗi ở dòng trên: 404 hoặc 401 là token sai hoặc đã /revoke; 429 là gọi quá nhiều, chờ vài phút rồi chạy lại một lần; 28 là hết thời gian chờ mạng." >&2; exit 1; }
+  local out code
+  out=$(mktemp)
+  code=$(curl -sS -m 25 -o "$out" -w '%{http_code}' "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}") || code=000
+  if [ "$code" != 200 ]; then
+    # Nội dung Telegram trả về không chứa token. 401/404: token sai hoặc đã /revoke. 429: gọi quá nhiều. 000: không nối được.
+    echo "Telegram trả HTTP $code: $(head -c 400 "$out")" >&2; rm -f "$out"; exit 1
+  fi
+  cat "$out"; rm -f "$out"
 }
 gui() {
   if [ "${DRY_RUN:-}" = 1 ]; then cat "$tmp"; return; fi
-  api sendMessage --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" --data-urlencode "text@$tmp" -o /dev/null
+  api sendMessage --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" --data-urlencode "text@$tmp" > /dev/null
 }
 
 case "$loai" in
