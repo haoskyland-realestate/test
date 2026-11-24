@@ -13,8 +13,8 @@ TELEGRAM_CHAT_ID=$(printf %s "${TELEGRAM_CHAT_ID:-}" | tr -d '[:space:]')
 
 api() {
   [ -n "$TELEGRAM_BOT_TOKEN" ] || { echo "Chưa có secret TELEGRAM_BOT_TOKEN" >&2; exit 1; }
-  curl -sS --fail-with-body -m 20 --retry 3 --retry-delay 3 --retry-all-errors "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}" \
-    || { echo "Gọi Telegram thất bại sau 4 lần thử. Mã lỗi curl ở dòng trên: 22 (404 hoặc 401) là token sai hoặc đã /revoke, 28 là hết thời gian chờ mạng." >&2; exit 1; }
+  curl -sS --fail-with-body -m 25 --retry 1 --retry-delay 15 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}" \
+    || { echo "Gọi Telegram thất bại. Mã lỗi ở dòng trên: 404 hoặc 401 là token sai hoặc đã /revoke; 429 là gọi quá nhiều, chờ vài phút rồi chạy lại một lần; 28 là hết thời gian chờ mạng." >&2; exit 1; }
 }
 gui() {
   if [ "${DRY_RUN:-}" = 1 ]; then cat "$tmp"; return; fi
