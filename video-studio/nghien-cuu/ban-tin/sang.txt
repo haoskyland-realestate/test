@@ -1,16 +1,30 @@
-NGAY: 2026-11-24
-Hào ơi, hôm nay (thứ Ba, ngày quay) có 1 kịch bản chính:
+NGAY: 2026-11-25
+Hào ơi, hôm nay (thứ Tư, ngày quay hoặc dựng) có 1 kịch bản chính:
 
-Fed có thể tăng lãi suất 8 đến 9/12: người vay ở Việt Nam có liên quan gì?
+CHỦ ĐỀ: Ngân hàng đã giảm lãi tiền gửi, vì sao lãi vay mua nhà vẫn 9 đến 12% một năm?
 
-Hook: "Ngày 9/12, Fed có thể tăng lãi suất lần nữa. Người vay mua nhà ở Việt Nam có liên quan gì?"
-Vì sao chọn: có ngày quyết định cụ thể, có số liệu từ 3 bài báo 2026, hook dạng câu hỏi.
-Nguồn: VNBA 17/11/2026; CafeF 19/11/2026; VOH 20/9/2026.
-Lưu ý: chưa có bài nào nói thẳng lãi vay mua nhà sẽ tăng bao nhiêu, nên kịch bản nói "chưa thể nói chắc".
+HOOK (chọn 1):
+1) "Ngân hàng giảm lãi tiền gửi rồi, sao lãi vay mua nhà vẫn 9 đến 12% một năm?" (khuyên dùng: câu hỏi, có số)
+2) "Lãi ưu đãi dưới 10% năm đầu, sang năm sau có thể lên 13 đến 16%. Chị đã đọc kỹ chưa?"
+3) "Lãi tiền gửi giảm không có nghĩa là lãi vay giảm. Đây là lý do."
 
-Ý dự phòng:
-1) Vàng xuống thấp nhất từ 9/2025 (cần thêm nguồn giải thích).
-2) Lợi suất trái phiếu Mỹ 10 năm lên 5,15% là gì với người gửi tiết kiệm.
+KỊCH BẢN 60 ĐẾN 75 GIÂY:
+0-3s: Hook 1.
+3-20s: Theo VnExpress ngày 25/11, toàn bộ 46 ngân hàng đã giảm lãi tiền gửi niêm yết 0,5 đến 0,7 điểm phần trăm một năm, kỳ hạn từ 6 tháng trở lên. Nhưng lãi vay mua nhà kỳ hạn 12 tháng vẫn phổ biến 9 đến 12% một năm.
+20-40s: Bài báo nói lãi vay có độ trễ điều chỉnh, và điều kiện vay khác nhau theo mục đích, thời hạn, nhóm khách hàng. Theo DKRA, lãi vay mua nhà cố định 12 tháng chưa giảm so với quý III. Nói đơn giản: ngân hàng giảm lãi đầu vào trước, lãi cho vay điều chỉnh chậm hơn.
+40-60s: Chỗ chị cần chú ý: có gói ưu đãi dưới 10% năm đầu, nhưng theo cùng bài, sau đó thả nổi có thể lên đến 13 đến 16%, và phí trả nợ trước hạn 4 đến 5%. Ví dụ minh họa: vay 2 tỷ, chênh 3 điểm phần trăm là 60 triệu một năm, tức 5 triệu mỗi tháng.
+60-75s: Tôi chưa thể nói chắc bao giờ lãi vay giảm, vì bài chưa nêu mốc nào. Chị đang tính vay thì hỏi ngân hàng ba điều: lãi ưu đãi đến khi nào, sau đó thả nổi theo công thức nào, phí trả nợ trước hạn là bao nhiêu.
 
-Kịch bản đầy đủ và câu trích nguyên văn: Google Sheet, tab Hôm nay.
-https://docs.google.com/spreadsheets/d/1XMgotc2MJgw7S3baROezoSo4vn7TLJtn1hJ6R1JtE5g/edit
+NGUỒN:
+- VnExpress, "Lãi suất huy động giảm, lãi vay bất động sản vẫn neo cao", 25/11/2026
+  https://vnexpress.net/lai-suat-huy-dong-giam-lai-vay-bat-dong-san-van-neo-cao-5147943.html
+- Thanh Niên, "Ngân hàng Nhà nước thanh tra việc giảm lãi suất của các ngân hàng trong tháng 11", 13/11/2026
+  https://thanhnien.vn/ngan-hang-nha-nuoc-thanh-tra-viec-giam-lai-suat-cua-cac-ngan-hang-trong-thang-11-185261113143008364.htm
+
+LƯU Ý: Các con số 9 đến 12%, 13 đến 16%, 4 đến 5% là của bài báo (đã kiểm nguyên văn). Câu "nói đơn giản" và ví dụ 2 tỷ là của trợ lý, không phải trích dẫn. Chưa có bài nào nói lãi vay sẽ giảm khi nào.
+
+Ý DỰ PHÒNG:
+1) Fed có thể tăng lãi suất 8 đến 9/12 và tỷ giá Việt Nam (đã có nguồn, xem Google Sheet).
+2) Vay lãi cố định hay thả nổi: khác nhau gì (cần thêm nguồn).
+
+Google Sheet: https://docs.google.com/spreadsheets/d/1XMgotc2MJgw7S3baROezoSo4vn7TLJtn1hJ6R1JtE5g/edit
