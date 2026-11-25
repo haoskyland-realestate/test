@@ -32,3 +32,10 @@ jobs:
           python -m playwright install chromium
       - name: Tự kiểm mọi tính năng + dựng thử 6 giây
         run: python scripts/kiem_may.py --tu-kiem --dung-thu
+      - name: Tự kiểm công cụ bản tin (không gọi mạng)
+        run: |
+          python scripts/nghien_cuu_tiktok.py --tu-kiem
+          python scripts/doc_bai_bao.py --tu-kiem
+          python scripts/phan_tich_giong_nguoi_noi.py --tu-kiem
+          DRY_RUN=1 bash scripts/gui_telegram.sh thu | grep -q "Thử kết nối"
+          rc=0; bash scripts/gui_telegram.sh abc 2>/dev/null || rc=$?; [ "$rc" = 2 ]

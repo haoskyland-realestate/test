@@ -36,16 +36,18 @@ def trich(cues, bat_dau, do_dai=90):
     return " ".join(l for t, l in cues if bat_dau <= t < bat_dau + do_dai)
 
 
-def phan_tich(cues):
+def phan_tich(cues, giua=3, do_dai=90):
+    """giua = số đoạn trích ở giữa video, do_dai = độ dài mỗi đoạn trích (giây)."""
     if not cues:
         return None
     het = cues[-1][0] + 5
     bi, so_tu = cum_tu(cues, 2, 8)
     tri, _ = cum_tu(cues, 3, 5)
+    mocs = [(i + 1) / (giua + 1) for i in range(giua)]
     return {"het_giay": het, "so_tu": so_tu, "tu_moi_phut": round(so_tu / (het / 60)), "cum2": bi, "cum3": tri,
-            "doan": [("Mở đầu (0 đến 90 giây)", 0, trich(cues, 0))] +
-                    [(f"Giữa video, phút {int(het * p / 60)}", int(het * p), trich(cues, int(het * p))) for p in (0.25, 0.5, 0.75)] +
-                    [("Kết (90 giây cuối)", max(het - 90, 0), trich(cues, max(het - 90, 0)))]}
+            "doan": [(f"Mở đầu (0 đến {do_dai} giây)", 0, trich(cues, 0, do_dai))] +
+                    [(f"Giữa video, phút {int(het * p / 60)}", int(het * p), trich(cues, int(het * p), do_dai)) for p in mocs] +
+                    [(f"Kết ({do_dai} giây cuối)", max(het - do_dai, 0), trich(cues, max(het - do_dai, 0), do_dai))]}
 
 
 def lay_video(url, so):
@@ -59,9 +61,9 @@ def lay_video(url, so):
     return top + moi
 
 
-def lay_phu_de(vid, thu_muc):
+def lay_phu_de(vid, thu_muc, ngon_ngu="vi.*,vi"):
     subprocess.run([sys.executable, "-m", "yt_dlp", "-q", "--skip-download", "--write-auto-subs", "--write-subs",
-                    "--sub-langs", "vi.*,vi", "--sub-format", "vtt", "-o", f"{thu_muc}/%(id)s.%(ext)s",
+                    "--sub-langs", ngon_ngu, "--sub-format", "vtt", "-o", f"{thu_muc}/%(id)s.%(ext)s",
                     f"https://www.youtube.com/watch?v={vid}"], capture_output=True, text=True, timeout=300)
     f = sorted(pathlib.Path(thu_muc).glob(f"{vid}*.vtt"))
     return doc_vtt(f[0].read_text(encoding="utf-8", errors="replace")) if f else []
@@ -80,6 +82,9 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("url", nargs="?"); ap.add_argument("--so", type=int, default=6); ap.add_argument("--ra")
     ap.add_argument("--tu-kiem", action="store_true")
+    ap.add_argument("--ngon-ngu", default="vi.*,vi", help='ngôn ngữ phụ đề, ví dụ "en.*,en" cho kênh nói tiếng Anh')
+    ap.add_argument("--giua", type=int, default=3, help="số đoạn trích ở giữa video")
+    ap.add_argument("--do-dai", type=int, default=90, help="độ dài mỗi đoạn trích (giây)")
     a = ap.parse_args()
     if a.tu_kiem:
         tu_kiem(); sys.exit()
@@ -92,7 +97,7 @@ if __name__ == "__main__":
     with tempfile.TemporaryDirectory() as d:
         for e in lay_video(a.url, a.so):
             print("đang lấy:", e.get("title", e["id"])[:70], flush=True)
-            r = phan_tich(lay_phu_de(e["id"], d))
+            r = phan_tich(lay_phu_de(e["id"], d, a.ngon_ngu), a.giua, a.do_dai)
             out += [f"## {e.get('title', e['id'])}", f"Lượt xem: {e.get('view_count')}. Link: https://www.youtube.com/watch?v={e['id']}", ""]
             if not r:
                 out += ["(không có phụ đề tiếng Việt)", ""]

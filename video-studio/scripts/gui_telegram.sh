@@ -37,6 +37,23 @@ print("chat id:", *ids) if ids else print("Chưa thấy tin nào: nhắn bot m�
   thu)
     echo "Thử kết nối: trợ lý content của Hào gửi được tin lúc $(TZ=Asia/Ho_Chi_Minh date '+%H:%M %d/%m/%Y')." > "$tmp"
     gui ;;
+  tin:*)
+    # Gửi nhiều nội dung từ nghien-cuu/ban-tin/<ten>.txt: dòng đầu "NGAY: hôm nay", các nội dung ngăn bằng dòng =====, mỗi nội dung một tin.
+    ten="${loai#tin:}"
+    [[ "$ten" =~ ^[a-z0-9_-]+$ ]] || { echo "Tên tin không hợp lệ (chỉ a-z, 0-9, gạch)" >&2; exit 2; }
+    f="nghien-cuu/ban-tin/$ten.txt"
+    if [ -f "$f" ] && [ "$(head -1 "$f")" = "NGAY: $hom_nay" ]; then
+      d=$(mktemp -d)
+      tail -n +2 "$f" | awk -v d="$d" 'BEGIN{n=1} /^=====$/{n++; next} {print > (d "/" n ".txt")}'
+      for p in $(ls "$d" | sort -n); do
+        cp "$d/$p" "$tmp"
+        [ "$(wc -c < "$tmp")" -le 4000 ] || { echo "Tin $p dài quá 4000 ký tự" >&2; rm -rf "$d"; exit 1; }
+        gui; sleep 1
+      done
+      rm -rf "$d"
+    else
+      printf 'Chưa có tin %s cho ngày %s.\n' "$ten" "$hom_nay" > "$tmp"; gui
+    fi ;;
   sang|toi)
     f="nghien-cuu/ban-tin/$loai.txt"
     if [ -f "$f" ] && [ "$(head -1 "$f")" = "NGAY: $hom_nay" ]; then

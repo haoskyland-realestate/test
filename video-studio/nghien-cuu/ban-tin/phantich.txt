@@ -1,0 +1,52 @@
+NGAY: 2026-11-25
+Hào ơi, em đã lấy lời thoại và phân tích 5 kênh TikTok (46 video, 45 video có lời). Kết quả chia làm 3 tin. Mẫu nhỏ nên đây là xu hướng, chưa phải quy luật.
+
+PHÂN TÍCH 1/3: 7 công thức hook thấy được (kèm bằng chứng)
+Bội số = lượt xem so với mức nền của chính kênh đó.
+
+H1. Con số kèm đánh đổi (hiệu quả nhất, lặp ở 3 kênh)
+- dinhlongbds, 283.700 lượt (11,5 lần): "Palm River nếu đặt tại Thủ Thiêm thì khó có đơn giá từ 168 triệu một m2", rồi "chấp nhận di chuyển xa thêm 10 phút".
+- namrealty, 11.000 lượt (10,8 lần): "Căn 4,1 tỷ trả nhanh sẽ giảm gần 700 triệu. Nghe thì hời đúng không? Nhưng khi vay thì giá giữ nguyên 4,1 tỷ."
+- lamphatlong, 148.500 lượt (6 lần): nói cái bình thường rồi nói cái "rất ít khi được nghe".
+H2. Hiện trường, việc làm thật: đứng tại chỗ (dinhlongbds, 12,4 lần), hoặc "đi thử từ ga metro Thảo Điền về Vinhomes Grand Park, mọi người đoán mất bao lâu" (quangvinhrealestate, 10 lần).
+H3. Nêu thực trạng ai cũng thấy: "Mọi người có để ý ..." (lamphatlong, 4,3 lần).
+H4. "Tại sao dòng tiền đổ về ...?" (lamphatlong, 2,8 lần).
+H5. Giả định cảm xúc: "Nếu đây là nhà của Long thì chiều nào cũng tìm cớ về sớm" (dinhlongbds, 5,6 lần).
+H6. Chuỗi nhiều tập, tập sau mở bằng tóm tắt tập trước (namrealty, 13,8 lần).
+H7. Đọc tài liệu gốc cùng người xem, nói rõ ngày (namrealty, 1,9 lần).
+=====
+PHÂN TÍCH 2/3: điều ít hiệu quả, giọng nói, điều nên và không nên học
+
+ÍT HIỆU QUẢ: nói chung về thị trường hay quy hoạch, không có cảnh hay con số cụ thể. Ví dụ dinhlongbds "Năm nay anh chị đã mua được nhà chưa ... lãi suất vẫn còn cao": 670 lượt (0,03 lần nền). Nhưng kênh lamphatlong có video vĩ mô nổ nhất kênh (94.500 lượt) vì mở bằng số liệu cụ thể. Kết luận thận trọng: vĩ mô chỉ hiệu quả khi hook có số cụ thể hoặc câu hỏi cụ thể.
+
+VIDEO NỔ THƯỜNG DÀI HƠN: ở cả 5 kênh, video nổ có độ dài trung vị cao hơn video mới (ví dụ 122 và 79 giây ở namrealty, 165 và 81 giây ở quangvinh). Có thể do video mới chưa kịp lên.
+
+GIỌNG GẦN HÀO NHẤT: batdongsanthat68 ("An"), kể chuyện cá nhân, mở bằng câu hỏi của người xem ("Anh ơi sao anh chăm chỉ thế"). Video "lần đầu không nói về BĐS" đạt 26.300 lượt, tỷ lệ thích 4,1%, thuộc nhóm cao nhất. Mới có một video nên cần thử thêm.
+
+NÊN HỌC: con số kèm đánh đổi cho chủ đề lãi suất; cho cảnh thật vào vĩ mô; làm chuỗi 3 tập; đọc văn bản gốc nói rõ ngày.
+KHÔNG NÊN HỌC (trái quy tắc của Hào): khan hiếm và thúc ép ("cơ hội hiếm", "chỉ còn X căn"), hứa ưu đãi lãi suất kiểu quảng bá, khuyên mua dự án khi chưa nói rủi ro.
+
+Lưu ý: dòng "Hãy subscribe cho kênh ..." cuối nhiều video là lỗi phiên âm ở đoạn im lặng, không phải lời người nói.
+=====
+ĐỀ XUẤT 3/3: 15 ý cho 3 tuần (đã ghi vào Google Sheet, tab Kho ý tưởng)
+Nguồn: Có = đã đọc và kiểm nguyên văn; Hào = cần Hào cung cấp; Cần = chưa có nguồn.
+1. Fed 8 đến 9/12 và người vay (Có). ĐĂNG TRƯỚC 8/12
+2. Lãi tiền gửi giảm, lãi vay vẫn 9 đến 12%: vì sao (Có)
+3. Ưu đãi năm đầu dưới 10%, thả nổi 13 đến 16%: tính thử trên giấy (Có)
+4. Chuỗi 3 tập: lãi tiền gửi giảm, lãi vay chưa giảm (Có)
+5. Đọc công văn NHNN thanh tra việc giảm lãi suất (Có)
+6. Đi thử từ Hóc Môn về trung tâm: mất bao phút (Hào tự đo)
+7. Vành đai 3 qua Hóc Môn: đứng ở cầu vượt Quốc lộ 22 (Có; ngày thông xe đoạn này chưa có)
+8. Căn 3 tỷ vay một nửa, lãi 8, 10, 13% chênh bao nhiêu một tháng (Có, số căn là ví dụ)
+9. Hạn mức tín dụng hạn chế: có tiền vẫn khó vay (Có)
+10. Tiền gửi ngân hàng đang đi đâu khi lãi giảm (Cần)
+11. Dự án 880 ha ở Hóc Môn: 3 con số (Có, giá chưa có)
+12. Một ngày của người tư vấn BĐS: sáng bóng chuyền, chiều đọc báo cáo (Hào, thử nghiệm)
+13. Một sai lầm tôi từng mắc khi tính dòng tiền (Hào, thử nghiệm)
+14. 5 con số lãi suất tôi theo dõi mỗi tuần, YouTube ngang 6 đến 8 phút (thử nghiệm)
+15. Khách hỏi: lãi cố định hay thả nổi nên chọn gì (Hào)
+
+CHƯA CÓ: lời thoại Khoai Lang Thang và 3 kênh YouTube khác (YouTube chặn máy chủ của em). Hào bấm đúp file phan-tich-youtube.bat trên PC (khoảng 15 đến 25 phút), rồi gửi các file kết quả cho em. Em cũng cần 3 đến 5 link video của @mythichbannhavin.
+
+Lịch 3 tuần, bảng đầy đủ, và 22 câu trích đã kiểm: thư mục video-studio/nghien-cuu/phan-tich/ trong repo.
+Google Sheet: https://docs.google.com/spreadsheets/d/1XMgotc2MJgw7S3baROezoSo4vn7TLJtn1hJ6R1JtE5g/edit

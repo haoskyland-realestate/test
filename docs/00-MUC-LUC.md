@@ -52,11 +52,13 @@ docs/
     CAI-TREN-MAC.md                cài, chạy app trên MacBook ★
     HE-THONG.md                    vai trò từng máy
     MCP-VA-SKILL.md                skill và MCP
+    KIEN-TRUC.md                   danh mục, trách nhiệm, luồng dữ liệu, phụ thuộc, rủi ro (25/11/2026)
   02-quy-trinh/
     QUY-TRINH-MOT-VIDEO.md         từng bước, ai làm, ra gì ★
     THU-TU-TU-DONG.md              thứ tự tự động của Claude, song song, bộ dựng nhớ gì ★
     NHIP-TUAN.md                   lịch tuần
   03-ke-hoach/
+    HO-SO-CONTENT-HAO.md           hồ sơ content của Hào: chủ đề, quy tắc nguồn, nhịp tuần, quyền của agent
     KE-HOACH-APP.md                kế hoạch app (đang theo)
     KE-HOACH.md                    kế hoạch tổng ban đầu (một phần đã cũ, xem mục 0 trong file)
     SERI-KICH-BAN-XAY-KENH.md      seri 10 kịch bản xây kênh từ 0 (bản nháp, 24/11/2026)
