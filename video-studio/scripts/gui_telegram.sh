@@ -7,16 +7,30 @@ loai="${1:-thu}"
 cd "$(dirname "$0")/.."
 hom_nay=$(TZ=Asia/Ho_Chi_Minh date +%F)
 tmp=$(mktemp)
+# Dán secret hay dính dấu cách hoặc xuống dòng ở cuối: bỏ hết khoảng trắng.
+TELEGRAM_BOT_TOKEN=$(printf %s "${TELEGRAM_BOT_TOKEN:-}" | tr -d '[:space:]')
+TELEGRAM_CHAT_ID=$(printf %s "${TELEGRAM_CHAT_ID:-}" | tr -d '[:space:]')
 
-api() { curl -sS --fail-with-body -m 30 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}"; }
+api() {
+  [ -n "$TELEGRAM_BOT_TOKEN" ] || { echo "Chưa có secret TELEGRAM_BOT_TOKEN" >&2; exit 1; }
+  local out code
+  out=$(mktemp)
+  code=$(curl -sS -m 25 -o "$out" -w '%{http_code}' "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/$1" "${@:2}") || code=000
+  if [ "$code" != 200 ]; then
+    # Nội dung Telegram trả về không chứa token. 401/404: token sai hoặc đã /revoke. 429: gọi quá nhiều. 000: không nối được.
+    echo "Telegram trả HTTP $code: $(head -c 400 "$out")" >&2; rm -f "$out"; exit 1
+  fi
+  cat "$out"; rm -f "$out"
+}
 gui() {
   if [ "${DRY_RUN:-}" = 1 ]; then cat "$tmp"; return; fi
-  api sendMessage --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" --data-urlencode "text@$tmp" -o /dev/null
+  api sendMessage --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" --data-urlencode "text@$tmp" > /dev/null
 }
 
 case "$loai" in
   chat_id)
-    api getUpdates | python3 -c '
+    resp=$(api getUpdates) || exit 1
+    printf %s "$resp" | python3 -c '
 import json, sys
 ids = {u["message"]["chat"]["id"] for u in json.load(sys.stdin)["result"] if "message" in u}
 print("chat id:", *ids) if ids else print("Chưa thấy tin nào: nhắn bot một câu rồi chạy lại")' ;;

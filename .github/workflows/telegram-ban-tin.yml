@@ -28,9 +28,11 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           LOAI_TAY: ${{ github.event.inputs.loai }}
+          LICH: ${{ github.event.schedule }}
         run: |
+          # Chọn sáng hay tối theo lịch đã kích hoạt, không theo giờ đồng hồ (GitHub có thể chạy trễ nhiều giờ).
           if [ "${{ github.event_name }}" = "schedule" ]; then
-            if [ "$(date -u +%H)" -lt 6 ]; then loai=sang; else loai=toi; fi
+            if [ "$LICH" = "0 0 * * *" ]; then loai=sang; else loai=toi; fi
           else
             loai="$LOAI_TAY"
           fi
