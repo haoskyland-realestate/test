@@ -892,6 +892,37 @@
    ]
   },
   {
+   "id": "kich_ban",
+   "ten": "Kịch bản & xếp cảnh",
+   "mo_ta": "Tự xếp clip quay lộn xộn theo kịch bản Google Doc (xep_canh.py).",
+   "thong_so": [
+    {
+     "id": "kich_ban.nguong_khop",
+     "ten": "Độ khớp tối thiểu để coi clip nói câu kịch bản",
+     "mo_ta": "Tỉ lệ từ của câu kịch bản có trong lời clip. Tăng: chặt hơn, câu nói khác chữ nhiều sẽ bị báo 'không khớp'. Giảm: dễ khớp hơn nhưng dễ xếp nhầm câu giống nhau. Hào hay nói lệch chữ so với kịch bản thì 0,5–0,6.",
+     "kieu": "so",
+     "mac_dinh": 0.6,
+     "min": 0.3,
+     "max": 0.95,
+     "buoc": 0.05,
+     "don_vi": "tỉ lệ",
+     "dung_o": "xep_canh.py"
+    },
+    {
+     "id": "kich_ban.tu_toi_thieu",
+     "ten": "Clip ít hơn số từ này là cảnh trám",
+     "mo_ta": "Clip nói ít hơn chừng này từ (flycam, cảnh quay không lời) được coi là cảnh trám, không xếp vào lời nói.",
+     "kieu": "so",
+     "mac_dinh": 3,
+     "min": 1,
+     "max": 10,
+     "buoc": 1,
+     "don_vi": "từ",
+     "dung_o": "xep_canh.py"
+    }
+   ]
+  },
+  {
    "id": "agent",
    "ten": "Agent",
    "mo_ta": "Lựa chọn mặc định khi chạy agent.py.",
