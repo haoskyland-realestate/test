@@ -845,6 +845,42 @@
      "buoc": 0.01,
      "don_vi": "chiều ngang",
      "dung_o": "kiem_vung.py"
+    },
+    {
+     "id": "vung.yt_tren",
+     "ten": "YouTube: lề trên",
+     "mo_ta": "Khung ngang 16:9: chữ/thẻ không vào phần trên này (tên kênh, tiêu đề khi tạm dừng). Chuẩn title-safe 5%.",
+     "kieu": "so",
+     "mac_dinh": 0.05,
+     "min": 0,
+     "max": 0.2,
+     "buoc": 0.01,
+     "don_vi": "tỉ lệ",
+     "dung_o": "kiem_vung.py, dung.py (vạch bản xem)"
+    },
+    {
+     "id": "vung.yt_duoi",
+     "ten": "YouTube: mép dưới tối đa",
+     "mo_ta": "Khung ngang: mép dưới chữ/thẻ không xuống quá mức này (chừa thanh tua, phụ đề YouTube). 0,88 = chừa 12% dưới.",
+     "kieu": "so",
+     "mac_dinh": 0.88,
+     "min": 0.7,
+     "max": 0.97,
+     "buoc": 0.01,
+     "don_vi": "tỉ lệ",
+     "dung_o": "kiem_vung.py, dung.py (vạch bản xem)"
+    },
+    {
+     "id": "vung.yt_ben",
+     "ten": "YouTube: lề hai bên",
+     "mo_ta": "Khung ngang: chừa mỗi bên chừng này (title-safe 5%).",
+     "kieu": "so",
+     "mac_dinh": 0.05,
+     "min": 0,
+     "max": 0.2,
+     "buoc": 0.01,
+     "don_vi": "tỉ lệ",
+     "dung_o": "kiem_vung.py, dung.py (vạch bản xem)"
     }
    ]
   },

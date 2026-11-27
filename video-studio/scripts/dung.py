@@ -403,7 +403,10 @@ fc.append(f"{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0[a0]"
 fc.append(f"[a0]loudnorm=I={CH('am.lufs')}:TP={CH('am.dinh')}:LRA={CH('am.lra')},aresample=48000[a]")
 vra = "[v]"
 if XEM:  # bản xem: vạch vùng an toàn TikTok (AutoEdit mục 4: trên 15%, dưới 25%, hai bên 10%) để Hào thấy chữ có lấn không; bản cuối sạch
-    t_, b_, l_ = int(H * CH("vung.tren")), int(H * CH("vung.duoi")), int(W * CH("vung.ben"))
+    if W > H:  # khung ngang YouTube dùng vùng an toàn riêng
+        t_, b_, l_ = int(H * CH("vung.yt_tren")), int(H * CH("vung.yt_duoi")), int(W * CH("vung.yt_ben"))
+    else:
+        t_, b_, l_ = int(H * CH("vung.tren")), int(H * CH("vung.duoi")), int(W * CH("vung.ben"))
     fc.append(f"[v]format=rgb24,drawbox=x=0:y=0:w=iw:h={t_}:color=red@0.22:t=fill,drawbox=x=0:y={b_}:w=iw:h=ih-{b_}:color=red@0.22:t=fill,"
               f"drawbox=x=0:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,drawbox=x=iw-{l_}:y={t_}:w={l_}:h={b_ - t_}:color=red@0.22:t=fill,"
               f"drawbox=x={l_}:y={t_}:w=iw-{2 * l_}:h={b_ - t_}:color=lime@0.8:t=2,format=yuv420p[vg]")

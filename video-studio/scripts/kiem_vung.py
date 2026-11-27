@@ -13,8 +13,13 @@ from cau_hinh import lay
 
 def gioi_han(tl):
     """Khung an toàn (tỉ lệ khung) từ bảng master nhóm vung."""
-    ben = lay("vung.ben", tl)
-    return {"t": lay("vung.tren", tl), "b": lay("vung.duoi", tl), "l": ben, "r": round(1 - ben, 6)}
+    from timeline import size
+    W, H = size(tl or {})
+    if W > H:  # khung ngang YouTube: vùng an toàn riêng (title-safe); khung dọc theo TikTok/AutoEdit
+        t, d, ben = lay("vung.yt_tren", tl), lay("vung.yt_duoi", tl), lay("vung.yt_ben", tl)
+    else:
+        t, d, ben = lay("vung.tren", tl), lay("vung.duoi", tl), lay("vung.ben", tl)
+    return {"t": t, "b": d, "l": ben, "r": round(1 - ben, 6)}
 
 
 def js_do():
@@ -78,6 +83,9 @@ def _tu_kiem():
     assert kiem(pj, tl) == [], "bố cục chữ theo nhịp nói phải tự kẹp vào vùng an toàn"
     tl["cards"] = [{"kieu": "kinh", "start": 4, "dur": 1.5, "title": "x" * 60}]
     assert any("tràn" in x for _, x in kiem(pj, tl)), "chữ quá dài tràn khung phải bị bắt"
+    assert gioi_han({"meta": {"platform": "youtube"}}) == {"t": 0.05, "b": 0.88, "l": 0.05, "r": 0.95}   # khung ngang: vùng YouTube
+    yt = {**tl, "meta": {"platform": "youtube"}, "cards": [], "texts": tl["texts"][:1]}
+    assert kiem(pj, yt) == [], kiem(pj, yt)                                                          # chữ lớn nằm gọn khung YouTube
     shutil.rmtree(pj)
     print("OK")
 
