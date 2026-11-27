@@ -72,7 +72,7 @@ def moc(ten):  # in thời gian từng bước, để biết bước nào tốn 
 
 # 1. Tải bản gốc các cảnh được chọn
 os.makedirs(f"{B}/raw", exist_ok=True)
-for s in shots + tl.get("broll", []):
+for s in shots + [x for x in tl.get("broll", []) if not str(x["file"]).startswith("kho:")]:  # kho: kiểm riêng ở bước kho bên dưới
     p = f"{B}/raw/{s['file']}"
     if not os.path.exists(p):
         if not s.get("id"):
@@ -85,7 +85,7 @@ if _m not in ("synth", None) and not os.path.exists(f"{B}/raw/{_m}"):
     sys.exit(f"Không thấy file nhạc {B}/raw/{_m} — chép file nhạc vào thư mục đó (hoặc chọn lại trong tab Âm thanh)")
 
 # Tài nguyên trong kho của Hào ("kho:<đường dẫn>"): overlay, LUT màu, âm. Thiếu thì dừng sớm, báo rõ file nào.
-_kho = [x["file"] for x in tl.get("overlays", []) + tl.get("sfx", []) if str(x["file"]).startswith("kho:")] + \
+_kho = [x["file"] for x in tl.get("overlays", []) + tl.get("sfx", []) + tl.get("broll", []) if str(x["file"]).startswith("kho:")] + \
        [c["look"] for c in shots if str(c.get("look", "")).startswith("kho:")]
 _thieu = [f for f in _kho if not (kho_path(f) and os.path.exists(kho_path(f)))]
 _thieu += [c["look"] for c in shots if str(c.get("look", "")).startswith("lut:") and not os.path.exists(os.path.join(HERE, c["look"][4:]))]
@@ -303,7 +303,16 @@ if voice:
 # Cảnh trám: cắt từng đoạn về đúng khung, cùng chỉnh màu của phong cách
 brs = tl.get("broll", [])
 for k, x in enumerate(brs):
-    src = nguon(x["file"])
+    src = kho_path(x["file"]) if str(x["file"]).startswith("kho:") else nguon(x["file"])  # kho: ảnh/video kho dự án (tram_canh.py)
+    if src.lower().endswith((".png", ".jpg", ".jpeg", ".webp")):
+        # ảnh tĩnh: đẩy vào/kéo ra 8% thật chậm, xen kẽ (Hào: zoom mượt, không giật). Phóng 4 lần trước zoompan rồi thu về
+        # để mỗi khung dịch dưới 1 điểm ảnh của khung thật → không rung bước (zoompan làm tròn toạ độ nguyên)
+        nk = max(1, round(x["dur"] * FPS) + 2)
+        z = f"1+0.08*on/{nk}" if k % 2 == 0 else f"1.08-0.08*on/{nk}"
+        ff("-i", src, "-an", "-vf", f"{khung(src, W, H, x.get('focus', 0), x.get('fit'))},{LOOKS[style['look']][1]},scale={W * 4}:{H * 4},"
+               f"zoompan=z='{z}':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d={nk}:s={W}x{H}:fps={FPS},format=yuv420p",
+               "-frames:v", str(nk), "-c:v", "libx264", "-crf", CRF, "-preset", PRESET, f"{B}/br{k}.mp4")
+        continue
     ff_vao("-ss", str(x["in"]), "-t", str(x["dur"]), "-i", src, "-an",
        "-vf", f"{khung(src, W, H, x.get('focus', 0), x.get('fit'))},"
               f"{tu_can(src, x['in'], x['dur'])},{LOOKS[style['look']][1]},fps={FPS},tpad=stop_mode=clone:stop_duration=0.2,format=yuv420p",
