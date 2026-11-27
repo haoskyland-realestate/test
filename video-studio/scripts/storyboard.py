@@ -47,6 +47,18 @@ def chu_tren_man(tl, a, b):
     return " ‖ ".join(q for q in v if q).replace("|", "/")
 
 
+def nhip(tl, a, b):
+    """(vai, zoom, âm) của cảnh [a, b): vai từ chữ lớn/thẻ (BAN-DUNG), zoom đang chạy, hiệu ứng âm có mốc trong cảnh."""
+    tren = lambda x: x["start"] < b and x["start"] + x["dur"] > a
+    vai = [x.get("vai") or x["kind"] for x in tl.get("texts", []) if x.get("kind") in ("title3d", "hook", "stat") and tren(x)]
+    vai += [f"thẻ {x.get('kieu', '')}".strip() for x in tl.get("cards", []) if tren(x)]
+    vai += ["từ khoá"] if any(x.get("kind") == "loi" and x.get("hl") and tren(x) for x in tl.get("texts", [])) else []
+    vai = vai or (["hook (3 giây đầu)"] if a < 3 else [])
+    zoom = [f"{'vào' if x.get('scale', 1) >= 1 else 'ra'} {round(x.get('scale', 1) * 100)}%" for x in tl.get("zooms", []) if tren(x)]
+    am = [str(x["file"]).split("/")[-1].split("_")[0] for x in tl.get("sfx", []) if a <= x["start"] < b]
+    return ", ".join(dict.fromkeys(vai)), ", ".join(dict.fromkeys(zoom)), ", ".join(dict.fromkeys(am))
+
+
 def anh(pj, tl, c, out):
     """Một khung đại diện của cảnh (giữa cảnh), cùng khung cắt và chuyển tông HDR như bộ dựng."""
     import cv2, numpy as np
@@ -63,7 +75,14 @@ def anh(pj, tl, c, out):
     L = layout(tl)
     s, x = (L["starts"][i], tl["clips"][i]) if loai == "clip" else (tl["broll"][i]["start"], tl["broll"][i])
     from ban_nhe import lay
-    raw = lay(os.path.join(pj, "build"), x["file"])  # bản nhẹ 540p: cắt một khung nhanh hơn 4K HDR nhiều
+    if str(x["file"]).startswith("kho:"):  # cảnh trám từ kho dự án (tram_canh.py)
+        from kho import duong_dan
+        raw = duong_dan(x["file"]) or ""
+    else:
+        raw = lay(os.path.join(pj, "build"), x["file"])  # bản nhẹ 540p: cắt một khung nhanh hơn 4K HDR nhiều
+    if raw.lower().endswith((".png", ".jpg", ".jpeg", ".webp")):
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", raw, "-frames:v", "1", "-vf", khung(raw, TW, TH, x.get("focus", 0), x.get("fit")), out], check=True)
+        return
     t = x.get("in", 0) + ((a + b) / 2 - s)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", raw, "-frames:v", "1",
                     "-vf", khung(raw, TW, TH, x.get("focus", 0), x.get("fit")), out], check=True)
@@ -102,18 +121,29 @@ def lap(pj):
         anh(pj, tl, c, f)
         files.append((f, a))
         nguon = (f"thẻ {tl['cards'][i].get('kieu', '')}" if loai == "card" else
-                 f"{'trám ' if loai == 'broll' else ''}{(tl['broll'] if loai == 'broll' else tl['clips'])[i]['file']}")
+                 f"{'trám ' if loai == 'broll' else ''}{(tl['broll'] if loai == 'broll' else tl['clips'])[i]['file']}"
+                 + (f" (khớp «{tl['broll'][i]['ly_do']}»)" if loai == "broll" and tl["broll"][i].get("ly_do") else ""))
         loi = " ".join(x[0] for x in w if a <= x[1] < b)
-        rows.append(f"| {k} | {a:.1f}–{b:.1f} ({b - a:.1f}s) | {nguon} | {loi.replace('|', '/')} | {chu_tren_man(tl, a, b)} | {tr.get(round(a, 2), '')} |")
+        vai, zoom, am = nhip(tl, a, b)
+        rows.append(f"| {k} | {a:.1f}–{b:.1f} ({b - a:.1f}s) | {vai} | {nguon} | {loi.replace('|', '/')} | {chu_tren_man(tl, a, b)} | {zoom} | {am} | {tr.get(round(a, 2), '')} |")
     luoi(files, os.path.join(pj, "build", "storyboard.jpg"))
     from phan_tich_loi import phan_tich, bao_cao
     phan_tich_md = bao_cao(phan_tich(tl, w, pj)) if w else ["- Chưa có text từ ghi âm (chạy loi_nhip.py) nên chưa phân tích được lời nói."]
     from doi_chieu import kiem
     hoi = kiem(pj)[0]
-    md = [f"# STORYBOARD: {os.path.basename(pj)}", "",
+    dai = [b - a for a, b, *_ in cs]
+    nhan = [f"{x['start']:.1f}s {x.get('vai') or x['kind']}" for x in tl.get("texts", []) if x.get("kind") in ("title3d", "hook", "stat")]
+    nhan += [f"{x['start']:.1f}s thẻ {x.get('kieu', '')}" for x in tl.get("cards", [])]
+    tom = ["## Nhịp dựng (kế hoạch của người dựng)",
+           f"- Hook 0–3 giây: {' '.join(x[0] for x in w if x[1] < 3) or '(chưa có lời)'}",
+           f"- {len(cs)} cảnh nhìn thấy, trung bình {sum(dai) / max(len(dai), 1):.1f}s/cảnh, dài nhất {max(dai, default=0):.1f}s"
+           + (" (cảnh > 7s dễ bị lướt: nên trám/zoom/chữ)" if max(dai, default=0) > 7 else ""),
+           f"- Điểm nhấn (chữ lớn, thẻ): {', '.join(sorted(nhan, key=lambda q: float(q.split('s')[0]))) or 'chưa có'}",
+           f"- Zoom: {len(tl.get('zooms', []))} lần (đẩy vào/kéo ra êm) · cảnh trám: {len(tl.get('broll', []))} · hiệu ứng âm: {len(tl.get('sfx', []))}", ""]
+    md = [f"# STORYBOARD: {os.path.basename(pj)}", "", *tom,
           f"> Tạo bằng `scripts/storyboard.py` từ `timeline.json`. {len(cs)} cảnh, {L['total']:.1f} giây. Ảnh lưới: `build/storyboard.jpg` (số # trùng bảng).",
           "> Hào duyệt bảng này trước; duyệt xong Claude dựng bản xem 540×960 (`dung.py --xem`), rồi mới dựng bản cuối.", "",
-          "| # | Giây | Hình | Lời nói | Chữ trên màn hình | Chuyển cảnh vào |", "|---|---|---|---|---|---|", *rows, "",
+          "| # | Giây | Vai | Hình | Lời nói | Chữ trên màn hình | Zoom | Âm | Chuyển cảnh vào |", "|---|---|---|---|---|---|---|---|---|", *rows, "",
           "## Phân tích lời nói và chỗ cắt (dự đoán, chưa sửa gì)",
           "> Nói nhanh/chậm so với nhịp riêng của Hào, lặp từ, nói vấp, chỗ cắt rơi giữa từ, cảnh quá ngắn/dài. Hào chọn mục nào cần sửa, Claude sửa rồi lập lại storyboard.", "",
           *phan_tich_md, "",
@@ -131,6 +161,9 @@ def _tu_kiem():
     assert got == [(0, 2, "clip"), (2, 3, "broll"), (3, 4, "card"), (4, 5, "broll"), (5, 10, "clip"), (10, 15, "clip")], got
     assert canh(tl)[-1][3] == 1  # cảnh chính thứ hai
     assert chu_tren_man(tl, 0, 2) == "a · 1.080 ha" and "271 ha" in chu_tren_man(tl, 3, 4)
+    tl["zooms"] = [{"start": 1, "dur": 2, "scale": 1.05}]
+    tl["sfx"] = [{"start": 3.2, "file": "whoosh_zoom_01"}]
+    assert nhip(tl, 0, 2) == ("title3d", "vào 105%", "") and nhip(tl, 3, 4) == ("thẻ so-lieu", "", "whoosh"), (nhip(tl, 0, 2), nhip(tl, 3, 4))
     print("OK")
 
 
