@@ -400,7 +400,7 @@ if tron_sfx(tl.get("sfx", []), total, f"{B}/sfx.wav"):  # hiệu ứng âm (thu-
     fc.append(f"[{nv + bool(voice)}:a]anull[sx]"); mix.append("[sx]")
 fc.append(f"{''.join(mix)}amix=inputs={len(mix)}:duration=first:normalize=0[a0]" if len(mix) > 1 else "[m]anull[a0]")
 # Chuẩn âm lượng EBU R128 cho mạng xã hội (−14 LUFS, đỉnh −1,5 dB), cùng thuật toán ffmpeg-normalize dùng
-fc.append(f"[a0]loudnorm=I={CH('am.lufs')}:TP={CH('am.dinh')}:LRA={CH('am.lra')},aresample=48000[a]")
+fc.append(f"[a0]loudnorm=I={CH('am.lufs')}:TP={CH('am.dinh')}:LRA={CH('am.lra')},aresample=48000,apad[a]")  # apad: tiếng không ngắn hơn hình (cắt bằng -t tổng độ dài)
 vra = "[v]"
 if XEM:  # bản xem: vạch vùng an toàn TikTok (AutoEdit mục 4: trên 15%, dưới 25%, hai bên 10%) để Hào thấy chữ có lấn không; bản cuối sạch
     if W > H:  # khung ngang YouTube dùng vùng an toàn riêng

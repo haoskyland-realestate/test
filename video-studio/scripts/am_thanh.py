@@ -53,8 +53,8 @@ def chuan_am(f, I=-14, TP=-1.5, LRA=11, lech=0.5):
         tmp = f + ".tmp.mp4"
         subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", f, "-c:v", "copy", "-af",
                         f"loudnorm=I={I}:TP={TP}:LRA={LRA}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
-                        f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,aresample=48000",
-                        "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", tmp], check=True)
+                        f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,aresample=48000,apad",
+                        "-shortest", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", tmp], check=True)
         os.replace(tmp, f)
     return float(m["input_i"])
 
