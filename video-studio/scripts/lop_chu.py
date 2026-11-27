@@ -315,8 +315,8 @@ def tao(tl, phan=None, ti_le=1):
     .card.so-lieu,.card.quy-dao,.card.checklist,.card.kinh{{background:{LO.get('nen_the', 'radial-gradient(ellipse at 50% 35%,#3a1d0a 0%,#120a05 65%,#070707 100%)')};padding-top:0;align-items:center}}
     .card .cw{{width:940px}} .card .cs{{font-size:34px;letter-spacing:7px;text-transform:uppercase;color:{AC};text-align:center;margin-bottom:26px}}
     .xv{{font-family:var(--display);font-weight:900;text-align:center;line-height:1;white-space:nowrap}}
-    .xl{{font-size:56px;font-weight:600;text-align:center;margin-top:24px;color:#fff}}
-    .xn{{font-size:28px;text-align:center;margin-top:60px;color:rgba(255,255,255,.55)}}
+    .xl{{font-size:56px;font-weight:600;text-align:center;margin:24px auto 0;color:#fff;max-width:{round(W * (1 - 2 * BEN / 100)) - 24}px}}
+    .xn{{font-size:28px;text-align:center;margin:60px auto 0;color:rgba(255,255,255,.55);max-width:{round(W * (1 - 2 * BEN / 100)) - 24}px}}
     .qd{{position:relative;width:940px;height:940px;margin:0 auto}}
     .qd i{{position:absolute;border-radius:50%;border:3px solid {AC}66;left:50%;top:50%;transform:translate(-50%,-50%)}}
     .qd .r1{{width:620px;height:620px}} .qd .r2{{width:900px;height:900px;border-color:{AC}33}}
@@ -347,6 +347,12 @@ def tao(tl, phan=None, ti_le=1):
     const tl=gsap.timeline({{paused:true}});
     tl.to("#prog",{{scaleX:1,duration:{total:.2f},ease:"none"}},0);
     {chr(10).join(em_dan(x, float(tl.get('meta', {}).get('cham_chu', 1.5))) for x in anims)}
+    // Chữ theo nhịp nói: đo bề rộng THẬT sau khi dàn chữ (không đoán theo số ký tự), dòng nào rộng hơn khung thì thu cỡ chữ cả khối cho vừa.
+    // Đo bằng offsetLeft/offsetWidth (bỏ qua transform của chuyển động), chạy ngay và chạy lại khi phông tải xong.
+    function vuaKhung(){{document.querySelectorAll(".blk.loi").forEach(b=>{{for(let k=0;k<6;k++){{let l=0,r=b.clientWidth;
+      b.querySelectorAll(".lw").forEach(w=>{{l=Math.min(l,w.offsetLeft);r=Math.max(r,w.offsetLeft+w.offsetWidth);}});
+      const tr=(r-l)/b.clientWidth; if(tr<=1.001)break; b.style.fontSize=(parseFloat(getComputedStyle(b).fontSize)/tr*0.97)+"px";}}}});}}
+    vuaKhung(); if(document.fonts&&document.fonts.ready)document.fonts.ready.then(vuaKhung);
     window.__timelines=window.__timelines||{{}}; window.__timelines["main"]=tl; tl.seek(0);
     // Xem trước trong app (ngoài HyperFrames): tua tới giây t, ẩn/hiện từng lớp theo data-start/data-duration như HyperFrames
     window.dat=function(t){{tl.seek(t);document.querySelectorAll(".clip").forEach(e=>{{const s=+e.dataset.start,d=+e.dataset.duration;e.style.visibility=t>=s&&t<s+d?"visible":"hidden";}});}};

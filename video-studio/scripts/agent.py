@@ -40,11 +40,12 @@ def ghi(p, d):
         json.dump(d, fh, ensure_ascii=False, indent=1)
 
 
-def chay(*cmd):
+def chay(*cmd, cho_phep=(0, 2)):
+    """Chạy một bước; trả mã thoát. cho_phep: mã không phải lỗi máy (doi_chieu 2 = còn câu hỏi; kiem_vung/kiem_cuoi 1 = chưa đạt → agent dừng chờ sửa)."""
     t = time.time()
     r = subprocess.run([PY, *cmd], cwd=ROOT)
     print(f"⏱ {os.path.basename(cmd[0])}: {time.time() - t:.0f}s", flush=True)
-    if r.returncode not in (0, 2):  # doi_chieu thoát 2 khi còn câu hỏi: agent tự xử lý
+    if r.returncode not in cho_phep:
         sys.exit(f"Bước {os.path.basename(cmd[0])} lỗi (mã {r.returncode}). Đọc lỗi ở trên; sửa xong chạy lại agent.")
     return r.returncode
 
@@ -136,10 +137,10 @@ def nhan_ban_youtube(ten, pj):
                 shutil.copytree(src, os.path.join(py, f), dirs_exist_ok=True)
             elif os.path.exists(src):
                 shutil.copy(src, os.path.join(py, f))
-    if chay("scripts/kiem_vung.py", py):
+    if chay("scripts/kiem_vung.py", py, cho_phep=(0, 1)):
         sys.exit(f"Bản YouTube: chữ tràn vùng an toàn (xem trên). Claude sửa projects/{yt}/timeline.json rồi chạy lại agent.")
     chay("scripts/dung.py", py)
-    if chay("scripts/kiem_cuoi.py", py):
+    if chay("scripts/kiem_cuoi.py", py, cho_phep=(0, 1)):
         sys.exit("Bản YouTube chưa đạt kiểm tra (xem trên).")
     return yt
 
@@ -309,15 +310,15 @@ def chay_agent(ten, nguon, opt):
     # 7. bản xem 540×960 → CỔNG 4
     if 4 not in st["qua"]:
         chay("scripts/dung.py", pj, "--xem")
-        if chay("scripts/kiem_vung.py", pj):
+        if chay("scripts/kiem_vung.py", pj, cho_phep=(0, 1)):
             dung_lai(st, pj, CHO_CLAUDE, "CHỜ CLAUDE: chữ tràn vùng an toàn (xem danh sách ở trên): rút gọn chữ/đổi bố cục rồi chạy lại.")
         dung_lai(st, pj, CHO_HAO, f"CỔNG 4: Hào xem out/{ten}.xem.mp4 (có vạch vùng an toàn). Đạt → agent.py {ten} --qua 4")
 
     # 8. bản cuối: đối chiếu (dung.py tự dừng), vùng an toàn, dựng, kiểm bản dựng
-    if chay("scripts/kiem_vung.py", pj):
+    if chay("scripts/kiem_vung.py", pj, cho_phep=(0, 1)):
         dung_lai(st, pj, CHO_CLAUDE, "CHỜ CLAUDE: chữ tràn vùng an toàn, sửa rồi chạy lại.")
     chay("scripts/dung.py", pj)
-    if chay("scripts/kiem_cuoi.py", pj):
+    if chay("scripts/kiem_cuoi.py", pj, cho_phep=(0, 1)):
         dung_lai(st, pj, CHO_CLAUDE, "CHỜ CLAUDE: bản dựng chưa đạt kiểm tra (xem trên).")
     chay("scripts/anh_bia.py", pj)
     ra = [f"out/{ten}.mp4", f"anh-bia/{ten}/ (3 ảnh bìa TikTok + 3 YouTube, Hào chọn trong ANH-BIA.md)"]

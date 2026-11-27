@@ -109,6 +109,7 @@ def ap(tl, w, bd):
     khoa = {i for v in vai if v["vai"] in ("tu-khoa", "cta") for i in range(v["tu"][0], v["tu"][1] + 1)}
     tl["texts"] = [x for x in tl.get("texts", []) if not (x.get("auto_loi") or x.get("ban_dung"))]
     tl["cards"] = [x for x in tl.get("cards", []) if not x.get("ban_dung")]
+    tl["subtitles"] = [x for x in tl.get("subtitles", []) if not x.get("auto")]  # chữ theo nhịp nói thay phụ đề máy tự sinh (không hiện một câu hai lần); phụ đề Hào tự gõ giữ
     # chữ theo nhịp nói cho phần còn lại; từ khoá do AI chọn (không dùng luật đoán số/tiền)
     # chữ lớn hiện lâu hơn lúc nói (tối thiểu 1,8s, thêm 0,8s) nên bỏ chữ theo nhịp nói rơi vào lúc đó, tránh chồng chữ
     LON_MIN, LON_THEM = lay("the.chu_lon_min", tl), lay("the.chu_lon_them", tl)
@@ -153,8 +154,10 @@ def _tu_kiem():
     assert kiem_ban(bd, w) == [], kiem_ban(bd, w)
     assert any("KHÔNG có" in e for e in kiem_ban({"vai": [{"vai": "hook", "tu": [0, 1], "chu": "GIÁ RẺ"}]}, w))   # chữ Hào không nói → chặn
     assert any("nguon" in e for e in kiem_ban({"vai": [{"vai": "so-lieu", "tu": [2, 3]}]}, w))
-    tl = {"version": 1, "meta": {}, "audio": {}, "clips": [{"file": "a.mp4", "in": 0, "dur": 5}], "transitions": []}
+    tl = {"version": 1, "meta": {}, "audio": {}, "clips": [{"file": "a.mp4", "in": 0, "dur": 5}], "transitions": [],
+          "subtitles": [{"start": 0, "dur": 1, "text": "Giá khoảng", "auto": True}, {"start": 2, "dur": 1, "text": "Hào tự gõ"}]}
     out = ap(tl, w, bd)
+    assert [x["text"] for x in out["subtitles"]] == ["Hào tự gõ"], "phụ đề tự sinh bỏ (đã có chữ theo nhịp nói), phụ đề tự gõ giữ"
     from timeline import check
     assert check(out) == [], check(out)
     big = [x for x in out["texts"] if x.get("ban_dung")]
