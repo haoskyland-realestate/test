@@ -5,11 +5,17 @@ description: Agent edit video talking head (gộp AutoEdit preset A/B/C + bộ d
 
 # Agent video: một lệnh, 4 cổng, không suy đoán
 
+**Nguồn chính: `docs/02-quy-trinh/QUY-TRINH-CHUAN.md`** (quy trình 10 bước Hào chốt 27/11: video thô lộn xộn + kịch bản Google Doc + tài nguyên dự án → xếp clip, trám cảnh, kế hoạch dựng, LUT, TikTok + YouTube, ảnh bìa).
+
 Mọi lệnh chạy trong `video-studio` (PC Windows: `.venv\Scripts\python.exe` thay cho `python`). Đọc trước: `CLAUDE.md`, `docs/04-thu-vien/GHI-NHO-NGHIEM-THU.md`, `autoedit/QUY-TRINH-AUTOEDIT.md` (quy tắc trình bày, vùng an toàn, phông, mục 5 "ý đang nói → hiệu ứng").
 
 ```
 python scripts/agent.py <tên> <nguồn…> [--preset A|B|C] [--mau talking-luxury-01]   # tạo / làm tiếp
+   [--kich-ban <link Google Doc | file .txt>]  [--tai-nguyen <link Drive> --du-an <can-gio>]  [--ca-hai]
 ```
+- Kịch bản không tải được (Doc chưa chia sẻ, mạng chặn): đọc Doc bằng công cụ Google Docs, lưu `.txt`, chạy lại với `--kich-ban <file>`.
+- "CHỜ CLAUDE mô tả ảnh kho": xem `build/mo-ta/*.jpg` theo `CAN-MO-TA.md`, ghi vào `kho/MO-TA.json` đúng những gì **nhìn thấy** (vài cụm từ: hồ bơi, sa bàn, mặt tiền…), không rõ thì ghi `""`.
+- Câu "CẦN HÌNH" trong `TRAM-CANH.md`: đợt 2 (motion graphic); giờ thì để mặt người nói hoặc đặt thẻ có sẵn nếu câu có số/ý liệt kê.
 Tên theo `<ngày>_<tiktok|youtube>_<dự án>_<chủ đề>`. Nguồn: thư mục, file, link Drive/trực tiếp/YouTube/TikTok. Chạy lại cùng lệnh là làm tiếp. `--trang-thai` xem đang ở đâu. Mã thoát: 0 xong · 10 chờ Hào · 20 chờ Claude.
 
 ## Hào nói "chỉnh X thành Y" (nhịp cắt, cỡ chữ, độ to, zoom…)

@@ -3,16 +3,20 @@ không đoán. Chạy lại cùng lệnh là làm tiếp từ bước dở. Tr�
 
 Chạy trong video-studio (PC: .venv\\Scripts\\python.exe):
   python scripts/agent.py <tên> [nguồn …] [--preset A|B|C] [--mau <mẫu edit>]   tạo dự án (nguồn: thư mục, file, link) hoặc làm tiếp
+      thêm (quy trình chuẩn 27/11, docs/02-quy-trinh/QUY-TRINH-CHUAN.md):
+      --kich-ban <link Google Doc | file>   kịch bản → KICH-BAN.md, tự xếp clip lộn xộn theo kịch bản (xep_canh.py)
+      --tai-nguyen <link Drive> [--du-an <tên ngắn, vd can-gio>]   ảnh/video dự án vào kho → tự trám cảnh (tram_canh.py)
+      --ca-hai                              xong bản TikTok thì dựng thêm bản YouTube 16:9
   python scripts/agent.py <tên> --qua 1        Hào đã trả lời câu hỏi lời nói (đã ghi sửa từ/cắt đoạn)
   python scripts/agent.py <tên> --chon "<kết quả trang chọn hiệu ứng>"   hoặc  --chon "làm hết"
   python scripts/agent.py <tên> --qua 3        Hào "chốt phương án" storyboard
   python scripts/agent.py <tên> --qua 4        Hào duyệt bản xem 540×960 → dựng bản cuối
   python scripts/agent.py <tên> --trang-thai   xem đang ở bước nào
 
-Các bước: 1 nguồn + bản nhẹ → 2 master cut → 3 ghép giọng + nhận dạng → CỔNG 1 (từ máy nghe không chắc, tên, số, lặp/vấp/cắt nghi ngờ)
+Các bước: 1 nguồn + bản nhẹ (+ kịch bản → xếp clip theo kịch bản, + tài nguyên dự án vào kho) → 2 master cut → 3 ghép giọng + nhận dạng → CỔNG 1 (từ máy nghe không chắc, tên, số, lặp/vấp/cắt nghi ngờ)
 → 4 CLAUDE chia cảnh + vai chữ (BAN-DUNG.json) → 5 trang chọn hiệu ứng → CỔNG 2 (Hào chọn) → CLAUDE đặt vai cho hiệu ứng đã chọn
-→ 6 storyboard → CỔNG 3 (chốt) → 7 khung hình + mẫu + bản xem 540×960 có vạch vùng an toàn → CỔNG 4 (duyệt)
-→ 8 bản cuối: đối chiếu chữ/số, vùng an toàn, dựng, kiểm bản dựng.
+→ 6 trám cảnh từ kho + đo màu (LUT) + storyboard/kế hoạch dựng → CỔNG 3 (chốt; chốt thì áp LUT) → 7 khung hình + mẫu + bản xem 540×960 có vạch vùng an toàn → CỔNG 4 (duyệt)
+→ 8 bản cuối: đối chiếu chữ/số, vùng an toàn, dựng, kiểm bản dựng → ảnh bìa 3 phương án (+ bản YouTube nếu --ca-hai).
 Mã thoát: 0 xong · 10 chờ Hào · 20 chờ Claude (đọc lời nói, viết/sửa BAN-DUNG.json) · 1 lỗi."""
 import base64, glob, hashlib, json, os, re, subprocess, sys, time
 
@@ -117,6 +121,29 @@ def doc_chon(text, so_canh):
 
 
 # ---------- chạy ----------
+def nhan_ban_youtube(ten, pj):
+    """Bản YouTube 16:9 của bản TikTok đã duyệt: cùng timeline, chữ, màu, text ghi âm; khung ngang tự đặt (footage dọc: hai bên nền mờ).
+    Dựng + kiểm vùng an toàn YouTube + kiểm bản dựng. Trả tên dự án YouTube."""
+    import shutil
+    from server import tao_du_an, PROJ
+    yt = ten.replace("_tiktok_", "_youtube_") if "_tiktok_" in ten else ten + "-youtube"
+    py = os.path.join(PROJ, yt)
+    if not os.path.exists(os.path.join(py, "timeline.json")):
+        tao_du_an({"name": yt, "platform": "youtube", "from": ten})
+        for f in ("BAN-DUNG.json", "mau", os.path.join("build", "transcripts"), os.path.join("build", "voice.wav")):  # đối chiếu + LUT dùng lại
+            src = os.path.join(pj, f)
+            if os.path.isdir(src):
+                shutil.copytree(src, os.path.join(py, f), dirs_exist_ok=True)
+            elif os.path.exists(src):
+                shutil.copy(src, os.path.join(py, f))
+    if chay("scripts/kiem_vung.py", py):
+        sys.exit(f"Bản YouTube: chữ tràn vùng an toàn (xem trên). Claude sửa projects/{yt}/timeline.json rồi chạy lại agent.")
+    chay("scripts/dung.py", py)
+    if chay("scripts/kiem_cuoi.py", py):
+        sys.exit("Bản YouTube chưa đạt kiểm tra (xem trên).")
+    return yt
+
+
 def chay_agent(ten, nguon, opt):
     from server import tao_du_an, PROJ
     pj = os.path.join(PROJ, ten)
@@ -137,6 +164,38 @@ def chay_agent(ten, nguon, opt):
     B = os.path.join(pj, "build")
     T = os.path.join(pj, "timeline.json")
     BD = os.path.join(pj, "BAN-DUNG.json")
+
+    for k in ("kich-ban", "tai-nguyen", "du-an", "ca-hai"):  # nhớ tham số cho các lần chạy sau
+        if opt.get(k) is not None:
+            st[k] = opt[k]
+    if st.get("du-an"):
+        tl0 = doc(T); tl0.setdefault("meta", {})["du_an"] = st["du-an"]; ghi(T, tl0)
+    if st.get("kich-ban") and not st.get("kb"):
+        import kich_ban_doc
+        try:
+            print(f"Kịch bản: {len(kich_ban_doc.ghi(pj, st['kich-ban']))} câu → KICH-BAN.md", flush=True)
+        except Exception as ex:
+            dung_lai(st, pj, CHO_CLAUDE, f"CHỜ CLAUDE: không tải được kịch bản ({ex}). Đọc Doc bằng công cụ Google Docs, lưu .txt, "
+                     f"chạy lại agent.py {ten} --kich-ban <file .txt>.")
+        st["kb"] = True
+    if st.get("tai-nguyen") and not st.get("tn"):
+        import kho, tai_drive
+        goc = kho.goc_kho()
+        if not goc:
+            dung_lai(st, pj, CHO_HAO, "CẦN HÀO: chưa chọn thư mục kho tài nguyên trên máy (vd thư mục Drive KHO-EDIT). Chạy: python scripts/kho.py <thư mục kho>, rồi chạy lại agent.")
+        da = st.get("du-an") or (ten.split("_")[2] if ten.count("_") >= 3 else ten)
+        dich = os.path.join(goc, "20_DU-AN", da)
+        os.makedirs(dich, exist_ok=True)
+        print(f"Tải tài nguyên dự án vào kho: {dich}", flush=True)
+        tai_drive.tai_nguon(st["tai-nguyen"], dich)
+        kho.luu(goc)
+        st["tn"] = True
+        ghi(SP, st)
+    from doi_chieu import doc_kich_ban
+    if not st.get("cat") and not st.get("xep") and any(l.strip("() ") and not l.startswith("(") for _, l, _ in doc_kich_ban(pj)):
+        chay("scripts/xep_canh.py", pj)  # trước master cut: xếp clip quay lộn xộn theo kịch bản
+        st["xep"] = True
+        ghi(SP, st)
 
     B0 = os.path.join(pj, "build")
     if moi and os.path.exists(os.path.join(B0, "master-cut.md")):  # dự án làm trước khi có agent: đã cắt (có thể đã chỉnh tay), không cắt lại
@@ -169,17 +228,29 @@ def chay_agent(ten, nguon, opt):
     # CỔNG 1
     if 1 not in st["qua"]:
         dong, goi_y = cau_hoi_loi(pj, tl, ws, tin)
-        if dong or goi_y:
+        xc = (tl.get("meta", {}).get("xep_canh") or {})
+        hoi_xep = ([f"- Câu kịch bản chưa có clip nào nói: {', '.join(map(str, xc['thieu']))} (quay thêm / bỏ câu / trám hình)"] if xc.get("thieu") else []) + \
+                  ([f"- Clip có lời nhưng không khớp câu nào (chưa đưa vào video): {', '.join(xc['khong_khop'])}"] if xc.get("khong_khop") else [])
+        if dong or goi_y or hoi_xep:
             md = ["# Cần Hào trả lời trước khi đi tiếp (agent dừng, không đoán)", "",
                   f"Toàn bộ lời nói: `build/LOI-NOI.md`. Trả lời từng dòng: đúng / sửa thành … / cắt. Claude ghi vào `meta.sua_tu`, `meta.da_duyet`, cắt bằng `cat_doan.py`, rồi chạy `agent.py {ten} --qua 1`.", ""]
             if dong:
                 md += ["## Từ cần xác nhận (máy nghe không chắc, tên riêng, con số)", "", "| Giây | Từ | Vì sao hỏi | Câu |", "|---|---|---|---|", *dong, ""]
+            if hoi_xep:
+                md += ["## Thứ tự clip theo kịch bản (chi tiết: XEP-CANH.md)", "", *hoi_xep, ""]
             if goi_y:
                 md += ["## Đoạn nghi lặp / vấp / cắt (giữ nguyên cho tới khi Hào nói cắt)", "", "| Giây | Loại | Chi tiết | Đề xuất |", "|---|---|---|---|",
                        *[f"| {t:.1f} | {l} | {nd} | {dx} |" for t, l, nd, dx in goi_y], ""]
             open(os.path.join(pj, "CAN-HOI.md"), "w", encoding="utf8").write("\n".join(md))
-            dung_lai(st, pj, CHO_HAO, f"CỔNG 1: {len(dong)} từ cần xác nhận, {len(goi_y)} đoạn nghi lặp/vấp/cắt → {os.path.relpath(pj, ROOT)}/CAN-HOI.md")
+            dung_lai(st, pj, CHO_HAO, f"CỔNG 1: {len(dong)} từ cần xác nhận, {len(goi_y)} đoạn nghi lặp/vấp/cắt, {len(hoi_xep)} mục xếp clip "
+                     f"→ {os.path.relpath(pj, ROOT)}/CAN-HOI.md")
         st["qua"] = sorted(set(st["qua"]) | {1})
+
+    # 3b. Claude mô tả ảnh/video kho dự án (một lần mỗi file) để trám cảnh tìm đúng hình
+    import tram_canh
+    if tram_canh.can_mo_ta(pj):
+        dung_lai(st, pj, CHO_CLAUDE, f"CHỜ CLAUDE: xem ảnh nhỏ build/mo-ta/*.jpg theo {os.path.relpath(pj, ROOT)}/CAN-MO-TA.md, ghi vài cụm từ mỗi file vào "
+                 f"kho/MO-TA.json (không rõ là gì thì ghi \"\"), rồi chạy lại agent.")
 
     # 4. Claude chia cảnh + vai chữ
     bd = doc(BD)
@@ -214,6 +285,10 @@ def chay_agent(ten, nguon, opt):
         t1 = ap_mau.ap(t0, ap_mau.MAU[st["mau"]])
         t1.setdefault("audio", {}).update(voice=True, music=t0.get("audio", {}).get("music"))  # talking head: giữ giọng; nhạc theo dự án, mẫu không tự thêm
         ghi(T, t1)
+        chay("scripts/tram_canh.py", pj)  # trám ảnh/video kho dự án + cảnh không lời
+        if not st.get("mau_do"):
+            chay("scripts/chinh_mau.py", pj)  # đo màu từng cảnh, LUT + ảnh trước/sau (chưa áp)
+            st["mau_do"] = True
         chay("scripts/storyboard.py", pj)
         sc = canh_du_lieu(bd, ws)
         for s, c in zip(sc, bd["canh"]):
@@ -221,9 +296,15 @@ def chay_agent(ten, nguon, opt):
             s.update(effect=c["chon"], name=m.get("ten", c["chon"]),
                      need=[{"k": "có trong bộ dựng" if m.get("co") else "đợt 2: tạm dựng chỉ người nói", "ok": bool(m.get("co"))}])
         ra = trang("storyboard_template.html", {"scenes": sc}, st["preset"], os.path.join(B, "storyboard-chot.html"))
-        dung_lai(st, pj, CHO_HAO, "CỔNG 3: Hào xem STORYBOARD.md + build/storyboard.jpg (ảnh thật từng cảnh) và "
+        dung_lai(st, pj, CHO_HAO, "CỔNG 3: Hào xem STORYBOARD.md (kế hoạch dựng: nhịp, vai, zoom, âm) + build/storyboard.jpg, "
+                 "TRAM-CANH.md (cảnh trám từ kho), MAU-SAC.md (ảnh trước/sau LUT màu) và "
                  f"{os.path.relpath(ra, ROOT)} (hiệu ứng từng cảnh)." + (("\nLưu ý:\n- " + "\n- ".join(bao)) if bao else "")
                  + f"\n\"Chốt phương án\" → agent.py {ten} --qua 3. Sửa gì thì nói Claude sửa rồi chạy lại.")
+
+    if st.get("mau_do") and not st.get("mau_ap"):  # Hào chốt phương án (gồm màu) → áp LUT từng cảnh
+        chay("scripts/chinh_mau.py", pj, "--ap")
+        st["mau_ap"] = True
+        ghi(SP, st)
 
     # 7. bản xem 540×960 → CỔNG 4
     if 4 not in st["qua"]:
@@ -238,8 +319,13 @@ def chay_agent(ten, nguon, opt):
     chay("scripts/dung.py", pj)
     if chay("scripts/kiem_cuoi.py", pj):
         dung_lai(st, pj, CHO_CLAUDE, "CHỜ CLAUDE: bản dựng chưa đạt kiểm tra (xem trên).")
+    chay("scripts/anh_bia.py", pj)
+    ra = [f"out/{ten}.mp4", f"anh-bia/{ten}/ (3 ảnh bìa TikTok + 3 YouTube, Hào chọn trong ANH-BIA.md)"]
+    if st.get("ca-hai"):
+        yt = nhan_ban_youtube(ten, pj)
+        ra.append(f"out/{yt}.mp4 (YouTube 16:9)")
     st["xong"] = time.strftime("%Y-%m-%d %H:%M")
-    dung_lai(st, pj, 0, f"XONG: out/{ten}.mp4 đã qua mọi cổng.")
+    dung_lai(st, pj, 0, "XONG, đã qua mọi cổng: " + " · ".join(ra))
 
 
 def _tu_kiem():
@@ -273,7 +359,11 @@ if __name__ == "__main__":
         sys.exit(__doc__)
     ten, opt, nguon, i = a[0], {}, [], 1
     while i < len(a):
-        if a[i] in ("--preset", "--mau", "--chon", "--qua") and i + 1 < len(a):
+        if a[i] in ("--kich-ban", "--tai-nguyen", "--du-an") and i + 1 < len(a):
+            opt[a[i][2:]] = a[i + 1]; i += 2
+        elif a[i] == "--ca-hai":
+            opt["ca-hai"] = True; i += 1
+        elif a[i] in ("--preset", "--mau", "--chon", "--qua") and i + 1 < len(a):
             opt[a[i][2:]] = int(a[i + 1]) if a[i] == "--qua" else a[i + 1].upper() if a[i] == "--preset" else a[i + 1]; i += 2
         elif a[i] == "--youtube":
             opt["platform"] = "youtube"; i += 1

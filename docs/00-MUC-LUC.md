@@ -9,6 +9,7 @@ Cập nhật 12/11/2026. Mỗi khi thêm, dời hay lưu trữ một tài liệu
 | **Xem toàn bộ hệ thống một trang: mục tiêu, ghi nhớ, tính năng, skill, cài trên PC** | `01-he-thong/TINH-NANG-VA-SKILL.md` |
 | Biết việc này nên hỏi AI nào | `01-he-thong/AI-NAO-VIEC-NAO.md` |
 | Có câu lệnh chép sẵn cho từng AI | `../mau/PROMPT-MAU.md` |
+| **Quy trình chuẩn (bộ não): Hào gửi gì, 10 bước, cổng duyệt, đợt 2** | `02-quy-trinh/QUY-TRINH-CHUAN.md` ★ |
 | Làm một video từ đầu đến cuối | `02-quy-trinh/QUY-TRINH-MOT-VIDEO.md` |
 | Biết Claude tự làm các bước dựng theo thứ tự nào, đổi gì thì dựng lại gì | `02-quy-trinh/THU-TU-TU-DONG.md` |
 | Biết tuần này làm gì, ngày nào | `02-quy-trinh/NHIP-TUAN.md` |

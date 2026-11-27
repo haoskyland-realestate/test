@@ -122,6 +122,8 @@ def can_mo_ta(pj):
     tl = json.load(open(os.path.join(pj, "timeline.json"), encoding="utf8"))
     mt = json.load(open(MO_TA, encoding="utf8")) if os.path.exists(MO_TA) else {}
     thieu = [f for f, _ in tai_nguyen(tl, os.path.basename(pj)) if f[4:] not in mt]
+    if not thieu:
+        return 0
     d = os.path.join(pj, "build", "mo-ta"); os.makedirs(d, exist_ok=True)
     md = ["# Cần Claude mô tả ảnh/video kho dự án", "", f"Xem từng ảnh nhỏ, ghi vài cụm từ (hồ bơi, mặt tiền, phòng khách…) vào `{MO_TA}` theo dạng",
           '`{"<đường dẫn kho>": "cụm 1, cụm 2"}`. Mỗi file chỉ làm một lần.', ""]

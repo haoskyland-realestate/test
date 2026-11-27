@@ -1,5 +1,5 @@
 """Thử CẢ QUY TRÌNH trên một dự án mới, đúng như bấm nút trong app (Hào chốt 20/11: lỗi chỉ lộ ra ở dự án mới, nên phải thử cả chuỗi):
-tạo dự án → master cut → phụ đề → đối chiếu → bản xem 540 → storyboard → nháp → bản cuối → kiểm bản cuối → kiểm vùng an toàn.
+tạo dự án → master cut → phụ đề → đối chiếu → bản xem 540 → storyboard → nháp → bản cuối → kiểm bản cuối → kiểm vùng an toàn → ảnh bìa → bản YouTube.
 Mỗi bước ghi đạt/lỗi, thời gian, các dòng lỗi cuối vào MỘT file BAO-CAO-THU.md (gửi Claude file này là đủ).
 Chạy trong video-studio:
   python scripts/thu_quy_trinh.py <thư mục video | tên dự án có sẵn> [--nhanh]   (--nhanh: chỉ 3 video đầu)
@@ -80,7 +80,10 @@ def chay(nguon, nhanh=False):
                 ("Dựng nháp", [py, sc("dung.py"), pj, "--nhap"]),
                 ("Bản cuối (chỉ để thử)", [py, sc("dung.py"), pj, "--da-duyet"]),
                 ("Kiểm bản cuối (khổ, độ dài, tiếng, LUFS)", [py, sc("kiem_cuoi.py"), pj]),
-                ("Kiểm vùng an toàn TikTok", [py, sc("kiem_vung.py"), pj])]
+                ("Kiểm vùng an toàn TikTok", [py, sc("kiem_vung.py"), pj]),
+                ("Ảnh bìa 3 phương án TikTok + YouTube", [py, sc("anh_bia.py"), pj]),
+                ("Bản YouTube 16:9 (nhân bản, dựng, kiểm vùng an toàn YouTube)",
+                 [py, "-c", f"import sys; sys.path.insert(0, r'{HERE}'); import agent; agent.nhan_ban_youtube(r'{ten}', r'{pj}')"])]
     for b in cac_buoc:
         print(f"→ {b[0]}…", flush=True)
         k = buoc_chay(b[0], b[1], log_dir, *b[2:])
